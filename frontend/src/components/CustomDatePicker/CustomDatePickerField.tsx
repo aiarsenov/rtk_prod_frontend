@@ -33,6 +33,7 @@ const CustomDatePickerField = ({
                 onFocus={() => setIsOpen(!isOpen)}
                 placeholder={placeholder}
                 value={formatted || ""}
+                disabled={disabled}
             />
 
             {isOpen !== "" && (
@@ -42,7 +43,7 @@ const CustomDatePickerField = ({
                 />
             )}
 
-            {isOpen != "" && (
+            {isOpen != "" && !disabled && (
                 <CustomDatePicker
                     closePicker={setIsOpen}
                     onChange={(updated) => onChange(updated)}

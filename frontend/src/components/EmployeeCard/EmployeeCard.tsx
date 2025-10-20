@@ -442,10 +442,10 @@ const EmployeeCard = () => {
                                             onChange={(updated) => {
                                                 console.log(updated);
 
-                                                // setCardDataCustom((prev) => ({
-                                                //     ...prev,
-                                                //     employment_date: updated,
-                                                // }));
+                                                setCardDataCustom((prev) => ({
+                                                    ...prev,
+                                                    employment_date: updated,
+                                                }));
                                                 // updateProject(projectId, true, {
                                                 //     contragent_id: newValue,
                                                 // });
@@ -492,10 +492,10 @@ const EmployeeCard = () => {
                                             onChange={(updated) => {
                                                 console.log(updated);
 
-                                                // setCardDataCustom((prev) => ({
-                                                //     ...prev,
-                                                //     employment_date: updated,
-                                                // }));
+                                                setCardDataCustom((prev) => ({
+                                                    ...prev,
+                                                    dismissal_date: updated,
+                                                }));
                                                 // updateProject(projectId, true, {
                                                 //     contragent_id: newValue,
                                                 // });
