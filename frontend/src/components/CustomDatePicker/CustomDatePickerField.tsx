@@ -6,9 +6,9 @@ import "./CustomDatePicker.scss";
 
 const CustomDatePickerField = ({
     value,
-    placeholder = "дд.мм.гггг",
-    onChange,
     single = false,
+    placeholder = single ? "дд.мм.гггг" : "мм.гггг - мм.гггг",
+    onChange,
     disabled,
 }: {
     single: boolean;
