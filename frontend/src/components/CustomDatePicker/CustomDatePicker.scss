@@ -4,7 +4,41 @@
     position: relative;
 
     .custom-datepicker {
-        position: absolute;
+        position: fixed;
+        top: 52%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        @media (min-width: $media-lg) {
+            position: absolute;
+            top: 105%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        &__field {
+            cursor: pointer;
+            min-width: 100%;
+            padding: 10px 13px;
+            border-radius: 10px;
+            border: 1px solid var(--color-gray-30);
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 140%;
+            background: var(--color-gray-20)
+                url("../../assets/icons/arrow-right.svg") no-repeat;
+            background-size: 16px;
+            background-position: right 12px top 50%;
+
+            &.disabled {
+                background: var(--color-gray-20);
+                cursor: unset;
+            }
+
+            .placeholder {
+                color: var(--color-gray-60);
+            }
+        }
     }
 }
 

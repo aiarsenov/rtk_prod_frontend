@@ -70,7 +70,6 @@ const CustomDatePicker = ({
     return (
         <div className={`custom-datepicker custom-datepicker_${type}`}>
             <DatePicker
-                selected={single ? singleDate : tempRange[0]}
                 onChange={(update) => {
                     if (single) {
                         setSingleDate(update as Date);

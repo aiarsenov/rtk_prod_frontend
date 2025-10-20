@@ -77,7 +77,7 @@ const EmployeeCard = () => {
 
         setErrors(newErrors);
         if (Object.values(newErrors).some((err) => err)) return;
-        updateEmployee();
+        updateData();
     };
 
     const handleInputChange = (e, name) => {
@@ -93,10 +93,10 @@ const EmployeeCard = () => {
             value = e.target.value;
         }
 
-        setCardData((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
+        // setCardData((prev) => ({
+        //     ...prev,
+        //     [name]: value,
+        // }));
     };
 
     // Текущая загрузка
@@ -168,7 +168,7 @@ const EmployeeCard = () => {
     };
 
     // Обновление данных сотрудника
-    const updateEmployee = () => {
+    const updateData = (showMessage = true, data = cardDataCustom) => {
         query = toast.loading("Обновление", {
             containerId: "toastContainer",
             position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
@@ -177,24 +177,35 @@ const EmployeeCard = () => {
         postData(
             "PATCH",
             `${import.meta.env.VITE_API_URL}physical-persons/${employeeId}`,
-            cardDataCustom
+            data
         )
             .then((response) => {
                 if (response?.ok) {
-                    toast.update(query, {
-                        render: "Успешно обновлено!",
-                        type: "success",
-                        containerId: "toastContainer",
-                        isLoading: false,
-                        autoClose: 1200,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
+                    setCardData((prev) => ({
+                        ...prev,
+                        ...response.data,
+                    }));
+                    setCardDataCustom((prev) => ({
+                        ...prev,
+                        ...response.data,
+                    }));
+
+                    if (showMessage) {
+                        toast.update(query, {
+                            render: "Данные обновлены",
+                            type: "success",
+                            containerId: "toastContainer",
+                            isLoading: false,
+                            autoClose: 1000,
+                            pauseOnFocusLoss: false,
+                            pauseOnHover: false,
+                            draggable: true,
+                            position:
+                                window.innerWidth >= 1440
+                                    ? "bottom-right"
+                                    : "top-right",
+                        });
+                    }
                 } else {
                     toast.error("Ошибка обновления", {
                         isLoading: false,
@@ -369,29 +380,30 @@ const EmployeeCard = () => {
                                                     ? "+7 999 999 99 99"
                                                     : ""
                                             }
-                                            // onAccept={(value) => {
-                                            //     if (mode === "read") return;
-                                            //     handleInputChange(
-                                            //         value || "",
-                                            //         "phone_number"
-                                            //     );
-                                            // }}
-                                            // onBlur={() => {
-                                            //     if (mode === "read") return;
-                                            //     if (
-                                            //         cardData?.company_website !=
-                                            //         cardDataCustom?.company_website
-                                            //     ) {
-                                            //         updateData(true, {
-                                            //             company_website:
-                                            //                 cardDataCustom.company_website,
-                                            //         });
-                                            //     }
-                                            // }}
                                             value={
                                                 cardDataCustom.phone_number ||
                                                 ""
                                             }
+                                            onAccept={(value) => {
+                                                if (mode === "read") return;
+
+                                                setCardDataCustom((prev) => ({
+                                                    ...prev,
+                                                    phone_number: value,
+                                                }));
+                                            }}
+                                            onBlur={() => {
+                                                if (mode === "read") return;
+                                                if (
+                                                    cardData?.phone_number !=
+                                                    cardDataCustom?.phone_number
+                                                ) {
+                                                    updateData(true, {
+                                                        phone_number:
+                                                            cardDataCustom.phone_number,
+                                                    });
+                                                }
+                                            }}
                                             disabled={mode == "read"}
                                         />
                                     </div>
@@ -410,20 +422,23 @@ const EmployeeCard = () => {
                                             value={cardDataCustom.email || ""}
                                             onChange={(e) => {
                                                 if (mode === "read") return;
-                                                handleInputChange(e, "email");
+
+                                                setCardDataCustom((prev) => ({
+                                                    ...prev,
+                                                    email: e.target.value,
+                                                }));
                                             }}
-                                            // onBlur={() => {
-                                            //     if (mode === "read") return;
-                                            //     if (
-                                            //         cardData?.company_website !=
-                                            //         cardDataCustom?.company_website
-                                            //     ) {
-                                            //         updateData(true, {
-                                            //             company_website:
-                                            //                 cardDataCustom.company_website,
-                                            //         });
-                                            //     }
-                                            // }}
+                                            onBlur={() => {
+                                                if (mode === "read") return;
+                                                if (
+                                                    cardData?.email !=
+                                                    cardDataCustom?.email
+                                                ) {
+                                                    updateData(true, {
+                                                        email: cardDataCustom.email,
+                                                    });
+                                                }
+                                            }}
                                             disabled={mode == "read"}
                                         />
                                     </div>
@@ -440,15 +455,20 @@ const EmployeeCard = () => {
                                                 cardDataCustom.employment_date
                                             }
                                             onChange={(updated) => {
-                                                console.log(updated);
-
                                                 setCardDataCustom((prev) => ({
                                                     ...prev,
-                                                    employment_date: updated,
+                                                    employment_date:
+                                                        formatToUtcDateOnly(
+                                                            updated
+                                                        ) || null,
                                                 }));
-                                                // updateProject(projectId, true, {
-                                                //     contragent_id: newValue,
-                                                // });
+
+                                                updateData(true, {
+                                                    employment_date:
+                                                        formatToUtcDateOnly(
+                                                            updated
+                                                        ) || null,
+                                                });
                                             }}
                                             disabled={
                                                 mode === "read" ||
@@ -456,28 +476,6 @@ const EmployeeCard = () => {
                                             }
                                             single={true}
                                         />
-
-                                        {/* <DatePicker
-                                            className={`border-2 border-gray-300 p-1 w-full h-[32px] transition ${
-                                                !cardDataCustom.is_staff
-                                                    ? "bg-gray-100"
-                                                    : ""
-                                            }`}
-                                            selected={
-                                                cardDataCustom.employment_date
-                                            }
-                                            onChange={(e) =>
-                                                handleInputChange(
-                                                    e,
-                                                    "employment_date"
-                                                )
-                                            }
-                                            dateFormat="dd.MM.yyyy"
-                                            disabled={
-                                                mode === "read" ||
-                                                !cardDataCustom.is_staff
-                                            }
-                                        /> */}
                                     </div>
 
                                     <div className="relative">
@@ -490,15 +488,20 @@ const EmployeeCard = () => {
                                                 cardDataCustom.dismissal_date
                                             }
                                             onChange={(updated) => {
-                                                console.log(updated);
-
                                                 setCardDataCustom((prev) => ({
                                                     ...prev,
-                                                    dismissal_date: updated,
+                                                    dismissal_date:
+                                                        formatToUtcDateOnly(
+                                                            updated
+                                                        ) || null,
                                                 }));
-                                                // updateProject(projectId, true, {
-                                                //     contragent_id: newValue,
-                                                // });
+
+                                                updateData(true, {
+                                                    dismissal_date:
+                                                        formatToUtcDateOnly(
+                                                            updated
+                                                        ) || null,
+                                                });
                                             }}
                                             disabled={
                                                 mode === "read" ||
@@ -507,30 +510,6 @@ const EmployeeCard = () => {
                                             }
                                             single={true}
                                         />
-
-                                        {/* <DatePicker
-                                            className={`border-2 border-gray-300 p-1 w-full h-[32px] transition ${
-                                                cardDataCustom?.is_active ||
-                                                !cardDataCustom.is_staff
-                                                    ? "bg-gray-100"
-                                                    : ""
-                                            }`}
-                                            selected={
-                                                cardDataCustom.dismissal_date
-                                            }
-                                            onChange={(e) =>
-                                                handleInputChange(
-                                                    e,
-                                                    "dismissal_date"
-                                                )
-                                            }
-                                            dateFormat="dd.MM.yyyy"
-                                            disabled={
-                                                mode === "read" ||
-                                                cardDataCustom?.is_active ||
-                                                !cardDataCustom.is_staff
-                                            }
-                                        /> */}
 
                                         {errors.dismissal_date && (
                                             <span className="text-red-400 absolute top-[105%] left-0 text-sm">
@@ -552,12 +531,20 @@ const EmployeeCard = () => {
                                                 cardDataCustom.department_id ||
                                                 ""
                                             }
-                                            onChange={(e) =>
-                                                handleInputChange(
-                                                    e,
-                                                    "department_id"
-                                                )
-                                            }
+                                            onChange={(evt) => {
+                                                if (mode === "read") return;
+
+                                                setCardDataCustom((prev) => ({
+                                                    ...prev,
+                                                    department_id:
+                                                        evt.target.value,
+                                                }));
+
+                                                updateData(true, {
+                                                    department_id:
+                                                        evt.target.value,
+                                                });
+                                            }}
                                             disabled={mode == "read"}
                                         >
                                             <option value="">
@@ -585,9 +572,22 @@ const EmployeeCard = () => {
                                                     cardDataCustom.is_staff
                                                 ) || ""
                                             }
-                                            onChange={(e) =>
-                                                handleInputChange(e, "is_staff")
-                                            }
+                                            onChange={(evt) => {
+                                                if (mode === "read") return;
+
+                                                setCardDataCustom((prev) => ({
+                                                    ...prev,
+                                                    is_staff: JSON.parse(
+                                                        evt.target.value
+                                                    ),
+                                                }));
+
+                                                updateData(true, {
+                                                    is_staff: JSON.parse(
+                                                        evt.target.value
+                                                    ),
+                                                });
+                                            }}
                                             disabled={mode == "read"}
                                         >
                                             <option value="true">
@@ -609,12 +609,20 @@ const EmployeeCard = () => {
                                         <select
                                             className="form-select"
                                             name="position_id"
-                                            onChange={(e) =>
-                                                handleInputChange(
-                                                    e,
-                                                    "position_id"
-                                                )
-                                            }
+                                            onChange={(evt) => {
+                                                if (mode === "read") return;
+
+                                                setCardDataCustom((prev) => ({
+                                                    ...prev,
+                                                    position_id:
+                                                        evt.target.value,
+                                                }));
+
+                                                updateData(true, {
+                                                    position_id:
+                                                        evt.target.value,
+                                                });
+                                            }}
                                             value={
                                                 cardDataCustom.position_id || ""
                                             }
@@ -646,12 +654,26 @@ const EmployeeCard = () => {
                                                         cardDataCustom.is_active
                                                     ) || ""
                                                 }
-                                                onChange={(e) =>
-                                                    handleInputChange(
-                                                        e,
-                                                        "is_active"
-                                                    )
-                                                }
+                                                onChange={(evt) => {
+                                                    if (mode === "read") return;
+
+                                                    setCardDataCustom(
+                                                        (prev) => ({
+                                                            ...prev,
+                                                            is_active:
+                                                                JSON.parse(
+                                                                    evt.target
+                                                                        .value
+                                                                ),
+                                                        })
+                                                    );
+
+                                                    updateData(true, {
+                                                        is_active: JSON.parse(
+                                                            evt.target.value
+                                                        ),
+                                                    });
+                                                }}
                                                 disabled={mode == "read"}
                                             >
                                                 <option value="true">

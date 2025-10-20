@@ -17,24 +17,31 @@ const CustomDatePickerField = ({
 }) => {
     const [isOpen, setIsOpen] = useState("");
 
-    const date = new Date(value);
+    const date = value ? new Date(value) : null;
 
-    const formatted = date.toLocaleDateString("ru-RU", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-    });
+    const formatted = date
+        ? date.toLocaleDateString("ru-RU", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+          })
+        : null;
 
     return (
         <div className="custom-datepicker-wrapper">
-            <input
-                type="text"
-                className="form-select"
-                onFocus={() => setIsOpen(!isOpen)}
-                placeholder={placeholder}
-                value={formatted || ""}
-                disabled={disabled}
-            />
+            <div
+                className={`custom-datepicker__field ${
+                    disabled ? "disabled" : ""
+                }`}
+                onClick={() => {
+                    if (disabled) return;
+                    setIsOpen(!isOpen);
+                }}
+            >
+                {formatted || (
+                    <span className="placeholder">{placeholder}</span>
+                )}
+            </div>
 
             {isOpen !== "" && (
                 <OverlayTransparent
