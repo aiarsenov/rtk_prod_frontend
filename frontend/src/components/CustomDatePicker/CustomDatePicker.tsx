@@ -21,11 +21,15 @@ const CustomDatePicker = ({
     closePicker,
     onChange,
     fieldkey,
+    single = false,
+    value,
 }: {
     type: string;
     closePicker: () => void;
     onChange: () => void;
     fieldkey: string;
+    single?: boolean;
+    value;
 }) => {
     const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
         null,
@@ -35,6 +39,10 @@ const CustomDatePicker = ({
         null,
         null,
     ]);
+
+    const [singleDate, setSingleDate] = useState<Date | null>(
+        value ? new Date(value) : null
+    );
 
     const handleApply = () => {
         setDateRange(tempRange);
@@ -50,8 +58,10 @@ const CustomDatePicker = ({
             filters[`${fieldkey}_to`] = [formatDate(start, type)];
         }
 
-        if (Object.keys(filters).length > 0) {
+        if (!single && Object.keys(filters).length > 0) {
             onChange(filters);
+        } else if (single) {
+            onChange(singleDate);
         }
 
         closePicker("");
@@ -60,13 +70,22 @@ const CustomDatePicker = ({
     return (
         <div className={`custom-datepicker custom-datepicker_${type}`}>
             <DatePicker
-                selected={tempRange[0]}
-                onChange={(update) =>
-                    setTempRange(update as [Date | null, Date | null])
+                selected={single ? singleDate : tempRange[0]}
+                onChange={(update) => {
+                    if (single) {
+                        setSingleDate(update as Date);
+                    } else {
+                        setTempRange(update as [Date | null, Date | null]);
+                    }
+                }}
+                startDate={
+                    !single ? tempRange[0] : value ? new Date(value) : null
                 }
-                startDate={tempRange[0]}
-                endDate={tempRange[1]}
-                selectsRange
+                selected={
+                    !single ? tempRange[0] : value ? new Date(value) : null
+                }
+                endDate={!single ? tempRange[1] : undefined}
+                selectsRange={!single}
                 inline
                 locale="ru"
                 dateFormat={type === "months" ? "MM.yyyy" : "dd.MM.yyyy"}

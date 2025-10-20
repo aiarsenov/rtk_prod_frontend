@@ -16,6 +16,8 @@ import EmployeeWorkloadSummary from "./EmployeeWorkloadSummary";
 import EmployeeCurrentWorkload from "./EmployeeCurrentWorkload";
 import PersonalWorkload from "./PersonalWorkload";
 
+import CustomDatePickerField from "../CustomDatePicker/CustomDatePickerField";
+
 import Loader from "../Loader.jsx";
 
 import "./EmployeeCard.scss";
@@ -433,7 +435,29 @@ const EmployeeCard = () => {
                                             Дата приема
                                         </div>
 
-                                        <DatePicker
+                                        <CustomDatePickerField
+                                            value={
+                                                cardDataCustom.employment_date
+                                            }
+                                            onChange={(updated) => {
+                                                console.log(updated);
+
+                                                // setCardDataCustom((prev) => ({
+                                                //     ...prev,
+                                                //     employment_date: updated,
+                                                // }));
+                                                // updateProject(projectId, true, {
+                                                //     contragent_id: newValue,
+                                                // });
+                                            }}
+                                            disabled={
+                                                mode === "read" ||
+                                                !cardDataCustom.is_staff
+                                            }
+                                            single={true}
+                                        />
+
+                                        {/* <DatePicker
                                             className={`border-2 border-gray-300 p-1 w-full h-[32px] transition ${
                                                 !cardDataCustom.is_staff
                                                     ? "bg-gray-100"
@@ -453,7 +477,7 @@ const EmployeeCard = () => {
                                                 mode === "read" ||
                                                 !cardDataCustom.is_staff
                                             }
-                                        />
+                                        /> */}
                                     </div>
 
                                     <div className="relative">
@@ -461,7 +485,30 @@ const EmployeeCard = () => {
                                             Дата увольнения
                                         </div>
 
-                                        <DatePicker
+                                        <CustomDatePickerField
+                                            value={
+                                                cardDataCustom.dismissal_date
+                                            }
+                                            onChange={(updated) => {
+                                                console.log(updated);
+
+                                                // setCardDataCustom((prev) => ({
+                                                //     ...prev,
+                                                //     employment_date: updated,
+                                                // }));
+                                                // updateProject(projectId, true, {
+                                                //     contragent_id: newValue,
+                                                // });
+                                            }}
+                                            disabled={
+                                                mode === "read" ||
+                                                cardDataCustom?.is_active ||
+                                                !cardDataCustom.is_staff
+                                            }
+                                            single={true}
+                                        />
+
+                                        {/* <DatePicker
                                             className={`border-2 border-gray-300 p-1 w-full h-[32px] transition ${
                                                 cardDataCustom?.is_active ||
                                                 !cardDataCustom.is_staff
@@ -483,7 +530,7 @@ const EmployeeCard = () => {
                                                 cardDataCustom?.is_active ||
                                                 !cardDataCustom.is_staff
                                             }
-                                        />
+                                        /> */}
 
                                         {errors.dismissal_date && (
                                             <span className="text-red-400 absolute top-[105%] left-0 text-sm">
@@ -683,7 +730,11 @@ const EmployeeCard = () => {
                                 </div>
                             </div>
 
-                            <PersonalWorkload mode={mode} employeeId={employeeId} getWorkloadSummary={getWorkloadSummary} />
+                            <PersonalWorkload
+                                mode={mode}
+                                employeeId={employeeId}
+                                getWorkloadSummary={getWorkloadSummary}
+                            />
                         </section>
                     </div>
                 </div>

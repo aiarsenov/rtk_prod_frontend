@@ -1,5 +1,13 @@
 @use "../../styles/media-breakpoints" as *;
 
+.custom-datepicker-wrapper {
+    position: relative;
+
+    .custom-datepicker {
+        position: absolute;
+    }
+}
+
 .custom-datepicker {
     width: 360px;
     border-radius: 10px;
