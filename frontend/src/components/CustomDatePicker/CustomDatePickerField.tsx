@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import CustomDatePicker from "./CustomDatePicker";
+import OverlayTransparent from "../Overlay/OverlayTransparent";
 
 import "./CustomDatePicker.scss";
 
@@ -16,16 +17,30 @@ const CustomDatePickerField = ({
 }) => {
     const [isOpen, setIsOpen] = useState("");
 
+    const date = new Date(value);
+
+    const formatted = date.toLocaleDateString("ru-RU", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+    });
+
     return (
         <div className="custom-datepicker-wrapper">
             <input
                 type="text"
                 className="form-select"
                 onFocus={() => setIsOpen(!isOpen)}
-                onBlur={() => setIsOpen("")}
                 placeholder={placeholder}
-                value={value || ""}
+                value={formatted || ""}
             />
+
+            {isOpen !== "" && (
+                <OverlayTransparent
+                    state={true}
+                    toggleMenu={() => setIsOpen("")}
+                />
+            )}
 
             {isOpen != "" && (
                 <CustomDatePicker
