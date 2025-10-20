@@ -1630,7 +1630,7 @@ const ProjectCard = () => {
                 setActiveWindow={setActiveWindow}
             />
 
-            <BottomNavCard update={() => updateProject(projectId)}>
+            <BottomNavCard>
                 {mode == "edit" && availableToChange && (
                     <button
                         type="button"

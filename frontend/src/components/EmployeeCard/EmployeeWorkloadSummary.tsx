@@ -6,10 +6,10 @@ const EmployeeWorkloadSummary = ({
         <ul className="employee-card__workload-summary__list">
             {workloadSummary &&
                 workloadSummary.length > 0 &&
-                workloadSummary.map((item) => (
+                workloadSummary.map((item, index) => (
                     <li
                         className="employee-card__workload-summary__list-item"
-                        key={item.uuid}
+                        key={`${item.project_id}_${index}`}
                     >
                         <div className="employee-card__workload-summary__list-item-main">
                             <div className="employee-card__workload-summary__list-item-name">
@@ -34,8 +34,8 @@ const EmployeeWorkloadSummary = ({
                                             fill="#98A2B3"
                                         />
                                         <path
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
+                                            fillRule="evenodd"
+                                            clipRule="evenodd"
                                             d="M7 12.833A5.833 5.833 0 117 1.167a5.833 5.833 0 010 11.666zm0-1.166a4.667 4.667 0 100-9.334 4.667 4.667 0 000 9.334z"
                                             fill="#98A2B3"
                                         />

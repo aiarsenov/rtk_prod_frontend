@@ -1,18 +1,26 @@
-const EmployeePersonalWorkloadItem = ({ props, mode, setWorkloads }) => {
+const EmployeePersonalWorkloadItem = ({
+    props,
+    mode,
+    setWorkloads,
+    updateLoadPercentage,
+}) => {
     return (
-        <li className="grid items-center grid-cols-[1fr_35%_15%] gap-3 mb-2">
-            <div className="flex flex-col justify-between gap-2">
-                <div className="text-lg">{props?.project_name}</div>
+        <li className="employee-card__personal-workload__list-item">
+            <div className="employee-card__personal-workload__list-item__name">
+                <strong>{props?.project_name}</strong>
 
-                <span className="text-gray-400">{props?.industry_name}</span>
+                <span>
+                    {props?.industry_names[0].length > 0 &&
+                        props?.industry_names[0]}
+                </span>
             </div>
 
-            <div className="flex flex-col justify-between gap-2">
-                <div className="text-lg">{props?.report_period_code}</div>
-                <span className="text-xs">{props?.execution_period}</span>
+            <div className="employee-card__personal-workload__list-item__period">
+                <strong>{props?.report_period_code}</strong>
+                <span>{props?.execution_period}</span>
             </div>
 
-            <div className="flex items-center border-2 border-gray-300 p-1">
+            <div className="employee-card__personal-workload__list-item__percentage">
                 <input
                     className="min-w-0"
                     type="number"
@@ -57,9 +65,12 @@ const EmployeePersonalWorkloadItem = ({ props, mode, setWorkloads }) => {
                             return updated;
                         });
                     }}
+                    onBlur={() => {
+                        updateLoadPercentage();
+                    }}
                     disabled={mode == "read"}
                 />
-                %
+                <span className="symbol">%</span>
             </div>
         </li>
     );

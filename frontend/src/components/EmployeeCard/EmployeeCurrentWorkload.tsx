@@ -3,9 +3,12 @@ const EmployeeCurrentWorkload = ({ projects }: { projects: object[] }) => {
         <ul className="card-projects employee-card-projects">
             {projects &&
                 projects.length > 0 &&
-                projects.map((item) => {
+                projects.map((item, index) => {
                     return (
-                        <li className="card-projects__item" key={item.id}>
+                        <li
+                            className="card-projects__item"
+                            key={`${item.id}_${index}`}
+                        >
                             <div className="card-projects__item-name">
                                 <strong>{item?.project?.name}</strong>
                                 <span>{item?.project?.main_industry}</span>

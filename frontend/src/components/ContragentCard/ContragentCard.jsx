@@ -753,7 +753,7 @@ const ContragentCard = () => {
                 />
             </div>
 
-            <BottomNavCard update={() => updateData()}></BottomNavCard>
+            <BottomNavCard />
         </main>
     );
 };

@@ -16,15 +16,17 @@ const BottomNavCard = ({ children, update }) => {
                 >
                     Назад
                 </button>
-                {/* 
-                <button
-                    type="button"
-                    className="action-button"
-                    title="Сохранить изменения"
-                    onClick={update}
-                >
-                    Сохранить
-                </button> */}
+
+                {update && (
+                    <button
+                        type="button"
+                        className="action-button"
+                        title="Сохранить изменения"
+                        onClick={update}
+                    >
+                        Сохранить
+                    </button>
+                )}
 
                 {children}
             </div>

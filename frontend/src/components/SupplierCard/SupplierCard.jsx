@@ -840,7 +840,7 @@ const SupplierCard = () => {
                 />
             </div>
 
-            <BottomNavCard update={() => updateData()}></BottomNavCard>
+            <BottomNavCard />
         </main>
     );
 };

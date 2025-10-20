@@ -12,22 +12,14 @@ import formatToUtcDateOnly from "../../utils/formatToUtcDateOnly";
 import { ru } from "date-fns/locale";
 import { format } from "date-fns";
 
-import EmployeePersonalWorkloadItem from "./EmployeePersonalWorkloadItem";
 import EmployeeWorkloadSummary from "./EmployeeWorkloadSummary";
 import EmployeeCurrentWorkload from "./EmployeeCurrentWorkload";
+import PersonalWorkload from "./PersonalWorkload";
 
 import Loader from "../Loader.jsx";
 
 import "./EmployeeCard.scss";
 import "react-toastify/dist/ReactToastify.css";
-
-const customStyles = {
-    option: (base, { data, isFocused, isSelected }) => ({
-        ...base,
-        backgroundColor: isSelected ? "#2684FF" : isFocused ? "#eee" : "white",
-        color: data.isFull ? "black" : "red",
-    }),
-};
 
 // const validateEmail = (email) => {
 //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -49,28 +41,16 @@ const EmployeeCard = () => {
     const [departments, setDepartments] = useState([]);
 
     const [workload, setworkload] = useState({});
-    const [personalWorkload, setPersonalWorkload] = useState({
-        other_workload: 0,
-    });
 
     const [workloadSummary, setWorkloadSummary] = useState();
     const [workloadSummaryMaxPercentage, setWorkloadSummaryMaxPercentage] =
         useState(null);
 
-    const [totalWorkload, setTotalWorkload] = useState(0);
-    const [workloads, setWorkloads] = useState([]);
-
-    const [datesData, setDatesData] = useState([]);
-    const [availableYears, setAvailableYears] = useState([]);
-
-    const [selectedPersonalYear, setSelectedPersonalYear] = useState(2024);
-    const [selectedPersonalMonth, setSelectedPersonalMonth] = useState({});
     const [selectedTypes, setSelecterTypes] = useState([]);
 
     const [reportTypes, setReportTypes] = useState([]);
     const [positions, setPositions] = useState([]);
 
-    const [availablePersonalMonths, setAvailablePersonalMonths] = useState([]);
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
 
@@ -126,25 +106,6 @@ const EmployeeCard = () => {
         ).then((response) => {
             if (response.status == 200) {
                 setworkload(response.data.workload);
-            }
-        });
-    };
-
-    // Получаем года для блока Трудозатраты
-    const getYears = () => {
-        getData(
-            `${
-                import.meta.env.VITE_API_URL
-            }personal-available-years?physical_person_id=${employeeId}`
-        ).then((response) => {
-            if (response.status == 200) {
-                setDatesData(response.data);
-                setAvailableYears(response.data.map((item) => item.year));
-                setSelectedPersonalYear(
-                    response.data.map((item) => item.year)[
-                        response.data.length - 1
-                    ]
-                );
             }
         });
     };
@@ -206,7 +167,6 @@ const EmployeeCard = () => {
 
     // Обновление данных сотрудника
     const updateEmployee = () => {
-        // if (cardDataCustom.position_id != null) {
         query = toast.loading("Обновление", {
             containerId: "toastContainer",
             position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
@@ -263,18 +223,6 @@ const EmployeeCard = () => {
                             : "top-right",
                 });
             });
-        // } else {
-        //     toast.error("Необходимо выбрать должность", {
-        //         containerId: "toastContainer",
-        //         isLoading: false,
-        //         autoClose: 1500,
-        //         pauseOnFocusLoss: false,
-        //         pauseOnHover: false,
-        //         draggable: true,
-        //         position:
-        //             window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        //     });
-        // }
     };
 
     // Получаем сотрудника
@@ -293,12 +241,7 @@ const EmployeeCard = () => {
                 setCardDataCustom(response.data);
             }
 
-            await Promise.all([
-                getWorkload(),
-                getPositions(),
-                getYears(),
-                getTypes(),
-            ]);
+            await Promise.all([getWorkload(), getPositions(), getTypes()]);
 
             setIsDataLoaded(true);
         } catch (error) {
@@ -314,109 +257,6 @@ const EmployeeCard = () => {
         }
     };
 
-    // Получение трудозатрат
-    const personalWorkloadFilter = () => {
-        if ("value" in selectedPersonalMonth) {
-            const payload = {
-                year: selectedPersonalYear,
-                month: selectedPersonalMonth.value,
-            };
-
-            getData(
-                `${
-                    import.meta.env.VITE_API_URL
-                }physical-persons/${employeeId}/personal-workload`,
-                { params: payload }
-            ).then((response) => {
-                if (response.status === 200) {
-                    setPersonalWorkload(response.data);
-                    setWorkloads(response.data.workload);
-                }
-            });
-        }
-    };
-
-    // Изменение процентов в блоке Трудозатраты
-    const updateLoadPercentage = () => {
-        const totalPercentage =
-            workloads.reduce((sum, item) => sum + item.load_percentage, 0) +
-            personalWorkload.other_workload;
-
-        if (totalPercentage === 100) {
-            if ("value" in selectedPersonalMonth) {
-                query = toast.loading("Обновление", {
-                    containerId: "toastContainer",
-                    draggable: true,
-                    position:
-                        window.innerWidth >= 1440
-                            ? "bottom-right"
-                            : "top-right",
-                });
-
-                const data = {
-                    workloads: workloads,
-                    year: +selectedPersonalYear,
-                    month: +selectedPersonalMonth.value,
-                    other_workload_percentage: personalWorkload.other_workload,
-                };
-
-                postData(
-                    "PATCH",
-                    `${
-                        import.meta.env.VITE_API_URL
-                    }physical-persons/${employeeId}/personal-workload`,
-                    data
-                )
-                    .then((response) => {
-                        if (response?.ok) {
-                            personalWorkloadFilter();
-                            getWorkloadSummary();
-                            toast.update(query, {
-                                render: "Успешно обновлено!",
-                                type: "success",
-                                containerId: "toastContainer",
-                                isLoading: false,
-                                autoClose: 1200,
-                                pauseOnFocusLoss: false,
-                                pauseOnHover: false,
-                                draggable: true,
-                                position:
-                                    window.innerWidth >= 1440
-                                        ? "bottom-right"
-                                        : "top-right",
-                            });
-                        }
-                    })
-                    .catch((error) => {
-                        toast.dismiss(query);
-                        toast.error(error.message || "Ошибка при обновлении", {
-                            containerId: "toastContainer",
-                            isLoading: false,
-                            autoClose: 4000,
-                            pauseOnFocusLoss: false,
-                            pauseOnHover: false,
-                            draggable: true,
-                            position:
-                                window.innerWidth >= 1440
-                                    ? "bottom-right"
-                                    : "top-right",
-                        });
-                    });
-            }
-        } else {
-            toast.error("Сумма всех трудозатрат должна равняться 100%", {
-                containerId: "toastContainer",
-                isLoading: false,
-                autoClose: 4000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                draggable: true,
-                position:
-                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-            });
-        }
-    };
-
     // Получение списка подразделений
     const getDepartments = () => {
         getData(`${import.meta.env.VITE_API_URL}departments`).then(
@@ -428,54 +268,11 @@ const EmployeeCard = () => {
         );
     };
 
-    const setSumToTotalWorkload = (workloads, otherWorkload) => {
-        const workloadsSum = workloads.reduce(
-            (sum, current) => sum + current,
-            0
-        );
-
-        setTotalWorkload(workloadsSum + otherWorkload || 0);
-    };
-
-    useEffect(() => {
-        setSumToTotalWorkload(
-            workloads.map((item) => parseInt(item.load_percentage ?? 0, 10)),
-            parseInt(personalWorkload?.other_workload ?? 0, 10)
-        );
-    }, [workloads, personalWorkload.other_workload]);
-
-    useEffect(() => {
-        if (selectedPersonalYear && selectedPersonalMonth) {
-            personalWorkloadFilter();
-        }
-    }, [selectedPersonalYear, selectedPersonalMonth]);
-
     useEffect(() => {
         if (dateRange[0] && dateRange[1]) {
             getWorkloadSummary();
         }
     }, [dateRange, selectedTypes]);
-
-    useEffect(() => {
-        if (datesData.length > 0) {
-            setAvailablePersonalMonths(
-                datesData
-                    .find((item) => item.year === +selectedPersonalYear)
-                    .months.map((month) => ({
-                        value: month.number,
-                        label: month.name,
-                        isFull: month.is_full_workload,
-                    }))
-            );
-            setSelectedPersonalMonth();
-        }
-    }, [selectedPersonalYear]);
-
-    useEffect(() => {
-        if (availablePersonalMonths.length > 0) {
-            setSelectedPersonalMonth(availablePersonalMonths[0]);
-        }
-    }, [availablePersonalMonths]);
 
     useEffect(() => {
         if (cardDataCustom?.is_active) {
@@ -589,7 +386,10 @@ const EmployeeCard = () => {
                                             //         });
                                             //     }
                                             // }}
-                                            value={cardDataCustom.phone_number}
+                                            value={
+                                                cardDataCustom.phone_number ||
+                                                ""
+                                            }
                                             disabled={mode == "read"}
                                         />
                                     </div>
@@ -605,7 +405,7 @@ const EmployeeCard = () => {
                                                     ? "mail@mail.ru"
                                                     : ""
                                             }
-                                            value={cardDataCustom.email}
+                                            value={cardDataCustom.email || ""}
                                             onChange={(e) => {
                                                 if (mode === "read") return;
                                                 handleInputChange(e, "email");
@@ -703,7 +503,8 @@ const EmployeeCard = () => {
                                             <select
                                                 className="form-select"
                                                 value={
-                                                    cardDataCustom.department_id
+                                                    cardDataCustom.department_id ||
+                                                    ""
                                                 }
                                                 onChange={(e) =>
                                                     handleInputChange(
@@ -733,9 +534,11 @@ const EmployeeCard = () => {
 
                                         <select
                                             className="form-select"
-                                            value={String(
-                                                cardDataCustom.is_staff
-                                            )}
+                                            value={
+                                                String(
+                                                    cardDataCustom.is_staff
+                                                ) || ""
+                                            }
                                             onChange={(e) =>
                                                 handleInputChange(e, "is_staff")
                                             }
@@ -766,7 +569,9 @@ const EmployeeCard = () => {
                                                     "position_id"
                                                 )
                                             }
-                                            value={cardDataCustom.position_id}
+                                            value={
+                                                cardDataCustom.position_id || ""
+                                            }
                                             disabled={mode == "read"}
                                         >
                                             <option value="">
@@ -790,9 +595,11 @@ const EmployeeCard = () => {
                                         {cardDataCustom.is_staff && (
                                             <select
                                                 className="form-select"
-                                                value={String(
-                                                    cardDataCustom.is_active
-                                                )}
+                                                value={
+                                                    String(
+                                                        cardDataCustom.is_active
+                                                    ) || ""
+                                                }
                                                 onChange={(e) =>
                                                     handleInputChange(
                                                         e,
@@ -876,196 +683,7 @@ const EmployeeCard = () => {
                                 </div>
                             </div>
 
-                            <div className="flex flex-col gap-2 flex-grow">
-                                <div className="flex items-center gap-2">
-                                    <h2 className="card__subtitle">
-                                        Трудозатраты
-                                    </h2>
-
-                                    <span className="flex items-center justify-center border border-gray-300 text-gray-400 p-1 rounded-[50%] w-[18px] h-[18px]">
-                                        ?
-                                    </span>
-
-                                    {mode == "edit" && (
-                                        <button
-                                            type="button"
-                                            className="save-icon w-[20px] h-[20px]"
-                                            onClick={() =>
-                                                updateLoadPercentage()
-                                            }
-                                            title="Обновить запись"
-                                        ></button>
-                                    )}
-                                </div>
-                                <div className="border-2 border-gray-300 py-5 px-4 min-h-full flex-grow h-full max-h-[500px] overflow-x-hidden overflow-y-auto">
-                                    <div className="grid grid-cols-2 items-center gap-3 mb-5">
-                                        <div className="flex flex-col">
-                                            <span className="block mb-2 text-gray-400">
-                                                Год
-                                            </span>
-                                            <select
-                                                className="border-2 h-[32px] p-1 border-gray-300 min-w-[170px] cursor-pointer"
-                                                onChange={(e) =>
-                                                    setSelectedPersonalYear(
-                                                        e.target.value
-                                                    )
-                                                }
-                                                value={selectedPersonalYear}
-                                            >
-                                                {availableYears.length > 0 &&
-                                                    availableYears.map(
-                                                        (item) => (
-                                                            <option
-                                                                value={item}
-                                                                key={item}
-                                                            >
-                                                                {item}
-                                                            </option>
-                                                        )
-                                                    )}
-                                            </select>
-                                        </div>
-
-                                        <div className="flex flex-col">
-                                            <span className="block mb-2 text-gray-400">
-                                                Месяц
-                                            </span>
-                                            <Select
-                                                options={
-                                                    availablePersonalMonths
-                                                }
-                                                styles={customStyles}
-                                                placeholder="Выберите месяц"
-                                                value={selectedPersonalMonth}
-                                                onChange={(e) =>
-                                                    setSelectedPersonalMonth(e)
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <ul className="grid gap-3">
-                                        <li className="grid items-center grid-cols-[45%_35%_15%] gap-3 text-gray-400">
-                                            <span>Проект</span>
-                                            <span>Отчет</span>
-                                            <span>% времени</span>
-                                        </li>
-
-                                        {personalWorkload?.workload?.length >
-                                            0 &&
-                                            personalWorkload?.workload?.every(
-                                                (item) => item !== null
-                                            ) && (
-                                                <>
-                                                    {personalWorkload?.workload?.map(
-                                                        (item) => (
-                                                            <EmployeePersonalWorkloadItem
-                                                                key={item?.id}
-                                                                mode={mode}
-                                                                props={item}
-                                                                setWorkloads={
-                                                                    setWorkloads
-                                                                }
-                                                            />
-                                                        )
-                                                    )}
-                                                    {personalWorkload.other_workload !==
-                                                        null && (
-                                                        <li className="grid items-center grid-cols-[1fr_35%_15%] gap-3 mb-2">
-                                                            <div className="text-lg">
-                                                                Прочие задачи
-                                                            </div>
-
-                                                            <div></div>
-
-                                                            <div className="flex items-center border-2 border-gray-300 p-1">
-                                                                <input
-                                                                    className="min-w-0"
-                                                                    type="number"
-                                                                    placeholder="0"
-                                                                    max="100"
-                                                                    min="0"
-                                                                    value={
-                                                                        personalWorkload.other_workload ===
-                                                                        0
-                                                                            ? ""
-                                                                            : personalWorkload.other_workload ??
-                                                                              ""
-                                                                    }
-                                                                    onChange={(
-                                                                        e
-                                                                    ) => {
-                                                                        const raw =
-                                                                            e
-                                                                                .target
-                                                                                .value;
-
-                                                                        if (
-                                                                            raw ===
-                                                                            ""
-                                                                        ) {
-                                                                            setPersonalWorkload(
-                                                                                (
-                                                                                    prev
-                                                                                ) => ({
-                                                                                    ...prev,
-                                                                                    other_workload:
-                                                                                        "",
-                                                                                })
-                                                                            );
-                                                                            return;
-                                                                        }
-
-                                                                        const value =
-                                                                            parseInt(
-                                                                                raw,
-                                                                                10
-                                                                            );
-
-                                                                        if (
-                                                                            !isNaN(
-                                                                                value
-                                                                            ) &&
-                                                                            value >=
-                                                                                0 &&
-                                                                            value <=
-                                                                                100
-                                                                        ) {
-                                                                            setPersonalWorkload(
-                                                                                (
-                                                                                    prev
-                                                                                ) => ({
-                                                                                    ...prev,
-                                                                                    other_workload:
-                                                                                        value,
-                                                                                })
-                                                                            );
-                                                                        }
-                                                                    }}
-                                                                    disabled={
-                                                                        mode ==
-                                                                        "read"
-                                                                    }
-                                                                />
-                                                                %
-                                                            </div>
-                                                        </li>
-                                                    )}
-
-                                                    <li className="grid items-center border-t-2 border-b-2 border-gray-300 grid-cols-[1fr_15%] gap-3 py-2">
-                                                        <div className="text-lg">
-                                                            Итого
-                                                        </div>
-
-                                                        <div>
-                                                            {totalWorkload}%
-                                                        </div>
-                                                    </li>
-                                                </>
-                                            )}
-                                    </ul>
-                                </div>
-                            </div>
+                            <PersonalWorkload mode={mode} employeeId={employeeId} getWorkloadSummary={getWorkloadSummary} />
                         </section>
                     </div>
                 </div>
