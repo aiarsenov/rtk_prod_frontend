@@ -546,25 +546,25 @@ const EmployeeCard = () => {
                                             Подразделение
                                         </div>
 
-                                        {departments.length > 0 && (
-                                            <select
-                                                className="form-select"
-                                                value={
-                                                    cardDataCustom.department_id ||
-                                                    ""
-                                                }
-                                                onChange={(e) =>
-                                                    handleInputChange(
-                                                        e,
-                                                        "department_id"
-                                                    )
-                                                }
-                                                disabled={mode == "read"}
-                                            >
-                                                <option value="">
-                                                    Подразделение
-                                                </option>
-                                                {departments.map((item) => (
+                                        <select
+                                            className="form-select"
+                                            value={
+                                                cardDataCustom.department_id ||
+                                                ""
+                                            }
+                                            onChange={(e) =>
+                                                handleInputChange(
+                                                    e,
+                                                    "department_id"
+                                                )
+                                            }
+                                            disabled={mode == "read"}
+                                        >
+                                            <option value="">
+                                                Подразделение
+                                            </option>
+                                            {departments.length > 0 &&
+                                                departments.map((item) => (
                                                     <option
                                                         value={item.id}
                                                         key={item.id}
@@ -572,8 +572,7 @@ const EmployeeCard = () => {
                                                         {item.name}
                                                     </option>
                                                 ))}
-                                            </select>
-                                        )}
+                                        </select>
                                     </div>
 
                                     <div>
