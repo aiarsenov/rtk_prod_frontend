@@ -24,7 +24,10 @@ const EmployeePersonalWorkloadList = ({
                         ))}
 
                         {personalWorkload.other_workload !== null && (
-                            <li className="employee-card__personal-workload__list-item">
+                            <li
+                                className="employee-card__personal-workload__list-item"
+                                style={{ alignItems: "center" }}
+                            >
                                 <div className="employee-card__personal-workload__list-item__name">
                                     <strong>Прочие задачи</strong>
                                 </div>

@@ -292,6 +292,25 @@
                 background-size: 16px;
             }
         }
+
+        [class*="css-tr4s17-option"] {
+            background: var(--color-blue-70);
+        }
+
+        [class*="-menu"] {
+            overflow: hidden;
+            border: 1px solid var(--color-gray-40);
+            border-radius: 10px;
+            box-shadow: 0px 12px 28px 0px rgba(0, 32, 51, 0.12);
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 140%;
+
+            [class*="-option"] {
+                padding: 10px 13px;
+                border-bottom: 1px solid var(--color-gray-30);
+            }
+        }
     }
 
     &-select {

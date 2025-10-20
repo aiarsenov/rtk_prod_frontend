@@ -11,8 +11,8 @@ import Hint from "../Hint/Hint";
 const customStyles = {
     option: (base, { data, isFocused, isSelected }) => ({
         ...base,
-        backgroundColor: isSelected ? "#2684FF" : isFocused ? "#eee" : "white",
-        color: data.isFull ? "black" : "red",
+        backgroundColor: isSelected ? "#0BA5EC" : isFocused ? "#eee" : "white",
+        color: isSelected ? "white" : data.isFull ? "#002033" : "#F97066",
     }),
 };
 
@@ -225,6 +225,7 @@ const PersonalWorkload = ({ mode, employeeId, getWorkloadSummary }: {}) => {
                 </select>
 
                 <Select
+                    className="form-select-extend"
                     options={availablePersonalMonths}
                     styles={customStyles}
                     placeholder="Месяц"
