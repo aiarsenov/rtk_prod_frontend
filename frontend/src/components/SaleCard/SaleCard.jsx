@@ -6,6 +6,7 @@ import postData from "../../utils/postData";
 import parseFormattedMoney from "../../utils/parseFormattedMoney";
 
 import Select from "react-select";
+import CustomSelect from "../CustomSelect/CustomSelect";
 import MultiSelect from "../MultiSelect/MultiSelect";
 import AutoResizeTextarea from "../AutoResizeTextarea";
 
@@ -13,7 +14,9 @@ import NewCustomerWindow from "./NewCustomerWindow";
 import SaleServiceItem from "./SaleServiceItem";
 import SaleFunnelStages from "./SaleFunnelStages";
 import SaleStageDetails from "./SaleStageDetails";
+
 import Loader from "../Loader";
+import Hint from "../Hint/Hint";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -803,101 +806,249 @@ const SaleCard = () => {
                 }`}
             >
                 <div className="container card__container sale-card__container">
-                    <section className="card__main-content sale-card__main-content">
-                        <div className="card__main-name">
-                            <input
-                                type="text"
-                                name="name"
-                                value={cardDataCustom?.name}
-                                onChange={(e) => {
-                                    if (mode === "read") return;
-                                    setCardDataCustom((prev) => ({
-                                        ...prev,
-                                        name: e.target.value,
-                                    }));
-                                }}
-                                onBlur={() => {
-                                    if (mode === "read") return;
-                                    if (
-                                        cardData?.name !=
-                                        cardDataCustom?.name
-                                    ) {
-                                        // updateProject(projectId, true, {
-                                        //     name: projectDataCustom.name,
-                                        // });
-                                    }
-                                }}
-                                disabled={mode == "read"}
-                            />
+                    <ToastContainer containerId="toastContainer" />
 
-                            <span
-                                className={`status`}
-                            >
-                                Статус
-                            </span>
-                        </div>
-                    </section>
+                    <div className="card__wrapper project-card__wrapper">
+                        <section className="card__main-content sale-card__main-content">
+                            <div className="card__main-name">
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={cardDataCustom?.name}
+                                    onChange={(e) => {
+                                        if (mode === "read") return;
+                                        setCardDataCustom((prev) => ({
+                                            ...prev,
+                                            name: e.target.value,
+                                        }));
+                                    }}
+                                    onBlur={() => {
+                                        if (mode === "read") return;
+                                        if (
+                                            cardData?.name !=
+                                            cardDataCustom?.name
+                                        ) {
+                                            // updateProject(projectId, true, {
+                                            //     name: projectDataCustom.name,
+                                            // });
+                                        }
+                                    }}
+                                    disabled={mode == "read"}
+                                />
+
+                                <span className={`status`}>Статус</span>
+                            </div>
+
+                            <section className="project-card__general-info">
+                                <h2 className="card__subtitle">
+                                    Общая информация
+                                </h2>
+
+                                <div className="project-card__industries">
+                                    <div className="form-label">
+                                        Основная отрасль
+                                        <Hint message={"Основная отрасль"} />
+                                    </div>
+
+                                    <select
+                                        className="form-select"
+                                        value={cardData?.industries?.main || ""}
+                                        onChange={(evt) => {
+                                            if (mode === "read") return;
+                                            setCardDataCustom({
+                                                ...cardDataCustom,
+                                                industries: {
+                                                    ...cardDataCustom.industries,
+                                                    main: +evt.target.value,
+                                                },
+                                            });
+
+                                            // updateProject(projectId, true, {
+                                            //     industries: {
+                                            //         ...projectDataCustom.industries,
+                                            //         main: +evt.target.value,
+                                            //     },
+                                            // });
+                                        }}
+                                        disabled={mode == "read"}
+                                    >
+                                        <option value="">
+                                            Выбрать из списка
+                                        </option>
+                                        {industries.length > 0 &&
+                                            industries.map((item) => (
+                                                <option
+                                                    value={item.id}
+                                                    key={item.id}
+                                                >
+                                                    {item.name}
+                                                </option>
+                                            ))}
+                                    </select>
+                                </div>
+
+                                <div className="project-card__industries">
+                                    <div className="form-label">
+                                        Дополнительная отрасль
+                                        <Hint
+                                            message={"Дополнительная отрасль"}
+                                        />
+                                    </div>
+
+                                    <CustomSelect
+                                        type={"checkbox"}
+                                        placeholder={
+                                            mode === "edit"
+                                                ? "Выбрать из списка"
+                                                : ""
+                                        }
+                                        options={industries
+                                            .filter(
+                                                (industry) =>
+                                                    industry.id !==
+                                                    cardDataCustom?.industries
+                                                        ?.main
+                                            )
+                                            .map((industry) => ({
+                                                value: industry.id,
+                                                label: industry.name,
+                                            }))}
+                                        // selectedValues={otherIndustries}
+                                        selectedValues={[]}
+                                        fieldName={"others"}
+                                        onChange={(values) => {
+                                            if (mode === "read") return;
+
+                                            // const newArray = values.map(
+                                            //     (item) => item.value
+                                            // );
+
+                                            // setOtherIndustries(newArray);
+
+                                            // updateProject(projectId, true, {
+                                            //     industries: {
+                                            //         ...projectDataCustom.industries,
+                                            //         others: newArray,
+                                            //     },
+                                            // });
+                                        }}
+                                        mode={mode}
+                                        isDisabled={mode == "read"}
+                                    />
+                                </div>
+
+                                <div className="project-card__sources">
+                                    <div className="form-label">
+                                        Источник
+                                        <Hint message={"Источник"} />
+                                    </div>
+
+                                    <select
+                                        className="form-select"
+                                        value={
+                                            cardData?.request_source_id || ""
+                                        }
+                                        onChange={(e) => {
+                                            // handleInputChange(
+                                            //     e,
+                                            //     "request_source_id"
+                                            // );
+                                        }}
+                                        disabled={mode == "read"}
+                                    >
+                                        <option value="">
+                                            Выберите из списка
+                                        </option>
+                                        {sources.length > 0 &&
+                                            sources.map((item) => (
+                                                <option
+                                                    value={item.id}
+                                                    key={item.id}
+                                                >
+                                                    {item.name}
+                                                </option>
+                                            ))}
+                                    </select>
+                                </div>
+
+                                <div className="project-card__industries">
+                                    <div className="form-label">
+                                        Банк
+                                        <Hint message={"Банк"} />
+                                    </div>
+
+                                    <CustomSelect
+                                        type={"checkbox"}
+                                        placeholder={
+                                            mode === "edit"
+                                                ? "Выбрать из списка"
+                                                : ""
+                                        }
+                                        options={banks.map((item) => ({
+                                            value: item.id,
+                                            label: item.name,
+                                        }))}
+                                        // selectedValues={otherIndustries}
+                                        selectedValues={
+                                            cardData.creditors?.map(
+                                                (creditor) => ({
+                                                    value: creditor.id,
+                                                    label: creditor.name,
+                                                })
+                                            ) || []
+                                        }
+                                        fieldName={"others"}
+                                        onChange={(values) => {
+                                            if (mode === "read") return;
+
+                                            // const newArray = values.map(
+                                            //     (item) => item.value
+                                            // );
+
+                                            // setOtherIndustries(newArray);
+
+                                            // updateProject(projectId, true, {
+                                            //     industries: {
+                                            //         ...projectDataCustom.industries,
+                                            //         others: newArray,
+                                            //     },
+                                            // });
+
+                                            // const selectedIds =
+                                            //     selectedOptions.map(
+                                            //         (option) => option.value
+                                            //     );
+
+                                            // const selectedBanks = banks.filter(
+                                            //     (bank) =>
+                                            //         selectedIds.includes(
+                                            //             bank.id
+                                            //         )
+                                            // );
+
+                                            // setCardData((prevData) => ({
+                                            //     ...prevData,
+                                            //     creditors: selectedBanks,
+                                            // }));
+
+                                            // setCardDataCustom((prev) => ({
+                                            //     ...prev,
+                                            //     creditors: selectedIds,
+                                            // }));
+                                        }}
+                                        mode={mode}
+                                        isDisabled={mode == "read"}
+                                    />
+                                </div>
+                            </section>
+                        </section>
+                    </div>
                 </div>
             </section>
 
             <div className="new-project pt-8 pb-15">
                 <div className="container relative">
                     <ToastContainer containerId="toastContainer" />
-
-                    <div className="flex justify-between items-center gap-10">
-                        {/* <div className="flex items-center gap-3 flex-grow">
-                            <div className="flex flex-col gap-3 w-full">
-                                <input
-                                    type="text"
-                                    className="text-3xl font-medium"
-                                    name="name"
-                                    defaultValue={cardData.name}
-                                    onChange={(e) =>
-                                        handleInputChange(e, "name")
-                                    }
-                                    disabled={mode == "read"}
-                                />
-                            </div>
-
-                            {mode === "edit" &&
-                                cardData?.name?.length > 2 && (
-                                    <button
-                                        type="button"
-                                        className="update-icon"
-                                        title="Обновить данные проекта"
-                                        onClick={() => handleSave()}
-                                    ></button>
-                                )}
-                        </div> */}
-
-                        {/* <nav className="switch">
-                            <div>
-                                <input
-                                    type="radio"
-                                    name="mode"
-                                    id="read_mode"
-                                    onChange={() => {
-                                        setMode("read");
-                                    }}
-                                    checked={mode === "read"}
-                                />
-                                <label htmlFor="read_mode">Чтение</label>
-                            </div>
-
-                            <div>
-                                <input
-                                    type="radio"
-                                    name="mode"
-                                    id="edit_mode"
-                                    onChange={() => setMode("edit")}
-                                    checked={mode === "edit"}
-                                />
-                                <label htmlFor="edit_mode">
-                                    Редактирование
-                                </label>
-                            </div>
-                        </nav> */}
-                    </div>
 
                     <div className="mt-15 grid grid-cols-3 gap-10 relative">
                         {!isDataLoaded ? (
@@ -962,7 +1113,7 @@ const SaleCard = () => {
 
                                     <div className="grid grid-cols-[1fr_40%] gap-5">
                                         <div className="flex flex-col gap-3">
-                                            <div className="flex flex-col gap-2 flex-shrink-0 flex-grow">
+                                            {/* <div className="flex flex-col gap-2 flex-shrink-0 flex-grow">
                                                 <span className="flex items-center gap-2 text-gray-400">
                                                     Отрасль
                                                     <span className="flex items-center justify-center border border-gray-300 p-1 rounded-[50%] w-[20px] h-[20px]">
@@ -973,8 +1124,7 @@ const SaleCard = () => {
                                                     <select
                                                         className="w-full h-[21px]"
                                                         value={
-                                                            cardData
-                                                                ?.industries
+                                                            cardData?.industries
                                                                 .main || ""
                                                         }
                                                         onChange={(evt) => {
@@ -1089,9 +1239,9 @@ const SaleCard = () => {
                                                         });
                                                     }}
                                                 />
-                                            </div>
+                                            </div> */}
 
-                                            <div className="flex flex-col gap-2 flex-shrink-0 flex-grow">
+                                            {/* <div className="flex flex-col gap-2 flex-shrink-0 flex-grow">
                                                 <span className="flex items-center gap-2 text-gray-400">
                                                     Источник
                                                     <span className="flex items-center justify-center border border-gray-300 p-1 rounded-[50%] w-[20px] h-[20px]">
@@ -1137,10 +1287,10 @@ const SaleCard = () => {
                                                             )}
                                                     </select>
                                                 </div>
-                                            </div>
+                                            </div> */}
                                         </div>
 
-                                        <div className="flex flex-col gap-2 flex-shrink-0 flex-grow">
+                                        {/* <div className="flex flex-col gap-2 flex-shrink-0 flex-grow">
                                             <span className="flex items-center gap-2 text-gray-400">
                                                 Банк
                                                 <div className="h-[20px] w-[20px]">
@@ -1235,7 +1385,7 @@ const SaleCard = () => {
                                                     )
                                                 )}
                                             </ul>
-                                        </div>
+                                        </div> */}
                                     </div>
 
                                     <div className="flex flex-col gap-2 flex-shrink-0 flex-grow">
@@ -1277,8 +1427,7 @@ const SaleCard = () => {
                                             placeholder="Заполните описание проекта"
                                             style={{ resize: "none" }}
                                             defaultValue={
-                                                cardData.short_description ||
-                                                ""
+                                                cardData.short_description || ""
                                             }
                                             onChange={(e) => {
                                                 handleInputChange(
