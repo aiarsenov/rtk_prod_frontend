@@ -1,49 +1,40 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+
 import getData from "../../utils/getData";
 import postData from "../../utils/postData";
+import { ru } from "date-fns/locale";
+import { format } from "date-fns";
+import formatToUtcDateOnly from "../../utils/formatToUtcDateOnly";
 
 import { IMaskInput } from "react-imask";
 import { ToastContainer, toast } from "react-toastify";
-import Select from "react-select";
-import DatePicker from "react-datepicker";
-import formatToUtcDateOnly from "../../utils/formatToUtcDateOnly";
 
-import { ru } from "date-fns/locale";
-import { format } from "date-fns";
+import Select from "react-select";
+import CustomSelect from "../CustomSelect/CustomSelect";
+import DatePicker from "react-datepicker";
+import CustomDatePickerField from "../CustomDatePicker/CustomDatePickerField";
 
 import EmployeeWorkloadSummary from "./EmployeeWorkloadSummary";
 import EmployeeCurrentWorkload from "./EmployeeCurrentWorkload";
 import PersonalWorkload from "./PersonalWorkload";
-
-import CustomDatePickerField from "../CustomDatePicker/CustomDatePickerField";
 
 import Loader from "../Loader.jsx";
 
 import "./EmployeeCard.scss";
 import "react-toastify/dist/ReactToastify.css";
 
-// const validateEmail = (email) => {
-//     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-//     return emailRegex.test(email);
-// };
-
 const EmployeeCard = () => {
     const { employeeId } = useParams();
     const navigate = useNavigate();
 
     const [mode, setMode] = useState("edit");
-    const [errors, setErrors] = useState({});
-
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
     const [cardData, setCardData] = useState({});
     const [cardDataCustom, setCardDataCustom] = useState({});
 
-    const [departments, setDepartments] = useState([]);
-
     const [workload, setworkload] = useState({});
-
     const [workloadSummary, setWorkloadSummary] = useState();
     const [workloadSummaryMaxPercentage, setWorkloadSummaryMaxPercentage] =
         useState(null);
@@ -52,6 +43,7 @@ const EmployeeCard = () => {
 
     const [reportTypes, setReportTypes] = useState([]);
     const [positions, setPositions] = useState([]);
+    const [departments, setDepartments] = useState([]);
 
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
@@ -247,12 +239,6 @@ const EmployeeCard = () => {
             getWorkloadSummary();
         }
     }, [dateRange, selectedTypes]);
-
-    // useEffect(() => {
-    //     if (cardDataCustom?.is_active) {
-
-    //     }
-    // }, [cardDataCustom?.is_active]);
 
     useEffect(() => {
         if (!cardDataCustom?.is_staff) {
@@ -692,40 +678,52 @@ const EmployeeCard = () => {
                                 </h2>
 
                                 <div className="employee-card__workload-summary__header">
-                                    <DatePicker
-                                        className="border-2 border-gray-300 p-1 w-full h-[32px]"
-                                        selectsRange
-                                        startDate={startDate}
-                                        endDate={endDate}
-                                        onChange={(update) =>
-                                            setDateRange(update)
-                                        }
-                                        dateFormat="MM-yyyy"
-                                        placeholderText="мм.гггг - мм.гггг"
-                                        showMonthYearPicker
-                                        // includeDates={allowedDates}
-                                        locale={ru}
-                                    />
+                                    <div>
+                                        <DatePicker
+                                            className="border-2 border-gray-300 p-1 w-full h-[32px]"
+                                            selectsRange
+                                            startDate={startDate}
+                                            endDate={endDate}
+                                            onChange={(update) =>
+                                                setDateRange(update)
+                                            }
+                                            dateFormat="MM-yyyy"
+                                            placeholderText="мм.гггг - мм.гггг"
+                                            showMonthYearPicker
+                                            // includeDates={allowedDates}
+                                            locale={ru}
+                                        />
+                                    </div>
 
-                                    <Select
-                                        closeMenuOnSelect={false}
-                                        isMulti
-                                        name="colors"
-                                        options={reportTypes.map((type) => ({
-                                            value: type.id,
-                                            label: type.name,
-                                        }))}
-                                        className="basic-multi-select min-w-[170px] min-h-[32px]"
-                                        classNamePrefix="select"
-                                        placeholder="Выбрать тип отчёта"
-                                        onChange={(selectedOptions) => {
-                                            setSelecterTypes(
-                                                selectedOptions.map(
-                                                    (option) => option.value
-                                                )
-                                            );
-                                        }}
-                                    />
+                                    <div>
+                                        <CustomSelect
+                                            type={"checkbox"}
+                                            closeMenuOnSelect={false}
+                                            placeholder={
+                                                mode === "edit"
+                                                    ? "Тип отчётов"
+                                                    : ""
+                                            }
+                                            options={reportTypes.map(
+                                                (type) => ({
+                                                    value: type.id,
+                                                    label: type.name,
+                                                })
+                                            )}
+                                            selectedValues={selectedTypes}
+                                            onChange={(values) => {
+                                                if (mode === "read") return;
+
+                                                const newArray = values.map(
+                                                    (item) => item.value
+                                                );
+
+                                                setSelecterTypes(newArray);
+                                            }}
+                                            mode={mode}
+                                            isDisabled={mode == "read"}
+                                        />
+                                    </div>
                                 </div>
 
                                 <div className="employee-card__workload-summary__body">

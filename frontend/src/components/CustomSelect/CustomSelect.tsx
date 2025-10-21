@@ -14,7 +14,7 @@ interface CustomSelectProps {
     mode: string;
     fieldName: string;
     options: OptionType[];
-    onChange: void;
+    onChange: () => void;
     selectedValues: number[];
     isDisabled: boolean;
 }
