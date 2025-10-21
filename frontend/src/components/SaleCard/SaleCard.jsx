@@ -26,14 +26,16 @@ const SaleCard = () => {
     const { saleId } = useParams();
     const navigate = useNavigate();
 
-    const [mode, setMode] = useState(location.state?.mode || "read");
+    // const [mode, setMode] = useState(location.state?.mode || "read");
+    const [mode, setMode] = useState("edit");
     const [isFirstInit, setIsFirstInit] = useState(true);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-    const [projectData, setProjectData] = useState({
+    const [cardData, setCardData] = useState({
         industries: { main: null, others: [] },
     });
-    const [formFields, setFormFields] = useState({
+
+    const [cardDataCustom, setCardDataCustom] = useState({
         industries: { main: null, others: [] },
     });
 
@@ -50,8 +52,10 @@ const SaleCard = () => {
     const [services, setServices] = useState([]);
     const [sources, setSources] = useState([]);
     const [saleStages, setSaleStages] = useState([]);
+
     const [newServices, setNewServices] = useState({ report_type_id: [] });
     const [stageMetrics, setStageMetrics] = useState({});
+
     const [metrics, setMetrics] = useState([]); // Прослойка - значения динамических полей в детализации
 
     let query;
@@ -59,15 +63,15 @@ const SaleCard = () => {
     const validateFields = () => {
         const newErrors = {};
 
-        if (!projectData?.contragent_id) {
+        if (!cardData?.contragent_id) {
             newErrors.contragent_id = "Необходимо назначить заказчика";
         }
 
-        if (!projectData?.industries.main) {
+        if (!cardData?.industries.main) {
             newErrors.industries = "Необходимо выбрать отрасль";
         }
 
-        if (!projectData?.request_source_id) {
+        if (!cardData?.request_source_id) {
             newErrors.request_source_id = "Необходимо выбрать источник";
         }
 
@@ -77,11 +81,11 @@ const SaleCard = () => {
     // Обработка ввода данных проекта
     const handleInputChange = useCallback((e, name) => {
         if (name == "contragent_id") {
-            setFormFields((prev) => ({ ...prev, [name]: e }));
-            setProjectData((prev) => ({ ...prev, [name]: e }));
+            // setFormFields((prev) => ({ ...prev, [name]: e }));
+            // setcardData((prev) => ({ ...prev, [name]: e }));
         } else {
-            setFormFields((prev) => ({ ...prev, [name]: e.target.value }));
-            setProjectData((prev) => ({ ...prev, [name]: e.target.value }));
+            // setFormFields((prev) => ({ ...prev, [name]: e.target.value }));
+            // setProjectData((prev) => ({ ...prev, [name]: e.target.value }));
         }
     }, []);
 
@@ -158,7 +162,7 @@ const SaleCard = () => {
     // Прикрепляем услугу
     const sendService = () => {
         query = toast.loading("Обновление", {
-            containerId: "projectCard",
+            containerId: "toastContainer",
             draggable: true,
             position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
         });
@@ -175,7 +179,7 @@ const SaleCard = () => {
                     toast.update(query, {
                         render: response.message,
                         type: "success",
-                        containerId: "projectCard",
+                        containerId: "toastContainer",
                         isLoading: false,
                         autoClose: 1200,
                         pauseOnFocusLoss: false,
@@ -196,7 +200,7 @@ const SaleCard = () => {
                     error.message ||
                         "Ошибка добавления. Возможно, такая услуга уже добавлена",
                     {
-                        containerId: "projectCard",
+                        containerId: "toastContainer",
                         isLoading: false,
                         autoClose: 3000,
                         pauseOnFocusLoss: false,
@@ -214,7 +218,7 @@ const SaleCard = () => {
     // Удалить услугу
     const deleteService = (id) => {
         query = toast.loading("Обновление", {
-            containerId: "projectCard",
+            containerId: "toastContainer",
             draggable: true,
             position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
         });
@@ -230,7 +234,7 @@ const SaleCard = () => {
                 toast.update(query, {
                     render: response.message,
                     type: "success",
-                    containerId: "projectCard",
+                    containerId: "toastContainer",
                     isLoading: false,
                     autoClose: 1200,
                     pauseOnFocusLoss: false,
@@ -254,7 +258,7 @@ const SaleCard = () => {
     // Обновление заказчика
     const updateContragent = async (showMessage = true, data) => {
         query = toast.loading("Обновление", {
-            containerId: "projectCard",
+            containerId: "toastContainer",
             draggable: true,
             position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
         });
@@ -265,7 +269,7 @@ const SaleCard = () => {
                 toast.update(query, {
                     render: "Проект успешно обновлен",
                     type: "success",
-                    containerId: "projectCard",
+                    containerId: "toastContainer",
                     isLoading: false,
                     autoClose: 1200,
                     pauseOnFocusLoss: false,
@@ -278,13 +282,14 @@ const SaleCard = () => {
                 });
             }
 
-            setProjectData(response);
-            setFormFields(response);
+            setCardData(response);
+            setCardDataCustom(response);
+
             return response;
         } catch (error) {
             toast.dismiss(query);
             toast.error("Ошибка при обновлении проекта", {
-                containerId: "projectCard",
+                containerId: "toastContainer",
                 isLoading: false,
                 autoClose: 1500,
                 pauseOnFocusLoss: false,
@@ -360,7 +365,7 @@ const SaleCard = () => {
                     toast.success(
                         response.message || "Дата этапа успешно обновлена",
                         {
-                            containerId: "projectCard",
+                            containerId: "toastContainer",
                             isLoading: false,
                             autoClose: 1200,
                             pauseOnFocusLoss: false,
@@ -373,7 +378,7 @@ const SaleCard = () => {
                     );
                 } else {
                     toast.error(response.error || "Ошибка запроса", {
-                        containerId: "projectCard",
+                        containerId: "toastContainer",
                         isLoading: false,
                         autoClose: 2000,
                         pauseOnFocusLoss: false,
@@ -387,7 +392,7 @@ const SaleCard = () => {
             })
             .catch((response) => {
                 toast.error(response.error || "Ошибка запроса", {
-                    containerId: "projectCard",
+                    containerId: "toastContainer",
                     isLoading: false,
                     autoClose: 2000,
                     pauseOnFocusLoss: false,
@@ -449,7 +454,7 @@ const SaleCard = () => {
                     } else {
                         toast.success(response.message, {
                             type: "success",
-                            containerId: "projectCard",
+                            containerId: "toastContainer",
                             isLoading: false,
                             autoClose: 1200,
                             pauseOnFocusLoss: false,
@@ -464,7 +469,7 @@ const SaleCard = () => {
                     }
                 } else {
                     toast.error(response.data.error || "Ошибка запроса", {
-                        containerId: "projectCard",
+                        containerId: "toastContainer",
                         isLoading: false,
                         autoClose: 2000,
                         pauseOnFocusLoss: false,
@@ -479,7 +484,7 @@ const SaleCard = () => {
             })
             .catch((response) => {
                 toast.error(response.data.error || "Ошибка запроса", {
-                    containerId: "projectCard",
+                    containerId: "toastContainer",
                     isLoading: false,
                     autoClose: 2000,
                     pauseOnFocusLoss: false,
@@ -516,7 +521,7 @@ const SaleCard = () => {
                 updateStageDetails();
             } else {
                 toast.error("Заполните все поля стоимости предложения", {
-                    containerId: "projectCard",
+                    containerId: "toastContainer",
                     isLoading: false,
                     autoClose: 2000,
                     pauseOnFocusLoss: false,
@@ -545,7 +550,7 @@ const SaleCard = () => {
                 if (response?.ok) {
                     toast.success(response.message, {
                         type: "success",
-                        containerId: "projectCard",
+                        containerId: "toastContainer",
                         isLoading: false,
                         autoClose: 1200,
                         pauseOnFocusLoss: false,
@@ -562,7 +567,7 @@ const SaleCard = () => {
             })
             .catch((response) => {
                 toast.error(response.error || "Ошибка запроса", {
-                    containerId: "projectCard",
+                    containerId: "toastContainer",
                     isLoading: false,
                     autoClose: 2000,
                     pauseOnFocusLoss: false,
@@ -596,7 +601,7 @@ const SaleCard = () => {
                 updateStageDetails(stage_id, stage_status);
             } else {
                 toast.error("Заполните все поля стоимости предложения", {
-                    containerId: "projectCard",
+                    containerId: "toastContainer",
                     isLoading: false,
                     autoClose: 2000,
                     pauseOnFocusLoss: false,
@@ -620,9 +625,11 @@ const SaleCard = () => {
             const response = await getData(`${URL}/${id}`, {
                 Accept: "application/json",
             });
-            setProjectData(response.data);
+            setCardData(response.data);
 
-            setFormFields((prev) => ({
+            setCardDataCustom(response.data);
+
+            setCardDataCustom((prev) => ({
                 ...prev,
                 industries: response.data?.industries,
             }));
@@ -651,24 +658,20 @@ const SaleCard = () => {
     };
 
     // Обновление проекта
-    const updateProject = async (showMessage = true) => {
+    const updateProject = async (showMessage = true, data = cardDataCustom) => {
         query = toast.loading("Обновление", {
-            containerId: "projectCard",
+            containerId: "toastContainer",
             draggable: true,
             position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
         });
 
         try {
-            const response = await postData(
-                "PATCH",
-                `${URL}/${saleId}`,
-                formFields
-            );
+            const response = await postData("PATCH", `${URL}/${saleId}`, data);
             if (response?.ok && showMessage) {
                 toast.update(query, {
                     render: "Проект успешно обновлен",
                     type: "success",
-                    containerId: "projectCard",
+                    containerId: "toastContainer",
                     isLoading: false,
                     autoClose: 1200,
                     pauseOnFocusLoss: false,
@@ -681,15 +684,15 @@ const SaleCard = () => {
                 });
             }
 
-            setProjectData(response);
-            setFormFields(response);
+            setCardData(response);
+            setCardDataCustom(response);
             fetchServices();
 
             return response;
         } catch (error) {
             toast.dismiss(query);
             toast.error("Ошибка при обновлении проекта", {
-                containerId: "projectCard",
+                containerId: "toastContainer",
                 isLoading: false,
                 autoClose: 1500,
                 pauseOnFocusLoss: false,
@@ -764,46 +767,91 @@ const SaleCard = () => {
     }, [saleStages]);
 
     useEffect(() => {
-        const machedIndustry = projectData.industries.others.find(
-            (item) => item === projectData.industries.main
+        const machedIndustry = cardData.industries.others.find(
+            (item) => item === cardData.industries.main
         );
 
         if (machedIndustry) {
-            setFormFields({
-                ...formFields,
+            setCardDataCustom({
+                ...cardDataCustom,
                 industries: {
-                    ...formFields.industries,
-                    others: formFields.industries.others.filter(
+                    ...cardDataCustom.industries,
+                    others: cardDataCustom.industries.others.filter(
                         (item) => item !== machedIndustry
                     ),
                 },
             });
-            setProjectData({
-                ...projectData,
+            setCardData({
+                ...cardData,
                 industries: {
-                    ...projectData.industries,
-                    others: projectData.industries.others.filter(
+                    ...cardData.industries,
+                    others: cardData.industries.others.filter(
                         (item) => item !== machedIndustry
                     ),
                 },
             });
         }
-    }, [projectData.industries.main]);
+    }, [cardData.industries.main]);
 
-    return (
+    return !isDataLoaded ? (
+        <Loader />
+    ) : (
         <main className="page">
+            <section
+                className={`card sale-card ${
+                    mode === "read" ? "read-mode" : ""
+                }`}
+            >
+                <div className="container card__container sale-card__container">
+                    <section className="card__main-content sale-card__main-content">
+                        <div className="card__main-name">
+                            <input
+                                type="text"
+                                name="name"
+                                value={cardDataCustom?.name}
+                                onChange={(e) => {
+                                    if (mode === "read") return;
+                                    setCardDataCustom((prev) => ({
+                                        ...prev,
+                                        name: e.target.value,
+                                    }));
+                                }}
+                                onBlur={() => {
+                                    if (mode === "read") return;
+                                    if (
+                                        cardData?.name !=
+                                        cardDataCustom?.name
+                                    ) {
+                                        // updateProject(projectId, true, {
+                                        //     name: projectDataCustom.name,
+                                        // });
+                                    }
+                                }}
+                                disabled={mode == "read"}
+                            />
+
+                            <span
+                                className={`status`}
+                            >
+                                Статус
+                            </span>
+                        </div>
+                    </section>
+                </div>
+            </section>
+
             <div className="new-project pt-8 pb-15">
                 <div className="container relative">
-                    <ToastContainer containerId="projectCard" />
+                    <ToastContainer containerId="toastContainer" />
 
                     <div className="flex justify-between items-center gap-10">
-                        <div className="flex items-center gap-3 flex-grow">
+                        {/* <div className="flex items-center gap-3 flex-grow">
                             <div className="flex flex-col gap-3 w-full">
                                 <input
                                     type="text"
                                     className="text-3xl font-medium"
                                     name="name"
-                                    defaultValue={projectData.name}
+                                    defaultValue={cardData.name}
                                     onChange={(e) =>
                                         handleInputChange(e, "name")
                                     }
@@ -812,7 +860,7 @@ const SaleCard = () => {
                             </div>
 
                             {mode === "edit" &&
-                                projectData?.name?.length > 2 && (
+                                cardData?.name?.length > 2 && (
                                     <button
                                         type="button"
                                         className="update-icon"
@@ -820,9 +868,9 @@ const SaleCard = () => {
                                         onClick={() => handleSave()}
                                     ></button>
                                 )}
-                        </div>
+                        </div> */}
 
-                        <nav className="switch">
+                        {/* <nav className="switch">
                             <div>
                                 <input
                                     type="radio"
@@ -848,7 +896,7 @@ const SaleCard = () => {
                                     Редактирование
                                 </label>
                             </div>
-                        </nav>
+                        </nav> */}
                     </div>
 
                     <div className="mt-15 grid grid-cols-3 gap-10 relative">
@@ -873,7 +921,7 @@ const SaleCard = () => {
                                                     handleInputChange={
                                                         handleInputChange
                                                     }
-                                                    projectData={projectData}
+                                                    projectData={cardData}
                                                     contragents={contragents}
                                                     updateProject={
                                                         updateProject
@@ -884,7 +932,7 @@ const SaleCard = () => {
                                                 />
                                             ) : (
                                                 <div className="flex items-center justify-between">
-                                                    {projectData.contragent
+                                                    {cardData.contragent
                                                         ?.program_name || (
                                                         <span className="text-gray-400">
                                                             Добавьте нового или
@@ -925,24 +973,24 @@ const SaleCard = () => {
                                                     <select
                                                         className="w-full h-[21px]"
                                                         value={
-                                                            projectData
+                                                            cardData
                                                                 ?.industries
                                                                 .main || ""
                                                         }
                                                         onChange={(evt) => {
-                                                            setFormFields({
-                                                                ...formFields,
+                                                            setCardDataCustom({
+                                                                ...cardDataCustom,
                                                                 industries: {
-                                                                    ...formFields.industries,
+                                                                    ...cardDataCustom.industries,
                                                                     main: +evt
                                                                         .target
                                                                         .value,
                                                                 },
                                                             });
-                                                            setProjectData({
-                                                                ...projectData,
+                                                            setCardData({
+                                                                ...cardData,
                                                                 industries: {
-                                                                    ...projectData.industries,
+                                                                    ...cardData.industries,
                                                                     main: +evt
                                                                         .target
                                                                         .value,
@@ -994,7 +1042,7 @@ const SaleCard = () => {
                                                         .filter(
                                                             (industry) =>
                                                                 industry.id !==
-                                                                formFields
+                                                                cardDataCustom
                                                                     ?.industries
                                                                     ?.main
                                                         )
@@ -1004,7 +1052,7 @@ const SaleCard = () => {
                                                         }))}
                                                     value={industries
                                                         .filter((industry) =>
-                                                            projectData?.industries?.others?.includes(
+                                                            cardData?.industries?.others?.includes(
                                                                 industry.id
                                                             )
                                                         )
@@ -1019,20 +1067,20 @@ const SaleCard = () => {
                                                     onChange={(
                                                         selectedOptions
                                                     ) => {
-                                                        setFormFields({
-                                                            ...formFields,
+                                                        setCardDataCustom({
+                                                            ...cardDataCustom,
                                                             industries: {
-                                                                ...formFields.industries,
+                                                                ...cardDataCustom.industries,
                                                                 others: selectedOptions.map(
                                                                     (option) =>
                                                                         option.value
                                                                 ),
                                                             },
                                                         });
-                                                        setProjectData({
-                                                            ...projectData,
+                                                        setCardData({
+                                                            ...cardData,
                                                             industries: {
-                                                                ...projectData.industries,
+                                                                ...cardData.industries,
                                                                 others: selectedOptions.map(
                                                                     (option) =>
                                                                         option.value
@@ -1054,7 +1102,7 @@ const SaleCard = () => {
                                                     <select
                                                         className="w-full h-[21px]"
                                                         value={
-                                                            projectData?.request_source_id ||
+                                                            cardData?.request_source_id ||
                                                             ""
                                                         }
                                                         onChange={(e) => {
@@ -1129,7 +1177,7 @@ const SaleCard = () => {
                                                         classNamePrefix="select"
                                                         placeholder="Выбрать банк"
                                                         value={
-                                                            projectData.creditors?.map(
+                                                            cardData.creditors?.map(
                                                                 (creditor) => ({
                                                                     value: creditor.id,
                                                                     label: creditor.name,
@@ -1153,7 +1201,7 @@ const SaleCard = () => {
                                                                         )
                                                                 );
 
-                                                            setProjectData(
+                                                            setCardData(
                                                                 (prevData) => ({
                                                                     ...prevData,
                                                                     creditors:
@@ -1161,7 +1209,7 @@ const SaleCard = () => {
                                                                 })
                                                             );
 
-                                                            setFormFields(
+                                                            setCardDataCustom(
                                                                 (prev) => ({
                                                                     ...prev,
                                                                     creditors:
@@ -1174,7 +1222,7 @@ const SaleCard = () => {
                                                         }}
                                                     />
                                                 ) : (
-                                                    projectData.creditors?.map(
+                                                    cardData.creditors?.map(
                                                         (creditor) => (
                                                             <li
                                                                 key={
@@ -1197,7 +1245,7 @@ const SaleCard = () => {
 
                                         <AutoResizeTextarea
                                             disabled={mode === "read"}
-                                            value={projectData?.location || ""}
+                                            value={cardData?.location || ""}
                                             onChange={(e) =>
                                                 handleInputChange(e, "location")
                                             }
@@ -1212,7 +1260,7 @@ const SaleCard = () => {
 
                                         <AutoResizeTextarea
                                             disabled={mode === "read"}
-                                            value={projectData?.tep || ""}
+                                            value={cardData?.tep || ""}
                                             onChange={(e) =>
                                                 handleInputChange(e, "tep")
                                             }
@@ -1229,7 +1277,7 @@ const SaleCard = () => {
                                             placeholder="Заполните описание проекта"
                                             style={{ resize: "none" }}
                                             defaultValue={
-                                                projectData.short_description ||
+                                                cardData.short_description ||
                                                 ""
                                             }
                                             onChange={(e) => {
