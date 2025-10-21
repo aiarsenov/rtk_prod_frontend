@@ -39,7 +39,7 @@ const EmployeeCard = () => {
     const [workloadSummaryMaxPercentage, setWorkloadSummaryMaxPercentage] =
         useState(null);
 
-    const [selectedTypes, setSelecterTypes] = useState([]);
+    const [selectedTypes, setSelecterTypes] = useState("");
 
     const [reportTypes, setReportTypes] = useState([]);
     const [positions, setPositions] = useState([]);
@@ -89,7 +89,7 @@ const EmployeeCard = () => {
         const payload = {
             dateFrom: format(dateRange[0], "MM-yyyy"),
             dateTo: format(dateRange[1], "MM-yyyy"),
-            reports_ids: selectedTypes.join(","),
+            reports_ids: selectedTypes,
         };
 
         getData(
@@ -679,23 +679,6 @@ const EmployeeCard = () => {
 
                                 <div className="employee-card__workload-summary__header">
                                     <div>
-                                        {/* <DatePicker
-                                            className="border-2 border-gray-300 p-1 w-full h-[32px]"
-                                            selectsRange
-                                            startDate={startDate}
-                                            endDate={endDate}
-                                            onChange={(update) => {
-                                                console.log(update);
-
-                                                setDateRange(update);
-                                            }}
-                                            dateFormat="MM-yyyy"
-                                            placeholderText="мм.гггг - мм.гггг"
-                                            showMonthYearPicker
-                                            // includeDates={allowedDates}
-                                            locale={ru}
-                                        /> */}
-
                                         <CustomDatePickerField
                                             startDate={dateRange[0]}
                                             endDate={dateRange[1]}
@@ -719,35 +702,22 @@ const EmployeeCard = () => {
                                         />
                                     </div>
 
-                                    <div>
-                                        <CustomSelect
-                                            type={"checkbox"}
-                                            closeMenuOnSelect={false}
-                                            placeholder={
-                                                mode === "edit"
-                                                    ? "Тип отчётов"
-                                                    : ""
-                                            }
-                                            options={reportTypes.map(
-                                                (type) => ({
-                                                    value: type.id,
-                                                    label: type.name,
-                                                })
-                                            )}
-                                            selectedValues={selectedTypes}
-                                            onChange={(values) => {
-                                                if (mode === "read") return;
+                                    <select
+                                        className="form-select"
+                                        value={selectedTypes}
+                                        onChange={(evt) =>
+                                            setSelecterTypes(evt.target.value)
+                                        }
+                                    >
+                                        <option value="">Тип отчётов</option>
 
-                                                const newArray = values.map(
-                                                    (item) => item.value
-                                                );
-
-                                                setSelecterTypes(newArray);
-                                            }}
-                                            mode={mode}
-                                            isDisabled={mode == "read"}
-                                        />
-                                    </div>
+                                        {reportTypes.length > 0 &&
+                                            reportTypes.map((item) => (
+                                                <option value={item.id}>
+                                                    {item.name}
+                                                </option>
+                                            ))}
+                                    </select>
                                 </div>
 
                                 <div className="employee-card__workload-summary__body">
