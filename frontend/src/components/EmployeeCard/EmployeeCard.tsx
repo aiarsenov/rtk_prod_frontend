@@ -60,45 +60,6 @@ const EmployeeCard = () => {
 
     let query;
 
-    // Свод по трудозатратам, массив доступных дат периода
-    // const allowedDates = useMemo(() => {
-    //     return datesData.flatMap((yearData) =>
-    //         yearData.months.map(
-    //             (month) => new Date(yearData.year, month.number - 1, 1)
-    //         )
-    //     );
-    // }, [datesData]);
-
-    const handleSave = () => {
-        const newErrors = {
-            dismissal_date:
-                !cardDataCustom?.is_active && !cardDataCustom.dismissal_date,
-        };
-
-        setErrors(newErrors);
-        if (Object.values(newErrors).some((err) => err)) return;
-        updateData();
-    };
-
-    const handleInputChange = (e, name) => {
-        let value;
-
-        if (name === "employment_date" || name === "dismissal_date") {
-            value = e ? formatToUtcDateOnly(e) : null;
-        } else if (name === "phone_number") {
-            value = e;
-        } else if (name === "is_staff" || name === "is_active") {
-            value = JSON.parse(e.target.value);
-        } else {
-            value = e.target.value;
-        }
-
-        // setCardData((prev) => ({
-        //     ...prev,
-        //     [name]: value,
-        // }));
-    };
-
     // Текущая загрузка
     const getWorkload = () => {
         getData(
@@ -287,14 +248,11 @@ const EmployeeCard = () => {
         }
     }, [dateRange, selectedTypes]);
 
-    useEffect(() => {
-        if (cardDataCustom?.is_active) {
-            setCardDataCustom((prev) => ({
-                ...prev,
-                dismissal_date: null,
-            }));
-        }
-    }, [cardDataCustom?.is_active]);
+    // useEffect(() => {
+    //     if (cardDataCustom?.is_active) {
+
+    //     }
+    // }, [cardDataCustom?.is_active]);
 
     useEffect(() => {
         if (!cardDataCustom?.is_staff) {
@@ -485,7 +443,9 @@ const EmployeeCard = () => {
 
                                         <CustomDatePickerField
                                             value={
-                                                cardDataCustom.dismissal_date
+                                                cardDataCustom?.is_active
+                                                    ? null
+                                                    : cardDataCustom.dismissal_date
                                             }
                                             onChange={(updated) => {
                                                 setCardDataCustom((prev) => ({
@@ -511,11 +471,12 @@ const EmployeeCard = () => {
                                             single={true}
                                         />
 
-                                        {errors.dismissal_date && (
-                                            <span className="text-red-400 absolute top-[105%] left-0 text-sm">
-                                                Укажите дату увольнения
-                                            </span>
-                                        )}
+                                        {!cardDataCustom?.is_active &&
+                                            !cardDataCustom.dismissal_date && (
+                                                <span className="text-red-400 absolute top-[105%] left-0 text-sm">
+                                                    Укажите дату увольнения
+                                                </span>
+                                            )}
                                     </div>
                                 </div>
 
@@ -668,11 +629,37 @@ const EmployeeCard = () => {
                                                         })
                                                     );
 
-                                                    updateData(true, {
-                                                        is_active: JSON.parse(
+                                                    if (
+                                                        JSON.parse(
                                                             evt.target.value
-                                                        ),
-                                                    });
+                                                        )
+                                                    ) {
+                                                        setCardDataCustom(
+                                                            (prev) => ({
+                                                                ...prev,
+                                                                dismissal_date:
+                                                                    null,
+                                                            })
+                                                        );
+
+                                                        updateData(true, {
+                                                            is_active:
+                                                                JSON.parse(
+                                                                    evt.target
+                                                                        .value
+                                                                ),
+                                                            dismissal_date:
+                                                                null,
+                                                        });
+                                                    } else {
+                                                        updateData(true, {
+                                                            is_active:
+                                                                JSON.parse(
+                                                                    evt.target
+                                                                        .value
+                                                                ),
+                                                        });
+                                                    }
                                                 }}
                                                 disabled={mode == "read"}
                                             >

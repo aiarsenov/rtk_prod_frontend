@@ -41,7 +41,7 @@ const CustomDatePicker = ({
     ]);
 
     const [singleDate, setSingleDate] = useState<Date | null>(
-        value ? new Date(value) : null
+        value ? new Date(value) : new Date()
     );
 
     const handleApply = () => {
@@ -78,10 +78,18 @@ const CustomDatePicker = ({
                     }
                 }}
                 startDate={
-                    !single ? tempRange[0] : value ? new Date(value) : null
+                    !single
+                        ? tempRange[0]
+                        : value
+                        ? new Date(value)
+                        : new Date()
                 }
                 selected={
-                    !single ? tempRange[0] : value ? new Date(value) : null
+                    !single
+                        ? tempRange[0]
+                        : value
+                        ? new Date(value)
+                        : new Date()
                 }
                 endDate={!single ? tempRange[1] : undefined}
                 selectsRange={!single}
