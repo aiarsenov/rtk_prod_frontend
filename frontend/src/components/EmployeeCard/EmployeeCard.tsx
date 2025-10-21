@@ -3,16 +3,12 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import getData from "../../utils/getData";
 import postData from "../../utils/postData";
-import { ru } from "date-fns/locale";
 import { format } from "date-fns";
 import formatToUtcDateOnly from "../../utils/formatToUtcDateOnly";
 
 import { IMaskInput } from "react-imask";
 import { ToastContainer, toast } from "react-toastify";
 
-import Select from "react-select";
-import CustomSelect from "../CustomSelect/CustomSelect";
-import DatePicker from "react-datepicker";
 import CustomDatePickerField from "../CustomDatePicker/CustomDatePickerField";
 
 import EmployeeWorkloadSummary from "./EmployeeWorkloadSummary";
@@ -46,7 +42,6 @@ const EmployeeCard = () => {
     const [departments, setDepartments] = useState([]);
 
     const [dateRange, setDateRange] = useState([null, null]);
-    // const [startDate, endDate] = dateRange;
 
     const PhoneMask = "+{7} (000) 000 00 00";
 
@@ -250,21 +245,6 @@ const EmployeeCard = () => {
             }));
         }
     }, [cardDataCustom?.is_staff]);
-
-    // Инициируем даты периода в своде по трудозатратам
-    // useEffect(() => {
-    //     const today = new Date();
-
-    //     const endDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-
-    //     const startDate = new Date(
-    //         endDate.getFullYear(),
-    //         endDate.getMonth() - 2,
-    //         1
-    //     );
-
-    //     setDateRange([startDate, endDate]);
-    // }, []);
 
     useEffect(() => {
         getDepartments();
