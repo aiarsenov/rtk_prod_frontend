@@ -51,11 +51,17 @@ const CustomDatePicker = ({
         const filters = {};
 
         if (start && end) {
-            filters[`${fieldkey}_from`] = [formatDate(start, type)];
-            filters[`${fieldkey}_to`] = [formatDate(end, type)];
+            const fromKey = fieldkey ? `${fieldkey}_from` : "date_from";
+            const toKey = fieldkey ? `${fieldkey}_to` : "date_to";
+
+            filters[fromKey] = [formatDate(start, type)];
+            filters[toKey] = [formatDate(end, type)];
         } else if (start && !end) {
-            filters[`${fieldkey}_from`] = [formatDate(start, type)];
-            filters[`${fieldkey}_to`] = [formatDate(start, type)];
+            const fromKey = fieldkey ? `${fieldkey}_from` : "date_from";
+            const toKey = fieldkey ? `${fieldkey}_to` : "date_to";
+
+            filters[fromKey] = [formatDate(start, type)];
+            filters[toKey] = [formatDate(start, type)];
         }
 
         if (!single && Object.keys(filters).length > 0) {

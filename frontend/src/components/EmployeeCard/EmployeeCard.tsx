@@ -46,7 +46,7 @@ const EmployeeCard = () => {
     const [departments, setDepartments] = useState([]);
 
     const [dateRange, setDateRange] = useState([null, null]);
-    const [startDate, endDate] = dateRange;
+    // const [startDate, endDate] = dateRange;
 
     const PhoneMask = "+{7} (000) 000 00 00";
 
@@ -252,19 +252,19 @@ const EmployeeCard = () => {
     }, [cardDataCustom?.is_staff]);
 
     // Инициируем даты периода в своде по трудозатратам
-    useEffect(() => {
-        const today = new Date();
+    // useEffect(() => {
+    //     const today = new Date();
 
-        const endDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+    //     const endDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
 
-        const startDate = new Date(
-            endDate.getFullYear(),
-            endDate.getMonth() - 2,
-            1
-        );
+    //     const startDate = new Date(
+    //         endDate.getFullYear(),
+    //         endDate.getMonth() - 2,
+    //         1
+    //     );
 
-        setDateRange([startDate, endDate]);
-    }, []);
+    //     setDateRange([startDate, endDate]);
+    // }, []);
 
     useEffect(() => {
         getDepartments();
@@ -679,19 +679,43 @@ const EmployeeCard = () => {
 
                                 <div className="employee-card__workload-summary__header">
                                     <div>
-                                        <DatePicker
+                                        {/* <DatePicker
                                             className="border-2 border-gray-300 p-1 w-full h-[32px]"
                                             selectsRange
                                             startDate={startDate}
                                             endDate={endDate}
-                                            onChange={(update) =>
-                                                setDateRange(update)
-                                            }
+                                            onChange={(update) => {
+                                                console.log(update);
+
+                                                setDateRange(update);
+                                            }}
                                             dateFormat="MM-yyyy"
                                             placeholderText="мм.гггг - мм.гггг"
                                             showMonthYearPicker
                                             // includeDates={allowedDates}
                                             locale={ru}
+                                        /> */}
+
+                                        <CustomDatePickerField
+                                            startDate={dateRange[0]}
+                                            endDate={dateRange[1]}
+                                            onChange={(updated) => {
+                                                const { date_from, date_to } =
+                                                    updated;
+
+                                                const dates = [
+                                                    new Date(
+                                                        `${date_from[0]}-01`
+                                                    ),
+                                                    new Date(
+                                                        `${date_to[0]}-01`
+                                                    ),
+                                                ];
+
+                                                setDateRange(dates);
+                                            }}
+                                            type="months"
+                                            single={false}
                                         />
                                     </div>
 

@@ -2,16 +2,23 @@ import { useState } from "react";
 
 import CustomDatePicker from "./CustomDatePicker";
 import OverlayTransparent from "../Overlay/OverlayTransparent";
+import formatDateDMY from "../../utils/formatDateDMY";
 
 import "./CustomDatePicker.scss";
 
 const CustomDatePickerField = ({
+    type = "days",
     value,
+    startDate,
+    endDate,
     single = false,
     placeholder = single ? "дд.мм.гггг" : "мм.гггг - мм.гггг",
     onChange,
     disabled,
 }: {
+    type: string;
+    startDate: string;
+    endDate: string;
     single: boolean;
     disabled: boolean;
 }) => {
@@ -27,6 +34,16 @@ const CustomDatePickerField = ({
           })
         : null;
 
+    const displayValue = (() => {
+        if (startDate && endDate)
+            return `${formatDateDMY(startDate, type)} - ${formatDateDMY(
+                endDate,
+                type
+            )}`;
+        if (startDate) return formatDateDMY(startDate, type);
+        return formatted;
+    })();
+
     return (
         <div className="custom-datepicker-wrapper">
             <div
@@ -38,7 +55,7 @@ const CustomDatePickerField = ({
                     setIsOpen(!isOpen);
                 }}
             >
-                {formatted || (
+                {displayValue || (
                     <span className="placeholder">{placeholder}</span>
                 )}
             </div>
@@ -56,6 +73,7 @@ const CustomDatePickerField = ({
                     onChange={(updated) => onChange(updated)}
                     value={value}
                     single={single}
+                    type={type}
                 />
             )}
         </div>
