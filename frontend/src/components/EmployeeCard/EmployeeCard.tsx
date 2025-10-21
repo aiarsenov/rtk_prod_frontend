@@ -276,13 +276,13 @@ const EmployeeCard = () => {
                                 <span
                                     className={`status
                                     ${
-                                        cardDataCustom?.status === "Работает"
+                                        cardDataCustom?.is_active === true
                                             ? "completed"
                                             : ""
                                     }
                                 `}
                                 >
-                                    {cardDataCustom?.status}
+                                    {cardDataCustom?.is_active ? "Работает" : "Не работает"}
                                 </span>
                             </div>
 
