@@ -68,10 +68,13 @@
 
         &__header {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
             align-items: start;
             gap: 12px;
             margin-bottom: 20px;
+
+            @media (min-width: $media-md) {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         &__list {
@@ -123,10 +126,13 @@
 
         &__header {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
             align-items: start;
             gap: 12px;
             margin-bottom: 20px;
+
+            @media (min-width: $media-md) {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         &__list {
