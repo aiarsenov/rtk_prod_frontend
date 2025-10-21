@@ -35,6 +35,10 @@
                 cursor: unset;
             }
 
+            .read-mode &.disabled {
+                background: var(--color-white);
+            }
+
             .placeholder {
                 color: var(--color-gray-60);
             }

@@ -14,7 +14,7 @@
         }
 
         .form-select-extend {
-            > [class*="-control"] {
+            > [class*="-control"][aria-disabled="true"] {
                 background-color: transparent;
             }
 
