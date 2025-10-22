@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser } from "../store/slices/userSlice";
+import { useAutoRefreshToken } from "../hooks/useAutoRefreshToken";
 
 import Router from "./Router";
 import Loader from "./Loader";
 
 function App() {
+    useAutoRefreshToken();
     const dispatch = useDispatch();
     const { data: user, loading, error } = useSelector((state) => state.user);
 
