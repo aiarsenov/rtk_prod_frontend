@@ -10,28 +10,32 @@ function App() {
     const { data: user, loading, error } = useSelector((state) => state.user);
 
     useEffect(() => {
-        if (import.meta.env.MODE !== "development") {
-            dispatch(fetchUser());
-        }
+        // if (import.meta.env.MODE !== "development") {
+        dispatch(fetchUser());
+        // }
     }, [dispatch]);
 
     useEffect(() => {
-        if (
-            import.meta.env.MODE !== "development" &&
-            error === "unauthorized"
-        ) {
+        // if (
+        //     import.meta.env.MODE !== "development" &&
+        //     error === "unauthorized"
+        // ) {
+        if (error === "unauthorized") {
             window.location.replace(
                 `${import.meta.env.VITE_API_URL}auth/login`
             );
         }
     }, [error]);
 
-    const displayUser =
-        import.meta.env.MODE === "development"
-            ? { name: "Dev", family_name: "User", email: "dev@example.com" }
-            : user;
+    // const displayUser =
+    //     import.meta.env.MODE === "development"
+    //         ? { name: "Dev", family_name: "User", email: "dev@example.com" }
+    //         : user;
 
-    if ((import.meta.env.MODE !== "development" && loading) || !displayUser) {
+    const displayUser = user;
+
+    // if ((import.meta.env.MODE !== "development" && loading) || !displayUser) {
+    if (loading || !displayUser) {
         return <Loader />;
     }
 
