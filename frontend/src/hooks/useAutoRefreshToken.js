@@ -14,7 +14,7 @@ export const useAutoRefreshToken = () => {
                 `${import.meta.env.VITE_API_URL}auth/refresh`,
                 {}
             );
-            console.log("Токен обновлён");
+            // console.log("Токен обновлён");
         } catch (error) {
             console.error("Ошибка обновления токена:", error);
             if (error.status === 401) {
