@@ -12,6 +12,7 @@ async function getData(url = "", options = {}) {
                 Accept: "application/json",
                 ...headers,
             },
+            credentials: "include",
         });
 
         if (!response.ok) {

@@ -1,54 +1,67 @@
-import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
-import { NavLink } from "react-router-dom";
-
-import getData from "../../utils/getData";
+import postData from "../../utils/postData";
 
 import "./User.scss";
 
+const getInitials = (value) => {
+    return value && value != "" ? Array.from(value)[0] : "";
+};
+
 const User = () => {
-    const getUser = () => {
-        getData(`${import.meta.env.VITE_API_URL}auth/user`).then((response) => {
-            console.log(response);
+    const user = useSelector((state) => state.user.data);
 
-            // if (response?.status == 200) {
-
-            // }
-        });
+    const logOut = () => {
+        postData("POST", `${import.meta.env.VITE_API_URL}auth/logout`, {}).then(
+            (response) => {
+                if (response?.ok) {
+                    window.location.replace(
+                        `${import.meta.env.VITE_API_URL}auth/login`
+                    );
+                }
+            }
+        );
     };
 
-    // useEffect(() => {
-    //     getUser();
-    // }, []);
+    if (!user) return null;
 
     return (
-        <NavLink to={"/"} className="user">
-            <div className="user__photo">ИИ</div>
+        user &&
+        Object.keys(user).length > 0 && (
+            <div
+                className="user"
+                onClick={() => logOut()}
+                title="Выйти из профиля"
+            >
+                <div className="user__photo">{`${getInitials(
+                    user.name
+                )}${getInitials(user.family_name)}`}</div>
 
-            <div className="user__info">
-                <div>
-                    <b>Иванов Иван Иванович</b>
-                    <span>ivan@yandex.ru</span>
-                </div>
+                <div className="user__info">
+                    <div>
+                        <b>{`${user.name} ${user.family_name}`}</b>
+                        <span>{user.email}</span>
+                    </div>
 
-                <div className="user__info-icon">
-                    <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 12 12"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            fillRule="evenodd"
-                            clipRule="evenodd"
-                            d="M8.295 5.039l-3.75-3.75-1.06 1.06 3.22 3.22-3.22 3.22 1.06 1.06 3.75-3.75a.75.75 0 000-1.06z"
-                            fill="currentcolor"
-                        />
-                    </svg>
+                    <div className="user__info-icon">
+                        <svg
+                            width="12"
+                            height="12"
+                            viewBox="0 0 12 12"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                fillRule="evenodd"
+                                clipRule="evenodd"
+                                d="M8.295 5.039l-3.75-3.75-1.06 1.06 3.22 3.22-3.22 3.22 1.06 1.06 3.75-3.75a.75.75 0 000-1.06z"
+                                fill="currentcolor"
+                            />
+                        </svg>
+                    </div>
                 </div>
             </div>
-        </NavLink>
+        )
     );
 };
 
