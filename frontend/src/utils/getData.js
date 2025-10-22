@@ -13,6 +13,7 @@ async function getData(url = "", options = {}) {
                 ...headers,
             },
             credentials: "include",
+            withCredentials: true,
         });
 
         if (!response.ok) {

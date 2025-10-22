@@ -8,6 +8,7 @@ async function postData(method = "POST", url = "", data = {}) {
                 Accept: "application/json",
             },
             credentials: "include",
+            withCredentials: true,
         });
 
         const responseData = await response.json().catch(() => ({}));

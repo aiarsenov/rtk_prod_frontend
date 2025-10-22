@@ -15,9 +15,9 @@ import "./styles/main.scss";
 import App from "./components/App.jsx";
 
 createRoot(document.getElementById("root")).render(
-    //<StrictMode>
-    <Provider store={store}>
-        <App />
-    </Provider>
-    //</StrictMode>
+    <StrictMode>
+        <Provider store={store}>
+            <App />
+        </Provider>
+    </StrictMode>
 );
