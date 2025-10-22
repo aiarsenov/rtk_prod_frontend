@@ -17,7 +17,7 @@ const EmployeePersonalWorkloadItem = ({
 
             <div className="employee-card__personal-workload__list-item__period">
                 <strong>{props?.report_period_code}</strong>
-                <span>{props?.execution_period}</span>
+                <span>{props?.execution_period_code}</span>
             </div>
 
             <div className="employee-card__personal-workload__list-item__percentage">

@@ -33,6 +33,7 @@ const SaleCard = () => {
     const [mode, setMode] = useState("edit");
     const [isFirstInit, setIsFirstInit] = useState(true);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
+    const [availableToChange, setAvailableToChange] = useState(true); // Можем ли мы вносить изменения в проект (до закрепления заказчика)
 
     const [cardData, setCardData] = useState({
         industries: { main: null, others: [] },
@@ -839,6 +840,193 @@ const SaleCard = () => {
                                 <span className={`status`}>Статус</span>
                             </div>
 
+                            <div className="project-card__services">
+                                <div className="form-label">
+                                    Услуги <Hint message={"Услуги"} />
+                                </div>
+
+                                {mode == "edit" && availableToChange && (
+                                    <button
+                                        type="button"
+                                        className="button-add"
+                                        onClick={() => setAddServices(true)}
+                                        title="Добавить услугу"
+                                    >
+                                        Добавить
+                                        <span>
+                                            <svg
+                                                width="10"
+                                                height="9"
+                                                viewBox="0 0 10 9"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    d="M5.75 3.75H9.5v1.5H5.75V9h-1.5V5.25H.5v-1.5h3.75V0h1.5v3.75z"
+                                                    fill="currentColor"
+                                                />
+                                            </svg>
+                                        </span>
+                                    </button>
+                                )}
+
+                                <div
+                                    className={`h-full ${
+                                        addServices
+                                            ? "relative"
+                                            : "overflow-x-hidden overflow-y-auto"
+                                    }`}
+                                >
+                                    {addServices ? (
+                                        <div className="px-2 py-4 absolute top-0 left-0 right-0overflow-x-hidden overflow-y-auto max-h-[500px]">
+                                            <MultiSelect
+                                                options={reportTypes.map(
+                                                    (type) => ({
+                                                        value: type.id,
+                                                        label: type.full_name,
+                                                    })
+                                                )}
+                                                selectedValues={
+                                                    newServices.report_type_id ??
+                                                    []
+                                                }
+                                                onChange={(updatedField) =>
+                                                    setNewServices((prev) => ({
+                                                        ...prev,
+                                                        ...updatedField,
+                                                    }))
+                                                }
+                                                fieldName="report_type_id"
+                                            />
+
+                                            <div className="mt-5 flex items-center gap-6 justify-between">
+                                                <button
+                                                    type="button"
+                                                    className="rounded-lg py-3 px-5 bg-black text-white flex-[1_1_50%]"
+                                                    onClick={() =>
+                                                        sendService()
+                                                    }
+                                                    title="Применить добавление услуг"
+                                                >
+                                                    Применить
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setAddServices(false);
+                                                        setNewServices(
+                                                            (prev) => ({
+                                                                ...prev,
+                                                                report_type_id:
+                                                                    services.map(
+                                                                        (
+                                                                            item
+                                                                        ) =>
+                                                                            item.id
+                                                                    ),
+                                                            })
+                                                        );
+                                                    }}
+                                                    className="border rounded-lg py-3 px-5 flex-[1_1_50%]"
+                                                    title="Отменить добавление услуг"
+                                                >
+                                                    Отменить
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <ul className="grid gap-3 py-5 px-4">
+                                            {services.length > 0 &&
+                                                services.map((service) => (
+                                                    <SaleServiceItem
+                                                        key={service.id}
+                                                        service={service}
+                                                        deleteService={
+                                                            deleteService
+                                                        }
+                                                        mode={mode}
+                                                    />
+                                                ))}
+                                        </ul>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="project-card__services">
+                                <div className="form-label">
+                                    Заказчик <Hint message={"Заказчик"} />
+                                </div>
+
+                                {mode == "edit" && availableToChange && (
+                                    <button
+                                        type="button"
+                                        className="button-add"
+                                        onClick={() => {}}
+                                        title="Добавить заказчика"
+                                    >
+                                        Добавить
+                                        <span>
+                                            <svg
+                                                width="10"
+                                                height="9"
+                                                viewBox="0 0 10 9"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    d="M5.75 3.75H9.5v1.5H5.75V9h-1.5V5.25H.5v-1.5h3.75V0h1.5v3.75z"
+                                                    fill="currentColor"
+                                                />
+                                            </svg>
+                                        </span>
+                                    </button>
+                                )}
+
+                                {/* <ReportServices services={services} /> */}
+
+                                <div className="border-2 border-gray-300 p-5">
+                                    {addCustomer ? (
+                                        <NewCustomerWindow
+                                            setAddCustomer={setAddCustomer}
+                                            handleInputChange={
+                                                handleInputChange
+                                            }
+                                            projectData={cardData}
+                                            contragents={contragents}
+                                            updateProject={updateProject}
+                                            sendNewContragent={
+                                                sendNewContragent
+                                            }
+                                        />
+                                    ) : (
+                                        <div className="flex items-center justify-between">
+                                            {cardData.contragent
+                                                ?.program_name || (
+                                                <span className="text-gray-400">
+                                                    Добавьте нового или выберите
+                                                    из списка
+                                                </span>
+                                            )}
+                                            <div className="h-[20px] w-[20px]">
+                                                {mode === "edit" && (
+                                                    <button
+                                                        type="button"
+                                                        className="add-button"
+                                                        title="Выбрать заказчика"
+                                                        onClick={() =>
+                                                            setAddCustomer(true)
+                                                        }
+                                                    >
+                                                        <span></span>
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
                             <section className="project-card__general-info">
                                 <h2 className="card__subtitle">
                                     Общая информация
@@ -937,7 +1125,7 @@ const SaleCard = () => {
                                     />
                                 </div>
 
-                                <div className="project-card__sources">
+                                <div className="project-card__industries">
                                     <div className="form-label">
                                         Источник
                                         <Hint message={"Источник"} />
@@ -1040,80 +1228,201 @@ const SaleCard = () => {
                                         isDisabled={mode == "read"}
                                     />
                                 </div>
+
+                                <div className="project-card__description">
+                                    <div className="form-label">
+                                        Краткое описание проекта
+                                        <Hint
+                                            message={"Краткое описание проекта"}
+                                        />
+                                    </div>
+
+                                    <AutoResizeTextarea
+                                        className="form-textarea"
+                                        placeholder={
+                                            mode === "edit"
+                                                ? "Например: создание производства заготовки с микрокристаллической структурой..."
+                                                : ""
+                                        }
+                                        type="text"
+                                        name="description"
+                                        value={
+                                            cardDataCustom?.short_description ||
+                                            ""
+                                        }
+                                        onChange={(e) => {
+                                            if (mode === "read") return;
+                                            setCardDataCustom((prev) => ({
+                                                ...prev,
+                                                short_description:
+                                                    e.target.value,
+                                            }));
+                                        }}
+                                        onBlur={() => {
+                                            if (mode === "read") return;
+                                            if (
+                                                cardData?.short_description !=
+                                                cardDataCustom?.short_description
+                                            ) {
+                                                updateProject(true, {
+                                                    short_description:
+                                                        cardDataCustom.short_description,
+                                                });
+                                            }
+                                        }}
+                                        disabled={
+                                            mode == "read" || !availableToChange
+                                        }
+                                    />
+                                </div>
+
+                                <div className="project-card__location">
+                                    <div className="form-label">
+                                        Местоположение
+                                        <Hint message={"Местоположение"} />
+                                    </div>
+
+                                    <AutoResizeTextarea
+                                        className="form-textarea"
+                                        placeholder={
+                                            mode === "edit"
+                                                ? "Страна, город, область..."
+                                                : ""
+                                        }
+                                        value={cardDataCustom?.location || ""}
+                                        onChange={(e) => {
+                                            if (mode === "read") return;
+                                            setCardDataCustom((prev) => ({
+                                                ...prev,
+                                                location: e.target.value,
+                                            }));
+                                        }}
+                                        onBlur={() => {
+                                            if (mode === "read") return;
+                                            if (
+                                                cardData?.location !=
+                                                cardDataCustom?.location
+                                            ) {
+                                                updateProject(true, {
+                                                    location:
+                                                        cardDataCustom.location,
+                                                });
+                                            }
+                                        }}
+                                        disabled={
+                                            mode == "read" || !availableToChange
+                                        }
+                                    />
+                                </div>
+
+                                <div className="project-card__tep">
+                                    <div className="form-label">
+                                        ТЭП
+                                        <Hint message={"ТЭП"} />
+                                    </div>
+
+                                    <AutoResizeTextarea
+                                        className="form-textarea"
+                                        placeholder={
+                                            mode === "edit"
+                                                ? "Заполните ТЭП"
+                                                : ""
+                                        }
+                                        value={cardDataCustom?.tep || ""}
+                                        onChange={(e) => {
+                                            if (mode === "read") return;
+                                            setCardDataCustom((prev) => ({
+                                                ...prev,
+                                                tep: e.target.value,
+                                            }));
+                                        }}
+                                        onBlur={() => {
+                                            if (mode === "read") return;
+                                            if (
+                                                cardData?.tep !=
+                                                cardDataCustom?.tep
+                                            ) {
+                                                updateProject(true, {
+                                                    tep: cardDataCustom.tep,
+                                                });
+                                            }
+                                        }}
+                                        disabled={
+                                            mode == "read" || !availableToChange
+                                        }
+                                    />
+                                </div>
                             </section>
+                        </section>
+
+                        <section className="card__aside-content project-card__aside-content">
+                            <div className="flex flex-col gap-2 flex-grow">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-gray-400">
+                                        Воронка продажи
+                                    </span>
+                                </div>
+
+                                <div className="border-2 border-gray-300 p-3 h-full overflow-x-hidden overflow-y-auto">
+                                    {saleStages.stages?.length > 0 &&
+                                        services.length > 0 && (
+                                            <SaleFunnelStages
+                                                saleId={saleId}
+                                                saleStages={saleStages}
+                                                handleNextStage={
+                                                    handleNextStage
+                                                }
+                                                getStageDetails={
+                                                    getStageDetails
+                                                }
+                                                activeStage={activeStage}
+                                                setActiveStage={setActiveStage}
+                                                handleActiveStageDate={
+                                                    handleActiveStageDate
+                                                }
+                                                getStages={getStages}
+                                                requestNextStage={
+                                                    requestNextStage
+                                                }
+                                                fetchServices={fetchServices}
+                                                mode={mode}
+                                            />
+                                        )}
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col gap-2 flex-grow">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-gray-400">
+                                        Детализация этапа продажи
+                                    </span>
+                                    {mode === "edit" && activeStage && (
+                                        <button
+                                            type="button"
+                                            className="save-icon w-[20px] h-[20px]"
+                                            title="Сохранить детализацию этапа продажи"
+                                            onClick={() => handleSaveDetails()}
+                                        ></button>
+                                    )}
+                                </div>
+
+                                <div className="border-2 border-gray-300 py-5 px-4 h-full">
+                                    {activeStage && services.length > 0 && (
+                                        <SaleStageDetails
+                                            stageMetrics={stageMetrics}
+                                            metrics={metrics}
+                                            setMetrics={setMetrics}
+                                            mode={mode}
+                                        />
+                                    )}
+                                </div>
+                            </div>
                         </section>
                     </div>
                 </div>
             </section>
 
-            <div className="new-project pt-8 pb-15">
-                <div className="container relative">
-                    <ToastContainer containerId="toastContainer" />
-
-                    <div className="mt-15 grid grid-cols-3 gap-10 relative">
-                        {!isDataLoaded ? (
-                            <Loader />
-                        ) : (
-                            <>
-                                <div className="flex flex-col gap-3">
-                                    <div className="flex flex-col gap-2 flex-shrink-0 flex-grow">
-                                        <span className="flex items-center gap-2 text-gray-400">
-                                            Заказчик
-                                            <span className="flex items-center justify-center border border-gray-300 p-1 rounded-[50%] w-[20px] h-[20px]">
-                                                ?
-                                            </span>
-                                        </span>
-                                        <div className="border-2 border-gray-300 p-5">
-                                            {addCustomer ? (
-                                                <NewCustomerWindow
-                                                    setAddCustomer={
-                                                        setAddCustomer
-                                                    }
-                                                    handleInputChange={
-                                                        handleInputChange
-                                                    }
-                                                    projectData={cardData}
-                                                    contragents={contragents}
-                                                    updateProject={
-                                                        updateProject
-                                                    }
-                                                    sendNewContragent={
-                                                        sendNewContragent
-                                                    }
-                                                />
-                                            ) : (
-                                                <div className="flex items-center justify-between">
-                                                    {cardData.contragent
-                                                        ?.program_name || (
-                                                        <span className="text-gray-400">
-                                                            Добавьте нового или
-                                                            выберите из списка
-                                                        </span>
-                                                    )}
-                                                    <div className="h-[20px] w-[20px]">
-                                                        {mode === "edit" && (
-                                                            <button
-                                                                type="button"
-                                                                className="add-button"
-                                                                title="Выбрать заказчика"
-                                                                onClick={() =>
-                                                                    setAddCustomer(
-                                                                        true
-                                                                    )
-                                                                }
-                                                            >
-                                                                <span></span>
-                                                            </button>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    <div className="grid grid-cols-[1fr_40%] gap-5">
-                                        <div className="flex flex-col gap-3">
-                                            {/* <div className="flex flex-col gap-2 flex-shrink-0 flex-grow">
+            {/* <div className="flex flex-col gap-2 flex-shrink-0 flex-grow">
                                                 <span className="flex items-center gap-2 text-gray-400">
                                                     Отрасль
                                                     <span className="flex items-center justify-center border border-gray-300 p-1 rounded-[50%] w-[20px] h-[20px]">
@@ -1241,7 +1550,7 @@ const SaleCard = () => {
                                                 />
                                             </div> */}
 
-                                            {/* <div className="flex flex-col gap-2 flex-shrink-0 flex-grow">
+            {/* <div className="flex flex-col gap-2 flex-shrink-0 flex-grow">
                                                 <span className="flex items-center gap-2 text-gray-400">
                                                     Источник
                                                     <span className="flex items-center justify-center border border-gray-300 p-1 rounded-[50%] w-[20px] h-[20px]">
@@ -1288,9 +1597,8 @@ const SaleCard = () => {
                                                     </select>
                                                 </div>
                                             </div> */}
-                                        </div>
 
-                                        {/* <div className="flex flex-col gap-2 flex-shrink-0 flex-grow">
+            {/* <div className="flex flex-col gap-2 flex-shrink-0 flex-grow">
                                             <span className="flex items-center gap-2 text-gray-400">
                                                 Банк
                                                 <div className="h-[20px] w-[20px]">
@@ -1386,9 +1694,8 @@ const SaleCard = () => {
                                                 )}
                                             </ul>
                                         </div> */}
-                                    </div>
 
-                                    <div className="flex flex-col gap-2 flex-shrink-0 flex-grow">
+            {/* <div className="flex flex-col gap-2 flex-shrink-0 flex-grow">
                                         <span className="flex items-center gap-2 text-gray-400">
                                             Местоположение
                                         </span>
@@ -1416,9 +1723,9 @@ const SaleCard = () => {
                                             }
                                             placeholder="Введите ТЭП"
                                         />
-                                    </div>
+                                    </div> */}
 
-                                    <div className="flex flex-col gap-2">
+            {/* <div className="flex flex-col gap-2">
                                         <span className="text-gray-400">
                                             Краткое описание
                                         </span>
@@ -1437,219 +1744,7 @@ const SaleCard = () => {
                                             }}
                                             disabled={mode == "read"}
                                         />
-                                    </div>
-                                </div>
-
-                                <div className="flex flex-col gap-3">
-                                    <div className="flex flex-col gap-2 h-[200px]">
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-gray-400">
-                                                Услуги
-                                            </span>
-                                            <span className="flex items-center justify-center border border-gray-300 p-1 rounded-[50%] w-[20px] h-[20px]">
-                                                ?
-                                            </span>
-                                            <div className="h-[20px] w-[20px]">
-                                                {mode === "edit" && (
-                                                    <button
-                                                        type="button"
-                                                        className="add-button"
-                                                        title="Добавить услугу"
-                                                        onClick={() =>
-                                                            setAddServices(true)
-                                                        }
-                                                    >
-                                                        <span></span>
-                                                    </button>
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        <div
-                                            className={`h-full ${
-                                                addServices
-                                                    ? "relative"
-                                                    : "overflow-x-hidden overflow-y-auto border-2 border-gray-300"
-                                            }`}
-                                        >
-                                            {addServices ? (
-                                                <div className="px-2 py-4 absolute top-0 left-0 right-0 bg-white z-99 border-2 border-gray-300 overflow-x-hidden overflow-y-auto max-h-[500px]">
-                                                    <MultiSelect
-                                                        options={reportTypes.map(
-                                                            (type) => ({
-                                                                value: type.id,
-                                                                label: type.full_name,
-                                                            })
-                                                        )}
-                                                        selectedValues={
-                                                            newServices.report_type_id ??
-                                                            []
-                                                        }
-                                                        onChange={(
-                                                            updatedField
-                                                        ) =>
-                                                            setNewServices(
-                                                                (prev) => ({
-                                                                    ...prev,
-                                                                    ...updatedField,
-                                                                })
-                                                            )
-                                                        }
-                                                        fieldName="report_type_id"
-                                                    />
-
-                                                    <div className="mt-5 flex items-center gap-6 justify-between">
-                                                        <button
-                                                            type="button"
-                                                            className="rounded-lg py-3 px-5 bg-black text-white flex-[1_1_50%]"
-                                                            onClick={() =>
-                                                                sendService()
-                                                            }
-                                                            title="Применить добавление услуг"
-                                                        >
-                                                            Применить
-                                                        </button>
-
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => {
-                                                                setAddServices(
-                                                                    false
-                                                                );
-                                                                setNewServices(
-                                                                    (prev) => ({
-                                                                        ...prev,
-                                                                        report_type_id:
-                                                                            services.map(
-                                                                                (
-                                                                                    item
-                                                                                ) =>
-                                                                                    item.id
-                                                                            ),
-                                                                    })
-                                                                );
-                                                            }}
-                                                            className="border rounded-lg py-3 px-5 flex-[1_1_50%]"
-                                                            title="Отменить добавление услуг"
-                                                        >
-                                                            Отменить
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            ) : (
-                                                <ul className="grid gap-3 py-5 px-4">
-                                                    <li className="grid items-center grid-cols-[1fr_40%] gap-3 mb-2 text-gray-400">
-                                                        <span>Тип услуги</span>
-                                                        <span className="flex items-center gap-2">
-                                                            Стоимость
-                                                            <span className="flex items-center justify-center border border-gray-300 p-1 rounded-[50%] w-[20px] h-[20px]">
-                                                                ?
-                                                            </span>
-                                                        </span>
-                                                    </li>
-
-                                                    {services.length > 0 &&
-                                                        services.map(
-                                                            (service) => (
-                                                                <SaleServiceItem
-                                                                    key={
-                                                                        service.id
-                                                                    }
-                                                                    service={
-                                                                        service
-                                                                    }
-                                                                    deleteService={
-                                                                        deleteService
-                                                                    }
-                                                                    mode={mode}
-                                                                />
-                                                            )
-                                                        )}
-                                                </ul>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    <div className="flex flex-col gap-2 flex-grow">
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-gray-400">
-                                                Воронка продажи
-                                            </span>
-                                        </div>
-
-                                        <div className="border-2 border-gray-300 p-3 h-full overflow-x-hidden overflow-y-auto">
-                                            {saleStages.stages?.length > 0 &&
-                                                services.length > 0 && (
-                                                    <SaleFunnelStages
-                                                        saleId={saleId}
-                                                        saleStages={saleStages}
-                                                        handleNextStage={
-                                                            handleNextStage
-                                                        }
-                                                        getStageDetails={
-                                                            getStageDetails
-                                                        }
-                                                        activeStage={
-                                                            activeStage
-                                                        }
-                                                        setActiveStage={
-                                                            setActiveStage
-                                                        }
-                                                        handleActiveStageDate={
-                                                            handleActiveStageDate
-                                                        }
-                                                        getStages={getStages}
-                                                        requestNextStage={
-                                                            requestNextStage
-                                                        }
-                                                        fetchServices={
-                                                            fetchServices
-                                                        }
-                                                        mode={mode}
-                                                    />
-                                                )}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="flex flex-col gap-3">
-                                    <div className="flex flex-col gap-2 flex-grow">
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-gray-400">
-                                                Детализация этапа продажи
-                                            </span>
-                                            {mode === "edit" && activeStage && (
-                                                <button
-                                                    type="button"
-                                                    className="save-icon w-[20px] h-[20px]"
-                                                    title="Сохранить детализацию этапа продажи"
-                                                    onClick={() =>
-                                                        handleSaveDetails()
-                                                    }
-                                                ></button>
-                                            )}
-                                        </div>
-
-                                        <div className="border-2 border-gray-300 py-5 px-4 h-full">
-                                            {activeStage &&
-                                                services.length > 0 && (
-                                                    <SaleStageDetails
-                                                        stageMetrics={
-                                                            stageMetrics
-                                                        }
-                                                        metrics={metrics}
-                                                        setMetrics={setMetrics}
-                                                        mode={mode}
-                                                    />
-                                                )}
-                                        </div>
-                                    </div>
-                                </div>
-                            </>
-                        )}
-                    </div>
-                </div>
-            </div>
+                                    </div> */}
         </main>
     );
 };
