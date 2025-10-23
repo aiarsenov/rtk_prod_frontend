@@ -126,7 +126,14 @@ const SaleCard = () => {
     const fetchBanks = () => {
         getData(`${import.meta.env.VITE_API_URL}banks`).then((response) => {
             if (response?.status == 200) {
-                setBanks(response.data.data);
+                if (response.data.data.length > 0) {
+                    setBanks(
+                        response.data.data.map((item) => ({
+                            value: item.id,
+                            label: item.name,
+                        }))
+                    );
+                }
             }
         });
     };
@@ -780,33 +787,6 @@ const SaleCard = () => {
         }
     }, [saleStages]);
 
-    useEffect(() => {
-        const machedIndustry = cardData.industries.others.find(
-            (item) => item === cardData.industries.main
-        );
-
-        if (machedIndustry) {
-            setCardDataCustom({
-                ...cardDataCustom,
-                industries: {
-                    ...cardDataCustom.industries,
-                    others: cardDataCustom.industries.others.filter(
-                        (item) => item !== machedIndustry
-                    ),
-                },
-            });
-            setCardData({
-                ...cardData,
-                industries: {
-                    ...cardData.industries,
-                    others: cardData.industries.others.filter(
-                        (item) => item !== machedIndustry
-                    ),
-                },
-            });
-        }
-    }, [cardData.industries.main]);
-
     return !isDataLoaded ? (
         <Loader />
     ) : (
@@ -1093,7 +1073,6 @@ const SaleCard = () => {
                                             });
                                         }}
                                         isDisabled={mode == "read"}
-                                        onMenuOpen={() => {}}
                                         styles={{
                                             input: (base) => ({
                                                 ...base,
@@ -1139,7 +1118,6 @@ const SaleCard = () => {
                                                     )) ||
                                             []
                                         }
-                                        fieldName={"others"}
                                         onChange={(values) => {
                                             if (mode === "read") return;
 
@@ -1161,15 +1139,6 @@ const SaleCard = () => {
                                                     others: newArray,
                                                 },
                                             });
-
-                                            // setOtherIndustries(newArray);
-
-                                            // updateProject(projectId, true, {
-                                            //     industries: {
-                                            //         ...projectDataCustom.industries,
-                                            //         others: newArray,
-                                            //     },
-                                            // });
                                         }}
                                         mode={mode}
                                         isDisabled={mode == "read"}
@@ -1210,13 +1179,13 @@ const SaleCard = () => {
                                             const newValue =
                                                 selectedOption?.value || null;
 
-                                            // setProjectDataCustom((prev) => ({
-                                            //     ...prev,
-                                            //     contragent_id: newValue,
-                                            // }));
-                                            // updateProject(projectId, true, {
-                                            //     contragent_id: newValue,
-                                            // });
+                                            setCardDataCustom((prev) => ({
+                                                ...prev,
+                                                request_source_id: newValue,
+                                            }));
+                                            updateProject(true, {
+                                                request_source_id: newValue,
+                                            });
                                         }}
                                         isDisabled={mode == "read"}
                                         onMenuOpen={() => {}}
@@ -1245,57 +1214,37 @@ const SaleCard = () => {
                                                 ? "Выбрать из списка"
                                                 : ""
                                         }
-                                        options={banks.map((item) => ({
-                                            value: item.id,
-                                            label: item.name,
-                                        }))}
-                                        // selectedValues={otherIndustries}
-                                        selectedValues={
-                                            cardData.creditors?.map(
-                                                (creditor) => ({
-                                                    value: creditor.id,
-                                                    label: creditor.name,
-                                                })
-                                            ) || []
-                                        }
-                                        fieldName={"others"}
+                                        options={banks}
+                                        selectedValues={(banks || [])
+                                            .filter((bank) =>
+                                                (
+                                                    cardDataCustom?.creditors ??
+                                                    []
+                                                ).some(
+                                                    (creditor) =>
+                                                        creditor.id ===
+                                                        bank.value
+                                                )
+                                            )
+                                            .map((bank) => bank.value)}
                                         onChange={(values) => {
                                             if (mode === "read") return;
 
-                                            // const newArray = values.map(
-                                            //     (item) => item.value
-                                            // );
+                                            const newArray = values.map(
+                                                (item) => item.value
+                                            );
 
-                                            // setOtherIndustries(newArray);
+                                            setCardDataCustom((prev) => ({
+                                                ...prev,
+                                                creditors: [
+                                                    ...(prev.creditors || []),
+                                                    ...newArray,
+                                                ],
+                                            }));
 
-                                            // updateProject(projectId, true, {
-                                            //     industries: {
-                                            //         ...projectDataCustom.industries,
-                                            //         others: newArray,
-                                            //     },
-                                            // });
-
-                                            // const selectedIds =
-                                            //     selectedOptions.map(
-                                            //         (option) => option.value
-                                            //     );
-
-                                            // const selectedBanks = banks.filter(
-                                            //     (bank) =>
-                                            //         selectedIds.includes(
-                                            //             bank.id
-                                            //         )
-                                            // );
-
-                                            // setCardData((prevData) => ({
-                                            //     ...prevData,
-                                            //     creditors: selectedBanks,
-                                            // }));
-
-                                            // setCardDataCustom((prev) => ({
-                                            //     ...prev,
-                                            //     creditors: selectedIds,
-                                            // }));
+                                            updateProject(true, {
+                                                creditors: newArray,
+                                            });
                                         }}
                                         mode={mode}
                                         isDisabled={mode == "read"}
@@ -1548,182 +1497,6 @@ const SaleCard = () => {
                     </div>
                 </div>
             </section>
-
-            {/* <div className="flex flex-col gap-2 flex-shrink-0 flex-grow">
-                                                <span className="flex items-center gap-2 text-gray-400">
-                                                    Отрасль
-                                                    <span className="flex items-center justify-center border border-gray-300 p-1 rounded-[50%] w-[20px] h-[20px]">
-                                                        ?
-                                                    </span>
-                                                </span>
-                                                <div className="border-2 border-gray-300 p-3">
-                                                    <select
-                                                        className="w-full h-[21px]"
-                                                        value={
-                                                            cardData?.industries
-                                                                .main || ""
-                                                        }
-                                                        onChange={(evt) => {
-                                                            setCardDataCustom({
-                                                                ...cardDataCustom,
-                                                                industries: {
-                                                                    ...cardDataCustom.industries,
-                                                                    main: +evt
-                                                                        .target
-                                                                        .value,
-                                                                },
-                                                            });
-                                                            setCardData({
-                                                                ...cardData,
-                                                                industries: {
-                                                                    ...cardData.industries,
-                                                                    main: +evt
-                                                                        .target
-                                                                        .value,
-                                                                },
-                                                            });
-                                                        }}
-                                                        disabled={
-                                                            mode == "read"
-                                                        }
-                                                    >
-                                                        <option value="">
-                                                            Выбрать отрасль
-                                                        </option>
-                                                        {industries.length >
-                                                            0 &&
-                                                            industries.map(
-                                                                (item) => (
-                                                                    <option
-                                                                        value={
-                                                                            item.id
-                                                                        }
-                                                                        key={
-                                                                            item.id
-                                                                        }
-                                                                    >
-                                                                        {
-                                                                            item.name
-                                                                        }
-                                                                    </option>
-                                                                )
-                                                            )}
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex flex-col gap-2 flex-shrink-0 flex-grow min-w-[200px] 2xl:min-w-[300px] 2xl:max-w-[300px]">
-                                                <span className="flex items-center gap-2 text-gray-400">
-                                                    Вспомогательные отрасли
-                                                    <span className="flex items-center justify-center border border-gray-300 p-1 rounded-[50%] w-[20px] h-[20px]">
-                                                        ?
-                                                    </span>
-                                                </span>
-
-                                                <Select
-                                                    closeMenuOnSelect={false}
-                                                    isMulti
-                                                    name="colors"
-                                                    options={industries
-                                                        .filter(
-                                                            (industry) =>
-                                                                industry.id !==
-                                                                cardDataCustom
-                                                                    ?.industries
-                                                                    ?.main
-                                                        )
-                                                        .map((industry) => ({
-                                                            value: industry.id,
-                                                            label: industry.name,
-                                                        }))}
-                                                    value={industries
-                                                        .filter((industry) =>
-                                                            cardData?.industries?.others?.includes(
-                                                                industry.id
-                                                            )
-                                                        )
-                                                        .map((industry) => ({
-                                                            value: industry.id,
-                                                            label: industry.name,
-                                                        }))}
-                                                    className="basic-multi-select min-h-[32px] w-full"
-                                                    classNamePrefix="select"
-                                                    placeholder="Выбрать отрасль"
-                                                    isDisabled={mode == "read"}
-                                                    onChange={(
-                                                        selectedOptions
-                                                    ) => {
-                                                        setCardDataCustom({
-                                                            ...cardDataCustom,
-                                                            industries: {
-                                                                ...cardDataCustom.industries,
-                                                                others: selectedOptions.map(
-                                                                    (option) =>
-                                                                        option.value
-                                                                ),
-                                                            },
-                                                        });
-                                                        setCardData({
-                                                            ...cardData,
-                                                            industries: {
-                                                                ...cardData.industries,
-                                                                others: selectedOptions.map(
-                                                                    (option) =>
-                                                                        option.value
-                                                                ),
-                                                            },
-                                                        });
-                                                    }}
-                                                />
-                                            </div> */}
-
-            {/* <div className="flex flex-col gap-2 flex-shrink-0 flex-grow">
-                                                <span className="flex items-center gap-2 text-gray-400">
-                                                    Источник
-                                                    <span className="flex items-center justify-center border border-gray-300 p-1 rounded-[50%] w-[20px] h-[20px]">
-                                                        ?
-                                                    </span>
-                                                </span>
-                                                <div className="border-2 border-gray-300 p-3">
-                                                    <select
-                                                        className="w-full h-[21px]"
-                                                        value={
-                                                            cardData?.request_source_id ||
-                                                            ""
-                                                        }
-                                                        onChange={(e) => {
-                                                            handleInputChange(
-                                                                e,
-                                                                "request_source_id"
-                                                            );
-                                                        }}
-                                                        disabled={
-                                                            mode == "read"
-                                                        }
-                                                    >
-                                                        <option value="">
-                                                            Выберите из списка
-                                                        </option>
-                                                        {sources.length > 0 &&
-                                                            sources.map(
-                                                                (item) => (
-                                                                    <option
-                                                                        value={
-                                                                            item.id
-                                                                        }
-                                                                        key={
-                                                                            item.id
-                                                                        }
-                                                                    >
-                                                                        {
-                                                                            item.name
-                                                                        }
-                                                                    </option>
-                                                                )
-                                                            )}
-                                                    </select>
-                                                </div>
-                                            </div> */}
 
             {/* <div className="flex flex-col gap-2 flex-shrink-0 flex-grow">
                                             <span className="flex items-center gap-2 text-gray-400">
