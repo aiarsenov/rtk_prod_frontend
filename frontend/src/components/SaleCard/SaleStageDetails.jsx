@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import pepcentColorHandler from "../../utils/percentColorHandler";
+import getColorBySign from "../../utils/getColorBySign";
 import formatMoney from "../../utils/formatMoney";
 
 const SaleStageDetails = ({ stageMetrics, metrics, setMetrics, mode }) => {
@@ -89,8 +89,10 @@ const SaleStageDetails = ({ stageMetrics, metrics, setMetrics, mode }) => {
                                         <div
                                             className={`flex items-center border-2 border-gray-300 py-1 px-2 h-[30px] ${
                                                 item.change_percent
-                                                    ? pepcentColorHandler(
-                                                          item.change_percent
+                                                    ? getColorBySign(
+                                                          item.change_percent,
+                                                          "text-[#32d583]",
+                                                          "text-[#f97066]"
                                                       )
                                                     : ""
                                             }`}
