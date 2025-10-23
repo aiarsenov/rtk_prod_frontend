@@ -10,7 +10,7 @@ import MultiSelect from "../MultiSelect/MultiSelect";
 import CreatableSelect from "react-select/creatable";
 import AutoResizeTextarea from "../AutoResizeTextarea";
 
-import NewCustomerWindow from "./NewCustomerWindow";
+import SaleNewContragentWindow from "./SaleNewContragentWindow";
 import SaleServicesList from "./SaleServicesList";
 import SaleFunnelStages from "./SaleFunnelStages";
 import SaleStageDetails from "./SaleStageDetails";
@@ -28,7 +28,7 @@ import "./SaleCard.scss";
 
 const SaleCard = () => {
     const URL = `${import.meta.env.VITE_API_URL}sales-funnel-projects`;
-    const location = useLocation();
+    // const location = useLocation();
     const { saleId } = useParams();
     const navigate = useNavigate();
 
@@ -86,15 +86,15 @@ const SaleCard = () => {
     };
 
     // Обработка ввода данных проекта
-    const handleInputChange = useCallback((e, name) => {
-        if (name == "contragent_id") {
-            // setFormFields((prev) => ({ ...prev, [name]: e }));
-            // setcardData((prev) => ({ ...prev, [name]: e }));
-        } else {
-            // setFormFields((prev) => ({ ...prev, [name]: e.target.value }));
-            // setProjectData((prev) => ({ ...prev, [name]: e.target.value }));
-        }
-    }, []);
+    // const handleInputChange = useCallback((e, name) => {
+    // if (name == "contragent_id") {
+    // setFormFields((prev) => ({ ...prev, [name]: e }));
+    // setcardData((prev) => ({ ...prev, [name]: e }));
+    // } else {
+    // setFormFields((prev) => ({ ...prev, [name]: e.target.value }));
+    // setProjectData((prev) => ({ ...prev, [name]: e.target.value }));
+    // }
+    // }, []);
 
     // Получение отраслей
     const fetchIndustries = () => {
@@ -120,7 +120,14 @@ const SaleCard = () => {
             Accept: "application/json",
         }).then((response) => {
             if (response?.status == 200) {
-                setContragents(response.data);
+                if (response.data.length > 0) {
+                    setContragents(
+                        response.data.map((item) => ({
+                            value: item.id,
+                            label: item.program_name,
+                        }))
+                    );
+                }
             }
         });
     };
@@ -332,7 +339,7 @@ const SaleCard = () => {
     };
 
     // Создание нового заказчика
-    const sendNewContragent = (program_name) => {
+    const createNewContragent = (program_name) => {
         postData(
             "POST",
             `${import.meta.env.VITE_API_URL}contragents/sales-funnel`,
@@ -864,73 +871,66 @@ const SaleCard = () => {
                             <div className="project-card__services">
                                 <h2 className="card__subtitle">Заказчик</h2>
 
-                                {mode == "edit" && availableToChange && (
-                                    <button
-                                        type="button"
-                                        className="button-add"
-                                        onClick={() => {}}
-                                        title="Добавить заказчика"
-                                    >
-                                        Добавить
-                                        <span>
+                                <ul className="sale-contragents__list">
+                                    <li className="sale-contragents__list-item">
+                                        <div>
+                                            {
+                                                cardDataCustom.contragent
+                                                    ?.program_name
+                                            }
+                                        </div>
+                                        {/* 
+                                        <button
+                                            type="button"
+                                            className="delete-button sale-contragents__list-item__delete"
+                                        >
                                             <svg
-                                                width="10"
-                                                height="9"
-                                                viewBox="0 0 10 9"
+                                                width="20"
+                                                height="21"
+                                                viewBox="0 0 20 21"
                                                 fill="none"
                                                 xmlns="http://www.w3.org/2000/svg"
                                             >
                                                 <path
-                                                    d="M5.75 3.75H9.5v1.5H5.75V9h-1.5V5.25H.5v-1.5h3.75V0h1.5v3.75z"
+                                                    d="M5.833 8v9.166h8.333V8h1.667v10c0 .46-.373.833-.833.833H5A.833.833 0 014.166 18V8h1.667zm3.333 0v7.5H7.5V8h1.666zM12.5 8v7.5h-1.667V8H12.5zm0-5.833c.358 0 .677.229.79.57l.643 1.929h2.733v1.667H3.333V4.666h2.733l.643-1.93a.833.833 0 01.79-.57h5zm-.601 1.666H8.1l-.278.833h4.354l-.277-.833z"
                                                     fill="currentColor"
-                                                />
+                                                ></path>
                                             </svg>
-                                        </span>
+                                        </button> */}
+                                    </li>
+                                </ul>
+
+                                {mode == "edit" && availableToChange && (
+                                    <button
+                                        type="button"
+                                        className="button-add"
+                                        onClick={() => setAddCustomer(true)}
+                                        title="Добавить заказчика"
+                                    >
+                                        {!cardDataCustom.contragent
+                                            ?.program_name ? (
+                                            <>
+                                                Добавить
+                                                <span>
+                                                    <svg
+                                                        width="10"
+                                                        height="9"
+                                                        viewBox="0 0 10 9"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            d="M5.75 3.75H9.5v1.5H5.75V9h-1.5V5.25H.5v-1.5h3.75V0h1.5v3.75z"
+                                                            fill="currentColor"
+                                                        />
+                                                    </svg>
+                                                </span>
+                                            </>
+                                        ) : (
+                                            "Изменить"
+                                        )}
                                     </button>
                                 )}
-
-                                {/* <ReportServices services={services} /> */}
-
-                                <div className="border-2 border-gray-300 p-5">
-                                    {addCustomer ? (
-                                        <NewCustomerWindow
-                                            setAddCustomer={setAddCustomer}
-                                            handleInputChange={
-                                                handleInputChange
-                                            }
-                                            projectData={cardData}
-                                            contragents={contragents}
-                                            updateProject={updateProject}
-                                            sendNewContragent={
-                                                sendNewContragent
-                                            }
-                                        />
-                                    ) : (
-                                        <div className="flex items-center justify-between">
-                                            {cardData.contragent
-                                                ?.program_name || (
-                                                <span className="text-gray-400">
-                                                    Добавьте нового или выберите
-                                                    из списка
-                                                </span>
-                                            )}
-                                            <div className="h-[20px] w-[20px]">
-                                                {mode === "edit" && (
-                                                    <button
-                                                        type="button"
-                                                        className="add-button"
-                                                        title="Выбрать заказчика"
-                                                        onClick={() =>
-                                                            setAddCustomer(true)
-                                                        }
-                                                    >
-                                                        <span></span>
-                                                    </button>
-                                                )}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
                             </div>
 
                             <section className="card__general-info">
@@ -1438,39 +1438,51 @@ const SaleCard = () => {
                     </div>
 
                     <div className="action-form__footer">
-                        <div className="max-w-[280px]">
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setAddServices(false);
-                                    setNewServices((prev) => ({
-                                        ...prev,
-                                        report_type_id: services.map(
-                                            (item) => item.id
-                                        ),
-                                    }));
-                                }}
-                                className="cancel-button flex-[1_0_auto]"
-                                title="Отменить добавление услуг"
-                            >
-                                Отменить
-                            </button>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setAddServices(false);
+                                setNewServices((prev) => ({
+                                    ...prev,
+                                    report_type_id: services.map(
+                                        (item) => item.id
+                                    ),
+                                }));
+                            }}
+                            className="cancel-button flex-[0_0_fit-content]"
+                            title="Отменить добавление услуг"
+                        >
+                            Отменить
+                        </button>
 
-                            <button
-                                type="button"
-                                className="action-button flex-[1_0_auto]"
-                                onClick={() => sendService()}
-                                title="Применить добавление услуг"
-                                disabled={
-                                    newServices.report_type_id &&
-                                    Object.keys(newServices.report_type_id)
-                                        .length == 0
-                                }
-                            >
-                                Добавить услугу
-                            </button>
-                        </div>
+                        <button
+                            type="button"
+                            className="action-button flex-[0_0_fit-content]"
+                            onClick={() => sendService()}
+                            title="Применить добавление услуг"
+                            disabled={
+                                newServices.report_type_id &&
+                                Object.keys(newServices.report_type_id)
+                                    .length == 0
+                            }
+                        >
+                            Добавить услугу
+                        </button>
                     </div>
+                </Popup>
+            )}
+
+            {addCustomer && (
+                <Popup
+                    onClick={() => setAddCustomer(false)}
+                    title="Добавить заказчика"
+                >
+                    <SaleNewContragentWindow
+                        setAddCustomer={setAddCustomer}
+                        updateProject={updateProject}
+                        contragents={contragents}
+                        createNewContragent={createNewContragent}
+                    />
                 </Popup>
             )}
         </main>

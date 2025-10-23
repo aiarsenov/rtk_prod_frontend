@@ -1,5 +1,48 @@
 @use "../../styles/media-breakpoints" as *;
 
+.sale-new-contragent-window {
+    .action-form__body {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        min-height: 310px;
+        max-height: 310px;
+    }
+
+    .form-select__list {
+        max-height: 100%;
+    }
+}
+
+.sale-contragents__list {
+    margin-bottom: 20px;
+    display: grid;
+    gap: 20px;
+
+    @media (min-width: $media-md) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    &-item {
+        // display: grid;
+        // grid-template-columns: 1fr 30px;
+        // align-items: center;
+        // gap: 20px;
+        background: var(--color-gray-20);
+        border: 1px solid var(--color-gray-40);
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 150%;
+        padding: 16px 20px;
+        border-radius: 10px;
+        transition: box-shadow var(--trans);
+
+        &:hover {
+            box-shadow: 0px 8px 8px 0px #0020330a;
+        }
+    }
+}
+
 .services {
     &__list {
         display: grid;
@@ -38,6 +81,10 @@
 
             @media (min-width: 680px) {
                 grid-template-columns: repeat(2, 1fr);
+            }
+
+            @media (min-width: $media-xxl) {
+                grid-template-columns: 75% 25%;
             }
 
             &-row {

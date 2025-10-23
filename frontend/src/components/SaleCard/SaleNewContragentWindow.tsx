@@ -1,0 +1,101 @@
+import { useState } from "react";
+
+import SelectList from "../MultiSelect/SelectList";
+
+const SaleNewContragentWindow = ({
+    setAddCustomer,
+    contragents,
+    updateProject,
+    createNewContragent,
+}) => {
+    const [programName, setProgramName] = useState("");
+    const [selectedContragent, setSelectedContragent] = useState(null);
+    const [activeTab, setActiveTab] = useState("create");
+
+    return (
+        <div className="sale-new-contragent-window">
+            <div className="action-form__body">
+                <ul className="card__tabs executor-block__tabs">
+                    <li className="card__tabs-item radio-field_tab">
+                        <input
+                            id="create"
+                            type="radio"
+                            checked={activeTab === "create"}
+                            name="create"
+                            onChange={() => setActiveTab("create")}
+                        />
+                        <label htmlFor="create">Создать</label>
+                    </li>
+
+                    <li className="card__tabs-item radio-field_tab">
+                        <input
+                            id="select"
+                            type="radio"
+                            name="select"
+                            checked={activeTab === "select"}
+                            onChange={() => setActiveTab("select")}
+                        />
+                        <label htmlFor="select">Выбрать из списка</label>
+                    </li>
+                </ul>
+
+                {activeTab === "create" ? (
+                    <input
+                        className="form-field"
+                        placeholder="Наименование заказчика"
+                        value={programName}
+                        type="text"
+                        onChange={(e) => setProgramName(e.target.value)}
+                    />
+                ) : (
+                    <SelectList
+                        options={contragents}
+                        onChange={(selected) => {
+                            if (selected) {
+                                setSelectedContragent(selected.value);
+                            } else {
+                                setSelectedContragent(null);
+                            }
+                        }}
+                    />
+                )}
+            </div>
+
+            <div className="action-form__footer">
+                <button
+                    type="button"
+                    className="cancel-button flex-[0_0_fit-content]"
+                    onClick={() => setAddCustomer(false)}
+                    title="Отменить добавление заказчика"
+                >
+                    Отменить
+                </button>
+
+                <button
+                    type="button"
+                    className="action-button flex-[0_0_fit-content]"
+                    onClick={() => {
+                        if (activeTab === "create") {
+                            createNewContragent(programName);
+                        } else {
+                            updateProject(true, {
+                                contragent_id: selectedContragent,
+                            });
+                        }
+
+                        setAddCustomer(false);
+                    }}
+                    title="Добавить заказчика"
+                    disabled={
+                        (activeTab === "create" && programName.trim() === "") ||
+                        (activeTab === "select" && selectedContragent === null)
+                    }
+                >
+                    Добавить заказчика
+                </button>
+            </div>
+        </div>
+    );
+};
+
+export default SaleNewContragentWindow;
