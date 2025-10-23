@@ -854,7 +854,7 @@ const ProjectCard = () => {
 
                             <div className="project-card__services">
                                 <div className="form-label">
-                                    Услуги <Hint message={"Услугиx"} />
+                                    Услуги <Hint message={"Услуги"} />
                                 </div>
 
                                 <ReportServices services={services} />

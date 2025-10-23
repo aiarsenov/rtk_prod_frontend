@@ -5,9 +5,9 @@ import getData from "../../utils/getData";
 import postData from "../../utils/postData";
 import parseFormattedMoney from "../../utils/parseFormattedMoney";
 
-import Select from "react-select";
 import CustomSelect from "../CustomSelect/CustomSelect";
 import MultiSelect from "../MultiSelect/MultiSelect";
+import CreatableSelect from "react-select/creatable";
 import AutoResizeTextarea from "../AutoResizeTextarea";
 
 import NewCustomerWindow from "./NewCustomerWindow";
@@ -99,7 +99,14 @@ const SaleCard = () => {
             Accept: "application/json",
         }).then((response) => {
             if (response?.status == 200) {
-                setIndustries(response.data.data);
+                if (response?.data?.data?.length > 0) {
+                    setIndustries(
+                        response.data.data.map((item) => ({
+                            value: item.id,
+                            label: item.name,
+                        }))
+                    );
+                }
             }
         });
     };
@@ -146,7 +153,14 @@ const SaleCard = () => {
         getData(`${import.meta.env.VITE_API_URL}request-sources`).then(
             (response) => {
                 if (response?.status == 200) {
-                    setSources(response.data.data);
+                    if (response?.data?.data?.length > 0) {
+                        setSources(
+                            response.data.data.map((item) => ({
+                                value: item.id,
+                                label: item.name,
+                            }))
+                        );
+                    }
                 }
             }
         );
@@ -629,14 +643,9 @@ const SaleCard = () => {
             const response = await getData(`${URL}/${id}`, {
                 Accept: "application/json",
             });
+
             setCardData(response.data);
-
             setCardDataCustom(response.data);
-
-            setCardDataCustom((prev) => ({
-                ...prev,
-                industries: response.data?.industries,
-            }));
 
             await Promise.all([
                 fetchIndustries(),
@@ -669,15 +678,37 @@ const SaleCard = () => {
             position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
         });
 
-        try {
-            const response = await postData("PATCH", `${URL}/${saleId}`, data);
-            if (response?.ok && showMessage) {
-                toast.update(query, {
-                    render: "Проект успешно обновлен",
-                    type: "success",
+        postData("PATCH", `${URL}/${saleId}`, data)
+            .then((response) => {
+                if (response?.ok) {
+                    setCardData(response);
+                    setCardDataCustom(response);
+                    fetchServices();
+
+                    if (showMessage) {
+                        toast.update(query, {
+                            render: "Проект успешно обновлен",
+                            type: "success",
+                            containerId: "toastContainer",
+                            isLoading: false,
+                            autoClose: 1200,
+                            pauseOnFocusLoss: false,
+                            pauseOnHover: false,
+                            draggable: true,
+                            position:
+                                window.innerWidth >= 1440
+                                    ? "bottom-right"
+                                    : "top-right",
+                        });
+                    }
+                }
+            })
+            .catch((error) => {
+                toast.dismiss(query);
+                toast.error(error.message || "Ошибка при обновлении проекта", {
                     containerId: "toastContainer",
                     isLoading: false,
-                    autoClose: 1200,
+                    autoClose: 1500,
                     pauseOnFocusLoss: false,
                     pauseOnHover: false,
                     draggable: true,
@@ -686,28 +717,7 @@ const SaleCard = () => {
                             ? "bottom-right"
                             : "top-right",
                 });
-            }
-
-            setCardData(response);
-            setCardDataCustom(response);
-            fetchServices();
-
-            return response;
-        } catch (error) {
-            toast.dismiss(query);
-            toast.error("Ошибка при обновлении проекта", {
-                containerId: "toastContainer",
-                isLoading: false,
-                autoClose: 1500,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                draggable: true,
-                position:
-                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
             });
-
-            throw error;
-        }
     };
 
     // Сохранение отчета
@@ -1027,55 +1037,76 @@ const SaleCard = () => {
                                 </div>
                             </div>
 
-                            <section className="project-card__general-info">
+                            <section className="card__general-info">
                                 <h2 className="card__subtitle">
                                     Общая информация
                                 </h2>
 
-                                <div className="project-card__industries">
+                                <div className="card__general-info__block">
                                     <div className="form-label">
                                         Основная отрасль
                                         <Hint message={"Основная отрасль"} />
                                     </div>
 
-                                    <select
-                                        className="form-select"
-                                        value={cardData?.industries?.main || ""}
-                                        onChange={(evt) => {
+                                    <CreatableSelect
+                                        options={industries}
+                                        className="form-select-extend"
+                                        placeholder={
+                                            mode === "edit"
+                                                ? "Выбрать из списка"
+                                                : ""
+                                        }
+                                        noOptionsMessage={() =>
+                                            "Совпадений нет"
+                                        }
+                                        isValidNewOption={() => false}
+                                        value={
+                                            (industries.length > 0 &&
+                                                industries.find(
+                                                    (option) =>
+                                                        option.value ===
+                                                            cardDataCustom
+                                                                ?.industries
+                                                                ?.main || ""
+                                                )) ||
+                                            null
+                                        }
+                                        onChange={(selectedOption) => {
                                             if (mode === "read") return;
+
+                                            const newValue =
+                                                selectedOption?.value || null;
+
                                             setCardDataCustom({
                                                 ...cardDataCustom,
                                                 industries: {
                                                     ...cardDataCustom.industries,
-                                                    main: +evt.target.value,
+                                                    main: newValue,
                                                 },
                                             });
 
-                                            // updateProject(projectId, true, {
-                                            //     industries: {
-                                            //         ...projectDataCustom.industries,
-                                            //         main: +evt.target.value,
-                                            //     },
-                                            // });
+                                            updateProject(true, {
+                                                industries: {
+                                                    ...cardDataCustom.industries,
+                                                    main: newValue,
+                                                },
+                                            });
                                         }}
-                                        disabled={mode == "read"}
-                                    >
-                                        <option value="">
-                                            Выбрать из списка
-                                        </option>
-                                        {industries.length > 0 &&
-                                            industries.map((item) => (
-                                                <option
-                                                    value={item.id}
-                                                    key={item.id}
-                                                >
-                                                    {item.name}
-                                                </option>
-                                            ))}
-                                    </select>
+                                        isDisabled={mode == "read"}
+                                        onMenuOpen={() => {}}
+                                        styles={{
+                                            input: (base) => ({
+                                                ...base,
+                                                maxWidth: "100%",
+                                                whiteSpace: "nowrap",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                            }),
+                                        }}
+                                    />
                                 </div>
 
-                                <div className="project-card__industries">
+                                <div className="card__general-info__block">
                                     <div className="form-label">
                                         Дополнительная отрасль
                                         <Hint
@@ -1090,26 +1121,46 @@ const SaleCard = () => {
                                                 ? "Выбрать из списка"
                                                 : ""
                                         }
-                                        options={industries
-                                            .filter(
-                                                (industry) =>
-                                                    industry.id !==
-                                                    cardDataCustom?.industries
-                                                        ?.main
-                                            )
-                                            .map((industry) => ({
-                                                value: industry.id,
-                                                label: industry.name,
-                                            }))}
-                                        // selectedValues={otherIndustries}
-                                        selectedValues={[]}
+                                        options={industries.filter(
+                                            (industry) =>
+                                                industry.value !==
+                                                cardDataCustom?.industries?.main
+                                        )}
+                                        selectedValues={
+                                            (industries?.length > 0 &&
+                                                industries
+                                                    .filter((item) =>
+                                                        cardDataCustom.industries?.others.includes(
+                                                            item.value
+                                                        )
+                                                    )
+                                                    .map(
+                                                        (item) => item.value
+                                                    )) ||
+                                            []
+                                        }
                                         fieldName={"others"}
                                         onChange={(values) => {
                                             if (mode === "read") return;
 
-                                            // const newArray = values.map(
-                                            //     (item) => item.value
-                                            // );
+                                            const newArray = values.map(
+                                                (item) => item.value
+                                            );
+
+                                            setCardDataCustom({
+                                                ...cardDataCustom,
+                                                industries: {
+                                                    ...cardDataCustom.industries,
+                                                    others: newArray,
+                                                },
+                                            });
+
+                                            updateProject(true, {
+                                                industries: {
+                                                    ...cardDataCustom.industries,
+                                                    others: newArray,
+                                                },
+                                            });
 
                                             // setOtherIndustries(newArray);
 
@@ -1125,41 +1176,63 @@ const SaleCard = () => {
                                     />
                                 </div>
 
-                                <div className="project-card__industries">
+                                <div className="card__general-info__block">
                                     <div className="form-label">
                                         Источник
                                         <Hint message={"Источник"} />
                                     </div>
 
-                                    <select
-                                        className="form-select"
-                                        value={
-                                            cardData?.request_source_id || ""
+                                    <CreatableSelect
+                                        options={sources}
+                                        className="form-select-extend"
+                                        placeholder={
+                                            mode === "edit"
+                                                ? "Выбрать из списка"
+                                                : ""
                                         }
-                                        onChange={(e) => {
-                                            // handleInputChange(
-                                            //     e,
-                                            //     "request_source_id"
-                                            // );
+                                        noOptionsMessage={() =>
+                                            "Совпадений нет"
+                                        }
+                                        isValidNewOption={() => false}
+                                        value={
+                                            (sources.length > 0 &&
+                                                sources.find(
+                                                    (option) =>
+                                                        option.value ===
+                                                            cardDataCustom?.request_source_id ||
+                                                        ""
+                                                )) ||
+                                            []
+                                        }
+                                        onChange={(selectedOption) => {
+                                            if (mode === "read") return;
+
+                                            const newValue =
+                                                selectedOption?.value || null;
+
+                                            // setProjectDataCustom((prev) => ({
+                                            //     ...prev,
+                                            //     contragent_id: newValue,
+                                            // }));
+                                            // updateProject(projectId, true, {
+                                            //     contragent_id: newValue,
+                                            // });
                                         }}
-                                        disabled={mode == "read"}
-                                    >
-                                        <option value="">
-                                            Выберите из списка
-                                        </option>
-                                        {sources.length > 0 &&
-                                            sources.map((item) => (
-                                                <option
-                                                    value={item.id}
-                                                    key={item.id}
-                                                >
-                                                    {item.name}
-                                                </option>
-                                            ))}
-                                    </select>
+                                        isDisabled={mode == "read"}
+                                        onMenuOpen={() => {}}
+                                        styles={{
+                                            input: (base) => ({
+                                                ...base,
+                                                maxWidth: "100%",
+                                                whiteSpace: "nowrap",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                            }),
+                                        }}
+                                    />
                                 </div>
 
-                                <div className="project-card__industries">
+                                <div className="card__general-info__block">
                                     <div className="form-label">
                                         Банк
                                         <Hint message={"Банк"} />
@@ -1229,7 +1302,61 @@ const SaleCard = () => {
                                     />
                                 </div>
 
-                                <div className="project-card__description">
+                                <div className="card__general-info__block">
+                                    <div className="form-label">
+                                        Ответственный
+                                        <Hint message={"Ответственный"} />
+                                    </div>
+                                    <CreatableSelect
+                                        // options={contragents}
+                                        className="form-select-extend"
+                                        placeholder={
+                                            mode === "edit"
+                                                ? "Выбрать из списка"
+                                                : ""
+                                        }
+                                        noOptionsMessage={() =>
+                                            "Совпадений нет"
+                                        }
+                                        isValidNewOption={() => false}
+                                        // value={
+                                        //     (contragents.length > 0 &&
+                                        //         contragents.find(
+                                        //             (option) =>
+                                        //                 option.value ===
+                                        //                 projectDataCustom?.contragent_id
+                                        //         )) ||
+                                        //     null
+                                        // }
+                                        onChange={(selectedOption) => {
+                                            if (mode === "read") return;
+
+                                            const newValue =
+                                                selectedOption?.value || null;
+
+                                            // setProjectDataCustom((prev) => ({
+                                            //     ...prev,
+                                            //     contragent_id: newValue,
+                                            // }));
+                                            // updateProject(projectId, true, {
+                                            //     contragent_id: newValue,
+                                            // });
+                                        }}
+                                        isDisabled={mode == "read"}
+                                        onMenuOpen={() => {}}
+                                        styles={{
+                                            input: (base) => ({
+                                                ...base,
+                                                maxWidth: "100%",
+                                                whiteSpace: "nowrap",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                            }),
+                                        }}
+                                    />
+                                </div>
+
+                                <div className="card__general-info__block">
                                     <div className="form-label">
                                         Краткое описание проекта
                                         <Hint
@@ -1276,7 +1403,7 @@ const SaleCard = () => {
                                     />
                                 </div>
 
-                                <div className="project-card__location">
+                                <div className="card__general-info__block">
                                     <div className="form-label">
                                         Местоположение
                                         <Hint message={"Местоположение"} />
@@ -1315,7 +1442,7 @@ const SaleCard = () => {
                                     />
                                 </div>
 
-                                <div className="project-card__tep">
+                                <div className="card__general-info__block">
                                     <div className="form-label">
                                         ТЭП
                                         <Hint message={"ТЭП"} />
