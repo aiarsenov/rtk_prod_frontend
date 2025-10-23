@@ -819,9 +819,9 @@ const SaleCard = () => {
                                             cardData?.name !=
                                             cardDataCustom?.name
                                         ) {
-                                            // updateProject(projectId, true, {
-                                            //     name: projectDataCustom.name,
-                                            // });
+                                            updateProject(true, {
+                                                name: cardDataCustom.name,
+                                            });
                                         }
                                     }}
                                     disabled={mode == "read"}
@@ -1430,7 +1430,7 @@ const SaleCard = () => {
                             </section>
                         </section>
 
-                        <section className="card__aside-content project-card__aside-content">
+                        <section className="card__aside-content">
                             <div className="flex flex-col gap-2 flex-grow">
                                 <div className="flex items-center gap-2">
                                     <span className="text-gray-400">

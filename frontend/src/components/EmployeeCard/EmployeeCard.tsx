@@ -282,7 +282,9 @@ const EmployeeCard = () => {
                                     }
                                 `}
                                 >
-                                    {cardDataCustom?.is_active ? "Работает" : "Не работает"}
+                                    {cardDataCustom?.is_active
+                                        ? "Работает"
+                                        : "Не работает"}
                                 </span>
                             </div>
 
@@ -651,7 +653,7 @@ const EmployeeCard = () => {
                             </section>
                         </section>
 
-                        <section className="card__aside-content project-card__aside-content employee-card__aside-content">
+                        <section className="card__aside-content">
                             <div className="employee-card__workload-summary">
                                 <h2 className="card__subtitle">
                                     Свод по трудозатратам, часы

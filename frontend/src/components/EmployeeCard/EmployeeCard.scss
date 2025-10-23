@@ -1,12 +1,6 @@
 @use "../../styles/media-breakpoints" as *;
 
 .employee {
-    &-card__aside-content {
-        display: block !important;
-        visibility: visible !important;
-        pointer-events: all !important;
-    }
-
     &-card-projects {
         .card-projects__item {
             cursor: unset;
