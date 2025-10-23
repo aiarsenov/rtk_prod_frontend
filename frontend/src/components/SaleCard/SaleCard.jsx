@@ -11,7 +11,7 @@ import CreatableSelect from "react-select/creatable";
 import AutoResizeTextarea from "../AutoResizeTextarea";
 
 import NewCustomerWindow from "./NewCustomerWindow";
-import SaleServiceItem from "./SaleServiceItem";
+import SaleServicesList from "./SaleServicesList";
 import SaleFunnelStages from "./SaleFunnelStages";
 import SaleStageDetails from "./SaleStageDetails";
 
@@ -22,6 +22,8 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+import "./SaleCard.scss";
 
 const SaleCard = () => {
     const URL = `${import.meta.env.VITE_API_URL}sales-funnel-projects`;
@@ -831,34 +833,7 @@ const SaleCard = () => {
                             </div>
 
                             <div className="project-card__services">
-                                <div className="form-label">
-                                    Услуги <Hint message={"Услуги"} />
-                                </div>
-
-                                {mode == "edit" && availableToChange && (
-                                    <button
-                                        type="button"
-                                        className="button-add"
-                                        onClick={() => setAddServices(true)}
-                                        title="Добавить услугу"
-                                    >
-                                        Добавить
-                                        <span>
-                                            <svg
-                                                width="10"
-                                                height="9"
-                                                viewBox="0 0 10 9"
-                                                fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path
-                                                    d="M5.75 3.75H9.5v1.5H5.75V9h-1.5V5.25H.5v-1.5h3.75V0h1.5v3.75z"
-                                                    fill="currentColor"
-                                                />
-                                            </svg>
-                                        </span>
-                                    </button>
-                                )}
+                                <h2 className="card__subtitle">Услуги</h2>
 
                                 <div
                                     className={`h-full ${
@@ -926,27 +901,42 @@ const SaleCard = () => {
                                             </div>
                                         </div>
                                     ) : (
-                                        <ul className="grid gap-3 py-5 px-4">
-                                            {services.length > 0 &&
-                                                services.map((service) => (
-                                                    <SaleServiceItem
-                                                        key={service.id}
-                                                        service={service}
-                                                        deleteService={
-                                                            deleteService
-                                                        }
-                                                        mode={mode}
-                                                    />
-                                                ))}
-                                        </ul>
+                                        <SaleServicesList
+                                            services={services}
+                                            deleteService={deleteService}
+                                            mode={mode}
+                                        />
                                     )}
                                 </div>
+
+                                {mode == "edit" && availableToChange && (
+                                    <button
+                                        type="button"
+                                        className="button-add"
+                                        onClick={() => setAddServices(true)}
+                                        title="Добавить услугу"
+                                    >
+                                        Добавить
+                                        <span>
+                                            <svg
+                                                width="10"
+                                                height="9"
+                                                viewBox="0 0 10 9"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    d="M5.75 3.75H9.5v1.5H5.75V9h-1.5V5.25H.5v-1.5h3.75V0h1.5v3.75z"
+                                                    fill="currentColor"
+                                                />
+                                            </svg>
+                                        </span>
+                                    </button>
+                                )}
                             </div>
 
                             <div className="project-card__services">
-                                <div className="form-label">
-                                    Заказчик <Hint message={"Заказчик"} />
-                                </div>
+                                <h2 className="card__subtitle">Заказчик</h2>
 
                                 {mode == "edit" && availableToChange && (
                                     <button
