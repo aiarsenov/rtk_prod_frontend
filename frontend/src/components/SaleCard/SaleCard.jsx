@@ -1277,22 +1277,21 @@ const SaleCard = () => {
                                         //         )) ||
                                         //     null
                                         // }
-                                        onChange={(selectedOption) => {
-                                            if (mode === "read") return;
+                                        // onChange={(selectedOption) => {
+                                        //     if (mode === "read") return;
 
-                                            const newValue =
-                                                selectedOption?.value || null;
+                                        // const newValue =
+                                        //     selectedOption?.value || null;
 
-                                            // setProjectDataCustom((prev) => ({
-                                            //     ...prev,
-                                            //     contragent_id: newValue,
-                                            // }));
-                                            // updateProject(projectId, true, {
-                                            //     contragent_id: newValue,
-                                            // });
-                                        }}
+                                        // setProjectDataCustom((prev) => ({
+                                        //     ...prev,
+                                        //     contragent_id: newValue,
+                                        // }));
+                                        // updateProject(projectId, true, {
+                                        //     contragent_id: newValue,
+                                        // });
+                                        // }}
                                         isDisabled={mode == "read"}
-                                        onMenuOpen={() => {}}
                                         styles={{
                                             input: (base) => ({
                                                 ...base,
@@ -1497,154 +1496,6 @@ const SaleCard = () => {
                     </div>
                 </div>
             </section>
-
-            {/* <div className="flex flex-col gap-2 flex-shrink-0 flex-grow">
-                                            <span className="flex items-center gap-2 text-gray-400">
-                                                Банк
-                                                <div className="h-[20px] w-[20px]">
-                                                    {mode === "edit" && (
-                                                        <button
-                                                            type="button"
-                                                            className="add-button"
-                                                            onClick={() =>
-                                                                setAddBanks(
-                                                                    true
-                                                                )
-                                                            }
-                                                            title="Выбрать банк"
-                                                        >
-                                                            <span></span>
-                                                        </button>
-                                                    )}
-                                                </div>
-                                            </span>
-                                            <ul className="border-2 border-gray-300 p-5 h-full flex flex-col gap-3">
-                                                {addBanks ? (
-                                                    <Select
-                                                        closeMenuOnSelect={
-                                                            false
-                                                        }
-                                                        isMulti
-                                                        options={banks.map(
-                                                            (item) => ({
-                                                                value: item.id,
-                                                                label: item.name,
-                                                            })
-                                                        )}
-                                                        className="basic-multi-select min-w-[170px] min-h-[32px]"
-                                                        classNamePrefix="select"
-                                                        placeholder="Выбрать банк"
-                                                        value={
-                                                            cardData.creditors?.map(
-                                                                (creditor) => ({
-                                                                    value: creditor.id,
-                                                                    label: creditor.name,
-                                                                })
-                                                            ) || []
-                                                        }
-                                                        onChange={(
-                                                            selectedOptions
-                                                        ) => {
-                                                            const selectedIds =
-                                                                selectedOptions.map(
-                                                                    (option) =>
-                                                                        option.value
-                                                                );
-
-                                                            const selectedBanks =
-                                                                banks.filter(
-                                                                    (bank) =>
-                                                                        selectedIds.includes(
-                                                                            bank.id
-                                                                        )
-                                                                );
-
-                                                            setCardData(
-                                                                (prevData) => ({
-                                                                    ...prevData,
-                                                                    creditors:
-                                                                        selectedBanks,
-                                                                })
-                                                            );
-
-                                                            setCardDataCustom(
-                                                                (prev) => ({
-                                                                    ...prev,
-                                                                    creditors:
-                                                                        selectedIds,
-                                                                })
-                                                            );
-                                                        }}
-                                                        onMenuClose={() => {
-                                                            setAddBanks(false);
-                                                        }}
-                                                    />
-                                                ) : (
-                                                    cardData.creditors?.map(
-                                                        (creditor) => (
-                                                            <li
-                                                                key={
-                                                                    creditor.id
-                                                                }
-                                                            >
-                                                                {creditor.name}
-                                                            </li>
-                                                        )
-                                                    )
-                                                )}
-                                            </ul>
-                                        </div> */}
-
-            {/* <div className="flex flex-col gap-2 flex-shrink-0 flex-grow">
-                                        <span className="flex items-center gap-2 text-gray-400">
-                                            Местоположение
-                                        </span>
-
-                                        <AutoResizeTextarea
-                                            disabled={mode === "read"}
-                                            value={cardData?.location || ""}
-                                            onChange={(e) =>
-                                                handleInputChange(e, "location")
-                                            }
-                                            placeholder="Введите местоположение"
-                                        />
-                                    </div>
-
-                                    <div className="flex flex-col gap-2 flex-shrink-0 flex-grow">
-                                        <span className="flex items-center gap-2 text-gray-400">
-                                            ТЭП
-                                        </span>
-
-                                        <AutoResizeTextarea
-                                            disabled={mode === "read"}
-                                            value={cardData?.tep || ""}
-                                            onChange={(e) =>
-                                                handleInputChange(e, "tep")
-                                            }
-                                            placeholder="Введите ТЭП"
-                                        />
-                                    </div> */}
-
-            {/* <div className="flex flex-col gap-2">
-                                        <span className="text-gray-400">
-                                            Краткое описание
-                                        </span>
-                                        <textarea
-                                            className="border-2 border-gray-300 p-5 min-h-[300px]"
-                                            placeholder="Заполните описание проекта"
-                                            style={{ resize: "none" }}
-                                            defaultValue={
-                                                cardData.short_description || ""
-                                            }
-                                            onChange={(e) => {
-                                                handleInputChange(
-                                                    e,
-                                                    "short_description"
-                                                );
-                                            }}
-                                            disabled={mode == "read"}
-                                        />
-                                    </div> */}
         </main>
     );
 };

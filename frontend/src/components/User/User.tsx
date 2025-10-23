@@ -39,7 +39,7 @@ const User = () => {
 
                 <div className="user__info">
                     <div>
-                        <b>{`${user.name} ${user.family_name}`}</b>
+                        <b>{user.name}</b>
                         <span>{user.email}</span>
                     </div>
 
