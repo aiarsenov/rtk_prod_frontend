@@ -1,5 +1,13 @@
 @use "../../styles/media-breakpoints" as *;
 
+.multi-select-active {
+    .multi-select__list-item {
+        border-bottom: 1px solid var(--color-gray-30);
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+}
+
 .multi-select {
     border-radius: 10px;
     box-shadow: 0 12px 28px rgba(0, 32, 51, 0.04);

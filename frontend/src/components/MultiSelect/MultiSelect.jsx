@@ -8,7 +8,7 @@ const MultiSelect = ({ options, selectedValues = [], onChange, fieldName }) => {
     };
 
     return (
-        <ul className="grid gap-2">
+        <ul className="multi-select-active">
             {options.map((option) => (
                 <li className="multi-select__list-item" key={option.value}>
                     <label
