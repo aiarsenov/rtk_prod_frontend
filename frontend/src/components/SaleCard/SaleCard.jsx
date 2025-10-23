@@ -15,6 +15,7 @@ import SaleServicesList from "./SaleServicesList";
 import SaleFunnelStages from "./SaleFunnelStages";
 import SaleStageDetails from "./SaleStageDetails";
 
+import Popup from "../Popup/Popup";
 import Loader from "../Loader";
 import Hint from "../Hint/Hint";
 
@@ -45,18 +46,18 @@ const SaleCard = () => {
         industries: { main: null, others: [] },
     });
 
-    const [addCustomer, setAddCustomer] = useState(false);
-    const [addServices, setAddServices] = useState(false);
-    const [addBanks, setAddBanks] = useState(false);
+    const [addCustomer, setAddCustomer] = useState(false); // Добавить заказчика
+    const [addServices, setAddServices] = useState(false); // Добавить услугу
 
     const [activeStage, setActiveStage] = useState(null);
 
-    const [industries, setIndustries] = useState([]);
-    const [contragents, setContragents] = useState([]);
-    const [banks, setBanks] = useState([]);
+    const [industries, setIndustries] = useState([]); // Отрасли
+    const [contragents, setContragents] = useState([]); // Заказчики
+    const [banks, setBanks] = useState([]); // Банки
+
     const [reportTypes, setReportTypes] = useState([]);
-    const [services, setServices] = useState([]);
-    const [sources, setSources] = useState([]);
+    const [services, setServices] = useState([]); // Услуги
+    const [sources, setSources] = useState([]); // Источники
     const [saleStages, setSaleStages] = useState([]);
 
     const [newServices, setNewServices] = useState({ report_type_id: [] });
@@ -754,14 +755,6 @@ const SaleCard = () => {
     }, []);
 
     useEffect(() => {
-        if (mode === "read") {
-            setAddCustomer(false);
-            setAddServices(false);
-            setAddBanks(false);
-        }
-    }, [mode]);
-
-    useEffect(() => {
         if (services.length > 0) {
             setNewServices((prev) => ({
                 ...prev,
@@ -770,6 +763,7 @@ const SaleCard = () => {
         } else {
             setStageMetrics({}); // Сбрасываем состояние при удалении всех услуг для перезагрузки экрана детализации
             setIsFirstInit(true);
+            setNewServices({ report_type_id: [] });
         }
     }, [services]);
 
@@ -835,79 +829,11 @@ const SaleCard = () => {
                             <div className="project-card__services">
                                 <h2 className="card__subtitle">Услуги</h2>
 
-                                <div
-                                    className={`h-full ${
-                                        addServices
-                                            ? "relative"
-                                            : "overflow-x-hidden overflow-y-auto"
-                                    }`}
-                                >
-                                    {addServices ? (
-                                        <div className="px-2 py-4 absolute top-0 left-0 right-0overflow-x-hidden overflow-y-auto max-h-[500px]">
-                                            <MultiSelect
-                                                options={reportTypes.map(
-                                                    (type) => ({
-                                                        value: type.id,
-                                                        label: type.full_name,
-                                                    })
-                                                )}
-                                                selectedValues={
-                                                    newServices.report_type_id ??
-                                                    []
-                                                }
-                                                onChange={(updatedField) =>
-                                                    setNewServices((prev) => ({
-                                                        ...prev,
-                                                        ...updatedField,
-                                                    }))
-                                                }
-                                                fieldName="report_type_id"
-                                            />
-
-                                            <div className="mt-5 flex items-center gap-6 justify-between">
-                                                <button
-                                                    type="button"
-                                                    className="rounded-lg py-3 px-5 bg-black text-white flex-[1_1_50%]"
-                                                    onClick={() =>
-                                                        sendService()
-                                                    }
-                                                    title="Применить добавление услуг"
-                                                >
-                                                    Применить
-                                                </button>
-
-                                                <button
-                                                    type="button"
-                                                    onClick={() => {
-                                                        setAddServices(false);
-                                                        setNewServices(
-                                                            (prev) => ({
-                                                                ...prev,
-                                                                report_type_id:
-                                                                    services.map(
-                                                                        (
-                                                                            item
-                                                                        ) =>
-                                                                            item.id
-                                                                    ),
-                                                            })
-                                                        );
-                                                    }}
-                                                    className="border rounded-lg py-3 px-5 flex-[1_1_50%]"
-                                                    title="Отменить добавление услуг"
-                                                >
-                                                    Отменить
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <SaleServicesList
-                                            services={services}
-                                            deleteService={deleteService}
-                                            mode={mode}
-                                        />
-                                    )}
-                                </div>
+                                <SaleServicesList
+                                    services={services}
+                                    deleteService={deleteService}
+                                    mode={mode}
+                                />
 
                                 {mode == "edit" && availableToChange && (
                                     <button
@@ -1486,6 +1412,67 @@ const SaleCard = () => {
                     </div>
                 </div>
             </section>
+
+            {addServices && (
+                <Popup
+                    onClick={() => setAddServices(false)}
+                    title="Добавить услугу"
+                >
+                    <div className="action-form__body">
+                        <MultiSelect
+                            options={reportTypes.map((type) => ({
+                                value: type.id,
+                                label: type.full_name,
+                            }))}
+                            selectedValues={newServices.report_type_id ?? []}
+                            onChange={(updatedField) => {
+                                console.log(updatedField);
+
+                                setNewServices((prev) => ({
+                                    ...prev,
+                                    ...updatedField,
+                                }));
+                            }}
+                            fieldName="report_type_id"
+                        />
+                    </div>
+
+                    <div className="action-form__footer">
+                        <div className="max-w-[280px]">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setAddServices(false);
+                                    setNewServices((prev) => ({
+                                        ...prev,
+                                        report_type_id: services.map(
+                                            (item) => item.id
+                                        ),
+                                    }));
+                                }}
+                                className="cancel-button flex-[1_0_auto]"
+                                title="Отменить добавление услуг"
+                            >
+                                Отменить
+                            </button>
+
+                            <button
+                                type="button"
+                                className="action-button flex-[1_0_auto]"
+                                onClick={() => sendService()}
+                                title="Применить добавление услуг"
+                                disabled={
+                                    newServices.report_type_id &&
+                                    Object.keys(newServices.report_type_id)
+                                        .length == 0
+                                }
+                            >
+                                Добавить услугу
+                            </button>
+                        </div>
+                    </div>
+                </Popup>
+            )}
         </main>
     );
 };

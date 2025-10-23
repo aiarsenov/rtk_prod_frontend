@@ -1,7 +1,7 @@
 const getColorBySign = (
     value,
-    color1 = "text-red-400",
-    color2 = "text-green-400"
+    color1 = "text-[#f97066]",
+    color2 = "text-[#32d583]"
 ) => {
     if (!value || typeof value !== "string") return "";
 
