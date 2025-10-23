@@ -872,14 +872,16 @@ const SaleCard = () => {
                                 <h2 className="card__subtitle">Заказчик</h2>
 
                                 <ul className="sale-contragents__list">
-                                    <li className="sale-contragents__list-item">
-                                        <div>
-                                            {
-                                                cardDataCustom.contragent
-                                                    ?.program_name
-                                            }
-                                        </div>
-                                        {/* 
+                                    {cardDataCustom.contragent
+                                        ?.program_name && (
+                                        <li className="sale-contragents__list-item">
+                                            <div>
+                                                {
+                                                    cardDataCustom.contragent
+                                                        ?.program_name
+                                                }
+                                            </div>
+                                            {/* 
                                         <button
                                             type="button"
                                             className="delete-button sale-contragents__list-item__delete"
@@ -897,7 +899,8 @@ const SaleCard = () => {
                                                 ></path>
                                             </svg>
                                         </button> */}
-                                    </li>
+                                        </li>
+                                    )}
                                 </ul>
 
                                 {mode == "edit" && availableToChange && (
