@@ -152,7 +152,14 @@
     }
 
     &__main-name {
-        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: border var(--trans);
+        border: 1px solid var(--color-gray-30);
+        background: var(--color-gray-20);
+        border-radius: 13px;
+        padding: 13px 16px;
         margin-bottom: 15px;
 
         @media (min-width: $media-lg) {
@@ -160,31 +167,13 @@
         }
 
         input {
-            width: 100%;
+            flex-grow: 1;
             font-weight: 600;
             font-size: 20px;
             line-height: 120%;
-            transition: border var(--trans);
-            border: 1px solid var(--color-gray-30);
-            background: var(--color-gray-20);
-            border-radius: 13px;
-            padding: 13px 125px 13px 16px;
-
-            &:focus {
-                border: 1px solid var(--color-blue-70);
-            }
-
-            @media (min-width: $media-lg) {
-                padding: 13px 140px 13px 16px;
-            }
         }
 
         .status {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            right: 13px;
-
             &_completed {
                 color: var(--color-orange-80);
                 background: var(--color-orange-30);
