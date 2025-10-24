@@ -26,6 +26,21 @@ import "react-toastify/dist/ReactToastify.css";
 
 import "./SaleCard.scss";
 
+const handleStatusClass = (status) => {
+    if (status.toLowerCase() == "получен запрос") {
+        return "";
+    } else if (
+        status.toLowerCase() == "получен отказ" ||
+        status.toLowerCase() == "отказ от участия"
+    ) {
+        return "status_canceled";
+    } else if (status.toLowerCase() == "проект отложен") {
+        return "status_completed";
+    } else {
+        return "status_active";
+    }
+};
+
 const SaleCard = () => {
     const URL = `${import.meta.env.VITE_API_URL}sales-funnel-projects`;
     // const location = useLocation();
@@ -37,6 +52,7 @@ const SaleCard = () => {
     const [isFirstInit, setIsFirstInit] = useState(true);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
     const [availableToChange, setAvailableToChange] = useState(true); // Можем ли мы вносить изменения в проект (до закрепления заказчика)
+    const [saleStatus, setSaleStatus] = useState(null); // Статус продажи
 
     const [cardData, setCardData] = useState({
         industries: { main: null, others: [] },
@@ -84,17 +100,6 @@ const SaleCard = () => {
 
         return newErrors;
     };
-
-    // Обработка ввода данных проекта
-    // const handleInputChange = useCallback((e, name) => {
-    // if (name == "contragent_id") {
-    // setFormFields((prev) => ({ ...prev, [name]: e }));
-    // setcardData((prev) => ({ ...prev, [name]: e }));
-    // } else {
-    // setFormFields((prev) => ({ ...prev, [name]: e.target.value }));
-    // setProjectData((prev) => ({ ...prev, [name]: e.target.value }));
-    // }
-    // }, []);
 
     // Получение отраслей
     const fetchIndustries = () => {
@@ -362,9 +367,12 @@ const SaleCard = () => {
                 setSaleStages(response.data);
 
                 if (response.data.stages && response.data.stages.length > 0) {
-                    console.log(
+                    setSaleStatus(
                         response.data.stages[response.data.stages.length - 1]
+                            .name
                     );
+                } else {
+                    setSaleStatus(null);
                 }
             }
         });
@@ -743,20 +751,6 @@ const SaleCard = () => {
             });
     };
 
-    // Сохранение отчета
-    // const handleSave = () => {
-    //     const newErrors = validateFields();
-
-    //     if (Object.keys(newErrors).length === 0) {
-    //         updateCard();
-    //     } else {
-    //         alert(
-    //             "Исправьте ошибки перед сохранением:\n" +
-    //                 Object.values(newErrors).join("\n")
-    //         );
-    //     }
-    // };
-
     useEffect(() => {
         if (saleId) {
             getCard();
@@ -836,7 +830,15 @@ const SaleCard = () => {
                                     disabled={mode == "read"}
                                 />
 
-                                <span className={`status`}>Статус</span>
+                                {saleStatus && (
+                                    <span
+                                        className={`status ${handleStatusClass(
+                                            saleStatus
+                                        )}`}
+                                    >
+                                        {saleStatus}
+                                    </span>
+                                )}
                             </div>
 
                             <div className="project-card__services">

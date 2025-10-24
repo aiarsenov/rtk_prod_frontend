@@ -185,6 +185,31 @@
             transform: translateY(-50%);
             right: 13px;
 
+            &_completed {
+                color: var(--color-orange-80);
+                background: var(--color-orange-30);
+            }
+
+            &_active {
+                color: var(--color-green-80);
+                background: var(--color-green-30);
+            }
+
+            &_inprogress {
+                color: var(--color-purple-80);
+                background: var(--color-purple-30);
+            }
+
+            &_canceled {
+                color: var(--color-red-70);
+                background: var(--color-red-30);
+            }
+
+            &_await {
+                color: var(--color-green-80);
+                background: var(--color-green-30);
+            }
+
             @media (min-width: $media-lg) {
                 right: 25px;
             }
