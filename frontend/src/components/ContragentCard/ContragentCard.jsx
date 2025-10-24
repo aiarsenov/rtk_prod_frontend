@@ -27,8 +27,6 @@ import ContragentResponsiblePersons from "./ContragentResponsiblePersons";
 
 import Loader from "../Loader.jsx";
 
-import "react-toastify/dist/ReactToastify.css";
-
 const ContragentCard = () => {
     const URL = `${import.meta.env.VITE_API_URL}contragents`;
     const { contragentId } = useParams();

@@ -1,23 +1,23 @@
 import { useState } from "react";
+
 import CustomDatePickerField from "../CustomDatePicker/CustomDatePickerField";
+import SaleStageDetails from "./SaleStageDetails";
 
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const SaleFunnelItem = ({
     stage,
     getStageDetails,
-    activeStage,
     maxPrevDate,
     showStageDots,
     showStageActions,
     isLast,
-    setActiveStage,
     handleNextStage,
     handleActiveStageDate,
     requestNextStage,
+    mode,
 }) => {
-    const [isActive, setIsActive] = useState(false);
+    const [activeStage, setActiveStage] = useState(null);
 
     const handleStage = (next_possible_stages, action) => {
         if (stage.stage_date) {
@@ -66,7 +66,7 @@ const SaleFunnelItem = ({
             return "rate-switch_red";
         } else if (stage.next_possible_stages[2]?.selected) {
             return "rate-switch_orange";
-        } else {
+        } else if (stage.next_possible_stages[0]?.selected) {
             return "rate-switch_green";
         }
     };
@@ -99,11 +99,11 @@ const SaleFunnelItem = ({
     return (
         <li
             className={`sale-funnel-stages__list-item ${
-                activeStage === stage.instance_id ? "active" : ""
+                activeStage ? "active" : ""
             }`}
             onClick={() => {
                 if (activeStage != stage.instance_id) {
-                    setActiveStage(stage.instance_id);
+                    // setActiveStage(stage.instance_id);
                     getStageDetails(stage.instance_id);
                 }
             }}
@@ -196,8 +196,19 @@ const SaleFunnelItem = ({
                 <button
                     type="button"
                     className="sale-funnel-stages__list-item__open-btn"
+                    onClick={() => setActiveStage(!activeStage)}
                 ></button>
             </div>
+
+            {activeStage && (
+                <SaleStageDetails
+                    // stageMetrics={stageMetrics}
+                    // metrics={metrics}
+                    // setMetrics={setMetrics}
+                    stage={stage}
+                    mode={mode}
+                />
+            )}
         </li>
     );
 };

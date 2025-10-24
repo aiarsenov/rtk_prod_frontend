@@ -13,7 +13,6 @@ import ReferenceItemWorkingHours from "./ReferenceItemWorkingHours";
 
 import { IMaskInput } from "react-imask";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 import COLUMNS from "../../data/reference_book_columns.json";
 import TITLES from "../../data/reference_book_titles.json";

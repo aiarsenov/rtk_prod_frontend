@@ -70,6 +70,9 @@
                 border: 1px solid var(--color-gray-30);
                 background: var(--color-white);
                 padding: 15px 10px 15px 20px;
+                transition: all var(--trans);
+                max-height: 73.6px;
+                overflow: hidden;
 
                 &__date {
                     .custom-datepicker__field {
@@ -86,6 +89,7 @@
                     height: 40px;
                     background: url("../../assets/icons/arrow-right.svg") center
                         no-repeat;
+                    transition: transform var(--trans);
                 }
 
                 &__row {
@@ -94,6 +98,14 @@
                     justify-content: space-between;
                     grid-template-columns: 1fr 120px 60px 40px;
                     gap: 23px;
+                }
+            }
+
+            &-item.active {
+                max-height: 1000px;
+
+                .sale-funnel-stages__list-item__open-btn {
+                    transform: rotate(90deg);
                 }
             }
         }

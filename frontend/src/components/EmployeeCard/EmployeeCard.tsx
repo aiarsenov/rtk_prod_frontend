@@ -18,7 +18,6 @@ import PersonalWorkload from "./PersonalWorkload";
 import Loader from "../Loader.jsx";
 
 import "./EmployeeCard.scss";
-import "react-toastify/dist/ReactToastify.css";
 
 const EmployeeCard = () => {
     const { employeeId } = useParams();

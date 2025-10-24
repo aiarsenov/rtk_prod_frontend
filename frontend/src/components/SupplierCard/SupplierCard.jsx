@@ -29,8 +29,6 @@ import AutoResizeTextarea from "../AutoResizeTextarea";
 
 import Loader from "../Loader.jsx";
 
-import "react-toastify/dist/ReactToastify.css";
-
 const SupplierCard = () => {
     const URL = `${import.meta.env.VITE_API_URL}suppliers`;
     const { supplierId } = useParams();

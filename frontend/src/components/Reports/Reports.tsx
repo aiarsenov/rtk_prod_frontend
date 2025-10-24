@@ -18,7 +18,6 @@ import Loader from "../Loader";
 import OverlayTransparent from "../Overlay/OverlayTransparent";
 
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 import "./Reports.scss";
 

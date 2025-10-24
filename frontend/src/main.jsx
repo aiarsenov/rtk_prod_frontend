@@ -11,6 +11,7 @@ import "./styles/form.scss";
 import "./styles/buttons.scss";
 import "./styles/table.scss";
 import "./styles/main.scss";
+import "react-toastify/dist/ReactToastify.css";
 
 import App from "./components/App.jsx";
 

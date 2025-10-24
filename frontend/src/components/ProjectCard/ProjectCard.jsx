@@ -41,7 +41,6 @@ import "./ProjectCard.scss";
 import "react-datepicker/dist/react-datepicker.css";
 
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const ProjectCard = () => {
     let query;

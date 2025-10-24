@@ -1,9 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 
 import getData from "../../utils/getData";
 import postData from "../../utils/postData";
-import parseFormattedMoney from "../../utils/parseFormattedMoney";
 
 import CustomSelect from "../CustomSelect/CustomSelect";
 import MultiSelect from "../MultiSelect/MultiSelect";
@@ -13,7 +12,7 @@ import AutoResizeTextarea from "../AutoResizeTextarea";
 import SaleNewContragentWindow from "./SaleNewContragentWindow";
 import SaleServicesList from "./SaleServicesList";
 import SaleFunnelStages from "./SaleFunnelStages";
-import SaleStageDetails from "./SaleStageDetails";
+// import SaleStageDetails from "./SaleStageDetails";
 
 import Popup from "../Popup/Popup";
 import Loader from "../Loader";
@@ -22,7 +21,6 @@ import Hint from "../Hint/Hint";
 import "react-datepicker/dist/react-datepicker.css";
 
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 import "./SaleCard.scss";
 
@@ -49,9 +47,11 @@ const SaleCard = () => {
 
     // const [mode, setMode] = useState(location.state?.mode || "read");
     const [mode, setMode] = useState("edit");
-    const [isFirstInit, setIsFirstInit] = useState(true);
+
+    // const [isFirstInit, setIsFirstInit] = useState(true);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
     const [availableToChange, setAvailableToChange] = useState(true); // Можем ли мы вносить изменения в проект (до закрепления заказчика)
+
     const [saleStatus, setSaleStatus] = useState(null); // Статус продажи
 
     const [cardData, setCardData] = useState({
@@ -65,7 +65,7 @@ const SaleCard = () => {
     const [addCustomer, setAddCustomer] = useState(false); // Добавить заказчика
     const [addServices, setAddServices] = useState(false); // Добавить услугу
 
-    const [activeStage, setActiveStage] = useState(null);
+    // const [activeStage, setActiveStage] = useState(null);
 
     const [industries, setIndustries] = useState([]); // Отрасли
     const [contragents, setContragents] = useState([]); // Заказчики
@@ -77,9 +77,9 @@ const SaleCard = () => {
     const [saleStages, setSaleStages] = useState([]);
 
     const [newServices, setNewServices] = useState({ report_type_id: [] });
-    const [stageMetrics, setStageMetrics] = useState({});
+    // const [stageMetrics, setStageMetrics] = useState({});
 
-    const [metrics, setMetrics] = useState([]); // Прослойка - значения динамических полей в детализации
+    // const [metrics, setMetrics] = useState([]); // Прослойка - значения динамических полей в детализации
 
     let query;
 
@@ -288,9 +288,9 @@ const SaleCard = () => {
                 fetchServices();
                 getStages();
 
-                if (services.length == 0) {
-                    setStageMetrics({});
-                }
+                // if (services.length == 0) {
+                //     setStageMetrics({});
+                // }
             }
         });
     };
@@ -376,294 +376,6 @@ const SaleCard = () => {
                 }
             }
         });
-    };
-
-    // Получаем детализацию выбранного этапа
-    const getStageDetails = (stageId) => {
-        const stageData = saleStages.stages?.find(
-            (item) => item.instance_id === stageId
-        );
-
-        if (stageData) {
-            setStageMetrics(stageData);
-            setStageMetrics((prev) => ({
-                ...prev,
-                stage_id: stageData.id,
-            }));
-        }
-    };
-
-    // Закрепляем дату за этапом
-    const setDate = (date, instance_id) => {
-        const newDate = new Date(date).toLocaleDateString("ru-RU");
-
-        const [day, month, year] = newDate.split(".");
-        const formattedDate = `${year}-${month}-${day}`;
-
-        postData(
-            "PATCH",
-            `${
-                import.meta.env.VITE_API_URL
-            }sales-funnel-projects/${saleId}/stages/${
-                stageMetrics.stage_id
-            }/date`,
-            { stage_date: formattedDate, stage_instance_id: instance_id }
-        )
-            .then((response) => {
-                if (response.ok) {
-                    toast.success(
-                        response.message || "Дата этапа успешно обновлена",
-                        {
-                            containerId: "toastContainer",
-                            isLoading: false,
-                            autoClose: 1200,
-                            pauseOnFocusLoss: false,
-                            pauseOnHover: false,
-                            position:
-                                window.innerWidth >= 1440
-                                    ? "bottom-right"
-                                    : "top-right",
-                        }
-                    );
-                } else {
-                    toast.error(response.error || "Ошибка запроса", {
-                        containerId: "toastContainer",
-                        isLoading: false,
-                        autoClose: 2000,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
-                }
-            })
-            .catch((response) => {
-                toast.error(response.error || "Ошибка запроса", {
-                    containerId: "toastContainer",
-                    isLoading: false,
-                    autoClose: 2000,
-                    pauseOnFocusLoss: false,
-                    pauseOnHover: false,
-                    position:
-                        window.innerWidth >= 1440
-                            ? "bottom-right"
-                            : "top-right",
-                });
-            });
-    };
-
-    // Обработка даты у этапа
-    const handleActiveStageDate = (date, stageId, instance_id) => {
-        setSaleStages((prev) => {
-            const updatedStages = prev.stages.map((stage) => {
-                if (stage.instance_id === instance_id) {
-                    return {
-                        ...stage,
-                        stage_date: date,
-                    };
-                }
-                return stage;
-            });
-
-            return { ...prev, stages: updatedStages };
-        });
-        setDate(date, instance_id);
-    };
-
-    // Обновляем детализацию этапа продажи
-    const updateStageDetails = (nextStage = false, stage_status) => {
-        // let stageMetricsData = stageMetrics;
-
-        let stageMetricsData = metrics;
-
-        stageMetricsData.stage_instance_id = stageMetrics.instance_id;
-
-        stageMetricsData.metrics = stageMetricsData.metrics.map((item) => ({
-            ...item,
-            current_value: parseFormattedMoney(item.current_value),
-        }));
-
-        postData(
-            "PATCH",
-            `${
-                import.meta.env.VITE_API_URL
-            }sales-funnel-projects/${saleId}/stages/${
-                stageMetrics.stage_id
-            }/metrics`,
-            stageMetricsData
-        )
-            .then((response) => {
-                if (response.ok) {
-                    getStages();
-
-                    if (nextStage) {
-                        requestNextStage(nextStage, stage_status);
-                    } else {
-                        toast.success(response.message, {
-                            type: "success",
-                            containerId: "toastContainer",
-                            isLoading: false,
-                            autoClose: 1200,
-                            pauseOnFocusLoss: false,
-                            pauseOnHover: false,
-                            draggable: true,
-                            position:
-                                window.innerWidth >= 1440
-                                    ? "bottom-right"
-                                    : "top-right",
-                        });
-                        fetchServices();
-                    }
-                } else {
-                    toast.error(response.data.error || "Ошибка запроса", {
-                        containerId: "toastContainer",
-                        isLoading: false,
-                        autoClose: 2000,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
-                }
-            })
-            .catch((response) => {
-                toast.error(response.data.error || "Ошибка запроса", {
-                    containerId: "toastContainer",
-                    isLoading: false,
-                    autoClose: 2000,
-                    pauseOnFocusLoss: false,
-                    pauseOnHover: false,
-                    draggable: true,
-                    position:
-                        window.innerWidth >= 1440
-                            ? "bottom-right"
-                            : "top-right",
-                });
-            });
-    };
-
-    // Валидация полей стоимости этапа перед сохранением
-    const handleSaveDetails = () => {
-        const activeStageData = saleStages.stages.find(
-            (item) => item.instance_id === stageMetrics.instance_id
-        );
-
-        if (
-            activeStageData.name.toLowerCase() !== "получен запрос" &&
-            activeStageData.name.toLowerCase() !== "проект отложен" &&
-            activeStageData.name.toLowerCase() !== "получен отказ" &&
-            activeStageData.name.toLowerCase() !== "отказ от участия" &&
-            activeStageData.name.toLowerCase() !== "подготовка кп"
-        ) {
-            if (
-                metrics.metrics?.length > 0 &&
-                metrics.metrics?.every(
-                    (item) =>
-                        item.current_value !== null && item.current_value !== ""
-                )
-            ) {
-                updateStageDetails();
-            } else {
-                toast.error("Заполните все поля стоимости предложения", {
-                    containerId: "toastContainer",
-                    isLoading: false,
-                    autoClose: 2000,
-                    pauseOnFocusLoss: false,
-                    pauseOnHover: false,
-                    position:
-                        window.innerWidth >= 1440
-                            ? "bottom-right"
-                            : "top-right",
-                });
-            }
-        } else {
-            updateStageDetails();
-        }
-    };
-
-    // Запрос следующего этапа в воронке продаж
-    const requestNextStage = (stage_id, stage_status) => {
-        postData(
-            "POST",
-            `${
-                import.meta.env.VITE_API_URL
-            }sales-funnel-projects/${saleId}/stages`,
-            { stage_id, status: stage_status }
-        )
-            .then((response) => {
-                if (response?.ok) {
-                    toast.success(response.message, {
-                        type: "success",
-                        containerId: "toastContainer",
-                        isLoading: false,
-                        autoClose: 1200,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
-                    getStages();
-                    fetchServices();
-                }
-            })
-            .catch((response) => {
-                toast.error(response.error || "Ошибка запроса", {
-                    containerId: "toastContainer",
-                    isLoading: false,
-                    autoClose: 2000,
-                    pauseOnFocusLoss: false,
-                    pauseOnHover: false,
-                    draggable: true,
-                    position:
-                        window.innerWidth >= 1440
-                            ? "bottom-right"
-                            : "top-right",
-                });
-            });
-    };
-
-    // Валидируем поля стоимости предложения перед запросом следующего этапа
-    const handleNextStage = (stage_id, name, stage_status) => {
-        if (
-            stage_status === "success" &&
-            name.toLowerCase() !== "получен запрос" &&
-            name.toLowerCase() !== "проект отложен" &&
-            name.toLowerCase() !== "получен отказ" &&
-            name.toLowerCase() !== "отказ от участия" &&
-            name.toLowerCase() !== "подготовка кп"
-        ) {
-            if (
-                metrics.metrics?.length > 0 &&
-                metrics.metrics?.every(
-                    (item) =>
-                        item.current_value !== null && item.current_value !== ""
-                )
-            ) {
-                updateStageDetails(stage_id, stage_status);
-            } else {
-                toast.error("Заполните все поля стоимости предложения", {
-                    containerId: "toastContainer",
-                    isLoading: false,
-                    autoClose: 2000,
-                    pauseOnFocusLoss: false,
-                    pauseOnHover: false,
-                    position:
-                        window.innerWidth >= 1440
-                            ? "bottom-right"
-                            : "top-right",
-                });
-            }
-        } else {
-            updateStageDetails(stage_id, stage_status);
-        }
     };
 
     // Получение карточки
@@ -768,27 +480,11 @@ const SaleCard = () => {
                 report_type_id: services.map((item) => item.id),
             }));
         } else {
-            setStageMetrics({}); // Сбрасываем состояние при удалении всех услуг для перезагрузки экрана детализации
-            setIsFirstInit(true);
+            // setStageMetrics({}); // Сбрасываем состояние при удалении всех услуг для перезагрузки экрана детализации
+            // setIsFirstInit(true);
             setNewServices({ report_type_id: [] });
         }
     }, [services]);
-
-    useEffect(() => {
-        if (saleStages.stages && saleStages.stages.length > 0 && isFirstInit) {
-            setActiveStage(
-                saleStages.stages[saleStages.stages?.length - 1].instance_id
-            );
-            getStageDetails(
-                saleStages.stages[saleStages.stages?.length - 1].instance_id
-            );
-            setIsFirstInit(false);
-        }
-
-        if (activeStage) {
-            getStageDetails(activeStage);
-        }
-    }, [saleStages]);
 
     return !isDataLoaded ? (
         <Loader />
@@ -1336,18 +1032,13 @@ const SaleCard = () => {
                             <SaleFunnelStages
                                 saleId={saleId}
                                 saleStages={saleStages}
-                                handleNextStage={handleNextStage}
-                                getStageDetails={getStageDetails}
-                                activeStage={activeStage}
-                                setActiveStage={setActiveStage}
-                                handleActiveStageDate={handleActiveStageDate}
                                 getStages={getStages}
-                                requestNextStage={requestNextStage}
                                 fetchServices={fetchServices}
+                                setSaleStages={setSaleStages}
                                 mode={mode}
                             />
 
-                            <div className="mt-5">
+                            {/* <div className="mt-5">
                                 <div className="flex gap-2">
                                     Детализация этапа
                                     {mode === "edit" && (
@@ -1368,7 +1059,7 @@ const SaleCard = () => {
                                         mode={mode}
                                     />
                                 )}
-                            </div>
+                            </div> */}
                         </section>
                     </div>
                 </div>
