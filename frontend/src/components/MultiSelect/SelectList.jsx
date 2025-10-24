@@ -17,11 +17,11 @@ const SelectList = ({ options = [], onChange, selectedContact }) => {
     return (
         <ul className="form-select__list">
             {options.map((item, index) => (
-                <li key={`${item.value}_${index}`}>
-                    <label
-                        htmlFor={item.value}
-                        className={`${selected === item.value ? "active" : ""}`}
-                    >
+                <li
+                    key={`${item.value}_${index}`}
+                    className={`${selected === item.value ? "active" : ""}`}
+                >
+                    <label htmlFor={item.value}>
                         <input
                             id={item.value}
                             type="checkbox"

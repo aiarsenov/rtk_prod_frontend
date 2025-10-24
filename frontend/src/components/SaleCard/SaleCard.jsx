@@ -360,6 +360,12 @@ const SaleCard = () => {
         ).then((response) => {
             if (response?.status == 200) {
                 setSaleStages(response.data);
+
+                if (response.data.stages && response.data.stages.length > 0) {
+                    console.log(
+                        response.data.stages[response.data.stages.length - 1]
+                    );
+                }
             }
         });
     };
@@ -653,11 +659,11 @@ const SaleCard = () => {
     };
 
     // Получение проекта
-    const getProject = async (id) => {
+    const getCard = async () => {
         setIsDataLoaded(false);
 
         try {
-            const response = await getData(`${URL}/${id}`, {
+            const response = await getData(`${URL}/${saleId}`, {
                 Accept: "application/json",
             });
 
@@ -688,7 +694,7 @@ const SaleCard = () => {
     };
 
     // Обновление проекта
-    const updateProject = async (showMessage = true, data = cardDataCustom) => {
+    const updateCard = async (showMessage = true, data = cardDataCustom) => {
         query = toast.loading("Обновление", {
             containerId: "toastContainer",
             draggable: true,
@@ -738,22 +744,22 @@ const SaleCard = () => {
     };
 
     // Сохранение отчета
-    const handleSave = () => {
-        const newErrors = validateFields();
+    // const handleSave = () => {
+    //     const newErrors = validateFields();
 
-        if (Object.keys(newErrors).length === 0) {
-            updateProject();
-        } else {
-            alert(
-                "Исправьте ошибки перед сохранением:\n" +
-                    Object.values(newErrors).join("\n")
-            );
-        }
-    };
+    //     if (Object.keys(newErrors).length === 0) {
+    //         updateCard();
+    //     } else {
+    //         alert(
+    //             "Исправьте ошибки перед сохранением:\n" +
+    //                 Object.values(newErrors).join("\n")
+    //         );
+    //     }
+    // };
 
     useEffect(() => {
         if (saleId) {
-            getProject(saleId);
+            getCard();
         }
 
         if (services.length > 0) {
@@ -822,7 +828,7 @@ const SaleCard = () => {
                                             cardData?.name !=
                                             cardDataCustom?.name
                                         ) {
-                                            updateProject(true, {
+                                            updateCard(true, {
                                                 name: cardDataCustom.name,
                                             });
                                         }
@@ -881,24 +887,6 @@ const SaleCard = () => {
                                                         ?.program_name
                                                 }
                                             </div>
-                                            {/* 
-                                        <button
-                                            type="button"
-                                            className="delete-button sale-contragents__list-item__delete"
-                                        >
-                                            <svg
-                                                width="20"
-                                                height="21"
-                                                viewBox="0 0 20 21"
-                                                fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path
-                                                    d="M5.833 8v9.166h8.333V8h1.667v10c0 .46-.373.833-.833.833H5A.833.833 0 014.166 18V8h1.667zm3.333 0v7.5H7.5V8h1.666zM12.5 8v7.5h-1.667V8H12.5zm0-5.833c.358 0 .677.229.79.57l.643 1.929h2.733v1.667H3.333V4.666h2.733l.643-1.93a.833.833 0 01.79-.57h5zm-.601 1.666H8.1l-.278.833h4.354l-.277-.833z"
-                                                    fill="currentColor"
-                                                ></path>
-                                            </svg>
-                                        </button> */}
                                         </li>
                                     )}
                                 </ul>
@@ -908,7 +896,12 @@ const SaleCard = () => {
                                         type="button"
                                         className="button-add"
                                         onClick={() => setAddCustomer(true)}
-                                        title="Добавить заказчика"
+                                        title={`${
+                                            cardDataCustom.contragent
+                                                ?.program_name
+                                                ? "Изменить заказчика"
+                                                : "Добавить заказчика"
+                                        }`}
                                     >
                                         {!cardDataCustom.contragent
                                             ?.program_name ? (
@@ -984,7 +977,7 @@ const SaleCard = () => {
                                                 },
                                             });
 
-                                            updateProject(true, {
+                                            updateCard(true, {
                                                 industries: {
                                                     ...cardDataCustom.industries,
                                                     main: newValue,
@@ -1052,7 +1045,7 @@ const SaleCard = () => {
                                                 },
                                             });
 
-                                            updateProject(true, {
+                                            updateCard(true, {
                                                 industries: {
                                                     ...cardDataCustom.industries,
                                                     others: newArray,
@@ -1102,7 +1095,7 @@ const SaleCard = () => {
                                                 ...prev,
                                                 request_source_id: newValue,
                                             }));
-                                            updateProject(true, {
+                                            updateCard(true, {
                                                 request_source_id: newValue,
                                             });
                                         }}
@@ -1161,7 +1154,7 @@ const SaleCard = () => {
                                                 ],
                                             }));
 
-                                            updateProject(true, {
+                                            updateCard(true, {
                                                 creditors: newArray,
                                             });
                                         }}
@@ -1187,18 +1180,6 @@ const SaleCard = () => {
                                             "Совпадений нет"
                                         }
                                         isValidNewOption={() => false}
-                                        // value={
-                                        //     (contragents.length > 0 &&
-                                        //         contragents.find(
-                                        //             (option) =>
-                                        //                 option.value ===
-                                        //                 projectDataCustom?.contragent_id
-                                        //         )) ||
-                                        //     null
-                                        // }
-                                        // onChange={(selectedOption) => {
-                                        //     if (mode === "read") return;
-
                                         // const newValue =
                                         //     selectedOption?.value || null;
 
@@ -1206,7 +1187,7 @@ const SaleCard = () => {
                                         //     ...prev,
                                         //     contragent_id: newValue,
                                         // }));
-                                        // updateProject(projectId, true, {
+                                        // updateCard(projectId, true, {
                                         //     contragent_id: newValue,
                                         // });
                                         // }}
@@ -1258,7 +1239,7 @@ const SaleCard = () => {
                                                 cardData?.short_description !=
                                                 cardDataCustom?.short_description
                                             ) {
-                                                updateProject(true, {
+                                                updateCard(true, {
                                                     short_description:
                                                         cardDataCustom.short_description,
                                                 });
@@ -1297,7 +1278,7 @@ const SaleCard = () => {
                                                 cardData?.location !=
                                                 cardDataCustom?.location
                                             ) {
-                                                updateProject(true, {
+                                                updateCard(true, {
                                                     location:
                                                         cardDataCustom.location,
                                                 });
@@ -1336,7 +1317,7 @@ const SaleCard = () => {
                                                 cardData?.tep !=
                                                 cardDataCustom?.tep
                                             ) {
-                                                updateProject(true, {
+                                                updateCard(true, {
                                                     tep: cardDataCustom.tep,
                                                 });
                                             }
@@ -1429,8 +1410,6 @@ const SaleCard = () => {
                             }))}
                             selectedValues={newServices.report_type_id ?? []}
                             onChange={(updatedField) => {
-                                console.log(updatedField);
-
                                 setNewServices((prev) => ({
                                     ...prev,
                                     ...updatedField,
@@ -1482,7 +1461,7 @@ const SaleCard = () => {
                 >
                     <SaleNewContragentWindow
                         setAddCustomer={setAddCustomer}
-                        updateProject={updateProject}
+                        updateCard={updateCard}
                         contragents={contragents}
                         createNewContragent={createNewContragent}
                     />

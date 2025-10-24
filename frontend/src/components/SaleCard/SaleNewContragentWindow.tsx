@@ -5,7 +5,7 @@ import SelectList from "../MultiSelect/SelectList";
 const SaleNewContragentWindow = ({
     setAddCustomer,
     contragents,
-    updateProject,
+    updateCard,
     createNewContragent,
 }) => {
     const [programName, setProgramName] = useState("");
@@ -78,7 +78,7 @@ const SaleNewContragentWindow = ({
                         if (activeTab === "create") {
                             createNewContragent(programName);
                         } else {
-                            updateProject(true, {
+                            updateCard(true, {
                                 contragent_id: selectedContragent,
                             });
                         }

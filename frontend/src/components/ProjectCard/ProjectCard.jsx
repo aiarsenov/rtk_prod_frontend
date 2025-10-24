@@ -199,11 +199,11 @@ const ProjectCard = () => {
     };
 
     // Получение проекта
-    const getProject = async (id) => {
+    const getCard = async () => {
         setIsDataLoaded(false);
 
         try {
-            const response = await getData(`${URL}/${id}`, {
+            const response = await getData(`${URL}/${projectId}`, {
                 Accept: "application/json",
             });
 
@@ -258,11 +258,7 @@ const ProjectCard = () => {
     };
 
     // Обновление проекта
-    const updateProject = async (
-        id,
-        showMessage = true,
-        data = projectDataCustom
-    ) => {
+    const updateCard = async (showMessage = true, data = projectDataCustom) => {
         if (projectDataCustom?.contragent_id || data?.contragent_id) {
             query = toast.loading("Обновление", {
                 containerId: "toastContainer",
@@ -271,7 +267,7 @@ const ProjectCard = () => {
                     window.innerWidth >= 1440 ? "bottom-right" : "top-right",
             });
 
-            postData("PATCH", `${URL}/${id}`, data)
+            postData("PATCH", `${URL}/${projectId}`, data)
                 .then((response) => {
                     if (response?.ok) {
                         setProjectData((prev) => ({
@@ -348,7 +344,7 @@ const ProjectCard = () => {
             )
                 .then((response) => {
                     if (response?.ok) {
-                        getProject(projectId);
+                        getCard();
                         setAddCreditor(false);
 
                         toast.update(query, {
@@ -588,7 +584,7 @@ const ProjectCard = () => {
                         response.data,
                     ]);
 
-                    getProject(projectId);
+                    getCard();
                 } else {
                     toast.dismiss(query);
                     toast.error("Ошибка при отправке отчёта", {
@@ -668,7 +664,7 @@ const ProjectCard = () => {
                                 : "top-right",
                     });
 
-                    getProject(projectId);
+                    getCard();
                 }
 
                 setReportId(null);
@@ -696,7 +692,7 @@ const ProjectCard = () => {
         postData("DELETE", `${import.meta.env.VITE_API_URL}reports/${id}`, {})
             .then((response) => {
                 if (response?.ok) {
-                    getProject(projectId);
+                    getCard();
                 }
             })
             .catch((error) => {
@@ -766,7 +762,7 @@ const ProjectCard = () => {
 
     useEffect(() => {
         if (projectId) {
-            getProject(projectId);
+            getCard();
         }
     }, []);
 
@@ -822,7 +818,7 @@ const ProjectCard = () => {
                                             projectData?.name !=
                                             projectDataCustom?.name
                                         ) {
-                                            updateProject(projectId, true, {
+                                            updateCard(true, {
                                                 name: projectDataCustom.name,
                                             });
                                         }
@@ -902,7 +898,7 @@ const ProjectCard = () => {
                                                 ...prev,
                                                 contragent_id: newValue,
                                             }));
-                                            updateProject(projectId, true, {
+                                            updateCard(true, {
                                                 contragent_id: newValue,
                                             });
                                         }}
@@ -955,7 +951,7 @@ const ProjectCard = () => {
                                                 },
                                             });
 
-                                            updateProject(projectId, true, {
+                                            updateCard(true, {
                                                 industries: {
                                                     ...projectDataCustom.industries,
                                                     main: +evt.target.value,
@@ -1017,7 +1013,7 @@ const ProjectCard = () => {
 
                                             setOtherIndustries(newArray);
 
-                                            updateProject(projectId, true, {
+                                            updateCard(true, {
                                                 industries: {
                                                     ...projectDataCustom.industries,
                                                     others: newArray,
@@ -1062,7 +1058,7 @@ const ProjectCard = () => {
                                                 projectData?.description !=
                                                 projectDataCustom?.description
                                             ) {
-                                                updateProject(projectId, true, {
+                                                updateCard(true, {
                                                     description:
                                                         projectDataCustom.description,
                                                 });
@@ -1103,7 +1099,7 @@ const ProjectCard = () => {
                                                 projectData?.location !=
                                                 projectDataCustom?.location
                                             ) {
-                                                updateProject(projectId, true, {
+                                                updateCard(true, {
                                                     location:
                                                         projectDataCustom.location,
                                                 });
@@ -1142,7 +1138,7 @@ const ProjectCard = () => {
                                                 projectData?.tep !=
                                                 projectDataCustom?.tep
                                             ) {
-                                                updateProject(projectId, true, {
+                                                updateCard(true, {
                                                     tep: projectDataCustom.tep,
                                                 });
                                             }
