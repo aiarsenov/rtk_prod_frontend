@@ -1,4 +1,5 @@
 import DatePicker from "react-datepicker";
+import CustomDatePickerField from "../CustomDatePicker/CustomDatePickerField";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -59,9 +60,9 @@ const SaleFunnelItem = ({
     };
 
     const handleStatusClass = () => {
-        if (stage.next_possible_stages[2]?.selected) {
+        if (stage.next_possible_stages[1]?.selected) {
             return "rate-switch_red";
-        } else if (stage.next_possible_stages[1]?.selected) {
+        } else if (stage.next_possible_stages[2]?.selected) {
             return "rate-switch_orange";
         } else {
             return "rate-switch_green";
@@ -112,39 +113,30 @@ const SaleFunnelItem = ({
                     </div>
 
                     <div className="sale-funnel-stages__list-item__date">
-                        {/* <CustomDatePickerField
-                        value={cardDataCustom.employment_date}
-                        onChange={(updated) => {
-                            setCardDataCustom((prev) => ({
-                                ...prev,
-                                employment_date:
-                                    formatToUtcDateOnly(updated) || null,
-                            }));
+                        <CustomDatePickerField
+                            value={stage.stage_date || ""}
+                            onChange={(updated) => {
+                                handleActiveStageDate(
+                                    updated,
+                                    stage.id,
+                                    stage.instance_id
+                                );
+                            }}
+                            disabled={!isLast}
+                            single={true}
+                        />
 
-                            updateData(true, {
-                                employment_date:
-                                    formatToUtcDateOnly(updated) || null,
-                            });
-                        }}
-                        disabled={mode === "read" || !cardDataCustom.is_staff}
-                        single={true}
-                    /> */}
-
-                        <DatePicker
+                        {/* <DatePicker
                             className="form-field"
                             startDate={stage.stage_date}
                             selected={stage.stage_date || ""}
-                            onChange={(date) =>
-                                handleActiveStageDate(
-                                    date,
-                                    stage.id,
-                                    stage.instance_id
-                                )
-                            }
+                            onChange={(date) => {
+                                console.log(date);
+                            }}
                             dateFormat="dd.MM.yyyy"
                             minDate={maxPrevDate}
                             disabled={!isLast}
-                        />
+                        /> */}
                     </div>
 
                     {stage.hasOwnProperty("next_possible_stages") &&

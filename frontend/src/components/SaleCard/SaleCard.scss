@@ -61,8 +61,14 @@
                 background: var(--color-white);
                 padding: 15px 10px 15px 20px;
 
-                &__date input {
-                    width: 120px;
+                &__date {
+                    .custom-datepicker__field {
+                        background: var(--color-gray-20);
+                    }
+
+                    input {
+                        width: 120px;
+                    }
                 }
 
                 &__open-btn {
