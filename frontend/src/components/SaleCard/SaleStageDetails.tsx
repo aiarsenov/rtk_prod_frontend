@@ -1,6 +1,8 @@
 import getColorBySign from "../../utils/getColorBySign";
 import formatMoney from "../../utils/formatMoney";
 
+import AutoResizeTextarea from "../AutoResizeTextarea";
+
 const SaleStageDetails = ({ stage, mode }) => {
     return (
         <div className="sale-stage-datails flex flex-col gap-4">
@@ -98,8 +100,8 @@ const SaleStageDetails = ({ stage, mode }) => {
                         <span className="text-gray-400">Комментарий:</span>
                     )}
 
-                <textarea
-                    className={`${
+                <AutoResizeTextarea
+                    className={`form-textarea ${
                         stage.name?.toLowerCase() === "получен запрос" ||
                         stage.name?.toLowerCase() === "подготовка кп" ||
                         stage.name?.toLowerCase() === "проект отложен" ||
