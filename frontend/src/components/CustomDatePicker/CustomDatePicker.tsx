@@ -23,6 +23,7 @@ const CustomDatePicker = ({
     fieldkey,
     single = false,
     value,
+    minDate,
 }: {
     type: string;
     closePicker: () => void;
@@ -76,6 +77,7 @@ const CustomDatePicker = ({
     return (
         <div className={`custom-datepicker custom-datepicker_${type}`}>
             <DatePicker
+                minDate={minDate}
                 onChange={(update) => {
                     if (single) {
                         setSingleDate(update as Date);

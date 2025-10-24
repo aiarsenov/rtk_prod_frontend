@@ -1,4 +1,4 @@
-import DatePicker from "react-datepicker";
+import { useState } from "react";
 import CustomDatePickerField from "../CustomDatePicker/CustomDatePickerField";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -17,6 +17,8 @@ const SaleFunnelItem = ({
     handleActiveStageDate,
     requestNextStage,
 }) => {
+    const [isActive, setIsActive] = useState(false);
+
     const handleStage = (next_possible_stages, action) => {
         if (stage.stage_date) {
             if (next_possible_stages?.selected) {
@@ -90,128 +92,113 @@ const SaleFunnelItem = ({
         stage.name.toLowerCase() !== "проект отложен" &&
         stage.name.toLowerCase() !== "договор заключён";
 
+    {
+        /* <ToastContainer containerId="container" /> */
+    }
+
     return (
-        <>
-            <ToastContainer containerId="container" />
-
-            <li
-                className={`sale-funnel-stages__list-item ${
-                    activeStage === stage.instance_id ? "active" : ""
-                }`}
-                onClick={() => {
-                    if (activeStage != stage.instance_id) {
-                        setActiveStage(stage.instance_id);
-                        getStageDetails(stage.instance_id);
-                    }
-                }}
-            >
-                <div className="sale-funnel-stages__list-item__row">
-                    <div className="sale-funnel-stages__list-item__name">
-                        <div className={`status ${handleNameClass()}`}>
-                            {stage.name}
-                        </div>
+        <li
+            className={`sale-funnel-stages__list-item ${
+                activeStage === stage.instance_id ? "active" : ""
+            }`}
+            onClick={() => {
+                if (activeStage != stage.instance_id) {
+                    setActiveStage(stage.instance_id);
+                    getStageDetails(stage.instance_id);
+                }
+            }}
+        >
+            <div className="sale-funnel-stages__list-item__row">
+                <div className="sale-funnel-stages__list-item__name">
+                    <div className={`status ${handleNameClass()}`}>
+                        {stage.name}
                     </div>
-
-                    <div className="sale-funnel-stages__list-item__date">
-                        <CustomDatePickerField
-                            value={stage.stage_date || ""}
-                            onChange={(updated) => {
-                                handleActiveStageDate(
-                                    updated,
-                                    stage.id,
-                                    stage.instance_id
-                                );
-                            }}
-                            disabled={!isLast}
-                            single={true}
-                        />
-
-                        {/* <DatePicker
-                            className="form-field"
-                            startDate={stage.stage_date}
-                            selected={stage.stage_date || ""}
-                            onChange={(date) => {
-                                console.log(date);
-                            }}
-                            dateFormat="dd.MM.yyyy"
-                            minDate={maxPrevDate}
-                            disabled={!isLast}
-                        /> */}
-                    </div>
-
-                    {stage.hasOwnProperty("next_possible_stages") &&
-                        stage.next_possible_stages.length > 0 &&
-                        showStageActions &&
-                        noActionStages && (
-                            <nav
-                                className={`rate-switch ${handleStatusClass()}`}
-                            >
-                                <button
-                                    type="button"
-                                    className="rate-switch__button"
-                                    title="Отказ от участия"
-                                    onClick={(evt) => {
-                                        evt.stopPropagation();
-
-                                        handleStage(
-                                            stage.next_possible_stages[1],
-                                            "rejected"
-                                        );
-                                    }}
-                                ></button>
-
-                                <button
-                                    type="button"
-                                    className="rate-switch__button"
-                                    title="Отложить проект"
-                                    onClick={(evt) => {
-                                        evt.stopPropagation();
-
-                                        handleStage(
-                                            stage.next_possible_stages[2],
-                                            "postponed"
-                                        );
-                                    }}
-                                ></button>
-
-                                <button
-                                    type="button"
-                                    className="rate-switch__button"
-                                    title="Принять"
-                                    onClick={(evt) => {
-                                        evt.stopPropagation();
-
-                                        handleStage(
-                                            stage.next_possible_stages[0],
-                                            "success"
-                                        );
-                                    }}
-                                ></button>
-                            </nav>
-                        )}
-
-                    {/* Отображаем индикатор примененного действия у этапа, если действия ему больше не доступны */}
-                    {stage.hasOwnProperty("next_possible_stages") &&
-                        showStageDots &&
-                        noActionStages && (
-                            <div
-                                className={`rate-switch ${handleStatusClass()}`}
-                            >
-                                <div className="rate-switch__button"></div>
-                                <div className="rate-switch__button"></div>
-                                <div className="rate-switch__button"></div>
-                            </div>
-                        )}
-
-                    {!noActionStages && <div></div>}
-
-                    <button
-                        type="button"
-                        className="sale-funnel-stages__list-item__open-btn"
-                    ></button>
                 </div>
-            </li>
-        </>
+
+                <div className="sale-funnel-stages__list-item__date">
+                    <CustomDatePickerField
+                        value={stage.stage_date || ""}
+                        onChange={(updated) => {
+                            handleActiveStageDate(
+                                updated,
+                                stage.id,
+                                stage.instance_id
+                            );
+                        }}
+                        minDate={maxPrevDate}
+                        disabled={!isLast}
+                        single={true}
+                    />
+                </div>
+
+                {stage.hasOwnProperty("next_possible_stages") &&
+                    stage.next_possible_stages.length > 0 &&
+                    showStageActions &&
+                    noActionStages && (
+                        <nav className={`rate-switch ${handleStatusClass()}`}>
+                            <button
+                                type="button"
+                                className="rate-switch__button"
+                                title="Отказ от участия"
+                                onClick={(evt) => {
+                                    evt.stopPropagation();
+
+                                    handleStage(
+                                        stage.next_possible_stages[1],
+                                        "rejected"
+                                    );
+                                }}
+                            ></button>
+
+                            <button
+                                type="button"
+                                className="rate-switch__button"
+                                title="Отложить проект"
+                                onClick={(evt) => {
+                                    evt.stopPropagation();
+
+                                    handleStage(
+                                        stage.next_possible_stages[2],
+                                        "postponed"
+                                    );
+                                }}
+                            ></button>
+
+                            <button
+                                type="button"
+                                className="rate-switch__button"
+                                title="Принять"
+                                onClick={(evt) => {
+                                    evt.stopPropagation();
+
+                                    handleStage(
+                                        stage.next_possible_stages[0],
+                                        "success"
+                                    );
+                                }}
+                            ></button>
+                        </nav>
+                    )}
+
+                {/* Отображаем индикатор примененного действия у этапа, если действия ему больше не доступны */}
+                {stage.hasOwnProperty("next_possible_stages") &&
+                    showStageDots &&
+                    noActionStages && (
+                        <div className={`rate-switch ${handleStatusClass()}`}>
+                            <div className="rate-switch__button"></div>
+                            <div className="rate-switch__button"></div>
+                            <div className="rate-switch__button"></div>
+                        </div>
+                    )}
+
+                {!noActionStages && <div></div>}
+
+                <button
+                    type="button"
+                    className="sale-funnel-stages__list-item__open-btn"
+                ></button>
+            </div>
+        </li>
     );
 };
 

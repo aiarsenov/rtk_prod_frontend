@@ -153,7 +153,8 @@
     }
 
     .react-datepicker__month-container .react-datepicker__day-names *,
-    .react-datepicker__day--outside-month .react-datepicker__day-number {
+    .react-datepicker__day--outside-month .react-datepicker__day-number,
+    .react-datepicker__day--disabled .react-datepicker__day-number {
         color: var(--color-gray-60) !important;
     }
 

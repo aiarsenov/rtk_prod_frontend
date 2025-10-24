@@ -176,14 +176,14 @@ const SaleFunnelStages = ({
 
                                 {showCancelButton && (
                                     <button
-                                        className="border rounded-[50%] flex items-center justify-center w-[20px] h-[20px] flex-[0_0_20px] leading-4"
+                                        className="cancel-button"
                                         type="button"
                                         title="Отменить возобновление воронки"
                                         onClick={() => {
                                             cancelResumeSaleFunnel();
                                         }}
                                     >
-                                        X
+                                        Отменить возобновление
                                     </button>
                                 )}
                             </div>
@@ -217,7 +217,7 @@ const SaleFunnelStages = ({
                     ]?.name?.toLowerCase() === "проект отложен") ? (
                     <button
                         type="button"
-                        className="text-lg italic w-fit px-5.5"
+                        className="button-active"
                         onClick={() => openResumableStagesPopup()}
                         title="Возобновить воронку"
                     >

@@ -51,8 +51,18 @@
             margin-top: 0;
         }
 
+        .button-active {
+            width: fit-content;
+            margin: 0 auto;
+        }
+
+        .cancel-button {
+            width: fit-content;
+        }
+
         &__list {
-            display: grid;
+            display: flex;
+            flex-direction: column;
             gap: 10px;
 
             &-item {

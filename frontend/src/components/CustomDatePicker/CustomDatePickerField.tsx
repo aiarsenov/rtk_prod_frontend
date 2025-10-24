@@ -15,6 +15,7 @@ const CustomDatePickerField = ({
     placeholder = single ? "дд.мм.гггг" : "мм.гггг - мм.гггг",
     onChange,
     disabled,
+    minDate,
 }: {
     type: string;
     startDate: string;
@@ -74,6 +75,7 @@ const CustomDatePickerField = ({
                     value={value}
                     single={single}
                     type={type}
+                    minDate={minDate}
                 />
             )}
         </div>
