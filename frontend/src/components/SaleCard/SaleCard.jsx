@@ -666,7 +666,7 @@ const SaleCard = () => {
         }
     };
 
-    // Получение проекта
+    // Получение карточки
     const getCard = async () => {
         setIsDataLoaded(false);
 
@@ -701,7 +701,7 @@ const SaleCard = () => {
         }
     };
 
-    // Обновление проекта
+    // Обновление карточки
     const updateCard = async (showMessage = true, data = cardDataCustom) => {
         query = toast.loading("Обновление", {
             containerId: "toastContainer",
@@ -1333,47 +1333,24 @@ const SaleCard = () => {
                         </section>
 
                         <section className="card__aside-content">
-                            <div className="flex flex-col gap-2 flex-grow">
-                                <div className="flex items-center gap-2">
-                                    <span className="text-gray-400">
-                                        Воронка продажи
-                                    </span>
-                                </div>
+                            <SaleFunnelStages
+                                saleId={saleId}
+                                saleStages={saleStages}
+                                handleNextStage={handleNextStage}
+                                getStageDetails={getStageDetails}
+                                activeStage={activeStage}
+                                setActiveStage={setActiveStage}
+                                handleActiveStageDate={handleActiveStageDate}
+                                getStages={getStages}
+                                requestNextStage={requestNextStage}
+                                fetchServices={fetchServices}
+                                mode={mode}
+                            />
 
-                                <div className="border-2 border-gray-300 p-3 h-full overflow-x-hidden overflow-y-auto">
-                                    {saleStages.stages?.length > 0 &&
-                                        services.length > 0 && (
-                                            <SaleFunnelStages
-                                                saleId={saleId}
-                                                saleStages={saleStages}
-                                                handleNextStage={
-                                                    handleNextStage
-                                                }
-                                                getStageDetails={
-                                                    getStageDetails
-                                                }
-                                                activeStage={activeStage}
-                                                setActiveStage={setActiveStage}
-                                                handleActiveStageDate={
-                                                    handleActiveStageDate
-                                                }
-                                                getStages={getStages}
-                                                requestNextStage={
-                                                    requestNextStage
-                                                }
-                                                fetchServices={fetchServices}
-                                                mode={mode}
-                                            />
-                                        )}
-                                </div>
-                            </div>
-
-                            <div className="flex flex-col gap-2 flex-grow">
-                                <div className="flex items-center gap-2">
-                                    <span className="text-gray-400">
-                                        Детализация этапа продажи
-                                    </span>
-                                    {mode === "edit" && activeStage && (
+                            <div className="mt-5">
+                                <div className="flex gap-2">
+                                    Детализация этапа
+                                    {mode === "edit" && (
                                         <button
                                             type="button"
                                             className="save-icon w-[20px] h-[20px]"
@@ -1383,16 +1360,14 @@ const SaleCard = () => {
                                     )}
                                 </div>
 
-                                <div className="border-2 border-gray-300 py-5 px-4 h-full">
-                                    {activeStage && services.length > 0 && (
-                                        <SaleStageDetails
-                                            stageMetrics={stageMetrics}
-                                            metrics={metrics}
-                                            setMetrics={setMetrics}
-                                            mode={mode}
-                                        />
-                                    )}
-                                </div>
+                                {activeStage && services.length > 0 && (
+                                    <SaleStageDetails
+                                        stageMetrics={stageMetrics}
+                                        metrics={metrics}
+                                        setMetrics={setMetrics}
+                                        mode={mode}
+                                    />
+                                )}
                             </div>
                         </section>
                     </div>

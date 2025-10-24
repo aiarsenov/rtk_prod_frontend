@@ -1,40 +1,85 @@
 @use "../../styles/media-breakpoints" as *;
 
-.sale-new-contragent-window {
-    .action-form__body {
-        display: flex;
-        flex-direction: column;
+.sale {
+    .read-mode {
+        .sale-contragents__list-item {
+            background: transparent;
+        }
+    }
+
+    &-new-contragent-window {
+        .action-form__body {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            min-height: 310px;
+            max-height: 310px;
+        }
+
+        .form-select__list {
+            max-height: 100%;
+        }
+    }
+
+    &-contragents__list {
+        margin-bottom: 20px;
+        display: grid;
         gap: 20px;
-        min-height: 310px;
-        max-height: 310px;
+
+        @media (min-width: $media-md) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        &-item {
+            background: var(--color-gray-20);
+            border: 1px solid var(--color-gray-40);
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 150%;
+            padding: 16px 20px;
+            border-radius: 10px;
+            transition: box-shadow var(--trans);
+
+            &:hover {
+                box-shadow: 0px 8px 8px 0px #0020330a;
+            }
+        }
     }
 
-    .form-select__list {
-        max-height: 100%;
-    }
-}
+    &-funnel-stages {
+        .card__subtitle {
+            margin-top: 0;
+        }
 
-.sale-contragents__list {
-    margin-bottom: 20px;
-    display: grid;
-    gap: 20px;
+        &__list {
+            display: grid;
+            gap: 10px;
 
-    @media (min-width: $media-md) {
-        grid-template-columns: repeat(2, 1fr);
-    }
+            &-item {
+                border-radius: 10px;
+                border: 1px solid var(--color-gray-30);
+                background: var(--color-white);
+                padding: 15px 10px 15px 20px;
 
-    &-item {
-        background: var(--color-gray-20);
-        border: 1px solid var(--color-gray-40);
-        font-weight: 500;
-        font-size: 14px;
-        line-height: 150%;
-        padding: 16px 20px;
-        border-radius: 10px;
-        transition: box-shadow var(--trans);
+                &__date input {
+                    width: 120px;
+                }
 
-        &:hover {
-            box-shadow: 0px 8px 8px 0px #0020330a;
+                &__open-btn {
+                    width: 40px;
+                    height: 40px;
+                    background: url("../../assets/icons/arrow-right.svg") center
+                        no-repeat;
+                }
+
+                &__row {
+                    display: grid;
+                    align-items: center;
+                    justify-content: space-between;
+                    grid-template-columns: 1fr 120px 60px 40px;
+                    gap: 23px;
+                }
+            }
         }
     }
 }
