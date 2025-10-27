@@ -130,6 +130,8 @@ const SaleFunnelStages = ({
             current_value: parseFormattedMoney(item.current_value),
         }));
 
+        stageMetricsData.comment = stage.comment || "";
+
         postData(
             "PATCH",
             `${
@@ -189,45 +191,6 @@ const SaleFunnelStages = ({
                 });
             });
     };
-
-    // Валидация полей стоимости этапа перед сохранением
-    // const handleSaveDetails = () => {
-    //     const activeStageData = saleStages.stages.find(
-    //         (item) => item.instance_id === stageMetrics.instance_id
-    //     );
-
-    //     if (
-    //         activeStageData.name.toLowerCase() !== "получен запрос" &&
-    //         activeStageData.name.toLowerCase() !== "проект отложен" &&
-    //         activeStageData.name.toLowerCase() !== "получен отказ" &&
-    //         activeStageData.name.toLowerCase() !== "отказ от участия" &&
-    //         activeStageData.name.toLowerCase() !== "подготовка кп"
-    //     ) {
-    //         if (
-    //             metrics.metrics?.length > 0 &&
-    //             metrics.metrics?.every(
-    //                 (item) =>
-    //                     item.current_value !== null && item.current_value !== ""
-    //             )
-    //         ) {
-    //             // updateStageDetails();
-    //         } else {
-    //             toast.error("Заполните все поля стоимости предложения", {
-    //                 containerId: "toastContainerStages",
-    //                 isLoading: false,
-    //                 autoClose: 2000,
-    //                 pauseOnFocusLoss: false,
-    //                 pauseOnHover: false,
-    //                 position:
-    //                     window.innerWidth >= 1440
-    //                         ? "bottom-right"
-    //                         : "top-right",
-    //             });
-    //         }
-    //     } else {
-    //         // updateStageDetails();
-    //     }
-    // };
 
     // Обработчик переключателя этапа
     const handleStage = (stage, next_stage, action) => {
@@ -516,15 +479,14 @@ const SaleFunnelStages = ({
                                 stage={stage}
                                 handleStage={handleStage}
                                 getStageDetails={getStageDetails}
-                                // activeStage={activeStage}
                                 maxPrevDate={maxPrevDate}
                                 showStageDots={showStageDots}
                                 showStageActions={showStageActions}
                                 isLast={isLast}
-                                // setActiveStage={setActiveStage}
                                 handleNextStage={handleNextStage}
                                 handleActiveStageDate={handleActiveStageDate}
                                 requestNextStage={requestNextStage}
+                                updateStageDetails={updateStageDetails}
                                 mode={mode}
                             />
                         );

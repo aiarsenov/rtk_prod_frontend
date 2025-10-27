@@ -1,10 +1,14 @@
+import { useState } from "react";
+
 import getColorBySign from "../../utils/getColorBySign";
 import formatMoney from "../../utils/formatMoney";
 
 import AutoResizeTextarea from "../AutoResizeTextarea";
 import Hint from "../Hint/Hint";
 
-const SaleStageDetails = ({ stage, mode }) => {
+const SaleStageDetails = ({ stage, mode, updateStageDetails }) => {
+    const [stageData, setStageData] = useState(stage || {});
+
     return (
         <div className="sale-stage-datails">
             {stage.name?.toLowerCase() !== "получен запрос" &&
@@ -19,8 +23,8 @@ const SaleStageDetails = ({ stage, mode }) => {
 
                         <div className="sale-stage-datails__list">
                             <div>
-                                {stage.dynamic_metrics?.length > 0 &&
-                                    stage.dynamic_metrics?.map((item) => (
+                                {stageData.dynamic_metrics?.length > 0 &&
+                                    stageData.dynamic_metrics?.map((item) => (
                                         <div
                                             className="form-field"
                                             key={item.report_type_id}
@@ -40,21 +44,42 @@ const SaleStageDetails = ({ stage, mode }) => {
                                                     const newValue =
                                                         evt.target.value;
 
-                                                    // setMetrics((prev) => ({
-                                                    //     ...prev,
-                                                    //     metrics:
-                                                    //         prev.metrics.map(
-                                                    //             (metric) =>
-                                                    //                 metric.report_type_id ===
-                                                    //                 item.report_type_id
-                                                    //                     ? {
-                                                    //                           ...metric,
-                                                    //                           current_value:
-                                                    //                               newValue,
-                                                    //                       }
-                                                    //                     : metric
-                                                    //         ),
-                                                    // }));
+                                                    setStageData((prev) => ({
+                                                        ...prev,
+                                                        dynamic_metrics:
+                                                            prev.dynamic_metrics.map(
+                                                                (metric) =>
+                                                                    metric.report_type_id ===
+                                                                    item.report_type_id
+                                                                        ? {
+                                                                              ...metric,
+                                                                              current_value:
+                                                                                  newValue,
+                                                                          }
+                                                                        : metric
+                                                            ),
+                                                    }));
+                                                }}
+                                                onBlur={() => {
+                                                    if (mode === "read") return;
+
+                                                    const originalMetric =
+                                                        stage?.dynamic_metrics?.find(
+                                                            (m) =>
+                                                                m.report_type_id ===
+                                                                item.report_type_id
+                                                        );
+
+                                                    if (
+                                                        originalMetric &&
+                                                        originalMetric.current_value !==
+                                                            item.current_value
+                                                    ) {
+                                                        updateStageDetails(
+                                                            stageData,
+                                                            false
+                                                        );
+                                                    }
                                                 }}
                                                 disabled={mode == "read"}
                                             />
@@ -105,12 +130,18 @@ const SaleStageDetails = ({ stage, mode }) => {
                     className="form-textarea"
                     placeholder="Ваш комментарий по этапу продажи"
                     style={{ resize: "none" }}
-                    value={stage?.comment || ""}
+                    value={stageData?.comment || ""}
                     onChange={(evt) => {
-                        // setMetrics((prev) => ({
-                        //     ...prev,
-                        //     comment: evt.target.value,
-                        // }));
+                        setStageData((prev) => ({
+                            ...prev,
+                            comment: evt.target.value,
+                        }));
+                    }}
+                    onBlur={() => {
+                        if (mode === "read") return;
+                        if (stage?.comment != stageData?.comment) {
+                            updateStageDetails(stageData, false);
+                        }
                     }}
                     disabled={mode == "read"}
                 />

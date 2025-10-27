@@ -12,6 +12,7 @@ const SaleFunnelItem = ({
     showStageActions,
     isLast,
     handleActiveStageDate,
+    updateStageDetails,
     mode,
 }) => {
     const [activeStage, setActiveStage] = useState(null);
@@ -172,7 +173,13 @@ const SaleFunnelItem = ({
                 ></button>
             </div>
 
-            {activeStage && <SaleStageDetails stage={stage} mode={mode} />}
+            {activeStage && (
+                <SaleStageDetails
+                    stage={stage}
+                    mode={mode}
+                    updateStageDetails={updateStageDetails}
+                />
+            )}
         </li>
     );
 };
