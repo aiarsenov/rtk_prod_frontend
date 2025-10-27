@@ -62,33 +62,33 @@ const SaleStageDetails = ({ stage, mode }) => {
                                     ))}
                             </div>
 
-                            <div>
-                                {stage.name?.toLowerCase() !==
-                                    "отправлено кп" &&
-                                    stage.dynamic_metrics?.length > 0 &&
-                                    stage.dynamic_metrics?.map((item) => (
-                                        <div
-                                            className="form-field"
-                                            key={item.report_type_id}
-                                        >
-                                            <span>Изменение:</span>
-
+                            {stage.name?.toLowerCase() !== "отправлено кп" &&
+                                stage.dynamic_metrics?.length > 0 && (
+                                    <div className="sale-stage-datails__change">
+                                        {stage.dynamic_metrics?.map((item) => (
                                             <div
-                                                className={`${
-                                                    item.change_percent
-                                                        ? getColorBySign(
-                                                              item.change_percent,
-                                                              "text-[#32d583]",
-                                                              "text-[#E84D42]"
-                                                          )
-                                                        : ""
-                                                }`}
+                                                className="form-field"
+                                                key={item.report_type_id}
                                             >
-                                                {item.change_percent || 0}%
+                                                <span>Изменение:</span>
+
+                                                <div
+                                                    className={`${
+                                                        item.change_percent
+                                                            ? getColorBySign(
+                                                                  item.change_percent,
+                                                                  "text-[#039855]",
+                                                                  "text-[#E84D42]"
+                                                              )
+                                                            : ""
+                                                    }`}
+                                                >
+                                                    {item.change_percent || 0}%
+                                                </div>
                                             </div>
-                                        </div>
-                                    ))}
-                            </div>
+                                        ))}
+                                    </div>
+                                )}
                         </div>
                     </div>
                 )}
