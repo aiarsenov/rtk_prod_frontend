@@ -442,7 +442,9 @@ const SaleFunnelStages = ({
                             nextStage && nextStage.can_cancel_resume === true;
 
                         return stage.name.toLowerCase() ==
-                            "воронка возобновлена" ? (
+                            "воронка возобновлена" ||
+                            stage.name.toLowerCase() ==
+                                "продажа возобновлена" ? (
                             <div
                                 key={stage.instance_id}
                                 className="text-[#667085] p-[15px] flex flex-wrap items-center gap-[10px]"
