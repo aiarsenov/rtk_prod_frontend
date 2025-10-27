@@ -22,12 +22,12 @@ const SaleServicesList = ({
                             <div className="services__list-item-row">
                                 <div className="services__list-item-cost">
                                     <div
-                                        className={`${
+                                        className={`services__list-item-percent ${
                                             item.cost_change_percent
                                                 ? getColorBySign(
                                                       item.cost_change_percent,
-                                                      "text-[#32d583]",
-                                                      "text-[#f97066]"
+                                                      "text-[#039855] bg-[#d1fadf]",
+                                                      "text-[#E84D42] bg-[#fee4e2]"
                                                   )
                                                 : ""
                                         }`}

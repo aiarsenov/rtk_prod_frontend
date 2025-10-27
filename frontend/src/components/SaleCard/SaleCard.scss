@@ -239,6 +239,12 @@
                 transition: opacity var(--trans);
             }
 
+            &-percent {
+                line-height: 100%;
+                padding: 5px;
+                border-radius: 5px;
+            }
+
             .delete-button {
                 transition: opacity var(--trans);
 
