@@ -91,15 +91,6 @@ const SaleStageDetails = ({ stage, mode, updateStageDetails }) => {
                                 stage.dynamic_metrics?.length > 0 && (
                                     <div className="sale-stage-datails__change">
                                         {stage.dynamic_metrics?.map((item) => {
-                                            console.log(
-                                                getColorBySign(
-                                                    item.change_percent,
-                                                    "text-[#039855]",
-                                                    "text-[#E84D42]"
-                                                )
-                                            );
-                                            console.log(item.change_percent);
-
                                             return (
                                                 <div
                                                     className="form-field"
