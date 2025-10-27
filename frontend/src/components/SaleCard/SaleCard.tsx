@@ -12,7 +12,6 @@ import AutoResizeTextarea from "../AutoResizeTextarea";
 import SaleNewContragentWindow from "./SaleNewContragentWindow";
 import SaleServicesList from "./SaleServicesList";
 import SaleFunnelStages from "./SaleFunnelStages";
-// import SaleStageDetails from "./SaleStageDetails";
 
 import Popup from "../Popup/Popup";
 import Loader from "../Loader";
@@ -48,7 +47,6 @@ const SaleCard = () => {
     // const [mode, setMode] = useState(location.state?.mode || "read");
     const [mode, setMode] = useState("edit");
 
-    // const [isFirstInit, setIsFirstInit] = useState(true);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
     const [availableToChange, setAvailableToChange] = useState(true); // Можем ли мы вносить изменения в проект (до закрепления заказчика)
 
@@ -65,8 +63,6 @@ const SaleCard = () => {
     const [addCustomer, setAddCustomer] = useState(false); // Добавить заказчика
     const [addServices, setAddServices] = useState(false); // Добавить услугу
 
-    // const [activeStage, setActiveStage] = useState(null);
-
     const [industries, setIndustries] = useState([]); // Отрасли
     const [contragents, setContragents] = useState([]); // Заказчики
     const [banks, setBanks] = useState([]); // Банки
@@ -77,29 +73,8 @@ const SaleCard = () => {
     const [saleStages, setSaleStages] = useState([]);
 
     const [newServices, setNewServices] = useState({ report_type_id: [] });
-    // const [stageMetrics, setStageMetrics] = useState({});
-
-    // const [metrics, setMetrics] = useState([]); // Прослойка - значения динамических полей в детализации
 
     let query;
-
-    const validateFields = () => {
-        const newErrors = {};
-
-        if (!cardData?.contragent_id) {
-            newErrors.contragent_id = "Необходимо назначить заказчика";
-        }
-
-        if (!cardData?.industries.main) {
-            newErrors.industries = "Необходимо выбрать отрасль";
-        }
-
-        if (!cardData?.request_source_id) {
-            newErrors.request_source_id = "Необходимо выбрать источник";
-        }
-
-        return newErrors;
-    };
 
     // Получение отраслей
     const fetchIndustries = () => {
@@ -480,11 +455,18 @@ const SaleCard = () => {
                 report_type_id: services.map((item) => item.id),
             }));
         } else {
-            // setStageMetrics({}); // Сбрасываем состояние при удалении всех услуг для перезагрузки экрана детализации
-            // setIsFirstInit(true);
             setNewServices({ report_type_id: [] });
         }
     }, [services]);
+
+    useEffect(() => {
+        const hasErrors =
+            !cardData?.contragent_id ||
+            !cardData?.industries?.main ||
+            !cardData?.request_source_id;
+
+        setAvailableToChange(!hasErrors);
+    }, [cardData]);
 
     return !isDataLoaded ? (
         <Loader />
@@ -589,7 +571,7 @@ const SaleCard = () => {
                                     )}
                                 </ul>
 
-                                {mode == "edit" && availableToChange && (
+                                {mode == "edit" && (
                                     <button
                                         type="button"
                                         className="button-add"
@@ -751,7 +733,9 @@ const SaleCard = () => {
                                             });
                                         }}
                                         mode={mode}
-                                        isDisabled={mode == "read"}
+                                        isDisabled={
+                                            mode == "read" || !availableToChange
+                                        }
                                     />
                                 </div>
 
@@ -798,7 +782,6 @@ const SaleCard = () => {
                                             });
                                         }}
                                         isDisabled={mode == "read"}
-                                        onMenuOpen={() => {}}
                                         styles={{
                                             input: (base) => ({
                                                 ...base,
@@ -857,7 +840,9 @@ const SaleCard = () => {
                                             });
                                         }}
                                         mode={mode}
-                                        isDisabled={mode == "read"}
+                                        isDisabled={
+                                            mode == "read" || !availableToChange
+                                        }
                                     />
                                 </div>
 
@@ -878,18 +863,9 @@ const SaleCard = () => {
                                             "Совпадений нет"
                                         }
                                         isValidNewOption={() => false}
-                                        // const newValue =
-                                        //     selectedOption?.value || null;
-
-                                        // setProjectDataCustom((prev) => ({
-                                        //     ...prev,
-                                        //     contragent_id: newValue,
-                                        // }));
-                                        // updateCard(projectId, true, {
-                                        //     contragent_id: newValue,
-                                        // });
-                                        // }}
-                                        isDisabled={mode == "read"}
+                                        isDisabled={
+                                            mode == "read" || !availableToChange
+                                        }
                                         styles={{
                                             input: (base) => ({
                                                 ...base,
