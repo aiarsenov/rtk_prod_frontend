@@ -70,13 +70,23 @@
                 border: 1px solid var(--color-gray-30);
                 background: var(--color-white);
                 padding: 15px 10px 15px 20px;
-                transition: all var(--trans);
-                max-height: 73.6px;
-                overflow: hidden;
+                transition: maxHeight var(--trans);
+
+                @media (min-width: $media-lg) {
+                    max-height: 73.6px;
+                    overflow: hidden;
+                }
+
+                .status {
+                    padding: 4px 10px;
+                }
 
                 &__date {
                     .custom-datepicker__field {
                         background: var(--color-gray-20);
+                        font-weight: 500;
+                        font-size: 14px;
+                        line-height: 150%;
                     }
 
                     input {
@@ -94,10 +104,15 @@
 
                 &__row {
                     display: grid;
+                    grid-template-columns: repeat(2, 1fr);
                     align-items: center;
                     justify-content: space-between;
-                    grid-template-columns: 1fr 120px 60px 40px;
-                    gap: 23px;
+                    gap: 10px;
+
+                    @media (min-width: $media-md) {
+                        grid-template-columns: 1fr 120px 60px 40px;
+                        gap: 23px;
+                    }
                 }
             }
 
@@ -108,6 +123,46 @@
                     transform: rotate(90deg);
                 }
             }
+        }
+    }
+
+    &-stage-datails {
+        padding-top: 23px;
+
+        &__header {
+            margin-bottom: 13px;
+        }
+
+        &__list {
+            display: grid;
+            grid-template-columns: 55% 1fr;
+            align-items: center;
+            gap: 10px;
+
+            @media (min-width: $media-md) {
+                grid-template-columns: 1fr 45%;
+            }
+
+            > div {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            > div:last-of-type span {
+                display: none;
+            }
+        }
+
+        .form-field {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        &__body {
+            overflow-y: auto;
+            max-height: 500px;
         }
     }
 }

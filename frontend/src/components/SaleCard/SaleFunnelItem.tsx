@@ -197,6 +197,11 @@ const SaleFunnelItem = ({
                     type="button"
                     className="sale-funnel-stages__list-item__open-btn"
                     onClick={() => setActiveStage(!activeStage)}
+                    title={
+                        activeStage
+                            ? "Скрыть детализацию"
+                            : "Показать детализацию"
+                    }
                 ></button>
             </div>
 

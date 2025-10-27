@@ -440,14 +440,14 @@ const SaleFunnelStages = ({
         <div className="sale-funnel-stages">
             <h2 className="card__subtitle">Воронка продажи</h2>
 
-            {mode === "edit" && (
+            {/* {mode === "edit" && (
                 <button
                     type="button"
                     className="save-icon w-[20px] h-[20px]"
                     title="Сохранить детализацию этапа продажи"
                     onClick={() => handleSaveDetails()}
                 ></button>
-            )}
+            )} */}
 
             <ul className="sale-funnel-stages__list">
                 <ToastContainer containerId="toast" />
@@ -483,7 +483,7 @@ const SaleFunnelStages = ({
                             "воронка возобновлена" ? (
                             <div
                                 key={stage.instance_id}
-                                className="text-gray-400 px-5.5 flex items-center gap-2 mb-2"
+                                className="text-[#667085] p-[15px] flex flex-wrap items-center gap-[10px]"
                             >
                                 {stage.name}
 

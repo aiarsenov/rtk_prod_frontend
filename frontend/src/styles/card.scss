@@ -152,7 +152,8 @@
     }
 
     &__main-name {
-        display: flex;
+        display: grid;
+        grid-template-columns: 1fr auto;
         align-items: center;
         gap: 10px;
         transition: border var(--trans);
@@ -167,10 +168,10 @@
         }
 
         input {
-            flex-grow: 1;
             font-weight: 600;
             font-size: 20px;
             line-height: 120%;
+            min-width: 0;
         }
     }
 
