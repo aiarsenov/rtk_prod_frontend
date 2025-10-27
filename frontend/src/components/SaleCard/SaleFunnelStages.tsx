@@ -5,6 +5,8 @@ import postData from "../../utils/postData";
 import parseFormattedMoney from "../../utils/parseFormattedMoney";
 
 import SaleFunnelItem from "./SaleFunnelItem";
+import Popup from "../Popup/Popup";
+import ResumableStages from "./ResumableStages";
 
 import { ToastContainer, toast } from "react-toastify";
 
@@ -18,12 +20,7 @@ const SaleFunnelStages = ({
 }) => {
     const [popupState, setPopupState] = useState(false);
     const [resumableStages, setResumableStages] = useState([]);
-
-    // const [activeStage, setActiveStage] = useState(null);
-
     const [stageMetrics, setStageMetrics] = useState({});
-
-    // const [metrics, setMetrics] = useState([]); // Прослойка - значения динамических полей в детализации
 
     // Получаем детализацию выбранного этапа
     const getStageDetails = (stageId) => {
@@ -102,7 +99,7 @@ const SaleFunnelStages = ({
     };
 
     // Обработка даты у этапа
-    const handleActiveStageDate = (date, stageId, instance_id) => {
+    const handleStageDate = (date, instance_id) => {
         setSaleStages((prev) => {
             const updatedStages = prev.stages.map((stage) => {
                 if (stage.instance_id === instance_id) {
@@ -293,6 +290,7 @@ const SaleFunnelStages = ({
         }
     };
 
+    // Попап возобновление воронки
     const openResumableStagesPopup = () => {
         if (saleStages.stages[saleStages.stages.length - 1]?.stage_date) {
             getData(
@@ -413,15 +411,6 @@ const SaleFunnelStages = ({
         <div className="sale-funnel-stages">
             <h2 className="card__subtitle">Воронка продажи</h2>
 
-            {/* {mode === "edit" && (
-                <button
-                    type="button"
-                    className="save-icon w-[20px] h-[20px]"
-                    title="Сохранить детализацию этапа продажи"
-                    onClick={() => handleSaveDetails()}
-                ></button>
-            )} */}
-
             <ul className="sale-funnel-stages__list">
                 <ToastContainer containerId="toastContainerStages" />
 
@@ -482,11 +471,11 @@ const SaleFunnelStages = ({
                                 maxPrevDate={maxPrevDate}
                                 showStageDots={showStageDots}
                                 showStageActions={showStageActions}
-                                isLast={isLast}
                                 handleNextStage={handleNextStage}
-                                handleActiveStageDate={handleActiveStageDate}
                                 requestNextStage={requestNextStage}
+                                handleStageDate={handleStageDate}
                                 updateStageDetails={updateStageDetails}
+                                isLast={isLast}
                                 mode={mode}
                             />
                         );
@@ -511,62 +500,20 @@ const SaleFunnelStages = ({
                         Возобновить воронку
                     </button>
                 ) : null}
-
-                {popupState && (
-                    <div
-                        className="fixed w-[100vw] h-[100vh] inset-0 z-2 flex items-center justify-center"
-                        style={{ background: "rgba(0, 0, 0, 0.2)" }}
-                        onClick={() => {
-                            setPopupState(false);
-                        }}
-                    >
-                        <div
-                            className="bg-white p-6"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                            }}
-                        >
-                            <div className="flex items-center justify-between gap-8 mb-5 text-lg">
-                                <b>
-                                    Выберите этап для возобновления воронки
-                                    продаж
-                                </b>
-
-                                <button
-                                    type="button"
-                                    className="border rounded-[50%] flex items-center justify-center w-[20px] h-[20px] flex-[0_0_20px] leading-4"
-                                    style={{ lineHeight: "150%" }}
-                                    title="Закрыть окно"
-                                    onClick={() => {
-                                        setPopupState(false);
-                                    }}
-                                >
-                                    x
-                                </button>
-                            </div>
-
-                            {resumableStages.length > 0 && (
-                                <ul className="grid gap-4">
-                                    {resumableStages.map((item) => (
-                                        <button
-                                            type="button"
-                                            className="w-fit text-lg"
-                                            key={item.id}
-                                            title={`Перейти к этапу ${item.name}`}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                resumeSaleFunnel(item.id);
-                                            }}
-                                        >
-                                            {item.name}
-                                        </button>
-                                    ))}
-                                </ul>
-                            )}
-                        </div>
-                    </div>
-                )}
             </ul>
+
+            {popupState && (
+                <Popup
+                    onClick={() => setPopupState(false)}
+                    title="Возобновление воронки"
+                >
+                    <ResumableStages
+                        resumableStages={resumableStages}
+                        resumeSaleFunnel={resumeSaleFunnel}
+                        setPopupState={setPopupState}
+                    />
+                </Popup>
+            )}
         </div>
     );
 };

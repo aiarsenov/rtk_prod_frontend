@@ -11,7 +11,7 @@ const SaleFunnelItem = ({
     showStageDots,
     showStageActions,
     isLast,
-    handleActiveStageDate,
+    handleStageDate,
     updateStageDetails,
     mode,
 }) => {
@@ -80,11 +80,7 @@ const SaleFunnelItem = ({
                     <CustomDatePickerField
                         value={stage.stage_date || ""}
                         onChange={(updated) => {
-                            handleActiveStageDate(
-                                updated,
-                                stage.id,
-                                stage.instance_id
-                            );
+                            handleStageDate(updated, stage.instance_id);
                         }}
                         minDate={maxPrevDate}
                         disabled={!isLast}
