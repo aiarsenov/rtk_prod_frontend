@@ -23,7 +23,7 @@ const SaleFunnelStages = ({
 
     const [stageMetrics, setStageMetrics] = useState({});
 
-    const [metrics, setMetrics] = useState([]); // Прослойка - значения динамических полей в детализации
+    // const [metrics, setMetrics] = useState([]); // Прослойка - значения динамических полей в детализации
 
     // Получаем детализацию выбранного этапа
     const getStageDetails = (stageId) => {
@@ -61,7 +61,7 @@ const SaleFunnelStages = ({
                     toast.success(
                         response.message || "Дата этапа успешно обновлена",
                         {
-                            containerId: "toastContainer",
+                            containerId: "toastContainerStages",
                             isLoading: false,
                             autoClose: 1200,
                             pauseOnFocusLoss: false,
@@ -74,7 +74,7 @@ const SaleFunnelStages = ({
                     );
                 } else {
                     toast.error(response.error || "Ошибка запроса", {
-                        containerId: "toastContainer",
+                        containerId: "toastContainerStages",
                         isLoading: false,
                         autoClose: 2000,
                         pauseOnFocusLoss: false,
@@ -88,7 +88,7 @@ const SaleFunnelStages = ({
             })
             .catch((response) => {
                 toast.error(response.error || "Ошибка запроса", {
-                    containerId: "toastContainer",
+                    containerId: "toastContainerStages",
                     isLoading: false,
                     autoClose: 2000,
                     pauseOnFocusLoss: false,
@@ -120,14 +120,12 @@ const SaleFunnelStages = ({
     };
 
     // Обновляем детализацию этапа продажи
-    const updateStageDetails = (nextStage = false, stage_status) => {
-        // let stageMetricsData = stageMetrics;
+    const updateStageDetails = (stage, nextStage = false, stage_status) => {
+        let stageMetricsData = {};
 
-        let stageMetricsData = metrics;
+        stageMetricsData.stage_instance_id = stage.instance_id;
 
-        stageMetricsData.stage_instance_id = stageMetrics.instance_id;
-
-        stageMetricsData.metrics = stageMetricsData.metrics.map((item) => ({
+        stageMetricsData.metrics = stage.dynamic_metrics.map((item) => ({
             ...item,
             current_value: parseFormattedMoney(item.current_value),
         }));
@@ -136,9 +134,7 @@ const SaleFunnelStages = ({
             "PATCH",
             `${
                 import.meta.env.VITE_API_URL
-            }sales-funnel-projects/${saleId}/stages/${
-                stageMetrics.stage_id
-            }/metrics`,
+            }sales-funnel-projects/${saleId}/stages/${stage.id}/metrics`,
             stageMetricsData
         )
             .then((response) => {
@@ -146,11 +142,11 @@ const SaleFunnelStages = ({
                     getStages();
 
                     if (nextStage) {
-                        requestNextStage(nextStage, stage_status);
+                        requestNextStage(nextStage.id, stage_status);
                     } else {
                         toast.success(response.message, {
                             type: "success",
-                            containerId: "toastContainer",
+                            containerId: "toastContainerStages",
                             isLoading: false,
                             autoClose: 1200,
                             pauseOnFocusLoss: false,
@@ -165,7 +161,7 @@ const SaleFunnelStages = ({
                     }
                 } else {
                     toast.error(response.data.error || "Ошибка запроса", {
-                        containerId: "toastContainer",
+                        containerId: "toastContainerStages",
                         isLoading: false,
                         autoClose: 2000,
                         pauseOnFocusLoss: false,
@@ -180,7 +176,7 @@ const SaleFunnelStages = ({
             })
             .catch((response) => {
                 toast.error(response.data.error || "Ошибка запроса", {
-                    containerId: "toastContainer",
+                    containerId: "toastContainerStages",
                     isLoading: false,
                     autoClose: 2000,
                     pauseOnFocusLoss: false,
@@ -195,41 +191,62 @@ const SaleFunnelStages = ({
     };
 
     // Валидация полей стоимости этапа перед сохранением
-    const handleSaveDetails = () => {
-        const activeStageData = saleStages.stages.find(
-            (item) => item.instance_id === stageMetrics.instance_id
-        );
+    // const handleSaveDetails = () => {
+    //     const activeStageData = saleStages.stages.find(
+    //         (item) => item.instance_id === stageMetrics.instance_id
+    //     );
 
-        if (
-            activeStageData.name.toLowerCase() !== "получен запрос" &&
-            activeStageData.name.toLowerCase() !== "проект отложен" &&
-            activeStageData.name.toLowerCase() !== "получен отказ" &&
-            activeStageData.name.toLowerCase() !== "отказ от участия" &&
-            activeStageData.name.toLowerCase() !== "подготовка кп"
-        ) {
-            if (
-                metrics.metrics?.length > 0 &&
-                metrics.metrics?.every(
-                    (item) =>
-                        item.current_value !== null && item.current_value !== ""
-                )
-            ) {
-                // updateStageDetails();
+    //     if (
+    //         activeStageData.name.toLowerCase() !== "получен запрос" &&
+    //         activeStageData.name.toLowerCase() !== "проект отложен" &&
+    //         activeStageData.name.toLowerCase() !== "получен отказ" &&
+    //         activeStageData.name.toLowerCase() !== "отказ от участия" &&
+    //         activeStageData.name.toLowerCase() !== "подготовка кп"
+    //     ) {
+    //         if (
+    //             metrics.metrics?.length > 0 &&
+    //             metrics.metrics?.every(
+    //                 (item) =>
+    //                     item.current_value !== null && item.current_value !== ""
+    //             )
+    //         ) {
+    //             // updateStageDetails();
+    //         } else {
+    //             toast.error("Заполните все поля стоимости предложения", {
+    //                 containerId: "toastContainerStages",
+    //                 isLoading: false,
+    //                 autoClose: 2000,
+    //                 pauseOnFocusLoss: false,
+    //                 pauseOnHover: false,
+    //                 position:
+    //                     window.innerWidth >= 1440
+    //                         ? "bottom-right"
+    //                         : "top-right",
+    //             });
+    //         }
+    //     } else {
+    //         // updateStageDetails();
+    //     }
+    // };
+
+    // Обработчик переключателя этапа
+    const handleStage = (stage, next_stage, action) => {
+        if (stage.stage_date) {
+            if (stage.next_possible_stages?.selected) {
+                requestNextStage(next_stage, action);
             } else {
-                toast.error("Заполните все поля стоимости предложения", {
-                    containerId: "toastContainer",
-                    isLoading: false,
-                    autoClose: 2000,
-                    pauseOnFocusLoss: false,
-                    pauseOnHover: false,
-                    position:
-                        window.innerWidth >= 1440
-                            ? "bottom-right"
-                            : "top-right",
-                });
+                handleNextStage(stage, next_stage, action);
             }
         } else {
-            // updateStageDetails();
+            toast.error("Выберите дату", {
+                containerId: "toastContainerStages",
+                isLoading: false,
+                autoClose: 2000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                position:
+                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+            });
         }
     };
 
@@ -246,7 +263,7 @@ const SaleFunnelStages = ({
                 if (response?.ok) {
                     toast.success(response.message, {
                         type: "success",
-                        containerId: "toastContainer",
+                        containerId: "toastContainerStages",
                         isLoading: false,
                         autoClose: 1200,
                         pauseOnFocusLoss: false,
@@ -263,7 +280,7 @@ const SaleFunnelStages = ({
             })
             .catch((response) => {
                 toast.error(response.error || "Ошибка запроса", {
-                    containerId: "toastContainer",
+                    containerId: "toastContainerStages",
                     isLoading: false,
                     autoClose: 2000,
                     pauseOnFocusLoss: false,
@@ -278,26 +295,26 @@ const SaleFunnelStages = ({
     };
 
     // Валидируем поля стоимости предложения перед запросом следующего этапа
-    const handleNextStage = (stage_id, name, stage_status) => {
+    const handleNextStage = (stage, next_stage, stage_status) => {
         if (
             stage_status === "success" &&
-            name.toLowerCase() !== "получен запрос" &&
-            name.toLowerCase() !== "проект отложен" &&
-            name.toLowerCase() !== "получен отказ" &&
-            name.toLowerCase() !== "отказ от участия" &&
-            name.toLowerCase() !== "подготовка кп"
+            stage.name.toLowerCase() !== "получен запрос" &&
+            stage.name.toLowerCase() !== "проект отложен" &&
+            stage.name.toLowerCase() !== "получен отказ" &&
+            stage.name.toLowerCase() !== "отказ от участия" &&
+            stage.name.toLowerCase() !== "подготовка кп"
         ) {
             if (
-                metrics.metrics?.length > 0 &&
-                metrics.metrics?.every(
+                stage.dynamic_metrics?.length > 0 &&
+                stage.dynamic_metrics?.every(
                     (item) =>
                         item.current_value !== null && item.current_value !== ""
                 )
             ) {
-                // updateStageDetails(stage_id, stage_status);
+                updateStageDetails(stage, next_stage, stage_status);
             } else {
                 toast.error("Заполните все поля стоимости предложения", {
-                    containerId: "toastContainer",
+                    containerId: "toastContainerStages",
                     isLoading: false,
                     autoClose: 2000,
                     pauseOnFocusLoss: false,
@@ -309,7 +326,7 @@ const SaleFunnelStages = ({
                 });
             }
         } else {
-            // updateStageDetails(stage_id, stage_status);
+            updateStageDetails(stage, next_stage, stage_status);
         }
     };
 
@@ -423,17 +440,10 @@ const SaleFunnelStages = ({
 
     useEffect(() => {
         if (saleStages.stages && saleStages.stages.length > 0) {
-            // setActiveStage(
-            //     saleStages.stages[saleStages.stages?.length - 1].instance_id
-            // );
             getStageDetails(
                 saleStages.stages[saleStages.stages?.length - 1].instance_id
             );
         }
-
-        // if (activeStage) {
-        //     getStageDetails(activeStage);
-        // }
     }, [saleStages]);
 
     return (
@@ -450,7 +460,7 @@ const SaleFunnelStages = ({
             )} */}
 
             <ul className="sale-funnel-stages__list">
-                <ToastContainer containerId="toast" />
+                <ToastContainer containerId="toastContainerStages" />
 
                 {saleStages.stages?.length > 0 &&
                     saleStages.stages.map((stage, index, arr) => {
@@ -504,6 +514,7 @@ const SaleFunnelStages = ({
                             <SaleFunnelItem
                                 key={stage.instance_id}
                                 stage={stage}
+                                handleStage={handleStage}
                                 getStageDetails={getStageDetails}
                                 // activeStage={activeStage}
                                 maxPrevDate={maxPrevDate}

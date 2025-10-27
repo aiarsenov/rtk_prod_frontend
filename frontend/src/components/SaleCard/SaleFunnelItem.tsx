@@ -3,63 +3,18 @@ import { useState } from "react";
 import CustomDatePickerField from "../CustomDatePicker/CustomDatePickerField";
 import SaleStageDetails from "./SaleStageDetails";
 
-import { ToastContainer, toast } from "react-toastify";
-
 const SaleFunnelItem = ({
     stage,
+    handleStage,
     getStageDetails,
     maxPrevDate,
     showStageDots,
     showStageActions,
     isLast,
-    handleNextStage,
     handleActiveStageDate,
-    requestNextStage,
     mode,
 }) => {
     const [activeStage, setActiveStage] = useState(null);
-
-    const handleStage = (next_possible_stages, action) => {
-        if (stage.stage_date) {
-            if (next_possible_stages?.selected) {
-                if (action === "rejected") {
-                    if (confirm("Вы уверены?")) {
-                        requestNextStage(next_possible_stages.id, action);
-                    }
-                    return;
-                } else {
-                    requestNextStage(next_possible_stages.id, action);
-                }
-            } else {
-                if (action === "rejected") {
-                    if (confirm("Вы уверены?")) {
-                        handleNextStage(
-                            next_possible_stages.id,
-                            stage.name,
-                            action
-                        );
-                    }
-                    return;
-                } else {
-                    handleNextStage(
-                        next_possible_stages.id,
-                        stage.name,
-                        action
-                    );
-                }
-            }
-        } else {
-            toast.error("Выберите дату", {
-                containerId: "container",
-                isLoading: false,
-                autoClose: 2000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                position:
-                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-            });
-        }
-    };
 
     const handleStatusClass = () => {
         if (stage.next_possible_stages[1]?.selected) {
@@ -67,6 +22,16 @@ const SaleFunnelItem = ({
         } else if (stage.next_possible_stages[2]?.selected) {
             return "rate-switch_orange";
         } else if (stage.next_possible_stages[0]?.selected) {
+            return "rate-switch_green";
+        }
+    };
+
+    const handleStaticStatusClass = () => {
+        if (stage.selected_status == "rejected") {
+            return "rate-switch_red";
+        } else if (stage.selected_status == "postponed") {
+            return "rate-switch_orange";
+        } else if (stage.selected_status == "success") {
             return "rate-switch_green";
         }
     };
@@ -92,10 +57,6 @@ const SaleFunnelItem = ({
         stage.name.toLowerCase() !== "проект отложен" &&
         stage.name.toLowerCase() !== "договор заключён";
 
-    {
-        /* <ToastContainer containerId="container" /> */
-    }
-
     return (
         <li
             className={`sale-funnel-stages__list-item ${
@@ -103,7 +64,6 @@ const SaleFunnelItem = ({
             }`}
             onClick={() => {
                 if (activeStage != stage.instance_id) {
-                    // setActiveStage(stage.instance_id);
                     getStageDetails(stage.instance_id);
                 }
             }}
@@ -143,10 +103,13 @@ const SaleFunnelItem = ({
                                 onClick={(evt) => {
                                     evt.stopPropagation();
 
-                                    handleStage(
-                                        stage.next_possible_stages[1],
-                                        "rejected"
-                                    );
+                                    if (confirm("Вы уверены?")) {
+                                        handleStage(
+                                            stage,
+                                            stage.next_possible_stages[1],
+                                            "rejected"
+                                        );
+                                    }
                                 }}
                             ></button>
 
@@ -158,6 +121,7 @@ const SaleFunnelItem = ({
                                     evt.stopPropagation();
 
                                     handleStage(
+                                        stage,
                                         stage.next_possible_stages[2],
                                         "postponed"
                                     );
@@ -172,6 +136,7 @@ const SaleFunnelItem = ({
                                     evt.stopPropagation();
 
                                     handleStage(
+                                        stage,
                                         stage.next_possible_stages[0],
                                         "success"
                                     );
@@ -184,7 +149,9 @@ const SaleFunnelItem = ({
                 {stage.hasOwnProperty("next_possible_stages") &&
                     showStageDots &&
                     noActionStages && (
-                        <div className={`rate-switch ${handleStatusClass()}`}>
+                        <div
+                            className={`rate-switch ${handleStaticStatusClass()}`}
+                        >
                             <div className="rate-switch__button"></div>
                             <div className="rate-switch__button"></div>
                             <div className="rate-switch__button"></div>
@@ -205,15 +172,7 @@ const SaleFunnelItem = ({
                 ></button>
             </div>
 
-            {activeStage && (
-                <SaleStageDetails
-                    // stageMetrics={stageMetrics}
-                    // metrics={metrics}
-                    // setMetrics={setMetrics}
-                    stage={stage}
-                    mode={mode}
-                />
-            )}
+            {activeStage && <SaleStageDetails stage={stage} mode={mode} />}
         </li>
     );
 };

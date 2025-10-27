@@ -53,7 +53,7 @@
 
         .button-active {
             width: fit-content;
-            margin: 0 auto;
+            margin: 10px 0;
         }
 
         .cancel-button {
@@ -70,12 +70,12 @@
                 border: 1px solid var(--color-gray-30);
                 background: var(--color-white);
                 padding: 15px 10px 15px 20px;
-                transition: all var(--trans);
-                max-height: 125px;
-                overflow: hidden;
+                // transition: all var(--trans);
+                // max-height: 125px;
+                // overflow: hidden;
 
                 @media (min-width: $media-lg) {
-                    max-height: 75px;
+                    // max-height: 75px;
                 }
 
                 .status {
@@ -118,7 +118,7 @@
             }
 
             &-item.active {
-                max-height: 1000px;
+                // max-height: 1000px;
 
                 .sale-funnel-stages__list-item__open-btn {
                     transform: rotate(90deg);
