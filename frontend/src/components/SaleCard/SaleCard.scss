@@ -70,13 +70,6 @@
                 border: 1px solid var(--color-gray-30);
                 background: var(--color-white);
                 padding: 15px 10px 15px 20px;
-                // transition: all var(--trans);
-                // max-height: 125px;
-                // overflow: hidden;
-
-                @media (min-width: $media-lg) {
-                    // max-height: 75px;
-                }
 
                 .status {
                     padding: 4px 10px;
@@ -118,8 +111,6 @@
             }
 
             &-item.active {
-                // max-height: 1000px;
-
                 .sale-funnel-stages__list-item__open-btn {
                     transform: rotate(90deg);
                 }
