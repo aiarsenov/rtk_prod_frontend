@@ -141,7 +141,9 @@ const SaleStageDetails = ({ stage, mode, updateStageDetails }) => {
 
                 <AutoResizeTextarea
                     className="form-textarea"
-                    placeholder="Ваш комментарий по этапу продажи"
+                    placeholder={
+                        mode == "edit" ? "Ваш комментарий по этапу продажи" : ""
+                    }
                     style={{ resize: "none" }}
                     value={stageData?.comment || ""}
                     onChange={(evt) => {

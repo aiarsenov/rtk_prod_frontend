@@ -46,7 +46,7 @@ const SaleCard = () => {
     const navigate = useNavigate();
 
     // const [mode, setMode] = useState(location.state?.mode || "read");
-    const [mode, setMode] = useState("read");
+    const [mode, setMode] = useState("edit");
 
     // const [isFirstInit, setIsFirstInit] = useState(true);
     const [isDataLoaded, setIsDataLoaded] = useState(false);

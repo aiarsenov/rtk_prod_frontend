@@ -1,12 +1,22 @@
 const getColorBySign = (
     value,
-    color1 = "text-[#f97066]",
-    color2 = "text-[#32d583]"
+    colorPositive = "text-[#f97066]",
+    colorNegative = "text-[#32d583]"
 ) => {
-    if (!value || typeof value !== "string") return "";
+    if (value === null || value === undefined) return "";
 
-    if (value.startsWith("+")) return color1;
-    if (value.startsWith("-")) return color2;
+    const num = Number(value);
+
+    if (!isNaN(num)) {
+        if (num > 0) return colorPositive;
+        if (num < 0) return colorNegative;
+        return "";
+    }
+
+    if (typeof value === "string") {
+        if (value.startsWith("+")) return colorPositive;
+        if (value.startsWith("-")) return colorNegative;
+    }
 
     return "";
 };
