@@ -15,7 +15,7 @@ import EmployeeWorkloadSummary from "./EmployeeWorkloadSummary";
 import EmployeeCurrentWorkload from "./EmployeeCurrentWorkload";
 import PersonalWorkload from "./PersonalWorkload";
 
-import Loader from "../Loader.jsx";
+import Loader from "../Loader.js";
 
 import "./EmployeeCard.scss";
 

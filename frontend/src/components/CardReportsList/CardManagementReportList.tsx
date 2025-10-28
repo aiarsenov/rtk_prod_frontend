@@ -4,7 +4,7 @@ import { useBodyScrollLock } from "../../hooks/useBodyScrollLock.js";
 
 import ReportRateEditor from "../ReportRateEditor/ReportRateEditor";
 import RateSwitchStatic from "../RateSwitch/ReteSwitchStatic.js";
-import Loader from "../Loader";
+import Loader from "../Loader.js";
 
 const CardManagementReportList = ({
     managerReports,

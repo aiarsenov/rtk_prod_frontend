@@ -1,0 +1,21 @@
+@use "../../styles/media-breakpoints" as *;
+
+.home {
+    &__container {
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+
+    &__tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        margin: 0 -15px;
+        white-space: nowrap;
+        padding: 0 15px 10px;
+
+        @media (min-width: $media-lg) {
+            margin: 0;
+            padding: 0;
+        }
+    }
+}

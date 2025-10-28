@@ -1,6 +1,6 @@
 import "./CardReportsList.scss";
 
-import Loader from "../../components/Loader";
+import Loader from "../Loader";
 
 const CardReportsList = ({
     isDataLoaded,

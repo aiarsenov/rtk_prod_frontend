@@ -602,269 +602,280 @@ const Indicators = () => {
         getProjects();
     }, []);
 
-    return (
-        <div className="flex flex-col justify-between gap-6 mb-8">
-            {isLoading && <Loader transparent={true} />}
+    return isLoading ? (
+        <Loader />
+    ) : (
+        <section className="indicators">
+            <div className="container dashboaƒrds__container">
+                {/* ФИЛЬТРЫ */}
+                <section className="filters flex items-center justify-between gap-6">
+                    <div className="flex items-center gap-8">
+                        <div className="flex flex-col">
+                            <span className="block mb-2 text-gray-400">
+                                Отчётный месяц
+                            </span>
+                            <select
+                                className="border-2 h-[32px] p-1 border-gray-300 min-w-full max-w-[140px] cursor-pointer"
+                                value={selectedFilters?.report_month?.[0] ?? ""}
+                                onChange={(e) => {
+                                    const selectedValue = Array.from(
+                                        e.target.selectedOptions
+                                    ).map((option) => option.value);
 
-            {/* ФИЛЬТРЫ */}
-            <section className="filters flex items-center justify-between gap-6">
-                <div className="flex items-center gap-8">
-                    <div className="flex flex-col">
-                        <span className="block mb-2 text-gray-400">
-                            Отчётный месяц
-                        </span>
-                        <select
-                            className="border-2 h-[32px] p-1 border-gray-300 min-w-full max-w-[140px] cursor-pointer"
-                            value={selectedFilters?.report_month?.[0] ?? ""}
-                            onChange={(e) => {
-                                const selectedValue = Array.from(
-                                    e.target.selectedOptions
-                                ).map((option) => option.value);
+                                    handleFilterChange(
+                                        "report_month",
+                                        selectedValue
+                                    );
+                                }}
+                            >
+                                {filtertOptions?.months?.length > 0 &&
+                                    filtertOptions?.months?.map((month) => (
+                                        <option
+                                            key={month.value}
+                                            value={month.value}
+                                        >
+                                            {month.label}
+                                        </option>
+                                    ))}
+                            </select>
+                        </div>
 
-                                handleFilterChange(
-                                    "report_month",
-                                    selectedValue
-                                );
-                            }}
-                        >
-                            {filtertOptions?.months?.length > 0 &&
-                                filtertOptions?.months?.map((month) => (
-                                    <option
-                                        key={month.value}
-                                        value={month.value}
-                                    >
-                                        {month.label}
-                                    </option>
-                                ))}
-                        </select>
+                        <div className="flex flex-col">
+                            <span className="block mb-2 text-gray-400">
+                                Отчётный период
+                            </span>
+                            <select
+                                className="border-2 h-[32px] p-1 border-gray-300 min-w-full max-w-[140px] cursor-pointer"
+                                value={selectedFilters?.period?.[0] ?? ""}
+                                onChange={(e) => {
+                                    const selectedValue = Array.from(
+                                        e.target.selectedOptions
+                                    ).map((option) => option.value);
+                                    handleFilterChange("period", selectedValue);
+                                }}
+                            >
+                                {filtertOptions?.periods?.length > 0 &&
+                                    filtertOptions?.periods?.map((period) => (
+                                        <option
+                                            key={period.value}
+                                            value={period.value}
+                                        >
+                                            {period.label}
+                                        </option>
+                                    ))}
+                            </select>
+                        </div>
                     </div>
 
-                    <div className="flex flex-col">
-                        <span className="block mb-2 text-gray-400">
-                            Отчётный период
-                        </span>
-                        <select
-                            className="border-2 h-[32px] p-1 border-gray-300 min-w-full max-w-[140px] cursor-pointer"
-                            value={selectedFilters?.period?.[0] ?? ""}
-                            onChange={(e) => {
-                                const selectedValue = Array.from(
-                                    e.target.selectedOptions
-                                ).map((option) => option.value);
-                                handleFilterChange("period", selectedValue);
-                            }}
-                        >
-                            {filtertOptions?.periods?.length > 0 &&
-                                filtertOptions?.periods?.map((period) => (
-                                    <option
-                                        key={period.value}
-                                        value={period.value}
-                                    >
-                                        {period.label}
-                                    </option>
-                                ))}
-                        </select>
-                    </div>
-                </div>
+                    <div className="flex items-end gap-8">
+                        <div className="flex flex-col">
+                            <span className="block mb-2 text-gray-400">
+                                Фильтры
+                            </span>
 
-                <div className="flex items-end gap-8">
-                    <div className="flex flex-col">
-                        <span className="block mb-2 text-gray-400">
-                            Фильтры
-                        </span>
-
-                        <div className="grid grid-cols-2 gap-5">
-                            <CreatableSelect
-                                isClearable
-                                options={
-                                    filteredContragents.length > 0 &&
-                                    filteredContragents.map((item) => ({
-                                        value: item.id,
-                                        label: item.program_name,
-                                    }))
-                                }
-                                className="executor-block__name-field border-2 border-gray-300 w-[240px]"
-                                placeholder="Заказчик"
-                                noOptionsMessage={() => "Совпадений нет"}
-                                isValidNewOption={() => false}
-                                value={
-                                    contragents
-                                        .map((item) => ({
+                            <div className="grid grid-cols-2 gap-5">
+                                <CreatableSelect
+                                    isClearable
+                                    options={
+                                        filteredContragents.length > 0 &&
+                                        filteredContragents.map((item) => ({
                                             value: item.id,
                                             label: item.program_name,
                                         }))
-                                        .find(
-                                            (opt) =>
-                                                opt.value ===
-                                                mainFilters.contragent_id?.[0]
-                                        ) || null
-                                }
-                                onChange={(selectedOption) => {
-                                    const newValue =
-                                        selectedOption?.value || "";
+                                    }
+                                    className="executor-block__name-field border-2 border-gray-300 w-[240px]"
+                                    placeholder="Заказчик"
+                                    noOptionsMessage={() => "Совпадений нет"}
+                                    isValidNewOption={() => false}
+                                    value={
+                                        contragents
+                                            .map((item) => ({
+                                                value: item.id,
+                                                label: item.program_name,
+                                            }))
+                                            .find(
+                                                (opt) =>
+                                                    opt.value ===
+                                                    mainFilters
+                                                        .contragent_id?.[0]
+                                            ) || null
+                                    }
+                                    onChange={(selectedOption) => {
+                                        const newValue =
+                                            selectedOption?.value || "";
 
-                                    setMainFilters((prev) => ({
-                                        ...prev,
-                                        contragent_id: [newValue],
-                                    }));
+                                        setMainFilters((prev) => ({
+                                            ...prev,
+                                            contragent_id: [newValue],
+                                        }));
 
-                                    if (newValue != "") {
-                                        const selectedContragentProjects =
-                                            contragents.find(
-                                                (item) => item.id === +newValue
-                                            ).project_ids;
+                                        if (newValue != "") {
+                                            const selectedContragentProjects =
+                                                contragents.find(
+                                                    (item) =>
+                                                        item.id === +newValue
+                                                ).project_ids;
 
-                                        if (
-                                            selectedContragentProjects.length >
-                                            0
-                                        ) {
-                                            setFilteredProjects(
-                                                projects.filter((item) =>
-                                                    selectedContragentProjects.includes(
-                                                        item.id
+                                            if (
+                                                selectedContragentProjects.length >
+                                                0
+                                            ) {
+                                                setFilteredProjects(
+                                                    projects.filter((item) =>
+                                                        selectedContragentProjects.includes(
+                                                            item.id
+                                                        )
+                                                    )
+                                                );
+                                            } else {
+                                                setFilteredProjects(projects);
+                                            }
+                                        } else {
+                                            setFilteredProjects(projects);
+                                        }
+                                    }}
+                                />
+
+                                <CreatableSelect
+                                    isClearable
+                                    options={
+                                        filteredProjects.length > 0 &&
+                                        filteredProjects.map((item) => ({
+                                            value: item.id,
+                                            label: item.name,
+                                        }))
+                                    }
+                                    className="executor-block__name-field border-2 border-gray-300 w-[240px]"
+                                    placeholder="Проект"
+                                    noOptionsMessage={() => "Совпадений нет"}
+                                    isValidNewOption={() => false}
+                                    value={
+                                        filteredProjects
+                                            .map((item) => ({
+                                                value: item.id,
+                                                label: item.name,
+                                            }))
+                                            .find(
+                                                (opt) =>
+                                                    opt.value ===
+                                                    mainFilters.project_id?.[0]
+                                            ) || null
+                                    }
+                                    onChange={(selectedOption) => {
+                                        const newValue =
+                                            selectedOption?.value || "";
+
+                                        setMainFilters((prev) => ({
+                                            ...prev,
+                                            project_id: [newValue],
+                                        }));
+
+                                        if (newValue != "") {
+                                            setFilteredContragents(
+                                                contragents.filter((item) =>
+                                                    item.project_ids.includes(
+                                                        newValue
                                                     )
                                                 )
                                             );
                                         } else {
-                                            setFilteredProjects(projects);
+                                            setFilteredContragents(contragents);
                                         }
-                                    } else {
-                                        setFilteredProjects(projects);
-                                    }
-                                }}
-                            />
-
-                            <CreatableSelect
-                                isClearable
-                                options={
-                                    filteredProjects.length > 0 &&
-                                    filteredProjects.map((item) => ({
-                                        value: item.id,
-                                        label: item.name,
-                                    }))
-                                }
-                                className="executor-block__name-field border-2 border-gray-300 w-[240px]"
-                                placeholder="Проект"
-                                noOptionsMessage={() => "Совпадений нет"}
-                                isValidNewOption={() => false}
-                                value={
-                                    filteredProjects
-                                        .map((item) => ({
-                                            value: item.id,
-                                            label: item.name,
-                                        }))
-                                        .find(
-                                            (opt) =>
-                                                opt.value ===
-                                                mainFilters.project_id?.[0]
-                                        ) || null
-                                }
-                                onChange={(selectedOption) => {
-                                    const newValue =
-                                        selectedOption?.value || "";
-
-                                    setMainFilters((prev) => ({
-                                        ...prev,
-                                        project_id: [newValue],
-                                    }));
-
-                                    if (newValue != "") {
-                                        setFilteredContragents(
-                                            contragents.filter((item) =>
-                                                item.project_ids.includes(
-                                                    newValue
-                                                )
-                                            )
-                                        );
-                                    } else {
-                                        setFilteredContragents(contragents);
-                                    }
-                                }}
-                            />
-                        </div>
-                    </div>
-
-                    <button
-                        type="button"
-                        className="border rounded-lg py-1 px-5 h-[32px] mb-2"
-                        onClick={() => {
-                            setMainFilters((prev) => {
-                                const { project_id, contragent_id, ...rest } =
-                                    prev;
-                                return rest;
-                            });
-                            setFilteredProjects(projects);
-                            setFilteredContragents(contragents);
-                        }}
-                    >
-                        Очистить
-                    </button>
-                </div>
-            </section>
-
-            <section className="flex flex-col gap-5">
-                <section className="flex flex-col gap-8 border border-gray-300 p-4">
-                    <h2 className="mb-2 text-2xl font-semibold tracking-tight text-balance">
-                        Ключевые финансовые показатели
-                    </h2>
-
-                    <div className="grid grid-cols-2 gap-10">
-                        <div>
-                            <FinancialMetrics
-                                financialMetrics={financialMetrics}
-                            />
-
-                            <div className="h-[320px]">
-                                <Bar
-                                    data={financialMetricsData}
-                                    options={verticalOptions}
-                                    height={320}
+                                    }}
                                 />
                             </div>
                         </div>
 
-                        <div>
-                            <GrossMetrics financialMetrics={financialMetrics} />
+                        <button
+                            type="button"
+                            className="border rounded-lg py-1 px-5 h-[32px] mb-2"
+                            onClick={() => {
+                                setMainFilters((prev) => {
+                                    const {
+                                        project_id,
+                                        contragent_id,
+                                        ...rest
+                                    } = prev;
+                                    return rest;
+                                });
+                                setFilteredProjects(projects);
+                                setFilteredContragents(contragents);
+                            }}
+                        >
+                            Очистить
+                        </button>
+                    </div>
+                </section>
 
-                            <div className="h-[320px]">
-                                <Bar
-                                    data={grossMetricsData}
-                                    options={verticalOptions2}
-                                    height={320}
+                <section className="flex flex-col gap-5">
+                    <section className="flex flex-col gap-8 border border-gray-300 p-4">
+                        <h2 className="mb-2 text-2xl font-semibold tracking-tight text-balance">
+                            Ключевые финансовые показатели
+                        </h2>
+
+                        <div className="grid grid-cols-2 gap-10">
+                            <div>
+                                <FinancialMetrics
+                                    financialMetrics={financialMetrics}
                                 />
+
+                                <div className="h-[320px]">
+                                    <Bar
+                                        data={financialMetricsData}
+                                        options={verticalOptions}
+                                        height={320}
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <GrossMetrics
+                                    financialMetrics={financialMetrics}
+                                />
+
+                                <div className="h-[320px]">
+                                    <Bar
+                                        data={grossMetricsData}
+                                        options={verticalOptions2}
+                                        height={320}
+                                    />
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <FinancialIndicators
-                        financialList={financialList}
-                        financialProfitList={financialProfitList}
-                        setFinancialListFilters={setFinancialListFilters}
-                        setFinancialProfitListFilters={
-                            setFinancialProfitListFilters
-                        }
-                    />
-                </section>
+                        <FinancialIndicators
+                            financialList={financialList}
+                            financialProfitList={financialProfitList}
+                            setFinancialListFilters={setFinancialListFilters}
+                            setFinancialProfitListFilters={
+                                setFinancialProfitListFilters
+                            }
+                        />
+                    </section>
 
-                <EmployeesStats
-                    employeeMetrics={employeeMetrics}
-                    setEmployeeFilters={setEmployeeFilters}
-                />
-
-                <section className="grid grid-cols-2 gap-4">
-                    <ManagerReports selectedFilters={selectedFilters} />
-
-                    <Sales funnelMetrics={funnelMetrics} />
-                </section>
-
-                <section className="grid grid-cols-2 gap-4">
-                    <ProjectManagerReports
-                        projectManagerReports={projectManagerReports}
+                    <EmployeesStats
+                        employeeMetrics={employeeMetrics}
+                        setEmployeeFilters={setEmployeeFilters}
                     />
 
-                    <CompletedReportsList completedReports={completedReports} />
+                    <section className="grid grid-cols-2 gap-4">
+                        <ManagerReports selectedFilters={selectedFilters} />
+
+                        <Sales funnelMetrics={funnelMetrics} />
+                    </section>
+
+                    <section className="grid grid-cols-2 gap-4">
+                        <ProjectManagerReports
+                            projectManagerReports={projectManagerReports}
+                        />
+
+                        <CompletedReportsList
+                            completedReports={completedReports}
+                        />
+                    </section>
                 </section>
-            </section>
-        </div>
+            </div>
+        </section>
     );
 };
 
