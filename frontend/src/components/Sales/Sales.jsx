@@ -261,8 +261,11 @@ const Sales = () => {
     return (
         <main className="page projects">
             <div className="container registry__container">
-                <section className="registry__header flex justify-between items-center">
-                    <h1 className="title">
+                <section className="registry__header gap-[15px] flex-wrap flex justify-between items-center">
+                    <h1
+                        className="title"
+                        style={{ flexShrink: 1, alignItems: "flex-start" }}
+                    >
                         Реестр проектов в воронке продаж
                         {filteredProjects.length > 0 && (
                             <span>{filteredProjects.length}</span>
