@@ -307,7 +307,7 @@ const SaleFunnelStages = ({
             toast.error(
                 "Необходимо заполнить дату перед возобновлением воронки",
                 {
-                    containerId: "toast",
+                    containerId: "toastContainerStages",
                     isLoading: false,
                     autoClose: 3000,
                     pauseOnFocusLoss: false,
