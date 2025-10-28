@@ -5,7 +5,7 @@ import buildQueryParams from "../../../utils/buildQueryParams";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
 import Loader from "../../Loader";
-import CreatableSelect from "react-select/creatable";
+import IndicatorsFilters from "./IndicatorsFilters";
 import FinancialMetrics from "./FinancialMetrics";
 import Sales from "./Sales";
 import GrossMetrics from "./GrossMetrics";
@@ -14,6 +14,8 @@ import EmployeesStats from "./EmployeesStats";
 import FinancialIndicators from "./FinancialIndicators";
 import ProjectManagerReports from "./ProjectManagerReports";
 import ManagerReports from "./ManagerReports";
+
+import "./Indicators.scss";
 
 import {
     Chart as ChartJS,
@@ -44,8 +46,6 @@ import { Bar } from "react-chartjs-2";
 const Indicators = () => {
     const [isLoading, setIsLoading] = useState(true);
 
-    const [filtertOptions, setFilterOptions] = useState([]);
-
     const [selectedReportMonth, setSelectedReportMonth] = useState([]); // Отчетный месяц
 
     const [selectedFilters, setSelectedFilters] = useState({}); // Отчетный месяц, отчетный период
@@ -60,12 +60,6 @@ const Indicators = () => {
     const [funnelMetrics, setFunnelMetrics] = useState({}); // Продажи
 
     const [employeeMetrics, setEmployeeMetrics] = useState({});
-
-    const [contragents, setContragents] = useState([]);
-    const [projects, setProjects] = useState([]);
-
-    const [filteredContragents, setFilteredContragents] = useState([]);
-    const [filteredProjects, setFilteredProjects] = useState([]);
 
     const [completedReports, setCompletedReports] = useState([]);
     const [projectManagerReports, setProjectManagerReports] = useState([]);
@@ -111,24 +105,25 @@ const Indicators = () => {
         labels: financialMetrics.monthly_chart?.map((item) => item.month),
         datasets: [
             {
-                label: "",
+                label: "Выручка",
                 data: financialMetrics.monthly_chart?.map((item) =>
                     parseFloat(item.revenue?.toString().replace(",", "."))
                 ),
-                backgroundColor: "black",
-                categoryPercentage: 0.5,
+                backgroundColor: "#7CD4FD",
                 stack: "stack1",
-                borderRadius: 2,
+                barPercentage: 0.25,
+                order: 2,
             },
             {
-                label: "",
+                label: "Поступления",
                 data: financialMetrics.monthly_chart?.map((item) =>
                     parseFloat(item.receipts?.toString().replace(",", "."))
                 ),
-                backgroundColor: "rgba(204, 204, 204, 0.5)",
-                categoryPercentage: 0.5,
-                stack: "stack2",
-                borderRadius: 2,
+                backgroundColor: "#E0F2FE",
+                borderRadius: 10,
+                stack: "stack1",
+                barPercentage: 1,
+                order: 1,
             },
         ],
     };
@@ -142,11 +137,11 @@ const Indicators = () => {
                 data: financialMetrics.monthly_chart?.map((item) =>
                     parseFloat(item.gross_margin?.toString().replace(",", "."))
                 ),
-                backgroundColor: "rgba(204, 204, 204, 1)",
-                borderColor: "rgba(204, 204, 204, 1)",
-                borderWidth: 2,
+                backgroundColor: "#36BFFA",
+                borderColor: "#36BFFA",
+                borderWidth: 1,
                 fill: false,
-                pointBackgroundColor: "#ccc",
+                pointBackgroundColor: "#36BFFA",
                 pointRadius: 4,
                 tension: 0.3,
                 yAxisID: "y1",
@@ -157,10 +152,11 @@ const Indicators = () => {
                 data: financialMetrics.monthly_chart?.map((item) =>
                     parseFloat(item.gross_profit?.toString().replace(",", "."))
                 ),
-                backgroundColor: "black",
-                categoryPercentage: 0.5,
+                backgroundColor: "#E0F2FE",
+                borderRadius: 10,
+                barThickness: 40,
+                categoryPercentage: 1,
                 stack: "stack1",
-                borderRadius: 2,
                 yAxisID: "y",
             },
         ],
@@ -171,22 +167,15 @@ const Indicators = () => {
         responsive: true,
         animation: false,
         plugins: {
-            legend: {
-                display: false,
-            },
-            title: {
-                display: false,
-                text: "",
-            },
+            legend: { display: false },
+            title: { display: false },
             datalabels: false,
-
             tooltip: {
                 displayColors: false,
                 callbacks: {
                     label: (context) => {
                         const month = context.label;
                         const value = context.raw;
-
                         const formattedValue = value
                             ? value.toLocaleString("ru-RU", {
                                   minimumFractionDigits: 2,
@@ -194,13 +183,10 @@ const Indicators = () => {
                               })
                             : "—";
 
-                        let labelText = "";
-                        if (context.datasetIndex === 0) {
-                            labelText = "Выручка, млн руб.";
-                        } else if (context.datasetIndex === 1) {
-                            labelText = "Поступления, млн руб.";
-                        }
-
+                        let labelText =
+                            context.datasetIndex === 0
+                                ? "Выручка, млн руб."
+                                : "Поступления, млн руб.";
                         return [month, labelText, formattedValue];
                     },
                     title: () => "",
@@ -208,14 +194,8 @@ const Indicators = () => {
             },
         },
         scales: {
-            x: {
-                stacked: true,
-            },
-            y: {
-                ticks: {
-                    // display: false,
-                },
-            },
+            x: { stacked: true },
+            y: { ticks: {} },
         },
     };
 
@@ -264,109 +244,38 @@ const Indicators = () => {
         scales: {
             x: {
                 stacked: true,
+                barThickness: 40,
+                grid: {
+                    display: false,
+                },
             },
             y: {
                 beginAtZero: true,
                 title: {
-                    display: true,
+                    display: false,
                     text: "Валовая прибыль, млн руб.",
+                },
+                grid: {
+                    drawBorder: false,
+                    drawOnChartArea: true,
+                    color: "#E5E7EB",
+                    borderDash: [4, 4],
+                    borderDashOffset: 0,
                 },
             },
             y1: {
                 beginAtZero: true,
                 position: "right",
                 grid: {
+                    display: false,
                     drawOnChartArea: false,
                 },
                 title: {
-                    display: true,
+                    display: false,
                     text: "Валовая рентаб., %",
                 },
             },
         },
-    };
-
-    // Добавляем значение отчетного месяца и периода в параметры запроса
-    const handleFilterChange = (filterKey, value) => {
-        const filteredValues = value.filter((v) => v !== "");
-
-        setSelectedReportMonth({
-            [filterKey]: filteredValues.length > 0 ? filteredValues : [],
-        });
-
-        setSelectedFilters((prev) => ({
-            ...prev,
-            [filterKey]: filteredValues.length > 0 ? filteredValues : [],
-        }));
-
-        setFinancialListFilters((prev) => ({
-            ...prev,
-            [filterKey]: filteredValues.length > 0 ? filteredValues : [],
-        }));
-
-        setFinancialProfitListFilters((prev) => ({
-            ...prev,
-            [filterKey]: filteredValues.length > 0 ? filteredValues : [],
-        }));
-
-        setMainFilters((prev) => ({
-            ...prev,
-            [filterKey]: filteredValues.length > 0 ? filteredValues : [],
-        }));
-
-        setEmployeeFilters((prev) => ({
-            ...prev,
-            [filterKey]: filteredValues.length > 0 ? filteredValues : [],
-        }));
-    };
-
-    // Получаем доступные фильтры
-    const getFilterOptions = () => {
-        getData(`${import.meta.env.VITE_API_URL}company/filter-options`).then(
-            (response) => {
-                if (response?.status == 200) {
-                    setFilterOptions(response.data);
-
-                    const periodValue = response.data.periods[1]?.value;
-                    const reportMonthValue = response.data.months[1]?.value
-                        ? response.data.months[1]?.value
-                        : response.data.months[0]?.value;
-
-                    setSelectedReportMonth({
-                        report_month: [reportMonthValue],
-                    });
-
-                    setSelectedFilters({
-                        period: [periodValue],
-                        report_month: [reportMonthValue],
-                    });
-
-                    setMainFilters((prev) => ({
-                        ...prev,
-                        period: [periodValue],
-                        report_month: [reportMonthValue],
-                    }));
-
-                    setFinancialListFilters((prev) => ({
-                        ...prev,
-                        period: [periodValue],
-                        report_month: [reportMonthValue],
-                    }));
-
-                    setFinancialProfitListFilters((prev) => ({
-                        ...prev,
-                        period: [periodValue],
-                        report_month: [reportMonthValue],
-                    }));
-
-                    setEmployeeFilters((prev) => ({
-                        ...prev,
-                        period: [periodValue],
-                        report_month: [reportMonthValue],
-                    }));
-                }
-            }
-        );
     };
 
     // Получение сотрудников
@@ -491,30 +400,6 @@ const Indicators = () => {
         });
     };
 
-    // Получение заказчиков
-    const getContragents = () => {
-        getData(
-            `${
-                import.meta.env.VITE_API_URL
-            }contragents?all=true&has_projects=true&scope=both`
-        ).then((response) => {
-            if (response?.status == 200) {
-                setContragents(response.data);
-                setFilteredContragents(response.data);
-            }
-        });
-    };
-
-    // Получение проектов
-    const getProjects = () => {
-        getData(`${import.meta.env.VITE_API_URL}projects`).then((response) => {
-            if (response?.status == 200) {
-                setProjects(response.data);
-                setFilteredProjects(response.data);
-            }
-        });
-    };
-
     useEffect(() => {
         if (!hasInitialized.current) {
             hasInitialized.current = true;
@@ -596,216 +481,23 @@ const Indicators = () => {
         mainFilters.project_id,
     ]);
 
-    useEffect(() => {
-        getFilterOptions();
-        getContragents();
-        getProjects();
-    }, []);
-
-    return isLoading ? (
-        <Loader />
-    ) : (
+    return (
         <section className="indicators">
-            <div className="container dashboaƒrds__container">
-                {/* ФИЛЬТРЫ */}
-                <section className="filters flex items-center justify-between gap-6">
-                    <div className="flex items-center gap-8">
-                        <div className="flex flex-col">
-                            <span className="block mb-2 text-gray-400">
-                                Отчётный месяц
-                            </span>
-                            <select
-                                className="border-2 h-[32px] p-1 border-gray-300 min-w-full max-w-[140px] cursor-pointer"
-                                value={selectedFilters?.report_month?.[0] ?? ""}
-                                onChange={(e) => {
-                                    const selectedValue = Array.from(
-                                        e.target.selectedOptions
-                                    ).map((option) => option.value);
+            {isLoading && <Loader bgColor={"rgba(255, 255, 255, 0.6)"} />}
 
-                                    handleFilterChange(
-                                        "report_month",
-                                        selectedValue
-                                    );
-                                }}
-                            >
-                                {filtertOptions?.months?.length > 0 &&
-                                    filtertOptions?.months?.map((month) => (
-                                        <option
-                                            key={month.value}
-                                            value={month.value}
-                                        >
-                                            {month.label}
-                                        </option>
-                                    ))}
-                            </select>
-                        </div>
-
-                        <div className="flex flex-col">
-                            <span className="block mb-2 text-gray-400">
-                                Отчётный период
-                            </span>
-                            <select
-                                className="border-2 h-[32px] p-1 border-gray-300 min-w-full max-w-[140px] cursor-pointer"
-                                value={selectedFilters?.period?.[0] ?? ""}
-                                onChange={(e) => {
-                                    const selectedValue = Array.from(
-                                        e.target.selectedOptions
-                                    ).map((option) => option.value);
-                                    handleFilterChange("period", selectedValue);
-                                }}
-                            >
-                                {filtertOptions?.periods?.length > 0 &&
-                                    filtertOptions?.periods?.map((period) => (
-                                        <option
-                                            key={period.value}
-                                            value={period.value}
-                                        >
-                                            {period.label}
-                                        </option>
-                                    ))}
-                            </select>
-                        </div>
-                    </div>
-
-                    <div className="flex items-end gap-8">
-                        <div className="flex flex-col">
-                            <span className="block mb-2 text-gray-400">
-                                Фильтры
-                            </span>
-
-                            <div className="grid grid-cols-2 gap-5">
-                                <CreatableSelect
-                                    isClearable
-                                    options={
-                                        filteredContragents.length > 0 &&
-                                        filteredContragents.map((item) => ({
-                                            value: item.id,
-                                            label: item.program_name,
-                                        }))
-                                    }
-                                    className="executor-block__name-field border-2 border-gray-300 w-[240px]"
-                                    placeholder="Заказчик"
-                                    noOptionsMessage={() => "Совпадений нет"}
-                                    isValidNewOption={() => false}
-                                    value={
-                                        contragents
-                                            .map((item) => ({
-                                                value: item.id,
-                                                label: item.program_name,
-                                            }))
-                                            .find(
-                                                (opt) =>
-                                                    opt.value ===
-                                                    mainFilters
-                                                        .contragent_id?.[0]
-                                            ) || null
-                                    }
-                                    onChange={(selectedOption) => {
-                                        const newValue =
-                                            selectedOption?.value || "";
-
-                                        setMainFilters((prev) => ({
-                                            ...prev,
-                                            contragent_id: [newValue],
-                                        }));
-
-                                        if (newValue != "") {
-                                            const selectedContragentProjects =
-                                                contragents.find(
-                                                    (item) =>
-                                                        item.id === +newValue
-                                                ).project_ids;
-
-                                            if (
-                                                selectedContragentProjects.length >
-                                                0
-                                            ) {
-                                                setFilteredProjects(
-                                                    projects.filter((item) =>
-                                                        selectedContragentProjects.includes(
-                                                            item.id
-                                                        )
-                                                    )
-                                                );
-                                            } else {
-                                                setFilteredProjects(projects);
-                                            }
-                                        } else {
-                                            setFilteredProjects(projects);
-                                        }
-                                    }}
-                                />
-
-                                <CreatableSelect
-                                    isClearable
-                                    options={
-                                        filteredProjects.length > 0 &&
-                                        filteredProjects.map((item) => ({
-                                            value: item.id,
-                                            label: item.name,
-                                        }))
-                                    }
-                                    className="executor-block__name-field border-2 border-gray-300 w-[240px]"
-                                    placeholder="Проект"
-                                    noOptionsMessage={() => "Совпадений нет"}
-                                    isValidNewOption={() => false}
-                                    value={
-                                        filteredProjects
-                                            .map((item) => ({
-                                                value: item.id,
-                                                label: item.name,
-                                            }))
-                                            .find(
-                                                (opt) =>
-                                                    opt.value ===
-                                                    mainFilters.project_id?.[0]
-                                            ) || null
-                                    }
-                                    onChange={(selectedOption) => {
-                                        const newValue =
-                                            selectedOption?.value || "";
-
-                                        setMainFilters((prev) => ({
-                                            ...prev,
-                                            project_id: [newValue],
-                                        }));
-
-                                        if (newValue != "") {
-                                            setFilteredContragents(
-                                                contragents.filter((item) =>
-                                                    item.project_ids.includes(
-                                                        newValue
-                                                    )
-                                                )
-                                            );
-                                        } else {
-                                            setFilteredContragents(contragents);
-                                        }
-                                    }}
-                                />
-                            </div>
-                        </div>
-
-                        <button
-                            type="button"
-                            className="border rounded-lg py-1 px-5 h-[32px] mb-2"
-                            onClick={() => {
-                                setMainFilters((prev) => {
-                                    const {
-                                        project_id,
-                                        contragent_id,
-                                        ...rest
-                                    } = prev;
-                                    return rest;
-                                });
-                                setFilteredProjects(projects);
-                                setFilteredContragents(contragents);
-                            }}
-                        >
-                            Очистить
-                        </button>
-                    </div>
-                </section>
+            <div className="container dashboards__container">
+                <IndicatorsFilters
+                    mainFilters={mainFilters}
+                    setMainFilters={setMainFilters}
+                    setSelectedReportMonth={setSelectedReportMonth}
+                    setSelectedFilters={setSelectedFilters}
+                    selectedFilters={selectedFilters}
+                    setFinancialListFilters={setFinancialListFilters}
+                    setFinancialProfitListFilters={
+                        setFinancialProfitListFilters
+                    }
+                    setEmployeeFilters={setEmployeeFilters}
+                />
 
                 <section className="flex flex-col gap-5">
                     <section className="flex flex-col gap-8 border border-gray-300 p-4">

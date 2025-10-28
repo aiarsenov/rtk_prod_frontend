@@ -58,8 +58,8 @@ const FinancialIndicators = ({
                         item.receipts?.value?.toString().replace(",", ".")
                     )
                 ),
-                backgroundColor: "black",
-                borderRadius: 2,
+                backgroundColor: "#FEDF89",
+                borderRadius: 5,
                 categoryPercentage: 0.3,
                 barThickness: 30,
             },
@@ -78,8 +78,8 @@ const FinancialIndicators = ({
                     )
                 ),
 
-                backgroundColor: "black",
-                borderRadius: 2,
+                backgroundColor: "#FEDF89",
+                borderRadius: 5,
                 categoryPercentage: 0.3,
                 barThickness: 30,
             },
@@ -97,8 +97,8 @@ const FinancialIndicators = ({
                         item.gross_profit?.value?.toString().replace(",", ".")
                     )
                 ),
-                backgroundColor: "black",
-                borderRadius: 2,
+                backgroundColor: "#FEDF89",
+                borderRadius: 5,
                 categoryPercentage: 0.3,
                 barThickness: 30,
             },
@@ -116,8 +116,8 @@ const FinancialIndicators = ({
                         item.gross_margin?.value?.toString().replace(",", ".")
                     )
                 ),
-                backgroundColor: "black",
-                borderRadius: 2,
+                backgroundColor: "#FEDF89",
+                borderRadius: 5,
                 categoryPercentage: 0.3,
                 barThickness: 30,
             },
