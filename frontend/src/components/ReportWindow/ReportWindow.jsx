@@ -759,91 +759,103 @@ const ReportWindow = ({
                                                 </button>
                                             )}
 
-                                        <div className="report-window__field">
-                                            <label className="form-label">
-                                                Тип отчёта
-                                            </label>
-
-                                            <select
-                                                className="form-select"
-                                                onChange={(e) =>
-                                                    handleInputChange(
-                                                        e,
-                                                        "report_type_id"
-                                                    )
-                                                }
-                                                value={
-                                                    reportData.report_type_id
-                                                }
-                                                disabled={mode === "read"}
-                                            >
-                                                <option value="">
-                                                    Выбрать тип
-                                                </option>
-                                                {reportTypes.length > 0 &&
-                                                    reportTypes.map((type) => (
-                                                        <option
-                                                            key={type.id}
-                                                            value={type.id}
-                                                        >
-                                                            {type.name}
-                                                        </option>
-                                                    ))}
-                                            </select>
-                                        </div>
-
-                                        <div className="report-window__field">
-                                            <label className="form-label">
-                                                Регулярность
-                                            </label>
-
-                                            <select
-                                                className="form-select"
-                                                onChange={(e) =>
-                                                    handleInputChange(
-                                                        e,
-                                                        "regularity"
-                                                    )
-                                                }
-                                                value={
-                                                    reportData.regularity || ""
-                                                }
-                                                disabled={
-                                                    mode === "read" ||
-                                                    reportData.is_regular ===
-                                                        false
-                                                }
-                                            >
-                                                <option value="">
-                                                    Выбрать из списка
-                                                </option>
-                                                {regularityOptions.length > 0 &&
-                                                    regularityOptions.map(
-                                                        (item) => {
-                                                            if (
-                                                                item.alias ===
-                                                                    "one_time" &&
-                                                                reportData.is_regular ===
-                                                                    true
-                                                            ) {
-                                                                return null;
-                                                            }
-
-                                                            return (
+                                        <div className="report-window__fields">
+                                            <div>
+                                                {" "}
+                                                <label className="form-label">
+                                                    Тип отчёта
+                                                </label>
+                                                <select
+                                                    className="form-select"
+                                                    onChange={(e) =>
+                                                        handleInputChange(
+                                                            e,
+                                                            "report_type_id"
+                                                        )
+                                                    }
+                                                    value={
+                                                        reportData.report_type_id
+                                                    }
+                                                    disabled={mode === "read"}
+                                                >
+                                                    <option value="">
+                                                        Выбрать тип
+                                                    </option>
+                                                    {reportTypes.length > 0 &&
+                                                        reportTypes.map(
+                                                            (type) => (
                                                                 <option
-                                                                    value={
-                                                                        item.alias
-                                                                    }
                                                                     key={
-                                                                        item.alias
+                                                                        type.id
+                                                                    }
+                                                                    value={
+                                                                        type.id
                                                                     }
                                                                 >
-                                                                    {item.name}
+                                                                    {type.name}
                                                                 </option>
-                                                            );
-                                                        }
-                                                    )}
-                                            </select>
+                                                            )
+                                                        )}
+                                                </select>
+                                            </div>
+
+                                            <div>
+                                                {" "}
+                                                <label className="form-label">
+                                                    Регулярность
+                                                </label>
+                                                <select
+                                                    className="form-select"
+                                                    onChange={(e) =>
+                                                        handleInputChange(
+                                                            e,
+                                                            "regularity"
+                                                        )
+                                                    }
+                                                    value={
+                                                        reportData.regularity ||
+                                                        ""
+                                                    }
+                                                    disabled={
+                                                        mode === "read" ||
+                                                        reportData.is_regular ===
+                                                            false
+                                                    }
+                                                >
+                                                    <option value="">
+                                                        Выбрать из списка
+                                                    </option>
+                                                    {regularityOptions.length >
+                                                        0 &&
+                                                        regularityOptions.map(
+                                                            (item) => {
+                                                                if (
+                                                                    item.alias ===
+                                                                        "one_time" &&
+                                                                    reportData.is_regular ===
+                                                                        true
+                                                                ) {
+                                                                    return null;
+                                                                }
+
+                                                                return (
+                                                                    <option
+                                                                        value={
+                                                                            item.alias
+                                                                        }
+                                                                        key={
+                                                                            item.alias
+                                                                        }
+                                                                    >
+                                                                        {
+                                                                            item.name
+                                                                        }
+                                                                    </option>
+                                                                );
+                                                            }
+                                                        )}
+                                                </select>
+                                            </div>
                                         </div>
 
                                         <div className="report-window__field">
