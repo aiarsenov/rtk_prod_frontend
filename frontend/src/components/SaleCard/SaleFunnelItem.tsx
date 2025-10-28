@@ -15,7 +15,7 @@ const SaleFunnelItem = ({
     updateStageDetails,
     mode,
 }) => {
-    const [activeStage, setActiveStage] = useState(null);
+    const [activeStage, setActiveStage] = useState(isLast || null);
 
     const handleStatusClass = () => {
         if (stage.next_possible_stages[1]?.selected) {

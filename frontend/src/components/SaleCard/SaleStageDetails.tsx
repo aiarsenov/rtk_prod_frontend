@@ -123,12 +123,7 @@ const SaleStageDetails = ({ stage, mode, updateStageDetails }) => {
                 )}
 
             <div className="sale-stage-datails__body">
-                {stage.name?.toLowerCase() !== "получен запрос" &&
-                    stage.name?.toLowerCase() !== "подготовка кп" &&
-                    stage.name?.toLowerCase() !== "проект отложен" &&
-                    stage.name?.toLowerCase() !== "получен отказ" && (
-                        <div className="form-label">Комментарий</div>
-                    )}
+                <div className="form-label">Комментарий</div>
 
                 <AutoResizeTextarea
                     className="form-textarea"

@@ -262,10 +262,6 @@ const SaleCard = () => {
                 });
                 fetchServices();
                 getStages();
-
-                // if (services.length == 0) {
-                //     setStageMetrics({});
-                // }
             }
         });
     };
@@ -1013,29 +1009,6 @@ const SaleCard = () => {
                                 setSaleStages={setSaleStages}
                                 mode={mode}
                             />
-
-                            {/* <div className="mt-5">
-                                <div className="flex gap-2">
-                                    Детализация этапа
-                                    {mode === "edit" && (
-                                        <button
-                                            type="button"
-                                            className="save-icon w-[20px] h-[20px]"
-                                            title="Сохранить детализацию этапа продажи"
-                                            onClick={() => handleSaveDetails()}
-                                        ></button>
-                                    )}
-                                </div>
-
-                                {activeStage && services.length > 0 && (
-                                    <SaleStageDetails
-                                        stageMetrics={stageMetrics}
-                                        metrics={metrics}
-                                        setMetrics={setMetrics}
-                                        mode={mode}
-                                    />
-                                )}
-                            </div> */}
                         </section>
                     </div>
                 </div>
