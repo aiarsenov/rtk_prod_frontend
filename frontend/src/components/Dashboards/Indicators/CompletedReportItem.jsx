@@ -9,7 +9,7 @@ const CompletedReportItem = ({
 }) => {
     return (
         <li
-            className="grid items-center grid-cols-[30%_34%_34%] justify-between gap-3 cursor-pointer"
+            className="reports__list-item"
             onClick={() => {
                 openReportEditor({
                     id,
@@ -19,25 +19,19 @@ const CompletedReportItem = ({
             }}
             title={`Открыть отчёт ${report_period_code}`}
         >
-            <div className="flex flex-col">
-                <div className="text-lg">{project.name}</div>
-                <span className="text-sm text-gray-400">
-                    {project.industries[0]}
-                </span>
+            <div className="reports__list-item__col">
+                <div>{project.name}</div>
+                <span>{project.industries[0]}</span>
             </div>
 
-            <div className="flex gap-3 items-center">
-                <div className="flex flex-col flex-grow">
-                    <div className="text-lg">{report_period_code}</div>
-                    <span className="text-sm">{report_period}</span>
-                </div>
+            <div className="reports__list-item__col">
+                <div>{report_period_code}</div>
+                <span>{report_period}</span>
             </div>
 
-            <div className="flex gap-3 items-center">
-                <div className="flex flex-col flex-grow">
-                    <div className="text-lg">{days}</div>
-                    <span className="text-sm">{execution_period}</span>
-                </div>
+            <div className="reports__list-item__col">
+                <div>{days}</div>
+                <span>{execution_period}</span>
             </div>
         </li>
     );

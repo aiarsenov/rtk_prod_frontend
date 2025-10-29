@@ -500,12 +500,12 @@ const Indicators = () => {
                 />
 
                 <section className="dashboards__content">
-                    {/* <section className="indicators__financial-metrics">
+                    <section className="indicators__financial-metrics">
                         <h2 className="subtitle">
                             Ключевые финансовые показатели
                         </h2>
 
-                        <div className="dashboards__row">
+                        {/* <div className="dashboards__row">
                             <div className="dashboards__block">
                                 <FinancialMetrics
                                     financialMetrics={financialMetrics}
@@ -533,7 +533,7 @@ const Indicators = () => {
                                     />
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
 
                         <FinancialIndicators
                             financialList={financialList}
@@ -548,7 +548,7 @@ const Indicators = () => {
                     <EmployeesStats
                         employeeMetrics={employeeMetrics}
                         setEmployeeFilters={setEmployeeFilters}
-                    /> */}
+                    />
 
                     <section>
                         <div className="dashboards__row">

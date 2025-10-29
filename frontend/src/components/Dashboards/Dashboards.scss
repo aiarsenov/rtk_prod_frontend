@@ -125,6 +125,16 @@
             }
         }
     }
+
+    &__completed-reports {
+        .reports__list-header {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .reports__list-item {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
 }
 
 .dashboards {
