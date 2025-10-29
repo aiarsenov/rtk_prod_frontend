@@ -185,7 +185,9 @@ const ReportRateEditor = ({
 
                                     <textarea
                                         className="form-textarea h-[150px]"
-                                        placeholder="Описание"
+                                        placeholder={
+                                            mode === "edit" ? "Описание" : ""
+                                        }
                                         style={{ resize: "none" }}
                                         value={
                                             reportRateData.general_summary || ""
