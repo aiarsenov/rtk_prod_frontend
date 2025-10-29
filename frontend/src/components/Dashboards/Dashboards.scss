@@ -29,8 +29,18 @@
         border-radius: 10px;
         padding: 15px;
 
+        .card__subtitle {
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
         @media (min-width: $media-lg) {
             padding: 20px;
         }
+    }
+
+    &__content {
+        display: grid;
+        gap: 20px;
     }
 }

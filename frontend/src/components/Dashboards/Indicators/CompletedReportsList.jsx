@@ -38,7 +38,7 @@ const CompletedReportsList = ({ completedReports }) => {
 
     return (
         <div className="dashboards__block">
-            <h2 className="subtitle">
+            <h2 className="card__subtitle">
                 Завершённые отчёты
                 <span>{completedReports.items?.length || 0}</span>
             </h2>
