@@ -248,6 +248,9 @@ const Indicators = () => {
                 grid: {
                     display: false,
                 },
+                ticks: {
+                    color: "#002033",
+                },
             },
             y: {
                 beginAtZero: true,
@@ -258,9 +261,13 @@ const Indicators = () => {
                 grid: {
                     drawBorder: false,
                     drawOnChartArea: true,
-                    color: "#E5E7EB",
-                    borderDash: [4, 4],
-                    borderDashOffset: 0,
+                    color: "#E4E7EC",
+                },
+                border: {
+                    dash: [3, 3],
+                },
+                ticks: {
+                    color: "#98A2B3",
                 },
             },
             y1: {
@@ -269,6 +276,9 @@ const Indicators = () => {
                 grid: {
                     display: false,
                     drawOnChartArea: false,
+                },
+                ticks: {
+                    color: "#98A2B3",
                 },
                 title: {
                     display: false,
@@ -505,18 +515,18 @@ const Indicators = () => {
                             Ключевые финансовые показатели
                         </h2>
 
-                        {/* <div className="dashboards__row">
+                        <div className="dashboards__row">
                             <div className="dashboards__block">
                                 <FinancialMetrics
                                     financialMetrics={financialMetrics}
                                 />
 
                                 <div className="h-[320px]">
-                                    <Bar
+                                    {/* <Bar
                                         data={financialMetricsData}
                                         options={verticalOptions}
                                         height={320}
-                                    />
+                                    /> */}
                                 </div>
                             </div>
 
@@ -533,8 +543,8 @@ const Indicators = () => {
                                     />
                                 </div>
                             </div>
-                        </div> */}
-{/* 
+                        </div>
+
                         <FinancialIndicators
                             financialList={financialList}
                             financialProfitList={financialProfitList}
@@ -542,7 +552,7 @@ const Indicators = () => {
                             setFinancialProfitListFilters={
                                 setFinancialProfitListFilters
                             }
-                        /> */}
+                        />
                     </section>
 
                     <EmployeesStats

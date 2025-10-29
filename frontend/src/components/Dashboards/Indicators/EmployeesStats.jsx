@@ -85,13 +85,10 @@ const EmployeesStats = ({ employeeMetrics, setEmployeeFilters }) => {
                     drawBorder: false,
                     drawTicks: false,
                     lineWidth: 1,
-
-                    color: "#D9DEE3",
-                    display: true,
-                    z: 0,
+                    color: "#E4E7EC",
                 },
                 border: {
-                    dash: [4, 4],
+                    dash: [3, 3],
                 },
                 barPercentage: 0.7,
                 categoryPercentage: 0.8,
