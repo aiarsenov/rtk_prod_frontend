@@ -73,12 +73,58 @@
             }
 
             &-header {
-                grid-template-columns: 1fr 1fr 1fr 27% 60px;
+                display: none !important;
+
+                @media (min-width: $media-xxl) {
+                    grid-template-columns: 1fr 80px 150px 120px 75px;
+                    display: grid !important;
+                }
             }
 
             &-item {
                 display: grid;
-                grid-template-columns: 1fr 1fr 1fr 27% 60px;
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: repeat(2, auto);
+
+                @media (min-width: $media-xxl) {
+                    grid-template-columns: 1fr 80px 150px 120px 65px;
+                }
+
+                .reports__list-item__col:nth-child(1) {
+                    grid-column: 1 / 2;
+                    grid-row: 1;
+                }
+
+                .reports__list-item__col:nth-child(2) {
+                    grid-column: 2 / 3;
+                    grid-row: 1;
+                }
+
+                .reports__list-item__col:nth-child(3) {
+                    grid-column: 1;
+                    grid-row: 2;
+                }
+
+                .reports__list-item__col:nth-child(4) {
+                    grid-column: 2;
+                    grid-row: 2;
+                }
+
+                .rate-switch {
+                    grid-column: 3;
+                    grid-row: 2;
+                }
+
+                .reports__list-item__col:nth-child(1),
+                .reports__list-item__col:nth-child(2),
+                .reports__list-item__col:nth-child(3),
+                .reports__list-item__col:nth-child(4),
+                .rate-switch {
+                    @media (min-width: $media-xxl) {
+                        grid-column: auto;
+                        grid-row: auto;
+                    }
+                }
             }
         }
     }
@@ -92,7 +138,7 @@
         gap: 20px;
 
         @media (min-width: $media-xxl) {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(2, 50%);
             align-items: stretch;
         }
     }
@@ -128,14 +174,20 @@
         &-header {
             display: grid;
             align-items: center;
-            gap: 10px;
+            gap: 20px;
             color: var(--color-gray-70);
             padding-top: 5px;
             padding-bottom: 20px;
         }
 
         &-item {
+            padding: 10px 0;
             border-top: 1px solid var(--color-gray-30);
+            gap: 20px;
+
+            @media (min-width: $media-xxl) {
+                padding: 20px 0;
+            }
         }
     }
 }
