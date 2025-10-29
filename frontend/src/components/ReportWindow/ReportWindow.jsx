@@ -16,14 +16,19 @@ import Popup from "../Popup/Popup";
 import "./ReportWindow.scss";
 
 const isValidDateRange = (str) => {
+    if (!str) return;
     const regex = /^(\d{2})\.(\d{2})\.(\d{4}) - (\d{2})\.(\d{2})\.(\d{4})$/;
     return regex.test(str);
 };
+
 const isFirstDateValid = (str) => {
+    if (!str) return;
     const match = str.match(/^(\d{2})\.(\d{2})\.(\d{4})/);
     return !!match;
 };
+
 const isValidDate = (str) => {
+    if (!str) return;
     const regex = /^\d{2}\.\d{2}\.\d{4}$/;
     return regex.test(str);
 };
