@@ -11,7 +11,7 @@ const Sales = ({ funnelMetrics }) => {
             <div className="reports__list-header">
                 <span>Проект</span>
                 <span>Источник</span>
-                <span>Стоим.</span>
+                <span>Стоимость</span>
                 <span>Статус</span>
             </div>
 

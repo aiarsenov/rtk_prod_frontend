@@ -1,12 +1,29 @@
 import { format, parseISO } from "date-fns";
 import { ru } from "date-fns/locale";
-import handleStatusString from "../../../utils/handleStatusString";
+
+const handleStatusString = (string) => {
+    if (!string) return;
+
+    if (string.toLowerCase() === "получен запрос") {
+        return "text-[#002033]";
+    } else if (
+        string.toLowerCase() === "получен отказ" ||
+        string.toLowerCase() === "отказ от участия"
+    ) {
+        return "text-[#E84D42]";
+    } else if (string.toLowerCase() === "проект отложен") {
+        return "text-[#F38B00]";
+    } else {
+        return "text-[#039855]";
+    }
+};
 
 const FunnelProjectItem = ({
     name,
     industry,
     source,
-    service_cost,
+    service_cost_value,
+    service_cost_label,
     current_stage,
 }) => {
     return (
@@ -19,8 +36,8 @@ const FunnelProjectItem = ({
             <div className="reports__list-item__col">{source}</div>
 
             <div className="reports__list-item__col">
-                <div>{service_cost}</div>
-                <span></span>
+                <div>{service_cost_value}</div>
+                <span>{service_cost_label}</span>
             </div>
 
             <div className="reports__list-item__col">
