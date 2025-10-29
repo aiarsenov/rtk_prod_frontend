@@ -37,9 +37,10 @@ const CompletedReportsList = ({ completedReports }) => {
     };
 
     return (
-        <div className="flex flex-col gap-3 border border-gray-300 p-4">
-            <h2 className="mb-2 text-2xl font-semibold tracking-tight text-balance">
-                Завершённые отчёты ({completedReports.items?.length || 0})
+        <div className="dashboards__block">
+            <h2 className="subtitle">
+                Завершённые отчёты
+                <span>{completedReports.items?.length || 0}</span>
             </h2>
 
             <div className="p-2">

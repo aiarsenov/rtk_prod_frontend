@@ -1,0 +1,36 @@
+@use "../../styles/media-breakpoints" as *;
+
+.indicators {
+    .loader {
+        position: fixed;
+    }
+
+    &__financial-metrics {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+.dashboards {
+    &__row {
+        display: grid;
+        gap: 20px;
+
+        @media (min-width: $media-xxl) {
+            grid-template-columns: repeat(2, 1fr);
+            align-items: stretch;
+        }
+    }
+
+    &__block {
+        background: var(--color-white);
+        border: 1px solid var(--color-gray-30);
+        border-radius: 10px;
+        padding: 15px;
+
+        @media (min-width: $media-lg) {
+            padding: 20px;
+        }
+    }
+}

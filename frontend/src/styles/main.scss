@@ -351,6 +351,38 @@ body {
     }
 }
 
+.subtitle {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 120%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    margin-bottom: 15px;
+
+    @media (min-width: $media-lg) {
+        align-items: flex-start;
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 120%;
+        margin-top: 40px;
+        margin-bottom: 30px;
+    }
+
+    span {
+        display: inline-block;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 120%;
+        color: var(--color-gray-60);
+
+        @media (min-width: $media-lg) {
+            font-size: 16px;
+        }
+    }
+}
+
 .text-blue {
     color: var(--color-blue-80);
 }

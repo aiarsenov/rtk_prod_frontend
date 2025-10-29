@@ -15,7 +15,7 @@ import FinancialIndicators from "./FinancialIndicators";
 import ProjectManagerReports from "./ProjectManagerReports";
 import ManagerReports from "./ManagerReports";
 
-import "./Indicators.scss";
+import "../Dashboards.scss";
 
 import {
     Chart as ChartJS,
@@ -499,14 +499,14 @@ const Indicators = () => {
                     setEmployeeFilters={setEmployeeFilters}
                 />
 
-                <section className="flex flex-col gap-5">
-                    <section className="flex flex-col gap-8 border border-gray-300 p-4">
-                        <h2 className="mb-2 text-2xl font-semibold tracking-tight text-balance">
+                <section className="dashboards__content">
+                    <section className="indicators__financial-metrics">
+                        <h2 className="subtitle">
                             Ключевые финансовые показатели
                         </h2>
 
-                        <div className="grid grid-cols-2 gap-10">
-                            <div>
+                        <div className="dashboards__row">
+                            <div className="dashboards__block">
                                 <FinancialMetrics
                                     financialMetrics={financialMetrics}
                                 />
@@ -520,7 +520,7 @@ const Indicators = () => {
                                 </div>
                             </div>
 
-                            <div>
+                            <div className="dashboards__block">
                                 <GrossMetrics
                                     financialMetrics={financialMetrics}
                                 />
@@ -550,20 +550,24 @@ const Indicators = () => {
                         setEmployeeFilters={setEmployeeFilters}
                     />
 
-                    <section className="grid grid-cols-2 gap-4">
-                        <ManagerReports selectedFilters={selectedFilters} />
+                    <section>
+                        <div className="dashboards__row">
+                            <ManagerReports selectedFilters={selectedFilters} />
 
-                        <Sales funnelMetrics={funnelMetrics} />
+                            <Sales funnelMetrics={funnelMetrics} />
+                        </div>
                     </section>
 
-                    <section className="grid grid-cols-2 gap-4">
-                        <ProjectManagerReports
-                            projectManagerReports={projectManagerReports}
-                        />
+                    <section>
+                        <div className="dashboards__row">
+                            <ProjectManagerReports
+                                projectManagerReports={projectManagerReports}
+                            />
 
-                        <CompletedReportsList
-                            completedReports={completedReports}
-                        />
+                            <CompletedReportsList
+                                completedReports={completedReports}
+                            />
+                        </div>
                     </section>
                 </section>
             </div>

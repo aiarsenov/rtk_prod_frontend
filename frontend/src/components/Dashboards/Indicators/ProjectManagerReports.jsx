@@ -25,11 +25,13 @@ const ProjectManagerReports = ({ projectManagerReports }) => {
     };
 
     return (
-        <div className="flex flex-col gap-3 border border-gray-300 p-4">
-            <h2 className="mb-2 text-2xl font-semibold tracking-tight text-balance">
-                Отчёты руководителей проектов{" "}
-                {projectManagerReports.length > 0 &&
-                    `(${projectManagerReports.length})`}
+        <div className="dashboards__block">
+            <h2 className="card__subtitle">
+                Отчёты руководителей проектов
+                <span>
+                    {projectManagerReports.length > 0 &&
+                        projectManagerReports.length}
+                </span>
             </h2>
 
             <div className="p-2">

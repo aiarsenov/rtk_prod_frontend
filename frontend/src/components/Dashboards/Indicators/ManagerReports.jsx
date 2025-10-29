@@ -53,10 +53,10 @@ const ManagerReports = ({ selectedFilters }) => {
     }, [selectedFilters]);
 
     return (
-        <div className="flex flex-col gap-3 border border-gray-300 p-4">
-            <h2 className="mb-2 text-2xl font-semibold tracking-tight text-balance">
-                Отчёты менеджмента{" "}
-                {reportsList.length > 0 && `(${reportsList.length})`}
+        <div className="dashboards__block">
+            <h2 className="card__subtitle">
+                Отчёты менеджмента
+                <span>{reportsList.length > 0 && reportsList.length}</span>
             </h2>
 
             <div className="p-2">

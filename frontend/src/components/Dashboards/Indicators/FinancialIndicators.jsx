@@ -343,7 +343,7 @@ const FinancialIndicators = ({
     }, [financialList, financialProfitList]);
 
     return (
-        <div className="flex flex-col gap-3 p-4 pl-0">
+        <div className="dashboards__block">
             <div className="grid grid-cols-[32%_1fr_1fr_1fr] pl-4">
                 <div className="flex items-center gap-5">
                     <select

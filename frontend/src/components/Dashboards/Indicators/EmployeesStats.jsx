@@ -104,12 +104,10 @@ const EmployeesStats = ({ employeeMetrics, setEmployeeFilters }) => {
     };
 
     return (
-        <section className="flex flex-col gap-8 border border-gray-300 p-4">
-            <h2 className="mb-2 text-2xl font-semibold tracking-tight text-balance">
-                Персонал
-            </h2>
+        <section className="">
+            <h2 className="subtitle">Персонал</h2>
 
-            <div className="grid grid-cols-2 gap-8">
+            <div className="dashboards__block">
                 <div className="flex flex-col gap-3">
                     <EmployeeMetrics {...employeeMetrics} />
 

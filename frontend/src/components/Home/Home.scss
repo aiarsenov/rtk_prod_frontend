@@ -1,6 +1,8 @@
 @use "../../styles/media-breakpoints" as *;
 
 .home {
+    background: var(--color-gray-20);
+    
     &__container {
         padding-top: 40px;
         padding-bottom: 40px;
