@@ -61,6 +61,27 @@
             }
         }
     }
+
+    &__project-manager-reports {
+        .reports__list {
+            max-height: 400px;
+            overflow-x: hidden;
+            overflow-y: auto;
+
+            @media (min-width: $media-xxl) {
+                min-height: 400px;
+            }
+
+            &-header {
+                grid-template-columns: 1fr 1fr 1fr 27% 60px;
+            }
+
+            &-item {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr 27% 60px;
+            }
+        }
+    }
 }
 
 .dashboards {

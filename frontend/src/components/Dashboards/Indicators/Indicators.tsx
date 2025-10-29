@@ -558,7 +558,7 @@ const Indicators = () => {
                         </div>
                     </section>
 
-                    {/* <section>
+                    <section>
                         <div className="dashboards__row">
                             <ProjectManagerReports
                                 projectManagerReports={projectManagerReports}
@@ -568,7 +568,7 @@ const Indicators = () => {
                                 completedReports={completedReports}
                             />
                         </div>
-                    </section> */}
+                    </section>
                 </section>
             </div>
         </section>
