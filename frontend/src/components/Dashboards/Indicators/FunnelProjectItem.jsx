@@ -10,21 +10,21 @@ const FunnelProjectItem = ({
     current_stage,
 }) => {
     return (
-        <li className="grid grid-cols-[200px_120px_85px_1fr] gap-2 items-start">
-            <div className="flex flex-col">
+        <li className="reports__list-item">
+            <div className="reports__list-item__col">
                 <div className="text-lg">{name}</div>
                 <span className="text-gray-400">{industry?.name}</span>
             </div>
 
-            <div className="text-lg">{source}</div>
+            <div className="reports__list-item__col">{source}</div>
 
-            <div className="flex flex-col">
+            <div className="reports__list-item__col">
                 <strong className="text-lg font-normal max-w-[100px] overflow-hidden text-ellipsis whitespace-nowrap">
                     {service_cost}
                 </strong>
             </div>
 
-            <div className="flex flex-col">
+            <div className="reports__list-item__col">
                 <div
                     className={`text-lg ${handleStatusString(
                         current_stage?.name

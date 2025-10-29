@@ -554,7 +554,7 @@ const Indicators = () => {
                         <div className="dashboards__row">
                             <ManagerReports selectedFilters={selectedFilters} />
 
-                            {/* <Sales funnelMetrics={funnelMetrics} /> */}
+                            <Sales funnelMetrics={funnelMetrics} />
                         </div>
                     </section>
 

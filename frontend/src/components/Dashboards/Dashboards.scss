@@ -10,9 +10,19 @@
         flex-direction: column;
         gap: 20px;
     }
+
+    &__funnel-metrics-statistics {
+        grid-template-columns: repeat(3, 1fr);
+
+        @media (min-width: $media-md) {
+            grid-template-columns: repeat(5, 100px);
+        }
+    }
 }
 
 .dashboards {
+    padding-bottom: 40px;
+
     &__row {
         display: grid;
         gap: 20px;
@@ -45,6 +55,7 @@
     }
 
     .reports__list {
+        height: auto;
         padding: 0;
         font-weight: 400;
         font-size: 14px;
