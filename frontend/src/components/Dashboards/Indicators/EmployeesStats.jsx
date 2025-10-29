@@ -1,5 +1,6 @@
 import EmployeeMetrics from "./EmployeeMetrics";
 import EmployeeItem from "./EmployeeItem";
+import Hint from "../../Hint/Hint";
 
 import {
     Chart as ChartJS,
@@ -42,8 +43,10 @@ const EmployeesStats = ({ employeeMetrics, setEmployeeFilters }) => {
             },
             datalabels: {
                 anchor: "end",
-                align: "left",
-                color: "#fff",
+                align: "right",
+                offset: 8,
+                color: "#002033",
+                clip: false,
                 formatter: (value) => value,
             },
             tooltip: {
@@ -63,7 +66,12 @@ const EmployeesStats = ({ employeeMetrics, setEmployeeFilters }) => {
 
         scales: {
             y: {
+                position: "left",
                 ticks: {
+                    color: "#002033",
+                    font: { size: 14 },
+                    crossAlign: "near",
+                    padding: 10,
                     autoSkip: false,
                     maxRotation: 0,
                     callback: function (value) {
@@ -73,15 +81,33 @@ const EmployeesStats = ({ employeeMetrics, setEmployeeFilters }) => {
                             : label;
                     },
                 },
+                grid: {
+                    drawBorder: false,
+                    drawTicks: false,
+                    lineWidth: 1,
+
+                    color: "#D9DEE3",
+                    display: true,
+                    z: 0,
+                },
+                border: {
+                    dash: [4, 4],
+                },
                 barPercentage: 0.7,
                 categoryPercentage: 0.8,
             },
+
             x: {
                 ticks: {
                     display: false,
                 },
                 grid: {
                     drawTicks: false,
+                    display: false,
+                },
+                afterDataLimits: (axis) => {
+                    const max = axis.max ?? 0;
+                    axis.max = max * 1.1;
                 },
             },
         },
@@ -95,20 +121,20 @@ const EmployeesStats = ({ employeeMetrics, setEmployeeFilters }) => {
                 data: employeeMetrics.positions_histogram?.map(
                     (item) => item.value
                 ),
-                backgroundColor: "black",
-                borderRadius: 2,
+                backgroundColor: "#BDB4FE",
+                borderRadius: 5,
                 categoryPercentage: 0.3,
-                barThickness: 30,
+                barThickness: 25,
             },
         ],
     };
 
     return (
-        <section className="">
+        <section className="indicators__employees">
             <h2 className="subtitle">Персонал</h2>
 
             <div className="dashboards__block">
-                <div className="flex flex-col gap-3">
+                <div className="indicators__employees-left">
                     <EmployeeMetrics {...employeeMetrics} />
 
                     <div className="flex flex-col gap-3">
@@ -133,9 +159,7 @@ const EmployeesStats = ({ employeeMetrics, setEmployeeFilters }) => {
                                 </option>
                             </select>
 
-                            <span className="flex items-center justify-center border border-gray-300 p-1 rounded-[50%] w-[20px] h-[20px]">
-                                ?
-                            </span>
+                            <Hint message={""} />
                         </div>
 
                         <div className="h-[300px] overflow-x-hidden overflow-y-auto">
@@ -160,7 +184,7 @@ const EmployeesStats = ({ employeeMetrics, setEmployeeFilters }) => {
                     </div>
                 </div>
 
-                <div className="flex flex-col gap-5">
+                <div className="indicators__employees-right">
                     <div className="grid items-stretch grid-cols-5 gap-3 mb-5">
                         <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2 font-medium">

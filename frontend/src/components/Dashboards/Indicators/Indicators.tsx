@@ -534,7 +534,7 @@ const Indicators = () => {
                                 </div>
                             </div>
                         </div> */}
-
+{/* 
                         <FinancialIndicators
                             financialList={financialList}
                             financialProfitList={financialProfitList}
@@ -542,7 +542,7 @@ const Indicators = () => {
                             setFinancialProfitListFilters={
                                 setFinancialProfitListFilters
                             }
-                        />
+                        /> */}
                     </section>
 
                     <EmployeesStats

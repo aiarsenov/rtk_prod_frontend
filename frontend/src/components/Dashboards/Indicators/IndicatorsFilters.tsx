@@ -135,7 +135,7 @@ const IndicatorsFilters = ({
     }, []);
 
     return (
-        <section className="filters hidden items-center justify-between gap-6">
+        <section className="filters flex items-center justify-between gap-6">
             <div className="flex items-center gap-8">
                 <div className="flex flex-col">
                     <span className="block mb-2 text-gray-400">
