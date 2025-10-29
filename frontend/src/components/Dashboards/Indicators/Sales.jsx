@@ -3,7 +3,7 @@ import FunnelProjectItem from "./FunnelProjectItem";
 
 const Sales = ({ funnelMetrics }) => {
     return (
-        <div className="dashboards__block">
+        <div className="dashboards__block indicators__funnel-metrics">
             <h2 className="card__subtitle">Продажи</h2>
 
             <FunnelMetrics funnelMetrics={funnelMetrics.metrics} />

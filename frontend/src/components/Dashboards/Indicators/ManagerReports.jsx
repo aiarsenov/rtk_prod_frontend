@@ -53,7 +53,7 @@ const ManagerReports = ({ selectedFilters }) => {
     }, [selectedFilters]);
 
     return (
-        <div className="dashboards__block dashboards__manager-reports">
+        <div className="dashboards__block indicators__manager-reports">
             <h2 className="card__subtitle">
                 Отчёты менеджмента
                 <span>{reportsList.length > 0 && reportsList.length}</span>

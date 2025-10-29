@@ -12,27 +12,22 @@ const FunnelProjectItem = ({
     return (
         <li className="reports__list-item">
             <div className="reports__list-item__col">
-                <div className="text-lg">{name}</div>
-                <span className="text-gray-400">{industry?.name}</span>
+                <div>{name}</div>
+                <span>{industry?.name}</span>
             </div>
 
             <div className="reports__list-item__col">{source}</div>
 
             <div className="reports__list-item__col">
-                <strong className="text-lg font-normal max-w-[100px] overflow-hidden text-ellipsis whitespace-nowrap">
-                    {service_cost}
-                </strong>
+                <div>{service_cost}</div>
+                <span></span>
             </div>
 
             <div className="reports__list-item__col">
-                <div
-                    className={`text-lg ${handleStatusString(
-                        current_stage?.name
-                    )}`}
-                >
+                <div className={`${handleStatusString(current_stage?.name)}`}>
                     {current_stage?.name}
                 </div>
-                <span className="text-gray-400">
+                <span>
                     {current_stage?.stage_date &&
                         format(
                             parseISO(current_stage?.stage_date),
