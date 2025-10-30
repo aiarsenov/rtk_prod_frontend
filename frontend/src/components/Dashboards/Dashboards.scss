@@ -5,6 +5,11 @@
         position: fixed;
     }
 
+    canvas {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
     &__employees {
         & > .dashboards__block {
             @media (min-width: $media-xxl) {
@@ -18,13 +23,6 @@
         display: flex;
         flex-direction: column;
         gap: 20px;
-        
-        & > .dashboards__block {
-            @media (min-width: $media-xxl) {
-                display: grid;
-                grid-template-columns: repeat(2, 50%);
-            }
-        }
     }
 
     &__manager-reports {
@@ -161,7 +159,7 @@
         gap: 20px;
 
         @media (min-width: $media-xxl) {
-            grid-template-columns: repeat(2, 50%);
+            grid-template-columns: repeat(2, 1fr);
             align-items: stretch;
         }
     }

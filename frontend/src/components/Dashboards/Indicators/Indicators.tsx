@@ -164,18 +164,26 @@ const Indicators = () => {
 
     const verticalOptions = {
         maintainAspectRatio: false,
+        aspectRatio: 2,
         responsive: true,
         animation: false,
         plugins: {
-            legend: { display: false },
-            title: { display: false },
+            legend: {
+                display: false,
+            },
+            title: {
+                display: false,
+                text: "",
+            },
             datalabels: false,
+
             tooltip: {
                 displayColors: false,
                 callbacks: {
                     label: (context) => {
                         const month = context.label;
                         const value = context.raw;
+
                         const formattedValue = value
                             ? value.toLocaleString("ru-RU", {
                                   minimumFractionDigits: 2,
@@ -183,10 +191,13 @@ const Indicators = () => {
                               })
                             : "—";
 
-                        let labelText =
-                            context.datasetIndex === 0
-                                ? "Выручка, млн руб."
-                                : "Поступления, млн руб.";
+                        let labelText = "";
+                        if (context.datasetIndex === 0) {
+                            labelText = "Выручка, млн руб.";
+                        } else if (context.datasetIndex === 1) {
+                            labelText = "Поступления, млн руб.";
+                        }
+
                         return [month, labelText, formattedValue];
                     },
                     title: () => "",
@@ -194,8 +205,14 @@ const Indicators = () => {
             },
         },
         scales: {
-            x: { stacked: true },
-            y: { ticks: {} },
+            x: {
+                stacked: true,
+            },
+            y: {
+                ticks: {
+                    // display: false,
+                },
+            },
         },
     };
 
@@ -521,12 +538,16 @@ const Indicators = () => {
                                     financialMetrics={financialMetrics}
                                 />
 
-                                <div className="h-[320px]">
-                                    {/* <Bar
+                                <div
+                                    style={{
+                                        height: "320px",
+                                    }}
+                                >
+                                    <Bar
                                         data={financialMetricsData}
                                         options={verticalOptions}
                                         height={320}
-                                    /> */}
+                                    />
                                 </div>
                             </div>
 
@@ -535,7 +556,11 @@ const Indicators = () => {
                                     financialMetrics={financialMetrics}
                                 />
 
-                                <div className="h-[320px]">
+                                <div
+                                    style={{
+                                        height: "320px",
+                                    }}
+                                >
                                     <Bar
                                         data={grossMetricsData}
                                         options={verticalOptions2}

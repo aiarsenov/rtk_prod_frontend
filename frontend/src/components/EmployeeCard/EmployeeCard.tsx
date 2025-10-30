@@ -14,6 +14,7 @@ import CustomDatePickerField from "../CustomDatePicker/CustomDatePickerField";
 import EmployeeWorkloadSummary from "./EmployeeWorkloadSummary";
 import EmployeeCurrentWorkload from "./EmployeeCurrentWorkload";
 import PersonalWorkload from "./PersonalWorkload";
+import BottomNavCard from "../BottomNav/BottomNavCard";
 
 import Loader from "../Loader.js";
 
@@ -720,6 +721,8 @@ const EmployeeCard = () => {
                     </div>
                 </div>
             </section>
+
+            <BottomNavCard />
         </main>
     );
 };
