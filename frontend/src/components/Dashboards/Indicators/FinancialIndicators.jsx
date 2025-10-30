@@ -40,8 +40,6 @@ const FinancialIndicators = ({
     const [mergedList, setMergetList] = useState([]);
     const [sortedMergedList, setSortedMergetList] = useState([]);
 
-    const [hoverLabel, setHoverLabel] = useState("");
-
     const [sortBy, setSortBy] = useState({
         key: "receipts.value",
         action: "ascending",
@@ -194,14 +192,6 @@ const FinancialIndicators = ({
                 },
             },
         },
-        onHover: (event, chartElements) => {
-            if (chartElements.length > 0) {
-                const index = chartElements[0].index;
-                setHoverLabel(financialListData1.labels[index]);
-            } else {
-                setHoverLabel("");
-            }
-        },
     };
 
     const horizontalOptionsNoLabels = {
@@ -267,14 +257,6 @@ const FinancialIndicators = ({
                     axis.max = max * 1.1;
                 },
             },
-        },
-        onHover: (event, chartElements) => {
-            if (chartElements.length > 0) {
-                const index = chartElements[0].index;
-                setHoverLabel(financialListData1.labels[index]);
-            } else {
-                setHoverLabel("");
-            }
         },
     };
 
@@ -344,14 +326,6 @@ const FinancialIndicators = ({
                     axis.max = max * 1.1;
                 },
             },
-        },
-        onHover: (event, chartElements) => {
-            if (chartElements.length > 0) {
-                const index = chartElements[0].index;
-                setHoverLabel(financialListData1.labels[index]);
-            } else {
-                setHoverLabel("");
-            }
         },
     };
 
@@ -435,14 +409,6 @@ const FinancialIndicators = ({
                     setSortBy={setSortBy}
                     className={"text-left ml-[10px]"}
                 />
-            </div>
-
-            <div
-                className={`relative ml-4 pl-4 py-2 flex items-center w-full max-w-[1000px] h-[30px] transition-all border-l-2 border-black  ${
-                    hoverLabel != "" ? "opacity-100" : "opacity-0"
-                }`}
-            >
-                {hoverLabel}
             </div>
 
             <div className="h-[300px] overflow-x-hidden overflow-y-auto grid grid-cols-[32%_1fr_1fr_1fr]">
