@@ -17,6 +17,12 @@
                 grid-template-columns: repeat(2, 50%);
             }
         }
+
+        &-metrics-statistics {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
     }
 
     &__financial-metrics {
