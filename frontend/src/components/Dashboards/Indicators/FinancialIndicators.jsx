@@ -139,9 +139,10 @@ const FinancialIndicators = ({
             },
             datalabels: {
                 anchor: "end",
-                align: "left",
-                color: "#fff",
-                clip: true,
+                align: "right",
+                offset: 8,
+                color: "#002033",
+                clip: false,
                 formatter: (value) => {
                     return typeof value === "number"
                         ? value.toFixed(2).toString().replace(".", ",")
@@ -167,6 +168,15 @@ const FinancialIndicators = ({
                     },
                 },
 
+                grid: {
+                    drawBorder: false,
+                    drawTicks: false,
+                    lineWidth: 1,
+                    color: "#E4E7EC",
+                },
+                border: {
+                    dash: [3, 3],
+                },
                 barPercentage: 0.7,
                 categoryPercentage: 0.8,
             },
@@ -176,6 +186,11 @@ const FinancialIndicators = ({
                 },
                 grid: {
                     drawTicks: false,
+                    display: false,
+                },
+                afterDataLimits: (axis) => {
+                    const max = axis.max ?? 0;
+                    axis.max = max * 1.1;
                 },
             },
         },
@@ -204,9 +219,10 @@ const FinancialIndicators = ({
             },
             datalabels: {
                 anchor: "end",
-                align: "left",
-                color: "#fff",
-                clip: true,
+                align: "right",
+                offset: 8,
+                color: "#002033",
+                clip: false,
                 formatter: (value) => {
                     return typeof value === "number"
                         ? value.toFixed(2).toString().replace(".", ",")
@@ -226,16 +242,29 @@ const FinancialIndicators = ({
                         return label.length > 0 ? label.slice(0, 0) : label;
                     },
                 },
+                grid: {
+                    drawBorder: false,
+                    drawTicks: false,
+                    lineWidth: 1,
+                    color: "#E4E7EC",
+                },
+                border: {
+                    dash: [3, 3],
+                },
                 barPercentage: 0.7,
                 categoryPercentage: 0.8,
             },
-
             x: {
                 ticks: {
                     display: false,
                 },
                 grid: {
                     drawTicks: false,
+                    display: false,
+                },
+                afterDataLimits: (axis) => {
+                    const max = axis.max ?? 0;
+                    axis.max = max * 1.1;
                 },
             },
         },
@@ -264,9 +293,10 @@ const FinancialIndicators = ({
             },
             datalabels: {
                 anchor: "end",
-                align: "left",
-                color: "#fff",
-                clip: true,
+                align: "right",
+                offset: 8,
+                color: "#002033",
+                clip: false,
                 formatter: (value) => `${value}%`,
             },
             tooltip: {
@@ -279,7 +309,6 @@ const FinancialIndicators = ({
                 // },
             },
         },
-
         scales: {
             y: {
                 ticks: {
@@ -290,16 +319,29 @@ const FinancialIndicators = ({
                         return label.length > 0 ? label.slice(0, 0) : label;
                     },
                 },
+                grid: {
+                    drawBorder: false,
+                    drawTicks: false,
+                    lineWidth: 1,
+                    color: "#E4E7EC",
+                },
+                border: {
+                    dash: [3, 3],
+                },
                 barPercentage: 0.7,
                 categoryPercentage: 0.8,
             },
-
             x: {
                 ticks: {
                     display: false,
                 },
                 grid: {
                     drawTicks: false,
+                    display: false,
+                },
+                afterDataLimits: (axis) => {
+                    const max = axis.max ?? 0;
+                    axis.max = max * 1.1;
                 },
             },
         },

@@ -47,18 +47,13 @@ const Indicators = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     const [selectedReportMonth, setSelectedReportMonth] = useState([]); // Отчетный месяц
-
     const [selectedFilters, setSelectedFilters] = useState({}); // Отчетный месяц, отчетный период
-
     const [mainFilters, setMainFilters] = useState({}); // Отчетный месяц, отчетный период, заказчик, проект
 
     const [financialMetrics, setFinancialMetrics] = useState({});
-
     const [financialList, setFinancialList] = useState({}); // Сортированные ключевые финансовые показатели - Поступления и выручка
     const [financialProfitList, setFinancialProfitList] = useState({}); // Сортированные ключевые финансовые показатели - Выловая прибыль и рентабельность
-
     const [funnelMetrics, setFunnelMetrics] = useState({}); // Продажи
-
     const [employeeMetrics, setEmployeeMetrics] = useState({});
 
     const [completedReports, setCompletedReports] = useState([]);
@@ -81,13 +76,9 @@ const Indicators = () => {
     });
 
     const hasInitialized = useRef(false);
-
     const hasCalledListOnSelected = useRef(false);
-
     const hasCalledProfitListOnSelected = useRef(false);
-
     const hasCalledMainMetricsOnSelected = useRef(false);
-
     const hasEmployeeMetricsOnSelected = useRef(false);
 
     const isFinancialListFiltersReady =
