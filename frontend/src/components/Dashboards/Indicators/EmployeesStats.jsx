@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import EmployeeMetrics from "./EmployeeMetrics";
 import EmployeeItem from "./EmployeeItem";
 import Hint from "../../Hint/Hint";
@@ -39,6 +41,8 @@ const EmployeesStats = ({
     setEmployeeFilters,
     employeeFilters,
 }) => {
+    const [activeTab, setActiveTab] = useState("employee_new");
+
     const horizontalOptions = {
         responsive: true,
         maintainAspectRatio: false,
@@ -167,7 +171,7 @@ const EmployeesStats = ({
                         <Hint message={""} />
                     </div>
 
-                    <div className="h-[225px] overflow-x-hidden overflow-y-auto">
+                    <div className="h-[225px] min-w-[500px] overflow-auto">
                         <div
                             style={{
                                 height:
@@ -189,76 +193,87 @@ const EmployeesStats = ({
                 </div>
 
                 <div className="indicators__employees-right">
-                    <div className="grid items-stretch grid-cols-5 gap-3 mb-5">
-                        <div className="flex flex-col gap-2">
-                            <div className="flex items-center gap-2 font-medium">
+                    <div className="statistics-block__content indicators__employees-metrics-statistics">
+                        <div className="statistics-block__item">
+                            <div className="statistics-block__item-label">
                                 Пришли
                             </div>
-                            <div className="flex items-center flex-grow gap-2">
-                                <strong className="font-normal text-3xl max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap">
-                                    <span>
-                                        {employeeMetrics.hired_employees
-                                            ?.length || 0}
-                                    </span>
-                                </strong>
-                                <small className="text-sm">чел.</small>
+
+                            <div className="statistics-block__item-value">
+                                <div className="statistics-block__item-value-block">
+                                    <strong>
+                                        <span>
+                                            {employeeMetrics.hired_employees
+                                                ?.length || 0}
+                                        </span>
+                                    </strong>
+
+                                    <small>чел.</small>
+                                </div>
                             </div>
                         </div>
 
-                        <div className="flex flex-col gap-2">
-                            <div className="flex items-center gap-2 font-medium">
+                        <div className="statistics-block__item">
+                            <div className="statistics-block__item-label">
                                 Ушли
                             </div>
-                            <div className="flex items-center flex-grow gap-2">
-                                <strong className="font-normal text-3xl max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap">
-                                    <span>
-                                        {employeeMetrics.dismissed_employees
-                                            ?.length || 0}
-                                    </span>
-                                </strong>
-                                <small className="text-sm">чел.</small>
+
+                            <div className="statistics-block__item-value">
+                                <div className="statistics-block__item-value-block">
+                                    <strong>
+                                        <span>
+                                            {employeeMetrics.dismissed_employees
+                                                ?.length || 0}
+                                        </span>
+                                    </strong>
+
+                                    <small>чел.</small>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-7 max-h-[280px] overflow-x-hidden overflow-y-auto">
-                        <div>
-                            <div className="mb-3 font-medium">
+                    <ul className="card__tabs">
+                        <li className="card__tabs-item radio-field_tab">
+                            <input
+                                type="radio"
+                                id="employee_new"
+                                checked={activeTab === "employee_new"}
+                                onChange={() => setActiveTab("employee_new")}
+                            />
+                            <label htmlFor="employee_new">
                                 Новые сотрудники
-                            </div>
+                            </label>
+                        </li>
 
-                            <ul className="flex flex-col gap-2">
-                                {employeeMetrics.hired_employees?.length > 0 &&
-                                    employeeMetrics.hired_employees.map(
-                                        (item) => (
-                                            <EmployeeItem
-                                                key={item.id}
-                                                {...item}
-                                            />
-                                        )
-                                    )}
-                            </ul>
-                        </div>
-
-                        <div>
-                            <div className="mb-3 font-medium">
+                        <li className="card__tabs-item radio-field_tab">
+                            <input
+                                type="radio"
+                                id="employee_departed"
+                                checked={activeTab === "employee_departed"}
+                                onChange={() =>
+                                    setActiveTab("employee_departed")
+                                }
+                            />
+                            <label htmlFor="employee_departed">
                                 Ушедшие сотрудники
-                            </div>
+                            </label>
+                        </li>
+                    </ul>
 
-                            <ul className="flex flex-col gap-2">
-                                {employeeMetrics.dismissed_employees?.length >
-                                    0 &&
-                                    employeeMetrics.dismissed_employees.map(
-                                        (item) => (
-                                            <EmployeeItem
-                                                key={item.id}
-                                                {...item}
-                                            />
-                                        )
-                                    )}
-                            </ul>
-                        </div>
-                    </div>
+                    <ul className="indicators__employees-list">
+                        {activeTab == "employee_new"
+                            ? employeeMetrics.hired_employees?.length > 0 &&
+                              employeeMetrics.hired_employees.map((item) => (
+                                  <EmployeeItem key={item.id} {...item} />
+                              ))
+                            : employeeMetrics.dismissed_employees?.length > 0 &&
+                              employeeMetrics.dismissed_employees.map(
+                                  (item) => (
+                                      <EmployeeItem key={item.id} {...item} />
+                                  )
+                              )}
+                    </ul>
                 </div>
             </div>
         </section>
