@@ -85,14 +85,14 @@ const EmployeesStats = ({
                 ticks: {
                     color: "#002033",
                     font: { size: 14 },
-                    crossAlign: "near",
-                    padding: 10,
+                    crossAlign: "far",
+                    padding: 15,
                     autoSkip: false,
                     maxRotation: 0,
                     callback: function (value) {
                         let label = this.getLabelForValue(value);
-                        return label.length > 22
-                            ? label.slice(0, 22) + "…"
+                        return label.length > 25
+                            ? label.slice(0, 25) + "…"
                             : label;
                     },
                 },
