@@ -588,6 +588,7 @@ const Indicators = () => {
                     <EmployeesStats
                         employeeMetrics={employeeMetrics}
                         setEmployeeFilters={setEmployeeFilters}
+                        employeeFilters={employeeFilters}
                     />
 
                     <section>

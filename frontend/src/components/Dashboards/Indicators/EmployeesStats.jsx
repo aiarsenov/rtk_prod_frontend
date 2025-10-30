@@ -1,6 +1,7 @@
 import EmployeeMetrics from "./EmployeeMetrics";
 import EmployeeItem from "./EmployeeItem";
 import Hint from "../../Hint/Hint";
+import Select from "react-select";
 
 import {
     Chart as ChartJS,
@@ -27,7 +28,17 @@ ChartJS.register(
 
 import { Bar } from "react-chartjs-2";
 
-const EmployeesStats = ({ employeeMetrics, setEmployeeFilters }) => {
+const OPTIONS = [
+    { value: "headcount", label: "Численность, чел" },
+    { value: "gross_salary", label: "ФОТ gross, млн руб." },
+    { value: "average_salary", label: "Средняя зп, тыс. руб." },
+];
+
+const EmployeesStats = ({
+    employeeMetrics,
+    setEmployeeFilters,
+    employeeFilters,
+}) => {
     const horizontalOptions = {
         responsive: true,
         maintainAspectRatio: false,
@@ -134,49 +145,45 @@ const EmployeesStats = ({ employeeMetrics, setEmployeeFilters }) => {
                 <div className="indicators__employees-left">
                     <EmployeeMetrics {...employeeMetrics} />
 
-                    <div className="flex flex-col gap-3">
-                        <div className="flex items-center gap-3">
-                            <select
-                                className="border-2 h-[30px] p-1 border-gray-300 max-w-[175px] w-full"
-                                onChange={(evt) =>
-                                    setEmployeeFilters((prev) => ({
-                                        ...prev,
-                                        metric_type: [evt.target.value],
-                                    }))
-                                }
-                            >
-                                <option value="headcount">
-                                    Численность, чел
-                                </option>
-                                <option value="gross_salary">
-                                    ФОТ gross, млн руб.
-                                </option>
-                                <option value="average_salary">
-                                    Средняя зп, тыс. руб.
-                                </option>
-                            </select>
+                    <div className="flex items-start gap-[5px] mb-[20px]">
+                        <Select
+                            className="form-select-extend w-[200px]"
+                            options={OPTIONS}
+                            placeholder="Выбрать"
+                            value={OPTIONS.find(
+                                (opt) =>
+                                    opt.value ===
+                                    (employeeFilters?.metric_type?.[0] ||
+                                        "headcount")
+                            )}
+                            onChange={(evt) =>
+                                setEmployeeFilters((prev) => ({
+                                    ...prev,
+                                    metric_type: [evt.value],
+                                }))
+                            }
+                        />
 
-                            <Hint message={""} />
-                        </div>
+                        <Hint message={""} />
+                    </div>
 
-                        <div className="h-[300px] overflow-x-hidden overflow-y-auto">
-                            <div
-                                style={{
-                                    height:
-                                        (EmployeeMetricsData.labels?.length ||
-                                            0) > 5
-                                            ? `${
-                                                  EmployeeMetricsData.labels
-                                                      .length * 60
-                                              }px`
-                                            : "300px",
-                                }}
-                            >
-                                <Bar
-                                    data={EmployeeMetricsData}
-                                    options={horizontalOptions}
-                                />
-                            </div>
+                    <div className="h-[225px] overflow-x-hidden overflow-y-auto">
+                        <div
+                            style={{
+                                height:
+                                    (EmployeeMetricsData.labels?.length || 0) >
+                                    5
+                                        ? `${
+                                              EmployeeMetricsData.labels
+                                                  .length * 47
+                                          }px`
+                                        : "225px",
+                            }}
+                        >
+                            <Bar
+                                data={EmployeeMetricsData}
+                                options={horizontalOptions}
+                            />
                         </div>
                     </div>
                 </div>
