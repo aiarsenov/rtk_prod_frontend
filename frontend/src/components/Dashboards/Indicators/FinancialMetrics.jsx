@@ -1,10 +1,33 @@
 import CountUp from "react-countup";
+import Hint from "../../Hint/Hint";
 
 import getColorBySign from "../../../utils/getColorBySign";
 
 const FinancialMetrics = ({ financialMetrics }) => {
     return (
-        <div className="grid items-stretch grid-cols-3 gap-3 mb-5 h-[90px]">
+        <div className="statistics-block__content indicators__financial-metrics-statistics">
+            {/* <div className="statistics-block__item">
+                <div className="statistics-block__item-label">
+                    Выручка
+                    <Hint message={"Выручка"} />
+                </div>
+                <div className="statistics-block__item-value">
+                    {financialMetrics.revenue?.value !== "0" ? (
+                        <div>
+                            <strong>
+                                <CountUp
+                                    end={financialMetrics.revenue?.value || 0}
+                                    duration={1}
+                                    separator=" "
+                                />
+                            </strong>
+                        </div>
+                    ) : (
+                        <b>Нет данных</b>
+                    )}
+                </div>
+            </div> */}
+
             <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2 font-medium">
                     Выручка

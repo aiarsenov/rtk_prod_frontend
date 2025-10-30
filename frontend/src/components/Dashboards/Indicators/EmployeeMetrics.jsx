@@ -1,4 +1,5 @@
 import CountUp from "react-countup";
+import Hint from "../../Hint/Hint";
 
 const EmployeeMetrics = ({
     total_active_employees,
@@ -6,117 +7,144 @@ const EmployeeMetrics = ({
     gross_salary,
 }) => {
     return (
-        <div className="grid items-stretch grid-cols-4 gap-3 mb-5">
-            <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-2 font-medium">
+        <div className="statistics-block__content indicators__employees-metrics-statistics">
+            <div className="statistics-block__item">
+                <div className="statistics-block__item-label">
                     Численность
-                    <span className="flex items-center justify-center border border-gray-300 p-1 rounded-[50%] w-[20px] h-[20px]">
-                        ?
-                    </span>
+                    <Hint message="Численность" />
                 </div>
-                <div
-                    className="flex items-center flex-grow gap-2"
-                    title={
-                        total_active_employees?.value +
-                        " " +
-                        total_active_employees?.label
-                    }
-                >
-                    <strong className="font-normal text-3xl max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap">
-                        <CountUp
-                            end={total_active_employees?.value || 0}
-                            duration={1}
-                            separator=" "
-                            decimals={2}
-                        />
-                    </strong>
-                    <small className="text-sm">
-                        {total_active_employees?.label}
-                    </small>
-                </div>
-                <div
-                    className={`${
-                        total_active_employees?.change_percent > 0
-                            ? "text-red-400"
-                            : "text-green-400"
-                    }`}
-                >
-                    {total_active_employees?.change_percent &&
-                        total_active_employees?.change_percent + "%"}
+                <div className="statistics-block__item-value">
+                    {total_active_employees?.value ? (
+                        <div className="statistics-block__item-value-block">
+                            <strong>
+                                <CountUp
+                                    end={total_active_employees?.value || 0}
+                                    duration={1}
+                                    separator=" "
+                                    decimals={2}
+                                />
+                            </strong>
+
+                            <small>{total_active_employees?.label}</small>
+
+                            {typeof total_active_employees?.change_percent ===
+                                "number" && (
+                                <div
+                                    className={`statistics-block__item-value-percent ${
+                                        total_active_employees.change_percent >
+                                        0
+                                            ? "red"
+                                            : total_active_employees.change_percent <
+                                              0
+                                            ? "green"
+                                            : ""
+                                    }`}
+                                >
+                                    {total_active_employees.change_percent > 0
+                                        ? `+${total_active_employees.change_percent}%`
+                                        : `${total_active_employees.change_percent}%`}
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <b>Нет данных</b>
+                    )}
                 </div>
             </div>
 
-            <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-2 font-medium">
+            <div className="statistics-block__item">
+                <div className="statistics-block__item-label">
                     ФОТ gross
-                    <span className="flex items-center justify-center border border-gray-300 p-1 rounded-[50%] w-[20px] h-[20px]">
-                        ?
-                    </span>
+                    <Hint message="ФОТ gross" />
                 </div>
-                <div
-                    className="flex items-center flex-grow gap-2"
-                    title={gross_salary?.value + " " + gross_salary?.label}
-                >
-                    <strong className="font-normal text-3xl max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap">
-                        <CountUp
-                            end={parseFloat(
-                                (gross_salary?.value || "0").replace(",", ".")
-                            )}
-                            duration={1}
-                            separator=" "
-                            decimals={2}
-                            decimal=","
-                        />
-                    </strong>
-                    <small className="text-sm">{gross_salary?.label}</small>
-                </div>
+                <div className="statistics-block__item-value">
+                    {gross_salary?.value ? (
+                        <div className="statistics-block__item-value-block">
+                            <strong>
+                                <CountUp
+                                    end={parseFloat(
+                                        (gross_salary?.value || "0").replace(
+                                            ",",
+                                            "."
+                                        )
+                                    )}
+                                    duration={1}
+                                    separator=" "
+                                    decimals={2}
+                                    decimal=","
+                                />
+                            </strong>
 
-                <div
-                    className={`${
-                        gross_salary?.change_percent > 0
-                            ? "text-red-400"
-                            : "text-green-400"
-                    }`}
-                >
-                    {gross_salary?.change_percent &&
-                        gross_salary?.change_percent + "%"}
+                            <small>{gross_salary?.label}</small>
+
+                            {typeof gross_salary?.change_percent ===
+                                "number" && (
+                                <div
+                                    className={`statistics-block__item-value-percent ${
+                                        gross_salary.change_percent > 0
+                                            ? "red"
+                                            : gross_salary.change_percent < 0
+                                            ? "green"
+                                            : ""
+                                    }`}
+                                >
+                                    {gross_salary.change_percent > 0
+                                        ? `+${gross_salary.change_percent}%`
+                                        : `${gross_salary.change_percent}%`}
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <b>Нет данных</b>
+                    )}
                 </div>
             </div>
 
-            <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-2 font-medium">
+            <div className="statistics-block__item">
+                <div className="statistics-block__item-label">
                     Средняя з/п
-                    <span className="flex items-center justify-center border border-gray-300 p-1 rounded-[50%] w-[20px] h-[20px]">
-                        ?
-                    </span>
+                    <Hint message="Средняя з/п" />
                 </div>
-                <div
-                    className="flex items-center flex-grow gap-2"
-                    title={average_salary?.value + " " + average_salary?.label}
-                >
-                    <strong className="font-normal text-3xl max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap">
-                        <CountUp
-                            end={parseFloat(
-                                (average_salary?.value || "0").replace(",", ".")
-                            )}
-                            duration={1}
-                            separator=" "
-                            decimals={1}
-                            decimal=","
-                        />
-                    </strong>
-                    <small className="text-sm">{average_salary?.label}</small>
-                </div>
+                <div className="statistics-block__item-value">
+                    {average_salary?.value ? (
+                        <div className="statistics-block__item-value-block">
+                            <strong>
+                                <CountUp
+                                    end={parseFloat(
+                                        (average_salary?.value || "0").replace(
+                                            ",",
+                                            "."
+                                        )
+                                    )}
+                                    duration={1}
+                                    separator=" "
+                                    decimals={1}
+                                    decimal=","
+                                />
+                            </strong>
 
-                <div
-                    className={`${
-                        average_salary?.change_percent > 0
-                            ? "text-red-400"
-                            : "text-green-400"
-                    }`}
-                >
-                    {average_salary?.change_percent &&
-                        average_salary?.change_percent + "%"}
+                            <small>{average_salary?.label}</small>
+
+                            {typeof average_salary?.change_percent ===
+                                "number" && (
+                                <div
+                                    className={`statistics-block__item-value-percent ${
+                                        average_salary.change_percent > 0
+                                            ? "red"
+                                            : average_salary.change_percent < 0
+                                            ? "green"
+                                            : ""
+                                    }`}
+                                >
+                                    {average_salary.change_percent > 0
+                                        ? `+${average_salary.change_percent}%`
+                                        : `${average_salary.change_percent}%`}
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <b>Нет данных</b>
+                    )}
                 </div>
             </div>
         </div>

@@ -686,6 +686,33 @@ body {
                 line-height: 120%;
             }
         }
+
+        &-value-block {
+            small {
+                flex: 0 0 auto !important;
+                color: var(--color-gray-70);
+            }
+        }
+
+        &-value-percent {
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 100%;
+            padding: 5px;
+            border-radius: 5px;
+            color: var(--color-gray-70);
+            background: var(--color-gray-30);
+
+            &.red {
+                background: var(--color-red-30);
+                color: var(--color-red-70);
+            }
+
+            &.green {
+                background: var(--color-green-30);
+                color: var(--color-green-70);
+            }
+        }
     }
 }
 
