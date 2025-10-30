@@ -207,10 +207,24 @@ const Indicators = () => {
         scales: {
             x: {
                 stacked: true,
+                grid: {
+                    display: false,
+                },
+                ticks: {
+                    color: "#98A2B3",
+                },
             },
             y: {
                 ticks: {
-                    // display: false,
+                    color: "#98A2B3",
+                },
+                grid: {
+                    drawBorder: false,
+                    drawOnChartArea: true,
+                    color: "#E4E7EC",
+                },
+                border: {
+                    dash: [3, 3],
                 },
             },
         },
