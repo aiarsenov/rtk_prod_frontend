@@ -402,6 +402,7 @@ const FinancialIndicators = ({
                     setSortBy={setSortBy}
                     className={"text-left ml-[10px]"}
                 />
+                
                 <SortBtn
                     label={"Валовая рентабельность"}
                     value={"gross_margin.value"}

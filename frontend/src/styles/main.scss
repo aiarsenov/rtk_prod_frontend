@@ -231,44 +231,6 @@ body {
     pointer-events: none;
 }
 
-.edit-icon {
-    background: url("../assets/icons/edit.svg") center no-repeat;
-}
-
-.save-icon {
-    background: url("../assets/icons/save.svg") center no-repeat;
-}
-
-.update-icon {
-    background: url("../assets/icons/update.svg") center no-repeat;
-}
-
-.delete-icon {
-    background: url("../assets/icons/delete.svg") center no-repeat;
-}
-
-.info-icon {
-    background: url("../assets/icons/info.png") center no-repeat;
-}
-
-.delete-icon,
-.update-icon,
-.save-icon,
-.edit-icon,
-.info-icon {
-    display: block;
-    width: 18px;
-    height: 18px;
-    flex: 0 0 auto;
-    background-size: contain;
-}
-
-:disabled .delete-icon,
-.delete-icon:disabled {
-    opacity: 0.6;
-    pointer-events: none;
-}
-
 .loader {
     position: absolute;
     inset: 0;
@@ -831,5 +793,72 @@ body {
         color: var(--color-gray-60);
         border: 1px solid var(--color-gray-40);
         border-radius: 99px;
+    }
+}
+
+.sort-btn {
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 150%;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    div {
+        display: block;
+        position: relative;
+        background: var(--color-gray-50);
+        height: 1.5px;
+        width: 9px;
+        transition: all var(--trans);
+
+        &::before,
+        &::after {
+            content: "";
+            position: absolute;
+            background: var(--color-gray-50);
+            height: 1.5px;
+            width: 9px;
+            left: 0;
+            transition: all var(--trans);
+        }
+
+        &::before {
+            top: 3px;
+        }
+
+        &::after {
+            bottom: 3px;
+        }
+    }
+
+    &_ascending {
+        div {
+            width: 7px;
+
+            &::before {
+                top: 4px;
+                width: 5px;
+            }
+
+            &::after {
+                bottom: 4px;
+            }
+        }
+    }
+
+    &_descending {
+        div {
+            width: 7px;
+
+            &::before {
+                top: 4px;
+            }
+
+            &::after {
+                bottom: 4px;
+                width: 5px;
+            }
+        }
     }
 }

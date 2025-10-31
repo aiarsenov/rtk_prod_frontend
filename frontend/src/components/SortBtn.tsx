@@ -49,7 +49,7 @@ const SortBtn = ({ label, value, sortBy, setSortBy, className = "" }) => {
             title={state.title}
         >
             {label}
-            <span></span>
+            <div></div>
         </button>
     );
 };
