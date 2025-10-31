@@ -577,6 +577,7 @@ const Indicators = () => {
                         <FinancialIndicators
                             financialList={financialList}
                             financialProfitList={financialProfitList}
+                            financialListFilters={financialListFilters}
                             setFinancialListFilters={setFinancialListFilters}
                             setFinancialProfitListFilters={
                                 setFinancialProfitListFilters

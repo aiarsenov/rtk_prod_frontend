@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { sortFinanceValues } from "../../../utils/sortFinanceValues";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
+import Select from "react-select";
 import SortBtn from "../../SortBtn";
 
 import {
@@ -31,9 +32,15 @@ ChartJS.register(
 
 import { Bar } from "react-chartjs-2";
 
+const OPTIONS = [
+    { value: "project", label: "Проект" },
+    { value: "customer", label: "Заказчик" },
+];
+
 const FinancialIndicators = ({
     financialList,
     financialProfitList,
+    financialListFilters,
     setFinancialListFilters,
     setFinancialProfitListFilters,
 }) => {
@@ -360,24 +367,28 @@ const FinancialIndicators = ({
 
     return (
         <div className="dashboards__block">
-            <div className="grid grid-cols-[32%_1fr_1fr_1fr] pl-4">
+            <div className="grid grid-cols-[32%_1fr_1fr_1fr]">
                 <div className="flex items-center gap-5">
-                    <select
-                        className="border-2 h-[30px] p-1 border-gray-300 w-full max-w-[125px] cursor-pointer"
+                    <Select
+                        className="form-select-extend w-[120px]"
+                        options={OPTIONS}
+                        placeholder="Выбрать"
+                        value={OPTIONS.find(
+                            (opt) =>
+                                opt.value ===
+                                (financialListFilters?.type?.[0] || "project")
+                        )}
                         onChange={(evt) => {
                             setFinancialListFilters((prev) => ({
                                 ...prev,
-                                type: [evt.target.value],
+                                type: [evt.value],
                             }));
                             setFinancialProfitListFilters((prev) => ({
                                 ...prev,
-                                type: [evt.target.value],
+                                type: [evt.value],
                             }));
                         }}
-                    >
-                        <option value="project">Проект</option>
-                        <option value="customer">Заказчик</option>
-                    </select>
+                    />
 
                     <SortBtn
                         label="Поступления, млн руб."
@@ -402,7 +413,7 @@ const FinancialIndicators = ({
                     setSortBy={setSortBy}
                     className={"text-left ml-[10px]"}
                 />
-                
+
                 <SortBtn
                     label={"Валовая рентабельность"}
                     value={"gross_margin.value"}
