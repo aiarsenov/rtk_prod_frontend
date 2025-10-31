@@ -108,6 +108,7 @@ const EmployeesStats = ({
                 },
                 border: {
                     dash: [3, 3],
+                    display: false,
                 },
                 barPercentage: 0.7,
                 categoryPercentage: 0.8,
