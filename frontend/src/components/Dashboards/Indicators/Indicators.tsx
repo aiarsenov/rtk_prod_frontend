@@ -7,7 +7,7 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 import Loader from "../../Loader";
 import IndicatorsFilters from "./IndicatorsFilters";
 import FinancialMetrics from "./FinancialMetrics";
-import Sales from "./Sales";
+import IndicatorsSales from "./IndicatorsSales";
 import GrossMetrics from "./GrossMetrics";
 import CompletedReportsList from "./CompletedReportsList";
 import EmployeesStats from "./EmployeesStats";
@@ -50,14 +50,13 @@ const Indicators = () => {
     const [selectedFilters, setSelectedFilters] = useState({}); // Отчетный месяц, отчетный период
     const [mainFilters, setMainFilters] = useState({}); // Отчетный месяц, отчетный период, заказчик, проект
 
-    const [financialMetrics, setFinancialMetrics] = useState({});
+    const [financialMetrics, setFinancialMetrics] = useState({}); // Ключевые финансовые показатели
     const [financialList, setFinancialList] = useState({}); // Сортированные ключевые финансовые показатели - Поступления и выручка
     const [financialProfitList, setFinancialProfitList] = useState({}); // Сортированные ключевые финансовые показатели - Выловая прибыль и рентабельность
     const [funnelMetrics, setFunnelMetrics] = useState({}); // Продажи
-    const [employeeMetrics, setEmployeeMetrics] = useState({});
-
-    const [completedReports, setCompletedReports] = useState([]);
-    const [projectManagerReports, setProjectManagerReports] = useState([]);
+    const [employeeMetrics, setEmployeeMetrics] = useState({}); // Персонал
+    const [completedReports, setCompletedReports] = useState([]); // Завершенные отчеты
+    const [projectManagerReports, setProjectManagerReports] = useState([]); // Отчеты руководителей проектов
 
     const [financialListFilters, setFinancialListFilters] = useState({
         type: ["project"],
@@ -595,7 +594,7 @@ const Indicators = () => {
                         <div className="dashboards__row">
                             <ManagerReports selectedFilters={selectedFilters} />
 
-                            <Sales funnelMetrics={funnelMetrics} />
+                            <IndicatorsSales funnelMetrics={funnelMetrics} />
                         </div>
                     </section>
 

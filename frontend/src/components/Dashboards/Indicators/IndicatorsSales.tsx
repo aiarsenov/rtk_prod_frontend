@@ -1,7 +1,7 @@
 import FunnelMetrics from "./FunnelMetrics";
 import FunnelProjectItem from "./FunnelProjectItem";
 
-const Sales = ({ funnelMetrics }) => {
+const IndicatorsSales = ({ funnelMetrics }) => {
     return (
         <div className="dashboards__block indicators__funnel-metrics">
             <h2 className="card__subtitle">Продажи</h2>
@@ -28,4 +28,4 @@ const Sales = ({ funnelMetrics }) => {
     );
 };
 
-export default Sales;
+export default IndicatorsSales;

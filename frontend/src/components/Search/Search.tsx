@@ -1,4 +1,4 @@
-import "./Search.css";
+import "./Search.scss";
 
 const Search = ({ onSearch, className, placeholder }) => {
     return (

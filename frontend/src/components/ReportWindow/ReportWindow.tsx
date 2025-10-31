@@ -723,7 +723,7 @@ const ReportWindow = ({
             >
                 <div className="bottom-sheet__icon"></div>
 
-                <div className="bottom-sheet__body">
+                <form className="bottom-sheet__body">
                     {reportWindowsState && (
                         <div
                             className={`report-window form ${
@@ -1281,7 +1281,9 @@ const ReportWindow = ({
                                                 onClick={() => {
                                                     resetState();
                                                 }}
-                                                style={{ gridColumn: "1 /-1" }}
+                                                style={{
+                                                    gridColumn: "1 /-1",
+                                                }}
                                                 className="cancel-button"
                                                 title="Закрыть отчёт"
                                             >
@@ -1293,7 +1295,7 @@ const ReportWindow = ({
                             </div>
                         </div>
                     )}
-                </div>
+                </form>
             </div>
         </div>
     ) : (

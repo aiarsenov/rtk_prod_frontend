@@ -68,7 +68,7 @@ const ManagementReportEditor = ({
             >
                 <div className="bottom-sheet__icon"></div>
 
-                <div className="bottom-sheet__body">
+                <form className="bottom-sheet__body">
                     <div
                         className={`report-window report-rate-editor ${
                             mode === "read" && "report-rate-editor_read-mode"
@@ -215,7 +215,7 @@ const ManagementReportEditor = ({
                             </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     ) : (

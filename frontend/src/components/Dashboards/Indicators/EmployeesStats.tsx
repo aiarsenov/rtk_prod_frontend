@@ -38,8 +38,12 @@ const OPTIONS = [
 
 const EmployeesStats = ({
     employeeMetrics,
-    setEmployeeFilters,
     employeeFilters,
+    setEmployeeFilters,
+}: {
+    employeeMetrics: object[];
+    employeeFilters: object[];
+    setEmployeeFilters: React.Dispatch<React.SetStateAction<object>>;
 }) => {
     const [activeTab, setActiveTab] = useState("employee_new");
 
