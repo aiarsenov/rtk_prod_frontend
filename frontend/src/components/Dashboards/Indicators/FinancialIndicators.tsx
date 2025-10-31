@@ -65,7 +65,7 @@ const FinancialIndicators = ({
                 ),
                 backgroundColor: "#FEDF89",
                 borderRadius: 5,
-                categoryPercentage: 0.3,
+                categoryPercentage: 0.1,
                 barThickness: 30,
             },
         ],
@@ -85,7 +85,7 @@ const FinancialIndicators = ({
 
                 backgroundColor: "#FEDF89",
                 borderRadius: 5,
-                categoryPercentage: 0.3,
+                categoryPercentage: 0.1,
                 barThickness: 30,
             },
         ],
@@ -104,7 +104,7 @@ const FinancialIndicators = ({
                 ),
                 backgroundColor: "#FEDF89",
                 borderRadius: 5,
-                categoryPercentage: 0.3,
+                categoryPercentage: 0.1,
                 barThickness: 30,
             },
         ],
@@ -123,7 +123,7 @@ const FinancialIndicators = ({
                 ),
                 backgroundColor: "#FEDF89",
                 borderRadius: 5,
-                categoryPercentage: 0.3,
+                categoryPercentage: 0.1,
                 barThickness: 30,
             },
         ],
@@ -158,7 +158,12 @@ const FinancialIndicators = ({
         },
         scales: {
             y: {
+                position: "left",
                 ticks: {
+                    color: "#002033",
+                    font: { size: 14 },
+                    padding: 5,
+                    crossAlign: "far",
                     autoSkip: false,
                     maxRotation: 0,
                     callback: function (value) {
@@ -181,6 +186,7 @@ const FinancialIndicators = ({
                 },
                 border: {
                     dash: [3, 3],
+                    display: false,
                 },
                 barPercentage: 0.7,
                 categoryPercentage: 0.8,
@@ -193,6 +199,7 @@ const FinancialIndicators = ({
                     drawTicks: false,
                     display: false,
                 },
+                border: { display: false },
                 afterDataLimits: (axis) => {
                     const max = axis.max ?? 0;
                     axis.max = max * 1.1;
@@ -232,8 +239,10 @@ const FinancialIndicators = ({
         scales: {
             y: {
                 ticks: {
+                    font: { size: 14 },
                     autoSkip: false,
                     maxRotation: 0,
+                    padding: 5,
                     callback: function (value) {
                         let label = this.getLabelForValue(value);
                         return label.length > 0 ? label.slice(0, 0) : label;
@@ -247,6 +256,7 @@ const FinancialIndicators = ({
                 },
                 border: {
                     dash: [3, 3],
+                    display: false,
                 },
                 barPercentage: 0.7,
                 categoryPercentage: 0.8,
@@ -256,7 +266,11 @@ const FinancialIndicators = ({
                     display: false,
                 },
                 grid: {
+                    drawBorder: false,
                     drawTicks: false,
+                    display: false,
+                },
+                border: {
                     display: false,
                 },
                 afterDataLimits: (axis) => {
@@ -290,12 +304,6 @@ const FinancialIndicators = ({
             },
             tooltip: {
                 enabled: false,
-                // callbacks: {
-                //     label: (context) => {
-                //         let value = context.raw;
-                //         return `${value}%`;
-                //     },
-                // },
             },
         },
         scales: {
@@ -303,6 +311,8 @@ const FinancialIndicators = ({
                 ticks: {
                     autoSkip: false,
                     maxRotation: 0,
+                    padding: 5,
+                    font: { size: 14 },
                     callback: function (value) {
                         let label = this.getLabelForValue(value);
                         return label.length > 0 ? label.slice(0, 0) : label;
@@ -316,6 +326,7 @@ const FinancialIndicators = ({
                 },
                 border: {
                     dash: [3, 3],
+                    display: false,
                 },
                 barPercentage: 0.7,
                 categoryPercentage: 0.8,
@@ -328,6 +339,7 @@ const FinancialIndicators = ({
                     drawTicks: false,
                     display: false,
                 },
+                border: { display: false },
                 afterDataLimits: (axis) => {
                     const max = axis.max ?? 0;
                     axis.max = max * 1.1;
@@ -366,9 +378,9 @@ const FinancialIndicators = ({
     }, [financialList, financialProfitList]);
 
     return (
-        <div className="dashboards__block">
-            <div className="grid grid-cols-[32%_1fr_1fr_1fr]">
-                <div className="flex items-center gap-5">
+        <div className="dashboards__block indicators__financial-indicators">
+            <div className="indicators__financial-indicators__header">
+                <div className="flex items-center gap-[40px]">
                     <Select
                         className="form-select-extend w-[120px]"
                         options={OPTIONS}
@@ -423,7 +435,7 @@ const FinancialIndicators = ({
                 />
             </div>
 
-            <div className="h-[300px] overflow-x-hidden overflow-y-auto grid grid-cols-[32%_1fr_1fr_1fr]">
+            <div className="indicators__financial-indicators__body">
                 <div
                     style={{
                         height:
@@ -433,6 +445,7 @@ const FinancialIndicators = ({
                                       60
                                   }px`
                                 : "300px",
+                        minWidth: "200px",
                     }}
                 >
                     <Bar
