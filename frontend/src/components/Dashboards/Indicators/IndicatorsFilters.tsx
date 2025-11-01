@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import getData from "../../../utils/getData";
 
 import CreatableSelect from "react-select/creatable";
+import CustomDatePickerField from "../../CustomDatePicker/CustomDatePickerField";
 
 const IndicatorsFilters = ({
     mainFilters,
@@ -14,6 +15,7 @@ const IndicatorsFilters = ({
     setFinancialProfitListFilters,
     setEmployeeFilters,
 }) => {
+    const [dateRange, setDateRange] = useState([null, null]);
     const [contragents, setContragents] = useState([]);
     const [projects, setProjects] = useState([]);
     const [filtertOptions, setFilterOptions] = useState([]);
@@ -135,167 +137,158 @@ const IndicatorsFilters = ({
     }, []);
 
     return (
-        <section className="filters flex items-center justify-between gap-6">
-            <div className="flex items-center gap-8">
-                <div className="flex flex-col">
-                    <span className="block mb-2 text-gray-400">
-                        Отчётный месяц
-                    </span>
-                    <select
-                        className="border-2 h-[32px] p-1 border-gray-300 min-w-full max-w-[140px] cursor-pointer"
-                        value={selectedFilters?.report_month?.[0] ?? ""}
-                        onChange={(e) => {
-                            const selectedValue = Array.from(
-                                e.target.selectedOptions
-                            ).map((option) => option.value);
+        <div className="dashboards__filters">
+            <div className="dashboards__filters-wrapper">
+                <div className="dashboards__filters-nav">
+                    <CustomDatePickerField
+                        startDate={dateRange[0]}
+                        endDate={dateRange[1]}
+                        onChange={(updated) => {
+                            const { date_from, date_to } = updated;
 
-                            handleFilterChange("report_month", selectedValue);
-                        }}
-                    >
-                        {filtertOptions?.months?.length > 0 &&
-                            filtertOptions?.months?.map((month) => (
-                                <option key={month.value} value={month.value}>
-                                    {month.label}
-                                </option>
-                            ))}
-                    </select>
-                </div>
+                            const dates = [
+                                new Date(`${date_from[0]}-01`),
+                                new Date(`${date_to[0]}-01`),
+                            ];
 
-                <div className="flex flex-col">
-                    <span className="block mb-2 text-gray-400">
-                        Отчётный период
-                    </span>
-                    <select
-                        className="border-2 h-[32px] p-1 border-gray-300 min-w-full max-w-[140px] cursor-pointer"
-                        value={selectedFilters?.period?.[0] ?? ""}
-                        onChange={(e) => {
-                            const selectedValue = Array.from(
-                                e.target.selectedOptions
-                            ).map((option) => option.value);
-                            handleFilterChange("period", selectedValue);
+                            setDateRange(dates);
                         }}
-                    >
+                        type="months"
+                        single={true}
+                    />
+
+                    <ul className="filters__period">
                         {filtertOptions?.periods?.length > 0 &&
                             filtertOptions?.periods?.map((period) => (
-                                <option key={period.value} value={period.value}>
-                                    {period.label}
-                                </option>
+                                <li
+                                    className="filters__period-item"
+                                    key={period.value}
+                                >
+                                    <input
+                                        type="radio"
+                                        id={period.value}
+                                        checked={
+                                            selectedFilters?.period?.[0] ===
+                                            period.value
+                                        }
+                                        onChange={() =>
+                                            handleFilterChange("period", [
+                                                period.value,
+                                            ])
+                                        }
+                                    />
+                                    <label htmlFor={period.value}>
+                                        {period.label}
+                                    </label>
+                                </li>
                             ))}
-                    </select>
-                </div>
-            </div>
+                    </ul>
 
-            <div className="flex items-end gap-8">
-                <div className="flex flex-col">
-                    <span className="block mb-2 text-gray-400">Фильтры</span>
-
-                    <div className="grid grid-cols-2 gap-5">
-                        <CreatableSelect
-                            isClearable
-                            options={
-                                filteredContragents.length > 0 &&
-                                filteredContragents.map((item) => ({
+                    <CreatableSelect
+                        isClearable
+                        options={
+                            filteredContragents.length > 0 &&
+                            filteredContragents.map((item) => ({
+                                value: item.id,
+                                label: item.program_name,
+                            }))
+                        }
+                        className="form-select-extend"
+                        placeholder="Заказчик"
+                        noOptionsMessage={() => "Совпадений нет"}
+                        isValidNewOption={() => false}
+                        value={
+                            contragents
+                                .map((item) => ({
                                     value: item.id,
                                     label: item.program_name,
                                 }))
-                            }
-                            className="executor-block__name-field border-2 border-gray-300 w-[240px]"
-                            placeholder="Заказчик"
-                            noOptionsMessage={() => "Совпадений нет"}
-                            isValidNewOption={() => false}
-                            value={
-                                contragents
-                                    .map((item) => ({
-                                        value: item.id,
-                                        label: item.program_name,
-                                    }))
-                                    .find(
-                                        (opt) =>
-                                            opt.value ===
-                                            mainFilters.contragent_id?.[0]
-                                    ) || null
-                            }
-                            onChange={(selectedOption) => {
-                                const newValue = selectedOption?.value || "";
+                                .find(
+                                    (opt) =>
+                                        opt.value ===
+                                        mainFilters.contragent_id?.[0]
+                                ) || null
+                        }
+                        onChange={(selectedOption) => {
+                            const newValue = selectedOption?.value || "";
 
-                                setMainFilters((prev) => ({
-                                    ...prev,
-                                    contragent_id: [newValue],
-                                }));
+                            setMainFilters((prev) => ({
+                                ...prev,
+                                contragent_id: [newValue],
+                            }));
 
-                                if (newValue != "") {
-                                    const selectedContragentProjects =
-                                        contragents.find(
-                                            (item) => item.id === +newValue
-                                        ).project_ids;
+                            if (newValue != "") {
+                                const selectedContragentProjects =
+                                    contragents.find(
+                                        (item) => item.id === +newValue
+                                    ).project_ids;
 
-                                    if (selectedContragentProjects.length > 0) {
-                                        setFilteredProjects(
-                                            projects.filter((item) =>
-                                                selectedContragentProjects.includes(
-                                                    item.id
-                                                )
+                                if (selectedContragentProjects.length > 0) {
+                                    setFilteredProjects(
+                                        projects.filter((item) =>
+                                            selectedContragentProjects.includes(
+                                                item.id
                                             )
-                                        );
-                                    } else {
-                                        setFilteredProjects(projects);
-                                    }
-                                } else {
-                                    setFilteredProjects(projects);
-                                }
-                            }}
-                        />
-
-                        <CreatableSelect
-                            isClearable
-                            options={
-                                filteredProjects.length > 0 &&
-                                filteredProjects.map((item) => ({
-                                    value: item.id,
-                                    label: item.name,
-                                }))
-                            }
-                            className="executor-block__name-field border-2 border-gray-300 w-[240px]"
-                            placeholder="Проект"
-                            noOptionsMessage={() => "Совпадений нет"}
-                            isValidNewOption={() => false}
-                            value={
-                                filteredProjects
-                                    .map((item) => ({
-                                        value: item.id,
-                                        label: item.name,
-                                    }))
-                                    .find(
-                                        (opt) =>
-                                            opt.value ===
-                                            mainFilters.project_id?.[0]
-                                    ) || null
-                            }
-                            onChange={(selectedOption) => {
-                                const newValue = selectedOption?.value || "";
-
-                                setMainFilters((prev) => ({
-                                    ...prev,
-                                    project_id: [newValue],
-                                }));
-
-                                if (newValue != "") {
-                                    setFilteredContragents(
-                                        contragents.filter((item) =>
-                                            item.project_ids.includes(newValue)
                                         )
                                     );
                                 } else {
-                                    setFilteredContragents(contragents);
+                                    setFilteredProjects(projects);
                                 }
-                            }}
-                        />
-                    </div>
+                            } else {
+                                setFilteredProjects(projects);
+                            }
+                        }}
+                    />
+
+                    <CreatableSelect
+                        isClearable
+                        options={
+                            filteredProjects.length > 0 &&
+                            filteredProjects.map((item) => ({
+                                value: item.id,
+                                label: item.name,
+                            }))
+                        }
+                        className="form-select-extend"
+                        placeholder="Проект"
+                        noOptionsMessage={() => "Совпадений нет"}
+                        isValidNewOption={() => false}
+                        value={
+                            filteredProjects
+                                .map((item) => ({
+                                    value: item.id,
+                                    label: item.name,
+                                }))
+                                .find(
+                                    (opt) =>
+                                        opt.value ===
+                                        mainFilters.project_id?.[0]
+                                ) || null
+                        }
+                        onChange={(selectedOption) => {
+                            const newValue = selectedOption?.value || "";
+
+                            setMainFilters((prev) => ({
+                                ...prev,
+                                project_id: [newValue],
+                            }));
+
+                            if (newValue != "") {
+                                setFilteredContragents(
+                                    contragents.filter((item) =>
+                                        item.project_ids.includes(newValue)
+                                    )
+                                );
+                            } else {
+                                setFilteredContragents(contragents);
+                            }
+                        }}
+                    />
                 </div>
 
                 <button
                     type="button"
-                    className="border rounded-lg py-1 px-5 h-[32px] mb-2"
+                    className="dashboards__filters-clear-btn"
                     onClick={() => {
                         setMainFilters((prev) => {
                             const { project_id, contragent_id, ...rest } = prev;
@@ -305,10 +298,11 @@ const IndicatorsFilters = ({
                         setFilteredContragents(contragents);
                     }}
                 >
-                    Очистить
+                    Очистить фильтры
+                    <span></span>
                 </button>
             </div>
-        </section>
+        </div>
     );
 };
 

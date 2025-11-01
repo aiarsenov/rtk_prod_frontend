@@ -14,6 +14,7 @@ import EmployeesStats from "./EmployeesStats";
 import FinancialIndicators from "./FinancialIndicators";
 import ProjectManagerReports from "./ProjectManagerReports";
 import ManagerReports from "./ManagerReports";
+import BottomSheet from "../../BottomSheet/BottomSheet";
 
 import "../Dashboards.scss";
 
@@ -45,6 +46,7 @@ import { Bar } from "react-chartjs-2";
 
 const Indicators = () => {
     const [isLoading, setIsLoading] = useState(true);
+    const [isActiveFilters, setIsActiveFilters] = useState(true); // Состояние окна фильтров
 
     const [selectedReportMonth, setSelectedReportMonth] = useState([]); // Отчетный месяц
     const [selectedFilters, setSelectedFilters] = useState({}); // Отчетный месяц, отчетный период
@@ -528,18 +530,23 @@ const Indicators = () => {
             {isLoading && <Loader bgColor={"rgba(255, 255, 255, 0.6)"} />}
 
             <div className="container dashboards__container">
-                <IndicatorsFilters
-                    mainFilters={mainFilters}
-                    setMainFilters={setMainFilters}
-                    setSelectedReportMonth={setSelectedReportMonth}
-                    setSelectedFilters={setSelectedFilters}
-                    selectedFilters={selectedFilters}
-                    setFinancialListFilters={setFinancialListFilters}
-                    setFinancialProfitListFilters={
-                        setFinancialProfitListFilters
-                    }
-                    setEmployeeFilters={setEmployeeFilters}
-                />
+                <BottomSheet
+                    onClick={() => setIsActiveFilters(false)}
+                    className={`${isActiveFilters ? "active" : ""}`}
+                >
+                    <IndicatorsFilters
+                        mainFilters={mainFilters}
+                        setMainFilters={setMainFilters}
+                        setSelectedReportMonth={setSelectedReportMonth}
+                        setSelectedFilters={setSelectedFilters}
+                        selectedFilters={selectedFilters}
+                        setFinancialListFilters={setFinancialListFilters}
+                        setFinancialProfitListFilters={
+                            setFinancialProfitListFilters
+                        }
+                        setEmployeeFilters={setEmployeeFilters}
+                    />
+                </BottomSheet>
 
                 <section className="dashboards__content">
                     <section className="indicators__financial-metrics">
@@ -547,7 +554,7 @@ const Indicators = () => {
                             Ключевые финансовые показатели
                         </h2>
 
-                        <div className="dashboards__row">
+                        {/* <div className="dashboards__row">
                             <div className="dashboards__block">
                                 <FinancialMetrics
                                     financialMetrics={financialMetrics}
@@ -605,8 +612,8 @@ const Indicators = () => {
                                     />
                                 </div>
                             </div>
-                        </div>
-
+                        </div> */}
+                        {/* 
                         <FinancialIndicators
                             financialList={financialList}
                             financialProfitList={financialProfitList}
@@ -615,14 +622,14 @@ const Indicators = () => {
                             setFinancialProfitListFilters={
                                 setFinancialProfitListFilters
                             }
-                        />
+                        /> */}
                     </section>
 
-                    <EmployeesStats
+                    {/* <EmployeesStats
                         employeeMetrics={employeeMetrics}
                         setEmployeeFilters={setEmployeeFilters}
                         employeeFilters={employeeFilters}
-                    />
+                    /> */}
 
                     <section>
                         <div className="dashboards__row">
@@ -644,6 +651,30 @@ const Indicators = () => {
                         </div>
                     </section>
                 </section>
+            </div>
+
+            <div className="card__bottom-actions">
+                <button
+                    type="button"
+                    title="Открыть фильтры"
+                    onClick={() => {
+                        setIsActiveFilters(true);
+                    }}
+                >
+                    <svg
+                        width="30"
+                        height="30"
+                        viewBox="0 0 30 30"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            d="M8.83116 9.62235H21.1633M8.83116 14.6909H21.1633M8.83116 19.4801H17.4517M6.06055 26.2405H24.0007C24.553 26.2405 25.0007 25.7928 25.0007 25.2405V4.75928C25.0007 4.20699 24.553 3.75928 24.0007 3.75928H6.06055C5.50826 3.75928 5.06055 4.20699 5.06055 4.75928V25.2405C5.06055 25.7928 5.50826 26.2405 6.06055 26.2405Z"
+                            stroke="#F38B00"
+                            strokeWidth="2"
+                        />
+                    </svg>
+                </button>
             </div>
         </section>
     );

@@ -162,7 +162,7 @@ const FinancialIndicators = ({
                 ticks: {
                     color: "#002033",
                     font: { size: 14 },
-                    padding: 5,
+                    padding: 2,
                     crossAlign: "far",
                     autoSkip: false,
                     maxRotation: 0,
@@ -242,7 +242,7 @@ const FinancialIndicators = ({
                     font: { size: 14 },
                     autoSkip: false,
                     maxRotation: 0,
-                    padding: 5,
+                    padding: 2,
                     callback: function (value) {
                         let label = this.getLabelForValue(value);
                         return label.length > 0 ? label.slice(0, 0) : label;
@@ -311,7 +311,7 @@ const FinancialIndicators = ({
                 ticks: {
                     autoSkip: false,
                     maxRotation: 0,
-                    padding: 5,
+                    padding: 2,
                     font: { size: 14 },
                     callback: function (value) {
                         let label = this.getLabelForValue(value);
