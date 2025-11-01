@@ -4,8 +4,9 @@ import getData from "../../utils/getData";
 import formatMoney from "../../utils/formatMoney";
 import parseDate from "../../utils/parseDate";
 import buildQueryParams from "../../utils/buildQueryParams";
-import CreatableSelect from "react-select/creatable";
+import { useBodyScrollLock } from "../../hooks/useBodyScrollLock.js";
 
+import CreatableSelect from "react-select/creatable";
 import TeammatesSection from "../TeammatesSection";
 import ContractorsSection from "../ContractorsSection";
 import DateFields from "../DateField/DateFields";
@@ -707,6 +708,8 @@ const ReportWindow = ({
             fetchEditorData();
         }
     }, [reportWindowsState]);
+
+    useBodyScrollLock(reportWindowsState);
 
     return !saveBeforeClose ? (
         <div

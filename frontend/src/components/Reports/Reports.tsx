@@ -3,7 +3,6 @@ import { useState, useEffect, useMemo } from "react";
 import getData from "../../utils/getData";
 import postData from "../../utils/postData";
 import { sortDateList } from "../../utils/sortDateList";
-import { useBodyScrollLock } from "../../hooks/useBodyScrollLock.js";
 import buildQueryParams from "../../utils/buildQueryParams";
 
 import TheadRow from "./TheadRow";
@@ -686,10 +685,6 @@ const Reports = () => {
             sortDateList(filteredManagementReports, sortBy)
         );
     }, [sortBy, filteredManagementReports]);
-
-    useBodyScrollLock(
-        reportWindowsState || rateEditorState || managementEditorState
-    ); // Блокируем экран при открытии редакторов отчета
 
     return (
         <main className="page reports-registry">

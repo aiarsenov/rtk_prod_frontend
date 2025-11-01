@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import handleStatusString from "../../utils/handleStatusString";
 import AutoResizeTextarea from "../AutoResizeTextarea";
+import { useBodyScrollLock } from "../../hooks/useBodyScrollLock.js";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
@@ -54,6 +55,8 @@ const ManagementReportEditor = ({
         setIsChanged(false);
         closeEditor();
     };
+
+    useBodyScrollLock(editorState);
 
     return !saveBeforeClose ? (
         <div

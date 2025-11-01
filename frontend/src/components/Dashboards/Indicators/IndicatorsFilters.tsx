@@ -15,7 +15,6 @@ const IndicatorsFilters = ({
     setFinancialProfitListFilters,
     setEmployeeFilters,
 }) => {
-    const [dateRange, setDateRange] = useState([null, null]);
     const [contragents, setContragents] = useState([]);
     const [projects, setProjects] = useState([]);
     const [filtertOptions, setFilterOptions] = useState([]);

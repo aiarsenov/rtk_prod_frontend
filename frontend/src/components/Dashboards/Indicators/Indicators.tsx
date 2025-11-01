@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from "react";
 import getData from "../../../utils/getData";
 import buildQueryParams from "../../../utils/buildQueryParams";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import { useBodyScrollLock } from "../../../hooks/useBodyScrollLock.js";
+import { useWindowWidth } from "../../../hooks/useWindowWidth.js";
 
 import Loader from "../../Loader";
 import IndicatorsFilters from "./IndicatorsFilters";
@@ -524,6 +526,16 @@ const Indicators = () => {
         mainFilters.contragent_id,
         mainFilters.project_id,
     ]);
+
+    useBodyScrollLock(isActiveFilters);
+
+    const width = useWindowWidth(); // Снимаем блокировку на десктопе
+
+    useEffect(() => {
+        if (width >= 1440) {
+            setIsActiveFilters(false);
+        }
+    }, [width]);
 
     return (
         <section className="indicators">

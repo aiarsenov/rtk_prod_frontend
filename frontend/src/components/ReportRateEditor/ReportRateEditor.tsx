@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+import { useBodyScrollLock } from "../../hooks/useBodyScrollLock.js";
+
 import RateSwitch from "../RateSwitch/RateSwitch";
 import Popup from "../Popup/Popup";
 
@@ -53,6 +55,8 @@ const ReportRateEditor = ({
             setReportRateData({ ...reportData });
         }
     }, [reportData]);
+
+    useBodyScrollLock(rateEditorState);
 
     return !saveBeforeClose ? (
         <div

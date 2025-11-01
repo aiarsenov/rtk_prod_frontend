@@ -775,7 +775,7 @@ const ProjectCard = () => {
         }
     }, [projectData?.contragent_id]);
 
-    useBodyScrollLock(activeWindow || reportWindowsState); // Блокируем экран при открытии попапа или редактора отчета
+    useBodyScrollLock(activeWindow); // Блокируем экран при открытии попапа или редактора отчета
 
     const width = useWindowWidth(); // Снимаем блокировку на десктопе
 
