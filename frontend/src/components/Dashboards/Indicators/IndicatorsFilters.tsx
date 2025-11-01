@@ -146,6 +146,10 @@ const IndicatorsFilters = ({
                             new Date(selectedFilters?.report_month?.[0]) ??
                             new Date()
                         }
+                        value={
+                            new Date(selectedFilters?.report_month?.[0]) ??
+                            new Date()
+                        }
                         onChange={(updated) => {
                             const formatted = new Date(updated)
                                 .toISOString()

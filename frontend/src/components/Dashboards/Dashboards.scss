@@ -268,11 +268,27 @@
         overflow-y: auto;
         overflow-x: hidden;
 
+        @media (min-width: $media-xxl) {
+            height: auto;
+            min-height: auto;
+            padding: 20px;
+            overflow: visible;
+            background: var(--color-white);
+            border: 1px solid var(--color-gray-30);
+            border-radius: 10px;
+        }
+
         .custom-datepicker-wrapper {
             width: 100%;
+
+            @media (min-width: $media-lg) {
+                width: 175px;
+                flex: 0 0 175px;
+            }
         }
 
         &-clear-btn {
+            white-space: nowrap;
             display: flex;
             align-items: center;
             gap: 5px;
@@ -280,6 +296,14 @@
             font-weight: 600;
             font-size: 13px;
             line-height: 150%;
+
+            @media (min-width: $media-lg) {
+                padding-top: 10px;
+            }
+
+            @media (min-width: $media-xxl) {
+                padding-top: 0;
+            }
 
             span {
                 display: block;
@@ -309,22 +333,32 @@
             }
         }
 
-        &-nav,
-        &-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
         &-wrapper {
             flex-grow: 1;
             min-height: 100%;
+
+            @media (min-width: $media-lg) {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                gap: 20px;
+            }
+
+            @media (min-width: $media-xxl) {
+                align-items: center;
+            }
         }
 
         &-nav {
-            justify-content: flex-start;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+
+            @media (min-width: $media-xxl) {
+                margin-bottom: 0;
+            }
 
             .form-select-extend {
                 flex: 0 0 100%;
@@ -400,8 +434,39 @@
 }
 
 .filters-bottomsheet {
+    @media (min-width: $media-xxl) {
+        visibility: visible;
+        opacity: 1;
+        position: relative;
+        inset: auto;
+        height: auto;
+        width: 100%;
+        background: transparent;
+        pointer-events: all;
+        justify-content: flex-start;
+        z-index: 1;
+        max-width: 100%;
+    }
+
+    .bottom-sheet__wrapper {
+        @media (min-width: $media-xxl) {
+            position: relative;
+            transform: none !important;
+            width: 100%;
+            height: auto;
+            inset: auto;
+            background: transparent;
+        }
+    }
+
     .bottom-sheet__body {
         padding: 50px 0 20px;
+
+        @media (min-width: $media-xxl) {
+            padding: 0;
+            overflow: visible;
+            min-height: auto;
+        }
     }
 }
 
@@ -416,6 +481,10 @@
 
     @media (min-width: 560px) {
         flex-direction: row;
+    }
+
+    @media (min-width: $media-lg) {
+        min-width: unset;
     }
 
     &-item {
@@ -434,6 +503,7 @@
         }
 
         label {
+            cursor: pointer;
             text-align: center;
             white-space: nowrap;
             display: block;

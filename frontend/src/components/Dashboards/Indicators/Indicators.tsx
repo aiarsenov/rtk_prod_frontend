@@ -46,7 +46,7 @@ import { Bar } from "react-chartjs-2";
 
 const Indicators = () => {
     const [isLoading, setIsLoading] = useState(true);
-    const [isActiveFilters, setIsActiveFilters] = useState(true); // Состояние окна фильтров
+    const [isActiveFilters, setIsActiveFilters] = useState(false); // Состояние окна фильтров
 
     const [selectedReportMonth, setSelectedReportMonth] = useState([]); // Отчетный месяц
     const [selectedFilters, setSelectedFilters] = useState({}); // Отчетный месяц, отчетный период
@@ -532,7 +532,7 @@ const Indicators = () => {
             <div className="container dashboards__container">
                 <BottomSheet
                     onClick={() => setIsActiveFilters(false)}
-                    className={`filters-bottomsheet ${
+                    className={`bottom-sheet_desk filters-bottomsheet ${
                         isActiveFilters ? "active" : ""
                     }`}
                 >
