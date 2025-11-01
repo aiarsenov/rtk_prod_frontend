@@ -166,7 +166,10 @@ const ReportRateEditor = ({
                                         </div>
 
                                         {RATE_LABELS.map((item) => (
-                                            <div className="form-field form-field_static">
+                                            <div
+                                                className="form-field form-field_static"
+                                                key={item.key}
+                                            >
                                                 {item.label}
 
                                                 <RateSwitch
