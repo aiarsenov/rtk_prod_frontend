@@ -141,6 +141,7 @@ const IndicatorsFilters = ({
             <div className="dashboards__filters-wrapper">
                 <div className="dashboards__filters-nav">
                     <CustomDatePickerField
+                        className="calendar"
                         startDate={dateRange[0]}
                         endDate={dateRange[1]}
                         onChange={(updated) => {

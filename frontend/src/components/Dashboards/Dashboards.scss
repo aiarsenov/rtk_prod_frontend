@@ -258,7 +258,7 @@
     padding-bottom: 40px;
 
     &__filters {
-        padding: 30px 20px;
+        padding: 60px 20px 40px;
         min-height: 100%;
         height: calc(100vh - 115px);
         display: flex;
@@ -267,6 +267,10 @@
         flex-grow: 1;
         overflow-y: auto;
         overflow-x: hidden;
+
+        .custom-datepicker-wrapper {
+            width: 100%;
+        }
 
         &-clear-btn {
             display: flex;

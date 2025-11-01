@@ -7,16 +7,22 @@ import formatDateDMY from "../../utils/formatDateDMY";
 import "./CustomDatePicker.scss";
 
 const CustomDatePickerField = ({
+    className = "",
     type = "days",
     value,
     startDate,
     endDate,
     single = false,
-    placeholder = single ? "дд.мм.гггг" : "мм.гггг - мм.гггг",
+    placeholder = type === "months"
+        ? "мм.гггг"
+        : single
+        ? "дд.мм.гггг"
+        : "мм.гггг - мм.гггг",
     onChange,
     disabled,
     minDate,
 }: {
+    className: string;
     type: string;
     startDate: string;
     endDate: string;
@@ -48,7 +54,7 @@ const CustomDatePickerField = ({
     return (
         <div className="custom-datepicker-wrapper">
             <div
-                className={`custom-datepicker__field ${
+                className={`custom-datepicker__field ${className} ${
                     disabled ? "disabled" : ""
                 }`}
                 onClick={() => {

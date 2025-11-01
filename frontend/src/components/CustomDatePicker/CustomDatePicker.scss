@@ -30,6 +30,14 @@
             background-size: 16px;
             background-position: right 12px top 50%;
 
+            &.calendar {
+                background: var(--color-gray-20)
+                    url("../../assets/icons/calendar.svg") no-repeat;
+                background-size: 16px;
+                background-position: right 10px top 50%;
+                padding-right: 30px;
+            }
+
             &.disabled {
                 background: var(--color-gray-20);
                 cursor: unset;
@@ -283,6 +291,11 @@
         border: 1px solid var(--color-gray-30);
         border-radius: 8px !important;
         margin: 0;
+
+        &.react-datepicker__month-text--selected {
+            color: var(--color-white);
+            background: var(--color-blue-70);
+        }
     }
 
     .react-datepicker__month-text:not(
