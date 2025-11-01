@@ -17,6 +17,8 @@ const CardProjects = ({
     getProjectContact: () => void;
     withLink: boolean;
 }) => {
+    console.log(import.meta.env.VITE_BASE_URL);
+
     return (
         <ul className="card-projects">
             {projects &&
@@ -98,7 +100,9 @@ const CardProjects = ({
                                 {withLink && (
                                     <a
                                         href={`${
-                                            import.meta.env.VITE_BASE_URL
+                                            new URL(
+                                                import.meta.env.VITE_API_URL
+                                            ).origin
                                         }/projects/${item.id}`}
                                         className="card-projects__item-link"
                                         aria-label={`Перейти в карточку проекта ${item.name}`}
