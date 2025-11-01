@@ -283,6 +283,10 @@
                 left: 100%;
             }
 
+            @media (min-width: $media-xxxl) {
+                left: 50%;
+            }
+
             &-wrapper {
                 width: 100%;
 
