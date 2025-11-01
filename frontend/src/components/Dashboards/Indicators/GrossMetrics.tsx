@@ -1,8 +1,6 @@
 import CountUp from "react-countup";
 import Hint from "../../Hint/Hint";
 
-import getColorBySign from "../../../utils/getColorBySign";
-
 const GrossMetrics = ({ financialMetrics }) => {
     return (
         <div className="statistics-block__content">
@@ -77,12 +75,9 @@ const GrossMetrics = ({ financialMetrics }) => {
                                     separator=" "
                                     decimals={2}
                                     decimal=","
-                                />
-                            </strong>
-
-                            <small>
+                                />{" "}
                                 {financialMetrics.gross_margin?.label}
-                            </small>
+                            </strong>
 
                             {typeof financialMetrics.gross_margin
                                 ?.change_percent === "string" && (

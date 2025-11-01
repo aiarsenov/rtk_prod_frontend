@@ -200,8 +200,11 @@ const Indicators = () => {
                 grid: {
                     display: false,
                 },
+                border: {
+                    display: false,
+                },
                 ticks: {
-                    color: "#98A2B3",
+                    color: "#002033",
                 },
             },
             y: {
@@ -215,6 +218,7 @@ const Indicators = () => {
                 },
                 border: {
                     dash: [3, 3],
+                    display: false,
                 },
             },
         },
@@ -269,6 +273,9 @@ const Indicators = () => {
                 grid: {
                     display: false,
                 },
+                border: {
+                    display: false,
+                },
                 ticks: {
                     color: "#002033",
                 },
@@ -286,6 +293,7 @@ const Indicators = () => {
                 },
                 border: {
                     dash: [3, 3],
+                    display: false,
                 },
                 ticks: {
                     color: "#98A2B3",
@@ -297,6 +305,9 @@ const Indicators = () => {
                 grid: {
                     display: false,
                     drawOnChartArea: false,
+                },
+                border: {
+                    display: false,
                 },
                 ticks: {
                     color: "#98A2B3",
@@ -542,6 +553,17 @@ const Indicators = () => {
                                     financialMetrics={financialMetrics}
                                 />
 
+                                <ul className="indicators__financial-labels">
+                                    <li>
+                                        <div className="bg-[#7CD4FD]"></div>
+                                        <span>Выручка</span>
+                                    </li>
+                                    <li>
+                                        <div className="bg-[#E0F2FE]"></div>
+                                        <span>Поступления</span>
+                                    </li>
+                                </ul>
+
                                 <div
                                     style={{
                                         height: "320px",
@@ -559,6 +581,17 @@ const Indicators = () => {
                                 <GrossMetrics
                                     financialMetrics={financialMetrics}
                                 />
+
+                                <ul className="indicators__financial-labels">
+                                    <li>
+                                        <div className="bg-[#7CD4FD]"></div>
+                                        <span>Валовая рентабельность</span>
+                                    </li>
+                                    <li>
+                                        <div className="bg-[#E0F2FE]"></div>
+                                        <span>Валовая прибыль</span>
+                                    </li>
+                                </ul>
 
                                 <div
                                     style={{
