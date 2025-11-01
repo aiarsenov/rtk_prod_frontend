@@ -532,7 +532,9 @@ const Indicators = () => {
             <div className="container dashboards__container">
                 <BottomSheet
                     onClick={() => setIsActiveFilters(false)}
-                    className={`${isActiveFilters ? "active" : ""}`}
+                    className={`filters-bottomsheet ${
+                        isActiveFilters ? "active" : ""
+                    }`}
                 >
                     <IndicatorsFilters
                         mainFilters={mainFilters}
@@ -554,7 +556,7 @@ const Indicators = () => {
                             Ключевые финансовые показатели
                         </h2>
 
-                        {/* <div className="dashboards__row">
+                        <div className="dashboards__row">
                             <div className="dashboards__block">
                                 <FinancialMetrics
                                     financialMetrics={financialMetrics}
@@ -612,8 +614,8 @@ const Indicators = () => {
                                     />
                                 </div>
                             </div>
-                        </div> */}
-                        {/* 
+                        </div>
+
                         <FinancialIndicators
                             financialList={financialList}
                             financialProfitList={financialProfitList}
@@ -622,14 +624,14 @@ const Indicators = () => {
                             setFinancialProfitListFilters={
                                 setFinancialProfitListFilters
                             }
-                        /> */}
+                        />
                     </section>
 
-                    {/* <EmployeesStats
+                    <EmployeesStats
                         employeeMetrics={employeeMetrics}
                         setEmployeeFilters={setEmployeeFilters}
                         employeeFilters={employeeFilters}
-                    /> */}
+                    />
 
                     <section>
                         <div className="dashboards__row">

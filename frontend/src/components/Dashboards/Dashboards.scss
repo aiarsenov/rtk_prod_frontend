@@ -258,7 +258,7 @@
     padding-bottom: 40px;
 
     &__filters {
-        padding: 60px 20px 40px;
+        padding: 0 20px 30px;
         min-height: 100%;
         height: calc(100vh - 115px);
         display: flex;
@@ -396,6 +396,12 @@
                 min-height: 80px;
             }
         }
+    }
+}
+
+.filters-bottomsheet {
+    .bottom-sheet__body {
+        padding: 50px 0 20px;
     }
 }
 
