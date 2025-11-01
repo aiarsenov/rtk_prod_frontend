@@ -379,130 +379,136 @@ const FinancialIndicators = ({
 
     return (
         <div className="dashboards__block indicators__financial-indicators">
-            <div className="indicators__financial-indicators__header">
-                <div className="flex items-center gap-[40px]">
-                    <Select
-                        className="form-select-extend w-[120px]"
-                        options={OPTIONS}
-                        placeholder="Выбрать"
-                        value={OPTIONS.find(
-                            (opt) =>
-                                opt.value ===
-                                (financialListFilters?.type?.[0] || "project")
-                        )}
-                        onChange={(evt) => {
-                            setFinancialListFilters((prev) => ({
-                                ...prev,
-                                type: [evt.value],
-                            }));
-                            setFinancialProfitListFilters((prev) => ({
-                                ...prev,
-                                type: [evt.value],
-                            }));
-                        }}
+            <div style={{ minWidth: "calc(32% + 900px)" }}>
+                <div className="indicators__financial-indicators__header">
+                    <div className="flex items-center gap-[40px]">
+                        <Select
+                            className="form-select-extend w-[120px]"
+                            options={OPTIONS}
+                            placeholder="Выбрать"
+                            value={OPTIONS.find(
+                                (opt) =>
+                                    opt.value ===
+                                    (financialListFilters?.type?.[0] ||
+                                        "project")
+                            )}
+                            onChange={(evt) => {
+                                setFinancialListFilters((prev) => ({
+                                    ...prev,
+                                    type: [evt.value],
+                                }));
+                                setFinancialProfitListFilters((prev) => ({
+                                    ...prev,
+                                    type: [evt.value],
+                                }));
+                            }}
+                        />
+
+                        <SortBtn
+                            label="Поступления, млн руб."
+                            value="receipts.value"
+                            sortBy={sortBy}
+                            setSortBy={setSortBy}
+                        />
+                    </div>
+
+                    <SortBtn
+                        label={"Выручка, млн руб."}
+                        value={"revenue.value"}
+                        sortBy={sortBy}
+                        setSortBy={setSortBy}
+                        className={"text-left ml-[10px]"}
                     />
 
                     <SortBtn
-                        label="Поступления, млн руб."
-                        value="receipts.value"
+                        label={"Валовая прибыль, млн руб."}
+                        value={"gross_profit.value"}
                         sortBy={sortBy}
                         setSortBy={setSortBy}
+                        className={"text-left ml-[10px]"}
+                    />
+
+                    <SortBtn
+                        label={"Валовая рентабельность"}
+                        value={"gross_margin.value"}
+                        sortBy={sortBy}
+                        setSortBy={setSortBy}
+                        className={"text-left ml-[10px]"}
                     />
                 </div>
 
-                <SortBtn
-                    label={"Выручка, млн руб."}
-                    value={"revenue.value"}
-                    sortBy={sortBy}
-                    setSortBy={setSortBy}
-                    className={"text-left ml-[10px]"}
-                />
+                <div className="indicators__financial-indicators__body">
+                    <div
+                        style={{
+                            height:
+                                (financialProfitListData1.labels?.length || 0) >
+                                5
+                                    ? `${
+                                          financialProfitListData1.labels
+                                              .length * 60
+                                      }px`
+                                    : "300px",
+                        }}
+                    >
+                        <Bar
+                            data={financialListData1}
+                            options={horizontalOptions}
+                        />
+                    </div>
 
-                <SortBtn
-                    label={"Валовая прибыль, млн руб."}
-                    value={"gross_profit.value"}
-                    sortBy={sortBy}
-                    setSortBy={setSortBy}
-                    className={"text-left ml-[10px]"}
-                />
+                    <div
+                        style={{
+                            height:
+                                (financialProfitListData1.labels?.length || 0) >
+                                5
+                                    ? `${
+                                          financialProfitListData1.labels
+                                              .length * 60
+                                      }px`
+                                    : "300px",
+                        }}
+                    >
+                        <Bar
+                            data={financialListData2}
+                            options={horizontalOptionsNoLabels}
+                        />
+                    </div>
 
-                <SortBtn
-                    label={"Валовая рентабельность"}
-                    value={"gross_margin.value"}
-                    sortBy={sortBy}
-                    setSortBy={setSortBy}
-                    className={"text-left ml-[10px]"}
-                />
-            </div>
+                    <div
+                        style={{
+                            height:
+                                (financialProfitListData1.labels?.length || 0) >
+                                5
+                                    ? `${
+                                          financialProfitListData1.labels
+                                              .length * 60
+                                      }px`
+                                    : "300px",
+                        }}
+                    >
+                        <Bar
+                            data={financialProfitListData1}
+                            options={horizontalOptionsNoLabels}
+                        />
+                    </div>
 
-            <div className="indicators__financial-indicators__body">
-                <div
-                    style={{
-                        height:
-                            (financialProfitListData1.labels?.length || 0) > 5
-                                ? `${
-                                      financialProfitListData1.labels.length *
-                                      60
-                                  }px`
-                                : "300px",
-                        minWidth: "200px",
-                    }}
-                >
-                    <Bar
-                        data={financialListData1}
-                        options={horizontalOptions}
-                    />
-                </div>
-
-                <div
-                    style={{
-                        height:
-                            (financialProfitListData1.labels?.length || 0) > 5
-                                ? `${
-                                      financialProfitListData1.labels.length *
-                                      60
-                                  }px`
-                                : "300px",
-                    }}
-                >
-                    <Bar
-                        data={financialListData2}
-                        options={horizontalOptionsNoLabels}
-                    />
-                </div>
-
-                <div
-                    style={{
-                        height:
-                            (financialProfitListData1.labels?.length || 0) > 5
-                                ? `${
-                                      financialProfitListData1.labels.length *
-                                      60
-                                  }px`
-                                : "300px",
-                    }}
-                >
-                    <Bar
-                        data={financialProfitListData1}
-                        options={horizontalOptionsNoLabels}
-                    />
-                </div>
-
-                <div
-                    style={{
-                        height:
-                            (financialProfitListData1.labels?.length || 0) > 5
-                                ? `${
-                                      financialProfitListData1.labels.length *
-                                      60
-                                  }px`
-                                : "300px",
-                    }}
-                >
-                    <Bar
-                        data={financialProfitListData2}
-                        options={horizontalOptionsWithPercent}
-                    />
+                    <div
+                        style={{
+                            height:
+                                (financialProfitListData1.labels?.length || 0) >
+                                5
+                                    ? `${
+                                          financialProfitListData1.labels
+                                              .length * 60
+                                      }px`
+                                    : "300px",
+                        }}
+                    >
+                        <Bar
+                            data={financialProfitListData2}
+                            options={horizontalOptionsWithPercent}
+                        />
+                    </div>
                 </div>
             </div>
         </div>

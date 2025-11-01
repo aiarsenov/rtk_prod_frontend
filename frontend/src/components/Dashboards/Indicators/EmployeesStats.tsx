@@ -176,7 +176,7 @@ const EmployeesStats = ({
                         <Hint message={""} />
                     </div>
 
-                    <div className="h-[225px] min-w-[500px] overflow-auto">
+                    <div className="h-[225px] overflow-auto">
                         <div
                             style={{
                                 height:
