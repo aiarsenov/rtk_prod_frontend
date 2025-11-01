@@ -142,17 +142,16 @@ const IndicatorsFilters = ({
                 <div className="dashboards__filters-nav">
                     <CustomDatePickerField
                         className="calendar"
-                        startDate={dateRange[0]}
-                        endDate={dateRange[1]}
+                        startDate={
+                            new Date(selectedFilters?.report_month?.[0]) ??
+                            new Date()
+                        }
                         onChange={(updated) => {
-                            const { date_from, date_to } = updated;
+                            const formatted = new Date(updated)
+                                .toISOString()
+                                .slice(0, 7);
 
-                            const dates = [
-                                new Date(`${date_from[0]}-01`),
-                                new Date(`${date_to[0]}-01`),
-                            ];
-
-                            setDateRange(dates);
+                            handleFilterChange("report_month", [formatted]);
                         }}
                         type="months"
                         single={true}
