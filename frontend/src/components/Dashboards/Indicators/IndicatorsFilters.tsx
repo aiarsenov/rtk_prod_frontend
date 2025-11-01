@@ -189,7 +189,6 @@ const IndicatorsFilters = ({
                     </ul>
 
                     <CreatableSelect
-                        isClearable
                         options={
                             filteredContragents.length > 0 &&
                             filteredContragents.map((item) => ({
@@ -245,7 +244,6 @@ const IndicatorsFilters = ({
                     />
 
                     <CreatableSelect
-                        isClearable
                         options={
                             filteredProjects.length > 0 &&
                             filteredProjects.map((item) => ({
