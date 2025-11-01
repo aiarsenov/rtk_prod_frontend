@@ -278,12 +278,18 @@
             border-radius: 10px;
         }
 
-        .custom-datepicker-wrapper {
-            width: 100%;
+        .custom-datepicker {
+            @media (min-width: $media-xxl) {
+                left: 100%;
+            }
 
-            @media (min-width: $media-lg) {
-                width: 175px;
-                flex: 0 0 175px;
+            &-wrapper {
+                width: 100%;
+
+                @media (min-width: $media-lg) {
+                    width: 175px;
+                    flex: 0 0 175px;
+                }
             }
         }
 
