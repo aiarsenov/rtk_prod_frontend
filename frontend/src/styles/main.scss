@@ -64,6 +64,7 @@ body {
     -moz-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
     color: var(--color-gray-100);
+    scrollbar-gutter: stable;
 }
 
 .wrapper {

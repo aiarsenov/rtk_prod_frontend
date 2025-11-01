@@ -122,6 +122,7 @@ const EmployeesStats = ({
                     drawTicks: false,
                     display: false,
                 },
+                border: { display: false },
                 afterDataLimits: (axis) => {
                     const max = axis.max ?? 0;
                     axis.max = max * 1.1;
