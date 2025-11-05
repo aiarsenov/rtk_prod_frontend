@@ -17,6 +17,7 @@ import SupplierCard from "./SupplierCard/SupplierCard";
 import Reports from "./Reports/Reports";
 import Sales from "./Sales/Sales";
 import SaleCard from "./SaleCard/SaleCard";
+import Admin from "./Admin/Admin";
 
 function Router() {
     return (
@@ -66,6 +67,8 @@ function Router() {
 
                     <Route path="sales" element={<Sales />} />
                     <Route path="sales/:saleId" element={<SaleCard />} />
+
+                    <Route path="admin" element={<Admin />} />
                 </Route>
             </Routes>
         </BrowserRouter>

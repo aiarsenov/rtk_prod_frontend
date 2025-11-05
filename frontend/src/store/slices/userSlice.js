@@ -8,7 +8,12 @@ export const fetchUser = createAsyncThunk(
             const response = await getData(
                 `${import.meta.env.VITE_API_URL}auth/user`
             );
-            return response.data.userinfo;
+            return {
+                ...response.data.userinfo,
+                roles: response.data.user?.roles || [],
+                groups: response.data.user?.groups || [],
+                permissions: response.data.permissions || [],
+            };
         } catch (error) {
             if (error.status === 401) {
                 return rejectWithValue("unauthorized");
