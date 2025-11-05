@@ -10,6 +10,7 @@ import ReferenceItemExtended from "./ReferenceItemExtended";
 import ReferenceItemExtendedContacts from "./ReferenceItemExtendedContacts";
 import ReferenceItemNew from "./ReferenceItemNew";
 import ReferenceItemWorkingHours from "./ReferenceItemWorkingHours";
+import Loader from "../Loader";
 
 import { IMaskInput } from "react-imask";
 import { ToastContainer, toast } from "react-toastify";
@@ -30,7 +31,7 @@ const SingleBook = () => {
     const [booksItems, setBooksItems] = useState([]);
     const [refBooksItems, setRefBooksItems] = useState([]);
 
-    const [mode, setMode] = useState("read");
+    const [mode, setMode] = useState("edit");
 
     const [formFields, setFormFields] = useState({});
 
@@ -890,13 +891,13 @@ const SingleBook = () => {
     }, [mode]);
 
     return (
-        <main className="page">
-            <div className="container py-8">
-                <ToastContainer containerId="singleBook" />
+        <main className="page reference-books">
+            <ToastContainer containerId="singleBook" />
 
-                <div className="flex justify-between items-center gap-6 mb-8">
-                    <h1 className="text-3xl font-medium">
-                        {TITLES[bookId]} ({listLength})
+            <div className="container reference-books__container">
+                <section className="registry__header flex justify-between items-center">
+                    <h1 className="title">
+                        {TITLES[bookId]} <span>{listLength}</span>
                     </h1>
 
                     <div
@@ -908,7 +909,7 @@ const SingleBook = () => {
                     >
                         {bookId === "working-hours" && (
                             <select
-                                className="p-1 border border-gray-300 min-w-[120px] max-w-[200px]"
+                                className="form-select"
                                 value={currentYear}
                                 onChange={(evt) =>
                                     setCurrentYear(evt.target.value)
@@ -934,39 +935,39 @@ const SingleBook = () => {
                                 ></button>
                             )}
 
-                            <nav className="switch">
-                                <div>
-                                    <input
-                                        type="radio"
-                                        name="mode"
-                                        id="read_mode"
-                                        onChange={() => {
-                                            setMode("read");
-                                        }}
-                                        checked={mode === "read" ? true : false}
-                                    />
-                                    <label htmlFor="read_mode">Чтение</label>
-                                </div>
-
-                                <div>
-                                    <input
-                                        type="radio"
-                                        name="mode"
-                                        id="edit_mode"
-                                        onChange={() => setMode("edit")}
-                                        checked={mode === "edit" ? true : false}
-                                    />
-                                    <label htmlFor="edit_mode">
-                                        Редактирование
-                                    </label>
-                                </div>
-                            </nav>
+                            {mode === "edit" && (
+                                <button
+                                    type="button"
+                                    className="button-active"
+                                    // onClick={}
+                                >
+                                    <span>Создать</span>
+                                    <div className="button-active__icon">
+                                        <svg
+                                            width="12"
+                                            height="13"
+                                            viewBox="0 0 12 13"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                d="M6.75 5.75h3.75v1.5H6.75V11h-1.5V7.25H1.5v-1.5h3.75V2h1.5v3.75z"
+                                                fill="#fff"
+                                            />
+                                        </svg>
+                                    </div>
+                                </button>
+                            )}
                         </div>
                     </div>
-                </div>
+                </section>
+            </div>
 
-                <div className="overflow-x-auto w-full pb-5">
-                    <table className="table-auto w-full border-collapse border-gray-300 text-sm">
+            {isLoading ? (
+                <Loader />
+            ) : (
+                <div className="reference-books__table-wrapper">
+                    <table className="reference-books__table table-auto w-full border-collapse">
                         <thead className="text-gray-400 text-left">
                             <tr className="border-b border-gray-300">
                                 {COLUMNS[bookId].map(
@@ -984,33 +985,26 @@ const SingleBook = () => {
                         </thead>
 
                         <tbody>
-                            {mode === "edit" &&
-                                bookId != "creditor" &&
-                                bookId != "contragent" &&
-                                bookId != "suppliers-with-reports" &&
-                                bookId != "working-hours" &&
-                                bookId !== "report-types" && (
-                                    <ReferenceItemNew
-                                        handleNewElementInputChange={
-                                            handleNewElementInputChange
-                                        }
-                                        columns={columns}
-                                        formFields={formFields}
-                                        booksItems={booksItems}
-                                        bookId={bookId}
-                                        positions={positions}
-                                        addNewElement={addNewElement}
-                                    />
-                                )}
+                            {/* {mode === "edit" &&
+                            bookId != "creditor" &&
+                            bookId != "contragent" &&
+                            bookId != "suppliers-with-reports" &&
+                            bookId != "working-hours" &&
+                            bookId !== "report-types" && (
+                                <ReferenceItemNew
+                                    handleNewElementInputChange={
+                                        handleNewElementInputChange
+                                    }
+                                    columns={columns}
+                                    formFields={formFields}
+                                    booksItems={booksItems}
+                                    bookId={bookId}
+                                    positions={positions}
+                                    addNewElement={addNewElement}
+                                />
+                            )} */}
 
-                            {isLoading ? (
-                                <tr>
-                                    <td className="text-base px-4 py-2">
-                                        Загрузка...
-                                    </td>
-                                </tr>
-                            ) : (
-                                booksItems?.length > 0 &&
+                            {booksItems?.length > 0 &&
                                 booksItems.map((item) => {
                                     if (
                                         bookId === "creditor" ||
@@ -1083,196 +1077,195 @@ const SingleBook = () => {
                                             positions={positions}
                                         />
                                     );
-                                })
-                            )}
+                                })}
                         </tbody>
                     </table>
                 </div>
+            )}
 
-                {popupState &&
-                    mode === "edit" &&
-                    bookId === "suppliers-with-reports" && (
-                        <Popup onClick={closePopup} title="Добавить контакт">
-                            <div className="min-w-[300px]">
-                                <div className="action-form__body grid grid-cols-2 gap-3">
-                                    <input
-                                        type="text"
-                                        className="w-full text-base border border-gray-300 p-1"
-                                        value={newElem.full_name}
-                                        placeholder="ФИО"
-                                        onChange={(e) =>
-                                            handleNewContactElemInputChange(
-                                                e,
-                                                "full_name"
-                                            )
-                                        }
-                                    />
+            {popupState &&
+                mode === "edit" &&
+                bookId === "suppliers-with-reports" && (
+                    <Popup onClick={closePopup} title="Добавить контакт">
+                        <div className="min-w-[300px]">
+                            <div className="action-form__body grid grid-cols-2 gap-3">
+                                <input
+                                    type="text"
+                                    className="w-full text-base border border-gray-300 p-1"
+                                    value={newElem.full_name}
+                                    placeholder="ФИО"
+                                    onChange={(e) =>
+                                        handleNewContactElemInputChange(
+                                            e,
+                                            "full_name"
+                                        )
+                                    }
+                                />
 
-                                    <input
-                                        type="text"
-                                        className="w-full text-base border border-gray-300 p-1"
-                                        value={newElem.position}
-                                        placeholder="Должность"
-                                        onChange={(e) =>
-                                            handleNewContactElemInputChange(
-                                                e,
-                                                "position"
-                                            )
-                                        }
-                                    />
+                                <input
+                                    type="text"
+                                    className="w-full text-base border border-gray-300 p-1"
+                                    value={newElem.position}
+                                    placeholder="Должность"
+                                    onChange={(e) =>
+                                        handleNewContactElemInputChange(
+                                            e,
+                                            "position"
+                                        )
+                                    }
+                                />
 
-                                    <IMaskInput
-                                        mask={PhoneMask}
-                                        className="w-full text-base border border-gray-300 p-1"
-                                        name="phone"
-                                        type="tel"
-                                        inputMode="tel"
-                                        onAccept={(value) =>
-                                            handleNewContactElemInputChange(
-                                                value || "",
-                                                "phone"
-                                            )
-                                        }
-                                        value={newElem.phone}
-                                        placeholder="+7 999 999 99 99"
-                                    />
+                                <IMaskInput
+                                    mask={PhoneMask}
+                                    className="w-full text-base border border-gray-300 p-1"
+                                    name="phone"
+                                    type="tel"
+                                    inputMode="tel"
+                                    onAccept={(value) =>
+                                        handleNewContactElemInputChange(
+                                            value || "",
+                                            "phone"
+                                        )
+                                    }
+                                    value={newElem.phone}
+                                    placeholder="+7 999 999 99 99"
+                                />
 
-                                    <input
-                                        type="text"
-                                        className="w-full text-base border border-gray-300 p-1"
-                                        value={newElem.email}
-                                        placeholder="Email"
-                                        onChange={(e) =>
-                                            handleNewContactElemInputChange(
-                                                e,
-                                                "email"
-                                            )
-                                        }
-                                    />
-                                </div>
+                                <input
+                                    type="text"
+                                    className="w-full text-base border border-gray-300 p-1"
+                                    value={newElem.email}
+                                    placeholder="Email"
+                                    onChange={(e) =>
+                                        handleNewContactElemInputChange(
+                                            e,
+                                            "email"
+                                        )
+                                    }
+                                />
+                            </div>
 
-                                <div className="action-form__footer mt-5 flex items-center gap-6 justify-between">
-                                    <button
-                                        type="button"
-                                        className="rounded-lg py-2 px-5 bg-black text-white flex-[1_1_50%]"
-                                        onClick={() => addNewContact(newElem)}
-                                    >
-                                        Добавить
-                                    </button>
+                            <div className="action-form__footer mt-5 flex items-center gap-6 justify-between">
+                                <button
+                                    type="button"
+                                    className="rounded-lg py-2 px-5 bg-black text-white flex-[1_1_50%]"
+                                    onClick={() => addNewContact(newElem)}
+                                >
+                                    Добавить
+                                </button>
 
-                                    <button
-                                        type="button"
-                                        onClick={() => setPopupState(false)}
-                                        className="border rounded-lg py-2 px-5 flex-[1_1_50%]"
-                                    >
-                                        Отменить
-                                    </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setPopupState(false)}
+                                    className="border rounded-lg py-2 px-5 flex-[1_1_50%]"
+                                >
+                                    Отменить
+                                </button>
+                            </div>
+                        </div>
+                    </Popup>
+                )}
+
+            {rolesAction.action != "" &&
+                mode === "edit" &&
+                bookId === "roles" && (
+                    <Popup
+                        onClick={closePopup}
+                        title={`${
+                            rolesAction.action === "true"
+                                ? "Включение генерации отчетов"
+                                : "Отключение генерации отчетов"
+                        }`}
+                    >
+                        <div className="min-w-[300px] max-w-[450px]">
+                            <div className="action-form__body grid grid-cols-1 gap-3">
+                                <p>
+                                    {rolesAction.action === "true"
+                                        ? "Отчеты сотрудников с данной ролью начнут генерироваться, начиная с текущего месяца. Следует ли сгенерировать отчеты сотрудников для прошлого периода?"
+                                        : "Отчеты сотрудников с данной ролью перестанут генерироваться начиная с текущего месяца. Что следует сделать с ранее созданными отчетами?"}
+                                </p>
+
+                                <div className="flex flex-col gap-4 mt-4">
+                                    {rolesAction.action === "true" ? (
+                                        <>
+                                            <button
+                                                type="button"
+                                                className="rounded-lg py-3 px-5 border"
+                                                title="Да"
+                                                onClick={() =>
+                                                    toggleRoleResponce({
+                                                        action: "enable",
+                                                        backfill: true,
+                                                    })
+                                                }
+                                            >
+                                                Да
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                className="rounded-lg py-3 px-5 border"
+                                                title="Нет"
+                                                onClick={() =>
+                                                    toggleRoleResponce({
+                                                        action: "enable",
+                                                        backfill: false,
+                                                    })
+                                                }
+                                            >
+                                                Нет
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <button
+                                                type="button"
+                                                className="rounded-lg py-3 px-5 border"
+                                                title="Безвозвратно удалить"
+                                                onClick={() =>
+                                                    toggleRoleResponce({
+                                                        action: "disable",
+                                                        policy: "delete",
+                                                    })
+                                                }
+                                            >
+                                                Безвозвратно удалить
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                className="rounded-lg py-3 px-5 border"
+                                                title="Скрыть из списка"
+                                                onClick={() =>
+                                                    toggleRoleResponce({
+                                                        action: "disable",
+                                                        policy: "hide",
+                                                    })
+                                                }
+                                            >
+                                                Скрыть из списка
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                className="rounded-lg py-3 px-5 border"
+                                                title="Оставить в списке"
+                                                onClick={() =>
+                                                    toggleRoleResponce({
+                                                        action: "disable",
+                                                        policy: "keep",
+                                                    })
+                                                }
+                                            >
+                                                Оставить в списке
+                                            </button>
+                                        </>
+                                    )}
                                 </div>
                             </div>
-                        </Popup>
-                    )}
-
-                {rolesAction.action != "" &&
-                    mode === "edit" &&
-                    bookId === "roles" && (
-                        <Popup
-                            onClick={closePopup}
-                            title={`${
-                                rolesAction.action === "true"
-                                    ? "Включение генерации отчетов"
-                                    : "Отключение генерации отчетов"
-                            }`}
-                        >
-                            <div className="min-w-[300px] max-w-[450px]">
-                                <div className="action-form__body grid grid-cols-1 gap-3">
-                                    <p>
-                                        {rolesAction.action === "true"
-                                            ? "Отчеты сотрудников с данной ролью начнут генерироваться, начиная с текущего месяца. Следует ли сгенерировать отчеты сотрудников для прошлого периода?"
-                                            : "Отчеты сотрудников с данной ролью перестанут генерироваться начиная с текущего месяца. Что следует сделать с ранее созданными отчетами?"}
-                                    </p>
-
-                                    <div className="flex flex-col gap-4 mt-4">
-                                        {rolesAction.action === "true" ? (
-                                            <>
-                                                <button
-                                                    type="button"
-                                                    className="rounded-lg py-3 px-5 border"
-                                                    title="Да"
-                                                    onClick={() =>
-                                                        toggleRoleResponce({
-                                                            action: "enable",
-                                                            backfill: true,
-                                                        })
-                                                    }
-                                                >
-                                                    Да
-                                                </button>
-
-                                                <button
-                                                    type="button"
-                                                    className="rounded-lg py-3 px-5 border"
-                                                    title="Нет"
-                                                    onClick={() =>
-                                                        toggleRoleResponce({
-                                                            action: "enable",
-                                                            backfill: false,
-                                                        })
-                                                    }
-                                                >
-                                                    Нет
-                                                </button>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <button
-                                                    type="button"
-                                                    className="rounded-lg py-3 px-5 border"
-                                                    title="Безвозвратно удалить"
-                                                    onClick={() =>
-                                                        toggleRoleResponce({
-                                                            action: "disable",
-                                                            policy: "delete",
-                                                        })
-                                                    }
-                                                >
-                                                    Безвозвратно удалить
-                                                </button>
-
-                                                <button
-                                                    type="button"
-                                                    className="rounded-lg py-3 px-5 border"
-                                                    title="Скрыть из списка"
-                                                    onClick={() =>
-                                                        toggleRoleResponce({
-                                                            action: "disable",
-                                                            policy: "hide",
-                                                        })
-                                                    }
-                                                >
-                                                    Скрыть из списка
-                                                </button>
-
-                                                <button
-                                                    type="button"
-                                                    className="rounded-lg py-3 px-5 border"
-                                                    title="Оставить в списке"
-                                                    onClick={() =>
-                                                        toggleRoleResponce({
-                                                            action: "disable",
-                                                            policy: "keep",
-                                                        })
-                                                    }
-                                                >
-                                                    Оставить в списке
-                                                </button>
-                                            </>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        </Popup>
-                    )}
-            </div>
+                        </div>
+                    </Popup>
+                )}
         </main>
     );
 };
