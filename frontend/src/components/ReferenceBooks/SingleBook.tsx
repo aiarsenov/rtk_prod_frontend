@@ -894,7 +894,7 @@ const SingleBook = () => {
         <main className="page reference-books">
             <ToastContainer containerId="singleBook" />
 
-            <div className="container reference-books__container">
+            <div className="container registry__container reference-books__container">
                 <section className="registry__header flex justify-between items-center">
                     <h1 className="title">
                         {TITLES[bookId]} <span>{listLength}</span>
@@ -965,7 +965,7 @@ const SingleBook = () => {
                 {isLoading ? (
                     <Loader />
                 ) : (
-                    <div className="reference-books__table-wrapper">
+                    <section className="reference-books__table-wrapper registry__table-section w-full">
                         <table className="reference-books__table table-auto w-full border-collapse">
                             <thead className="registry-table__thead">
                                 <tr>
@@ -1085,7 +1085,7 @@ const SingleBook = () => {
                                     })}
                             </tbody>
                         </table>
-                    </div>
+                    </section>
                 )}
             </div>
 

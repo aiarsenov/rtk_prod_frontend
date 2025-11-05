@@ -48,23 +48,13 @@ const ReferenceItem = ({
 
                 if (Array.isArray(value) && value.length > 0) {
                     return (
-                        <td
-                            className="py-7 min-w-[180px] max-w-[200px]"
-                            key={key}
-                        >
+                        <td className="min-w-[180px] max-w-[300px]" key={key}>
                             <table className="w-full">
-                                <tbody className="flex flex-col gap-3">
+                                <tbody>
                                     {Array.isArray(value) ? (
                                         value.map((item, index) => (
-                                            <tr
-                                                className={`${
-                                                    index !== value.length - 1
-                                                        ? "border-b border-gray-300 pb-2"
-                                                        : ""
-                                                }`}
-                                                key={`${key}_${index}`}
-                                            >
-                                                <td className="px-4">
+                                            <tr key={`${key}_${index}`}>
+                                                <td className="registry-table__item-last-report w-full">
                                                     {typeof item === "object" &&
                                                         item !== null && (
                                                             <div className="flex flex-col gap-1">
@@ -148,10 +138,7 @@ const ReferenceItem = ({
                     );
                 } else {
                     return (
-                        <td
-                            className="px-4 py-7 min-w-[180px] max-w-[200px]"
-                            key={key}
-                        >
+                        <td className="min-w-[180px] max-w-[300px]" key={key}>
                             {mode === "edit" &&
                             (key === "name" || key === "phone") ? (
                                 <div className="flex items-center gap-2 relative">
@@ -332,8 +319,8 @@ const ReferenceItem = ({
             })}
 
             {mode === "edit" && bookId != "working-hours" && (
-                <td className="px-4 py-7 min-w-[50px] text-center">
-                    <div className="flex items-center justify-end gap-3">
+                <td>
+                    <div className="registry-table__item-actions">
                         {mode === "edit" && (
                             <button
                                 onClick={() => {
@@ -361,7 +348,6 @@ const ReferenceItem = ({
                                 }}
                                 className="delete-button extended"
                                 title="Удалить элемент"
-                                id={data.id}
                                 disabled={
                                     data.projects_count > 0 ||
                                     data.employee_count > 0

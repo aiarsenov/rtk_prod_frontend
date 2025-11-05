@@ -127,14 +127,17 @@
     }
 
     &__item {
+        position: relative;
         font-size: 14px;
         font-weight: 400;
         line-height: 150%;
         color: var(--color-gray-100);
         border-bottom: 1px solid var(--color-gray-30);
+        z-index: 0;
 
         > td {
             padding: 15px;
+            z-index: 0;
         }
 
         > td:first-of-type {
@@ -150,6 +153,36 @@
                 @media (min-width: $media-xxl) {
                     opacity: 1;
                 }
+            }
+
+            .registry-table__item-actions {
+                opacity: 1;
+            }
+
+            @media (min-width: $media-xxl) {
+                &::after {
+                    content: "";
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%, -50%);
+                    height: 100%;
+                    width: 100vw;
+                    background: var(--color-gray-20);
+                    z-index: -1;
+                    pointer-events: none;
+                }
+            }
+        }
+
+        &-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: opacity var(--trans);
+
+            @media (min-width: $media-xxl) {
+                opacity: 0;
             }
         }
 
