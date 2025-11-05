@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { isAdmin } from "../../utils/permissions";
 
 import "./HeaderNav.scss";
 
@@ -69,13 +70,9 @@ const HeaderNav = ({
 }) => {
     const user = useSelector((state: any) => state.user.data);
 
-    // Проверяем, является ли пользователь админом
-    const isAdmin = user?.roles?.includes("admin");
-
-    // Фильтруем ссылки: показываем админские только для админов
     const visibleLinks = LINKS.filter((link) => {
         if (link.requiresAdmin) {
-            return isAdmin;
+            return isAdmin(user);
         }
         return true;
     });
