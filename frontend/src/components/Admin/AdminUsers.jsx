@@ -73,17 +73,35 @@ const AdminUsers = () => {
         }
     };
 
+    const handleActivate = async (userId) => {
+        if (!confirm("Вы уверены, что хотите активировать пользователя?")) {
+            return;
+        }
+
+        try {
+            const response = await postData("PATCH", `${API_URL}admin/users/${userId}/activate`);
+            alert(response.message || "Пользователь активирован");
+            loadUsers();
+        } catch (err) {
+            alert("Ошибка активации: " + (err.message || "Неизвестная ошибка"));
+        }
+    };
+
     const handleDeactivate = async (userId) => {
         if (!confirm("Вы уверены, что хотите деактивировать пользователя?")) {
             return;
         }
 
         try {
-            await postData("DELETE", `${API_URL}admin/users/${userId}`);
-            alert("Пользователь деактивирован");
+            const response = await postData("PATCH", `${API_URL}admin/users/${userId}/deactivate`);
+            alert(response.message || "Пользователь деактивирован");
             loadUsers();
         } catch (err) {
-            alert("Ошибка деактивации: " + err.message);
+            if (err.status === 403) {
+                alert("Нельзя деактивировать собственную учетную запись");
+            } else {
+                alert("Ошибка деактивации: " + (err.message || "Неизвестная ошибка"));
+            }
         }
     };
 
@@ -156,14 +174,25 @@ const AdminUsers = () => {
                                     </td>
                                     <td>
                                         <div className="admin-actions">
-                                            {user.is_active && (
+                                            {user.is_active ? (
                                                 <button
-                                                    className="admin-btn admin-btn--danger"
+                                                    className="admin-btn admin-btn--danger admin-btn--sm"
                                                     onClick={() =>
                                                         handleDeactivate(user.id)
                                                     }
+                                                    title="Деактивировать пользователя"
                                                 >
                                                     Деактивировать
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    className="admin-btn admin-btn--success admin-btn--sm"
+                                                    onClick={() =>
+                                                        handleActivate(user.id)
+                                                    }
+                                                    title="Активировать пользователя"
+                                                >
+                                                    Активировать
                                                 </button>
                                             )}
                                         </div>

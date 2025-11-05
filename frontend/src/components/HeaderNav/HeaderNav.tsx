@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import "./HeaderNav.scss";
 
@@ -6,6 +7,7 @@ type NavLinkItem = {
     url: string;
     title: string;
     label: string;
+    requiresAdmin?: boolean;
 };
 
 const LINKS: NavLinkItem[] = [
@@ -50,6 +52,12 @@ const LINKS: NavLinkItem[] = [
         title: "Перейти в справочники",
         label: "Справочники",
     },
+    {
+        url: "/admin",
+        title: "Перейти в панель администрирования",
+        label: "Администрирование",
+        requiresAdmin: true,
+    },
 ];
 
 const HeaderNav = ({
@@ -59,9 +67,22 @@ const HeaderNav = ({
     state: boolean;
     toggleMenu: () => void;
 }) => {
+    const user = useSelector((state: any) => state.user.data);
+
+    // Проверяем, является ли пользователь админом
+    const isAdmin = user?.roles?.includes("admin");
+
+    // Фильтруем ссылки: показываем админские только для админов
+    const visibleLinks = LINKS.filter((link) => {
+        if (link.requiresAdmin) {
+            return isAdmin;
+        }
+        return true;
+    });
+
     return (
         <nav className={`header__nav ${state ? "active" : ""}`}>
-            {LINKS.map((link) => (
+            {visibleLinks.map((link) => (
                 <NavLink
                     to={link.url}
                     className={({ isActive }) =>
