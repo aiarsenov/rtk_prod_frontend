@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import getData from "../../utils/getData";
 import postData from "../../utils/postData";
 import Loader from "../Loader";
+import AccessDenied from "./AccessDenied";
 
 const AdminUsers = () => {
     const [users, setUsers] = useState([]);
@@ -12,6 +13,7 @@ const AdminUsers = () => {
     const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [inviteEmail, setInviteEmail] = useState("");
     const [error, setError] = useState("");
+    const [accessDenied, setAccessDenied] = useState(false);
 
     const API_URL = import.meta.env.VITE_API_URL;
 
@@ -22,12 +24,16 @@ const AdminUsers = () => {
     const loadUsers = async () => {
         try {
             setIsLoading(true);
+            setAccessDenied(false);
             const response = await getData(`${API_URL}admin/users`);
             if (response.status === 200) {
                 setUsers(response.data.data || []);
             }
         } catch (err) {
             console.error("Ошибка загрузки пользователей:", err);
+            if (err.status === 403) {
+                setAccessDenied(true);
+            }
         } finally {
             setIsLoading(false);
         }
@@ -178,6 +184,12 @@ const AdminUsers = () => {
 
     if (isLoading) {
         return <Loader />;
+    }
+
+    if (accessDenied) {
+        return (
+            <AccessDenied message="У вас нет прав для управления пользователями" />
+        );
     }
 
     return (

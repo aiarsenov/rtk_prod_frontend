@@ -256,6 +256,42 @@
     font-size: 16px;
 }
 
+.admin-access-denied {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+
+    &__icon {
+        width: 64px;
+        height: 64px;
+        margin-bottom: 20px;
+        color: var(--color-red-60);
+    }
+
+    &__title {
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--color-gray-100);
+        margin-bottom: 12px;
+    }
+
+    &__message {
+        font-size: 16px;
+        color: var(--color-gray-70);
+        margin-bottom: 8px;
+        max-width: 500px;
+    }
+
+    &__hint {
+        font-size: 14px;
+        color: var(--color-gray-60);
+        max-width: 500px;
+    }
+}
+
 .admin-group-card {
     border: 1px solid var(--color-gray-30);
     border-radius: 8px;

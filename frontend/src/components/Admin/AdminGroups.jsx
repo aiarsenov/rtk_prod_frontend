@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import getData from "../../utils/getData";
 import postData from "../../utils/postData";
 import Loader from "../Loader";
+import AccessDenied from "./AccessDenied";
 
 const SECTIONS = {
     main: "Главная",
@@ -34,6 +35,7 @@ const AdminGroups = () => {
     const [showAddUserModal, setShowAddUserModal] = useState(false);
     const [selectedGroup, setSelectedGroup] = useState(null);
     const [allUsers, setAllUsers] = useState([]);
+    const [accessDenied, setAccessDenied] = useState(false);
 
     // Форма создания группы
     const [newGroupName, setNewGroupName] = useState("");
@@ -59,12 +61,16 @@ const AdminGroups = () => {
     const loadGroups = async () => {
         try {
             setIsLoading(true);
+            setAccessDenied(false);
             const response = await getData(`${API_URL}admin/permission-groups`);
             if (response.status === 200) {
                 setGroups(response.data || []);
             }
         } catch (err) {
             console.error("Ошибка загрузки групп:", err);
+            if (err.status === 403) {
+                setAccessDenied(true);
+            }
         } finally {
             setIsLoading(false);
         }
@@ -348,6 +354,12 @@ const AdminGroups = () => {
 
     if (isLoading) {
         return <Loader />;
+    }
+
+    if (accessDenied) {
+        return (
+            <AccessDenied message="У вас нет прав для управления группами и правами" />
+        );
     }
 
     return (

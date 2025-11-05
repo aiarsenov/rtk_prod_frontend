@@ -1,10 +1,27 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import AdminUsers from "./AdminUsers";
 import AdminGroups from "./AdminGroups";
+import AccessDenied from "./AccessDenied";
 import "./Admin.scss";
 
 const Admin = () => {
     const [activeTab, setActiveTab] = useState("users");
+    const user = useSelector((state) => state.user.data);
+
+    // Проверяем, является ли пользователь админом
+    const isAdmin = user?.roles?.includes("admin");
+
+    // Если не админ - показываем заглушку
+    if (!isAdmin) {
+        return (
+            <main className="page">
+                <div className="container py-8">
+                    <AccessDenied message="Доступ к админ-панели разрешен только администраторам" />
+                </div>
+            </main>
+        );
+    }
 
     return (
         <main className="page">
