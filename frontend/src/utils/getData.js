@@ -1,3 +1,5 @@
+import { getCsrfHeaders } from './csrf.js';
+
 async function getData(url = "", options = {}) {
     const { headers = {}, params = {} } = options;
 
@@ -10,6 +12,7 @@ async function getData(url = "", options = {}) {
             headers: {
                 "Content-Type": "application/json",
                 Accept: "application/json",
+                ...getCsrfHeaders(),
                 ...headers,
             },
             credentials: "include",
