@@ -1,7 +1,7 @@
 const AccessDenied = ({ message }) => {
     return (
-        <div className="admin-access-denied">
-            <div className="admin-access-denied__icon">
+        <div className="access-denied">
+            <div className="access-denied__icon">
                 <svg
                     width="64"
                     height="64"
@@ -15,11 +15,11 @@ const AccessDenied = ({ message }) => {
                     />
                 </svg>
             </div>
-            <h2 className="admin-access-denied__title">Доступ запрещен</h2>
-            <p className="admin-access-denied__message">
+            <h2 className="access-denied__title">Доступ запрещен</h2>
+            <p className="access-denied__message">
                 {message || "У вас нет прав для просмотра этого раздела"}
             </p>
-            <p className="admin-access-denied__hint">
+            <p className="access-denied__hint">
                 Обратитесь к администратору системы для получения доступа
             </p>
         </div>

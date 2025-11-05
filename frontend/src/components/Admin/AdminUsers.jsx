@@ -3,7 +3,8 @@ import { toast } from "react-toastify";
 import getData from "../../utils/getData";
 import postData from "../../utils/postData";
 import Loader from "../Loader";
-import AccessDenied from "./AccessDenied";
+import AccessDenied from "../AccessDenied/AccessDenied";
+import "../AccessDenied/AccessDenied.scss";
 
 const AdminUsers = () => {
     const [users, setUsers] = useState([]);

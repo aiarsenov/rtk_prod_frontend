@@ -3,7 +3,8 @@ import { useSelector } from "react-redux";
 import { isAdmin } from "../../utils/permissions";
 import AdminUsers from "./AdminUsers";
 import AdminGroups from "./AdminGroups";
-import AccessDenied from "./AccessDenied";
+import AccessDenied from "../AccessDenied/AccessDenied";
+import "../AccessDenied/AccessDenied.scss";
 import "./Admin.scss";
 
 const Admin = () => {
