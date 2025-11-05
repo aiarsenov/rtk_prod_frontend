@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import getData from "../../utils/getData";
 import postData from "../../utils/postData";
 import Loader from "../Loader";
@@ -57,18 +58,40 @@ const AdminUsers = () => {
             return;
         }
 
+        const toastId = toast.loading("Отправка приглашения...", {
+            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        });
+
         try {
             await postData("POST", `${API_URL}admin/users/invite`, {
                 physical_person_id: selectedEmployee,
                 email: inviteEmail,
             });
 
-            alert("Приглашение отправлено!");
+            toast.update(toastId, {
+                render: "Приглашение успешно отправлено",
+                type: "success",
+                isLoading: false,
+                autoClose: 2000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
+
             setShowInviteModal(false);
             setSelectedEmployee(null);
             setInviteEmail("");
             loadUsers();
         } catch (err) {
+            toast.update(toastId, {
+                render: err.message || "Ошибка отправки приглашения",
+                type: "error",
+                isLoading: false,
+                autoClose: 3000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
             setError(err.message || "Ошибка отправки приглашения");
         }
     };
@@ -78,12 +101,32 @@ const AdminUsers = () => {
             return;
         }
 
+        const toastId = toast.loading("Активация пользователя...", {
+            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        });
+
         try {
             const response = await postData("PATCH", `${API_URL}admin/users/${userId}/activate`);
-            alert(response.message || "Пользователь активирован");
+            toast.update(toastId, {
+                render: response.message || "Пользователь успешно активирован",
+                type: "success",
+                isLoading: false,
+                autoClose: 2000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
             loadUsers();
         } catch (err) {
-            alert("Ошибка активации: " + (err.message || "Неизвестная ошибка"));
+            toast.update(toastId, {
+                render: err.message || "Ошибка активации пользователя",
+                type: "error",
+                isLoading: false,
+                autoClose: 3000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
         }
     };
 
@@ -92,16 +135,34 @@ const AdminUsers = () => {
             return;
         }
 
+        const toastId = toast.loading("Деактивация пользователя...", {
+            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        });
+
         try {
             const response = await postData("PATCH", `${API_URL}admin/users/${userId}/deactivate`);
-            alert(response.message || "Пользователь деактивирован");
+            toast.update(toastId, {
+                render: response.message || "Пользователь успешно деактивирован",
+                type: "success",
+                isLoading: false,
+                autoClose: 2000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
             loadUsers();
         } catch (err) {
-            if (err.status === 403) {
-                alert("Нельзя деактивировать собственную учетную запись");
-            } else {
-                alert("Ошибка деактивации: " + (err.message || "Неизвестная ошибка"));
-            }
+            toast.update(toastId, {
+                render: err.status === 403
+                    ? "Нельзя деактивировать собственную учетную запись"
+                    : err.message || "Ошибка деактивации пользователя",
+                type: "error",
+                isLoading: false,
+                autoClose: 3000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
         }
     };
 

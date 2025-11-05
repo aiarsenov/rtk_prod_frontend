@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import getData from "../../utils/getData";
 import postData from "../../utils/postData";
 import Loader from "../Loader";
@@ -89,18 +90,40 @@ const AdminGroups = () => {
             return;
         }
 
+        const toastId = toast.loading("Создание группы...", {
+            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        });
+
         try {
             await postData("POST", `${API_URL}admin/permission-groups`, {
                 name: newGroupName,
                 description: newGroupDescription,
             });
 
-            alert("Группа создана!");
+            toast.update(toastId, {
+                render: "Группа успешно создана",
+                type: "success",
+                isLoading: false,
+                autoClose: 2000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
+
             setShowCreateModal(false);
             setNewGroupName("");
             setNewGroupDescription("");
             loadGroups();
         } catch (err) {
+            toast.update(toastId, {
+                render: err.message || "Ошибка создания группы",
+                type: "error",
+                isLoading: false,
+                autoClose: 3000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
             setError(err.message || "Ошибка создания группы");
         }
     };
@@ -110,12 +133,32 @@ const AdminGroups = () => {
             return;
         }
 
+        const toastId = toast.loading("Удаление группы...", {
+            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        });
+
         try {
             await postData("DELETE", `${API_URL}admin/permission-groups/${groupId}`);
-            alert("Группа удалена");
+            toast.update(toastId, {
+                render: "Группа успешно удалена",
+                type: "success",
+                isLoading: false,
+                autoClose: 2000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
             loadGroups();
         } catch (err) {
-            alert("Ошибка удаления: " + err.message);
+            toast.update(toastId, {
+                render: err.message || "Ошибка удаления группы",
+                type: "error",
+                isLoading: false,
+                autoClose: 3000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
         }
     };
 
@@ -128,6 +171,10 @@ const AdminGroups = () => {
             return;
         }
 
+        const toastId = toast.loading("Добавление права...", {
+            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        });
+
         try {
             await postData(
                 "POST",
@@ -139,13 +186,31 @@ const AdminGroups = () => {
                 }
             );
 
-            alert("Право добавлено!");
+            toast.update(toastId, {
+                render: "Право успешно добавлено",
+                type: "success",
+                isLoading: false,
+                autoClose: 2000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
+
             setShowAddPermissionModal(false);
             setPermissionSection("");
             setPermissionType("");
             setPermissionScope("");
             loadGroups();
         } catch (err) {
+            toast.update(toastId, {
+                render: err.message || "Ошибка добавления права",
+                type: "error",
+                isLoading: false,
+                autoClose: 3000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
             setError(err.message || "Ошибка добавления права");
         }
     };
@@ -155,15 +220,35 @@ const AdminGroups = () => {
             return;
         }
 
+        const toastId = toast.loading("Удаление права...", {
+            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        });
+
         try {
             await postData(
                 "DELETE",
                 `${API_URL}admin/permission-groups/${groupId}/permissions/${permissionId}`
             );
-            alert("Право удалено");
+            toast.update(toastId, {
+                render: "Право успешно удалено",
+                type: "success",
+                isLoading: false,
+                autoClose: 2000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
             loadGroups();
         } catch (err) {
-            alert("Ошибка: " + err.message);
+            toast.update(toastId, {
+                render: err.message || "Ошибка удаления права",
+                type: "error",
+                isLoading: false,
+                autoClose: 3000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
         }
     };
 
@@ -176,6 +261,10 @@ const AdminGroups = () => {
             return;
         }
 
+        const toastId = toast.loading("Добавление пользователей...", {
+            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        });
+
         try {
             await postData(
                 "POST",
@@ -185,11 +274,29 @@ const AdminGroups = () => {
                 }
             );
 
-            alert("Пользователи добавлены!");
+            toast.update(toastId, {
+                render: "Пользователи успешно добавлены",
+                type: "success",
+                isLoading: false,
+                autoClose: 2000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
+
             setShowAddUserModal(false);
             setSelectedUsers([]);
             loadGroups();
         } catch (err) {
+            toast.update(toastId, {
+                render: err.message || "Ошибка добавления пользователей",
+                type: "error",
+                isLoading: false,
+                autoClose: 3000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
             setError(err.message || "Ошибка добавления пользователей");
         }
     };
@@ -199,15 +306,35 @@ const AdminGroups = () => {
             return;
         }
 
+        const toastId = toast.loading("Удаление пользователя...", {
+            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        });
+
         try {
             await postData(
                 "DELETE",
                 `${API_URL}admin/permission-groups/${groupId}/users/${userId}`
             );
-            alert("Пользователь удален из группы");
+            toast.update(toastId, {
+                render: "Пользователь успешно удален из группы",
+                type: "success",
+                isLoading: false,
+                autoClose: 2000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
             loadGroups();
         } catch (err) {
-            alert("Ошибка: " + err.message);
+            toast.update(toastId, {
+                render: err.message || "Ошибка удаления пользователя",
+                type: "error",
+                isLoading: false,
+                autoClose: 3000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
         }
     };
 
