@@ -63,7 +63,7 @@ const ReferenceItemExtended = ({
     }, [data.contacts]);
 
     return (
-        <tr className="registry-table__item transition text-base text-left cursor-pointer">
+        <tr className="registry-table__item registry-table__item_extended transition text-base text-left cursor-pointer">
             <td className="align-top">
                 <strong>{data.name}</strong>
             </td>
@@ -76,17 +76,16 @@ const ReferenceItemExtended = ({
                                 key={index}
                                 ref={(el) => (targetRefs.current[index] = el)}
                             >
-                                <td className="min-w-[180px] w-full flex flex-col gap-1">
-                                    {mode === "read" ? (
-                                        <>
-                                            <div className="text-xl p-1 border border-transparent">
-                                                {contact.full_name}
-                                            </div>
-                                            <div className="text-xl p-1 border border-transparent">
-                                                {contact.position}
-                                            </div>
-                                        </>
-                                    ) : (
+                                <td className="min-w-[180px] w-full">
+                                    {/* {mode === "read" ? ( */}
+                                    {/* <> */}
+                                    <div className="extended__info">
+                                        <div>{contact.full_name}</div>
+                                        <span>{contact.position}</span>
+                                    </div>
+
+                                    {/* </> */}
+                                    {/* ) : (
                                         <>
                                             <input
                                                 className="text-xl border border-gray-300 p-1"
@@ -129,7 +128,7 @@ const ReferenceItemExtended = ({
                                                 }}
                                             />
                                         </>
-                                    )}
+                                    )} */}
                                 </td>
                             </tr>
                         ))}
@@ -156,22 +155,22 @@ const ReferenceItemExtended = ({
 
             <td className="align-top">
                 <table className="w-full">
-                    <tbody className="flex flex-col gap-3">
+                    <tbody className="flex flex-col">
                         {data.contacts.map((contact, index) => (
                             <tr
                                 key={index}
                                 ref={(el) => (phoneRefs.current[index] = el)}
                             >
-                                <td className="py-3 px-4 min-w-[180px] w-full flex flex-col gap-1">
-                                    {mode === "read" ? (
-                                        <>
-                                            <div className="text-xl p-1 border border-transparent">
-                                                {contact.phone}
-                                            </div>
-                                            <div className="text-xl p-1 border border-transparent">
-                                                {contact.email}
-                                            </div>
-                                        </>
+                                <td className="min-w-[180px] w-full">
+                                    {/* {mode === "read" ? (
+                                        <> */}
+
+                                    <div className="extended__info">
+                                        <div>{contact.phone}</div>
+                                        <div>{contact.email}</div>
+                                    </div>
+
+                                    {/* </>
                                     ) : (
                                         <>
                                             <IMaskInput
@@ -217,7 +216,7 @@ const ReferenceItemExtended = ({
                                                 }}
                                             />
                                         </>
-                                    )}
+                                    )} */}
                                 </td>
                             </tr>
                         ))}

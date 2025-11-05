@@ -340,4 +340,17 @@
             }
         }
     }
+
+    &__item_extended {
+        background: var(--color-gray-20);
+    }
+
+    .extended__info {
+        display: flex;
+        flex-direction: column;
+
+        span {
+            color: var(--color-gray-60);
+        }
+    }
 }
