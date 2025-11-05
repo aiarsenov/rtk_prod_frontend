@@ -1,0 +1,57 @@
+@use "../../styles/media-breakpoints" as *;
+
+.reference-books {
+    &__container {
+        padding-bottom: 40px;
+    }
+
+    &__main-grid {
+        display: grid;
+        gap: 30px;
+
+        @media (min-width: $media-md) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @media (min-width: $media-lg) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+}
+
+.grid-item {
+    position: relative;
+    border: 1px solid var(--color-gray-30);
+    border-radius: 10px;
+    padding: 16px 60px 16px 16px;
+
+    &__name {
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 150%;
+        margin-bottom: 16px;
+    }
+
+    &__icon {
+        position: absolute;
+        right: 16px;
+        top: 0;
+        width: 40px;
+        height: 40px;
+    }
+
+    &__info {
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 150%;
+        color: var(--color-gray-70);
+
+        div {
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+    }
+}

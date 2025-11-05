@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import getData from "../../utils/getData";
-import ReferenceItem from "./ReferenceItem";
+import ReferenceBooksMainGridItem from "./ReferenceBooksMainGridItem";
+
+import "./ReferenceBooks.scss";
 
 const ReferenceBooks = () => {
     const [booksItems, setBooksItems] = useState([]);
@@ -15,49 +17,21 @@ const ReferenceBooks = () => {
         });
     }, []);
 
-    const COLUMNS = [
-        { label: "Наименование", key: "name" },
-        { label: "Кол-во элементов", key: "items_count" },
-        { label: "Последнее изменение", key: "last_updated" },
-        { label: "Автор измнения", key: "author" },
-    ];
-
     return (
         <main className="page">
-            <div className="container py-8">
-                <div className="flex justify-between items-center gap-6 mb-8">
-                    <h1 className="text-3xl font-medium">
-                        Реестр справочников
-                    </h1>
+            <div className="container reference-books__container">
+                <div className="registry__header">
+                    <h1 className="title">Реестр справочников</h1>
                 </div>
 
-                <div className="overflow-x-auto w-full pb-5">
-                    <table className="table-auto w-full border-collapse border-b border-gray-300 text-sm">
-                        <thead className="text-gray-400 text-left">
-                            <tr className="border-b border-gray-300">
-                                {COLUMNS.map(({ label, key }) => (
-                                    <th
-                                        className="text-base px-4 py-2 min-w-[180px] max-w-[200px]"
-                                        rowSpan="2"
-                                        key={key}
-                                    >
-                                        {label}
-                                    </th>
-                                ))}
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {booksItems.length > 0 &&
-                                booksItems.map((item, index) => (
-                                    <ReferenceItem
-                                        key={index}
-                                        data={item}
-                                        columns={COLUMNS}
-                                    />
-                                ))}
-                        </tbody>
-                    </table>
+                <div className="reference-books__main-grid">
+                    {booksItems.length > 0 &&
+                        booksItems.map((item) => (
+                            <ReferenceBooksMainGridItem
+                                key={item.alias}
+                                data={item}
+                            />
+                        ))}
                 </div>
             </div>
         </main>
