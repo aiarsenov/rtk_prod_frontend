@@ -961,31 +961,30 @@ const SingleBook = () => {
                         </div>
                     </div>
                 </section>
-            </div>
 
-            {isLoading ? (
-                <Loader />
-            ) : (
-                <div className="reference-books__table-wrapper">
-                    <table className="reference-books__table table-auto w-full border-collapse">
-                        <thead className="text-gray-400 text-left">
-                            <tr className="border-b border-gray-300">
-                                {COLUMNS[bookId].map(
-                                    ({ label, key, index }) => (
-                                        <th
-                                            className="text-base px-4 py-2 min-w-[180px]"
-                                            rowSpan="2"
-                                            key={key || index}
-                                        >
-                                            {label}
-                                        </th>
-                                    )
-                                )}
-                            </tr>
-                        </thead>
+                {isLoading ? (
+                    <Loader />
+                ) : (
+                    <div className="reference-books__table-wrapper">
+                        <table className="reference-books__table table-auto w-full border-collapse">
+                            <thead className="registry-table__thead">
+                                <tr>
+                                    {COLUMNS[bookId].map(
+                                        ({ label, key, index }) => (
+                                            <th
+                                                className="min-w-[125px]"
+                                                rowSpan="2"
+                                                key={key || index}
+                                            >
+                                                {label}
+                                            </th>
+                                        )
+                                    )}
+                                </tr>
+                            </thead>
 
-                        <tbody>
-                            {/* {mode === "edit" &&
+                            <tbody className="registry-table__tbody">
+                                {/* {mode === "edit" &&
                             bookId != "creditor" &&
                             bookId != "contragent" &&
                             bookId != "suppliers-with-reports" &&
@@ -1004,84 +1003,91 @@ const SingleBook = () => {
                                 />
                             )} */}
 
-                            {booksItems?.length > 0 &&
-                                booksItems.map((item) => {
-                                    if (
-                                        bookId === "creditor" ||
-                                        bookId === "contragent"
-                                    ) {
-                                        return (
-                                            <ReferenceItemExtended
-                                                key={item.id}
-                                                data={item}
-                                                mode={mode}
-                                                bookId={bookId}
-                                                editContragentAndCreditorContact={
-                                                    editContragentAndCreditorContact
-                                                }
-                                                deleteContact={deleteContact}
-                                            />
-                                        );
-                                    }
+                                {booksItems?.length > 0 &&
+                                    booksItems.map((item) => {
+                                        if (
+                                            bookId === "creditor" ||
+                                            bookId === "contragent"
+                                        ) {
+                                            return (
+                                                <ReferenceItemExtended
+                                                    key={item.id}
+                                                    data={item}
+                                                    mode={mode}
+                                                    bookId={bookId}
+                                                    editContragentAndCreditorContact={
+                                                        editContragentAndCreditorContact
+                                                    }
+                                                    deleteContact={
+                                                        deleteContact
+                                                    }
+                                                />
+                                            );
+                                        }
 
-                                    if (bookId === "suppliers-with-reports") {
-                                        return (
-                                            <ReferenceItemExtendedContacts
-                                                key={item.id}
-                                                data={item}
-                                                mode={mode}
-                                                handleContactInputChange={
-                                                    handleContactInputChange
-                                                }
-                                                deleteContactElem={
-                                                    deleteContactElem
-                                                }
-                                                editContactElem={
-                                                    editContactElem
-                                                }
-                                                setPopupState={setPopupState}
-                                                setnewElem={setnewElem}
-                                            />
-                                        );
-                                    }
+                                        if (
+                                            bookId === "suppliers-with-reports"
+                                        ) {
+                                            return (
+                                                <ReferenceItemExtendedContacts
+                                                    key={item.id}
+                                                    data={item}
+                                                    mode={mode}
+                                                    handleContactInputChange={
+                                                        handleContactInputChange
+                                                    }
+                                                    deleteContactElem={
+                                                        deleteContactElem
+                                                    }
+                                                    editContactElem={
+                                                        editContactElem
+                                                    }
+                                                    setPopupState={
+                                                        setPopupState
+                                                    }
+                                                    setnewElem={setnewElem}
+                                                />
+                                            );
+                                        }
 
-                                    if (bookId === "working-hours") {
+                                        if (bookId === "working-hours") {
+                                            return (
+                                                <ReferenceItemWorkingHours
+                                                    key={item.id}
+                                                    data={item}
+                                                    columns={columns}
+                                                    mode={mode}
+                                                    bookId={bookId}
+                                                    handleInputChange={
+                                                        handleInputChange
+                                                    }
+                                                />
+                                            );
+                                        }
+
                                         return (
-                                            <ReferenceItemWorkingHours
+                                            <ReferenceItem
                                                 key={item.id}
                                                 data={item}
+                                                booksItems={booksItems}
                                                 columns={columns}
                                                 mode={mode}
                                                 bookId={bookId}
                                                 handleInputChange={
                                                     handleInputChange
                                                 }
+                                                deleteElement={deleteElement}
+                                                editElement={editElement}
+                                                setRolesAction={setRolesAction}
+                                                positions={positions}
                                             />
                                         );
-                                    }
-
-                                    return (
-                                        <ReferenceItem
-                                            key={item.id}
-                                            data={item}
-                                            booksItems={booksItems}
-                                            columns={columns}
-                                            mode={mode}
-                                            bookId={bookId}
-                                            handleInputChange={
-                                                handleInputChange
-                                            }
-                                            deleteElement={deleteElement}
-                                            editElement={editElement}
-                                            setRolesAction={setRolesAction}
-                                            positions={positions}
-                                        />
-                                    );
-                                })}
-                        </tbody>
-                    </table>
-                </div>
-            )}
+                                    })}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </div>
 
             {popupState &&
                 mode === "edit" &&
