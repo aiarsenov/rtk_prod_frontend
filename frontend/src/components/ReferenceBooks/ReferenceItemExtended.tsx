@@ -76,7 +76,7 @@ const ReferenceItemExtended = ({
                                 key={index}
                                 ref={(el) => (targetRefs.current[index] = el)}
                             >
-                                <td className="py-3 px-4 min-w-[180px] w-full flex flex-col gap-1">
+                                <td className="min-w-[180px] w-full flex flex-col gap-1">
                                     {mode === "read" ? (
                                         <>
                                             <div className="text-xl p-1 border border-transparent">

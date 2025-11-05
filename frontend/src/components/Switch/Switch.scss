@@ -1,0 +1,38 @@
+.switch {
+    position: relative;
+    width: 48px;
+    flex: 0 0 48px;
+    height: 28px;
+    border-radius: 99px;
+    border: 2px solid var(--color-gray-30);
+    cursor: pointer;
+    transition: border var(--trans), background var(--trans);
+
+    input {
+        display: none;
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 2px;
+        transform: translate3d(0, -50%, 0);
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--color-gray-50);
+        transition: transform var(--trans), background var(--trans);
+        will-change: transform;
+    }
+
+    &.checked {
+        border: 2px solid var(--color-blue-70);
+        background: var(--color-blue-70);
+
+        &::after {
+            transform: translate3d(100%, -50%, 0);
+            background: var(--color-white);
+        }
+    }
+}

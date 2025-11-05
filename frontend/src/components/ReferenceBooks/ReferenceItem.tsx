@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { format, parseISO } from "date-fns";
 import { ru } from "date-fns/locale";
 
+import Switch from "../Switch/Switch";
+
 const ReferenceItem = ({
     data,
     booksItems,
@@ -216,79 +218,32 @@ const ReferenceItem = ({
                                         </>
                                     )}
                                 </select>
-                            ) : key === "is_regular" ? (
-                                <select
-                                    className={`w-full min-h-[30px] ${
-                                        mode == "read"
-                                            ? ""
-                                            : "border border-gray-300"
-                                    }`}
-                                    name={key}
-                                    value={value.toString() || ""}
-                                    onChange={(e) =>
-                                        handleInputChange(e, key, data.id)
-                                    }
-                                    disabled={mode == "read"}
-                                >
-                                    <option value="true">Да</option>
-                                    <option value="false">Нет</option>
-                                </select>
-                            ) : key === "include_in_payroll" ? (
-                                <select
-                                    className={`w-full min-h-[30px] ${
-                                        mode == "read"
-                                            ? ""
-                                            : "border border-gray-300"
-                                    }`}
-                                    name={key}
-                                    value={value.toString() || ""}
-                                    onChange={(e) =>
-                                        handleInputChange(e, key, data.id)
-                                    }
-                                    disabled={mode == "read"}
-                                >
-                                    <option value="">Выбрать</option>
-                                    <option value="true">Да</option>
-                                    <option value="false">Нет</option>
-                                </select>
-                            ) : key === "show_cost" ? (
-                                <select
-                                    className={`w-full min-h-[30px] ${
-                                        mode == "read"
-                                            ? ""
-                                            : "border border-gray-300"
-                                    }`}
-                                    name={key}
-                                    value={value.toString() || ""}
-                                    onChange={(e) =>
-                                        handleInputChange(e, key, data.id)
-                                    }
-                                    disabled={mode == "read"}
-                                >
-                                    <option value="true">Да</option>
-                                    <option value="false">Нет</option>
-                                </select>
-                            ) : key === "is_project_report_responsible" ? (
-                                <select
-                                    className={`w-full min-h-[30px] ${
-                                        mode == "read"
-                                            ? ""
-                                            : "border border-gray-300"
-                                    }`}
-                                    name={key}
-                                    value={value.toString() || ""}
-                                    onChange={(e) => {
-                                        handleInputChange(e, key, data.id);
-                                        setRolesAction({
-                                            action: e.target.value,
-                                            roleId: data.id,
-                                        });
+                            ) : [
+                                  "is_regular",
+                                  "include_in_payroll",
+                                  "show_cost",
+                                  "is_project_report_responsible",
+                              ].includes(key) ? (
+                                <Switch
+                                    value={value === true || value === "true"}
+                                    label={`${key}_${data.id}`}
+                                    onChange={(updated) => {
+                                        handleInputChange(
+                                            updated,
+                                            key,
+                                            data.id
+                                        );
+                                        if (
+                                            key ===
+                                            "is_project_report_responsible"
+                                        ) {
+                                            setRolesAction({
+                                                action: updated.toString(),
+                                                roleId: data.id,
+                                            });
+                                        }
                                     }}
-                                    disabled={mode == "read"}
-                                >
-                                    <option value="true">Да</option>
-                                    <option value="false">Нет</option>
-                                </select>
+                                />
                             ) : (key === "updated_at" ||
                                   key === "last_updated") &&
                               value ? (

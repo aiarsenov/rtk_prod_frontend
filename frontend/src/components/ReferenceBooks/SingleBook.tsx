@@ -228,7 +228,7 @@ const SingleBook = () => {
             name === "show_cost" ||
             name === "is_project_report_responsible"
         ) {
-            value = e.target.value === "true";
+            value = e === true;
         } else {
             value = e.target.value;
         }

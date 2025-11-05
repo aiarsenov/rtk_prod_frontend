@@ -71,8 +71,7 @@ const HeaderNav = ({
 
     // Проверяем, является ли пользователь админом
     const isAdmin = user?.roles?.includes("admin");
-
-    // Фильтруем ссылки: показываем админские только для админов
+    
     const visibleLinks = LINKS.filter((link) => {
         if (link.requiresAdmin) {
             return isAdmin;
