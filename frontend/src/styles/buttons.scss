@@ -82,12 +82,37 @@
     width: 20px;
     height: 20px;
 
+    &.extended {
+        height: 28px;
+        width: 28px;
+        flex: 0 0 28px;
+        border: 1px solid var(--color-red-40);
+        background: var(--color-red-30);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &:disabled {
+        background: transparent;
+        opacity: 0.6;
+        border: 1px solid var(--color-gray-30);
+        pointer-events: none;
+        cursor: none;
+
+        svg {
+            color: var(--color-gray-30) !important;
+        }
+    }
+
     svg {
         transition: color var(--trans);
         color: var(--color-gray-50);
         pointer-events: none;
     }
 
+    &.extended,
     &:hover {
         svg {
             color: var(--color-red-70);
@@ -118,4 +143,15 @@
     display: flex;
     align-items: center;
     gap: 10px;
+}
+
+.edit-button {
+    height: 28px;
+    width: 28px;
+    flex: 0 0 28px;
+    border: 1px solid var(--color-gray-30);
+    border-radius: 8px;
+    background: var(--color-white) url("../assets/icons/edit.svg") center
+        no-repeat;
+    transition: opacity var(--trans);
 }

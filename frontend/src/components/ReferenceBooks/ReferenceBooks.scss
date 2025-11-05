@@ -17,6 +17,14 @@
             grid-template-columns: repeat(3, 1fr);
         }
     }
+
+    &__table {
+        td {
+            .delete-button {
+                opacity: 1;
+            }
+        }
+    }
 }
 
 .grid-item {

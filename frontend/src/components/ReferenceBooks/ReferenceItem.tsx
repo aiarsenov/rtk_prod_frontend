@@ -334,19 +334,21 @@ const ReferenceItem = ({
             {mode === "edit" && bookId != "working-hours" && (
                 <td className="px-4 py-7 min-w-[50px] text-center">
                     <div className="flex items-center justify-end gap-3">
-                        <button
-                            onClick={() => {
-                                if (bookId == "positions") {
-                                    hasNameMatch(data.name, data.id);
-                                } else {
-                                    editElement(data.id);
-                                }
-                            }}
-                            className="delete-button save-icon"
-                            title="Изменить элемент"
-                        ></button>
+                        {mode === "edit" && (
+                            <button
+                                onClick={() => {
+                                    if (bookId == "positions") {
+                                        hasNameMatch(data.name, data.id);
+                                    } else {
+                                        editElement(data.id);
+                                    }
+                                }}
+                                className="edit-button"
+                                title="Изменить элемент"
+                            ></button>
+                        )}
 
-                        {bookId !== "report-types" && (
+                        {mode === "edit" && bookId !== "report-types" && (
                             <button
                                 onClick={() => {
                                     if (data.projects_count) {
@@ -357,7 +359,7 @@ const ReferenceItem = ({
                                         deleteElement(data.id);
                                     }
                                 }}
-                                className="delete-button"
+                                className="delete-button extended"
                                 title="Удалить элемент"
                                 id={data.id}
                                 disabled={
