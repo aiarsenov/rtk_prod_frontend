@@ -148,6 +148,12 @@
             padding-right: 0;
         }
 
+        strong {
+            font-weight: 600;
+            font-size: 16px;
+            line-height: 120%;
+        }
+
         &:hover {
             .delete-button {
                 @media (min-width: $media-xxl) {

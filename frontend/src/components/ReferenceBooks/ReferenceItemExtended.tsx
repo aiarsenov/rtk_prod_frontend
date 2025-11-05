@@ -63,12 +63,14 @@ const ReferenceItemExtended = ({
     }, [data.contacts]);
 
     return (
-        <tr className="border-b border-gray-300 hover:bg-gray-50 transition text-base text-left cursor-pointer">
-            <td className="pl-4">{data.name}</td>
+        <tr className="registry-table__item transition text-base text-left cursor-pointer">
+            <td className="align-top">
+                <strong>{data.name}</strong>
+            </td>
 
             <td className="align-top">
                 <table className="w-full">
-                    <tbody className="flex flex-col gap-3">
+                    <tbody>
                         {data.contacts.map((contact, index) => (
                             <tr
                                 key={index}
@@ -143,7 +145,7 @@ const ReferenceItemExtended = ({
                                 key={index}
                                 ref={(el) => (projectsRefs.current[index] = el)}
                             >
-                                <td className="py-3 px-4 min-w-[180px]">
+                                <td className="min-w-[180px] max-w-[300px]">
                                     {contact.projects_count}
                                 </td>
                             </tr>
@@ -225,7 +227,7 @@ const ReferenceItemExtended = ({
 
             <td className="align-top">
                 <div
-                    className="py-3 px-4 min-w-[180px]"
+                    className="min-w-[180px] max-w-[300px]"
                     ref={(el) => (lastChangeRefs.current[0] = el)}
                 >
                     {format(
@@ -240,7 +242,7 @@ const ReferenceItemExtended = ({
 
             <td className="align-top">
                 <div
-                    className="py-3 px-4 min-w-[180px]"
+                    className="min-w-[180px] max-w-[300px]"
                     ref={(el) => (authorRefs.current[0] = el)}
                 >
                     {data.author || "-"}
