@@ -41,6 +41,28 @@ const SingleBook = () => {
 
     const [popupState, setPopupState] = useState(false);
     const [rolesAction, setRolesAction] = useState({ action: "", roleId: "" });
+    const [isEditElem, setIsEditElem] = useState(false);
+
+    const [popupFields, setPopupFields] = useState([]);
+
+    const handleOpenPopup = (data) => {
+        const editableKeys = ["name", "full_name", "phone"];
+
+        const editableFields = Object.entries(data)
+            .filter(([key]) => editableKeys.includes(key))
+            .map(([key, value]) => {
+                const column = columns.find((col) => col.key === key);
+                return {
+                    id: data.id,
+                    key,
+                    label: column?.label || key,
+                    value,
+                };
+            });
+
+        setPopupFields(editableFields);
+        setIsEditElem(true);
+    };
 
     const [positions, setPositions] = useState([]);
     const [availableYears, setAvailableYears] = useState([]);
@@ -57,6 +79,10 @@ const SingleBook = () => {
     const PhoneMask = "+{7} (000) 000 00 00";
 
     let query;
+
+    useEffect(() => {
+        console.log(popupFields);
+    }, [popupFields]);
 
     // Обработка существующих полей контактов подрядчиков
     const handleContactInputChange = (e, name, item, contactId) => {
@@ -1029,6 +1055,9 @@ const SingleBook = () => {
                                                     deleteContact={
                                                         deleteContact
                                                     }
+                                                    handleOpenPopup={
+                                                        handleOpenPopup
+                                                    }
                                                 />
                                             );
                                         }
@@ -1054,6 +1083,9 @@ const SingleBook = () => {
                                                         setPopupState
                                                     }
                                                     setnewElem={setnewElem}
+                                                    handleOpenPopup={
+                                                        handleOpenPopup
+                                                    }
                                                 />
                                             );
                                         }
@@ -1068,6 +1100,9 @@ const SingleBook = () => {
                                                     bookId={bookId}
                                                     handleInputChange={
                                                         handleInputChange
+                                                    }
+                                                    handleOpenPopup={
+                                                        handleOpenPopup
                                                     }
                                                 />
                                             );
@@ -1088,6 +1123,9 @@ const SingleBook = () => {
                                                 editElement={editElement}
                                                 setRolesAction={setRolesAction}
                                                 positions={positions}
+                                                handleOpenPopup={
+                                                    handleOpenPopup
+                                                }
                                             />
                                         );
                                     })}
@@ -1280,6 +1318,72 @@ const SingleBook = () => {
                         </div>
                     </Popup>
                 )}
+
+            {isEditElem && (
+                <Popup
+                    onClick={() => setIsPEditElem(false)}
+                    title="Редактирование записи"
+                >
+                    <form>
+                        <div className="action-form__body flex flex-col gap-[18px]">
+                            {popupFields.length > 0 &&
+                                popupFields.map(({ key, label, value }) => (
+                                    <div key={key} className="flex flex-col">
+                                        <label
+                                            htmlFor={key}
+                                            className="form-label"
+                                        >
+                                            {label}
+                                        </label>
+                                        <input
+                                            id={key}
+                                            type="text"
+                                            className="form-field"
+                                            value={value?.toString() || ""}
+                                            onChange={(e) =>
+                                                handleInputChange(
+                                                    e,
+                                                    key,
+                                                    data.id
+                                                )
+                                            }
+                                        />
+                                    </div>
+                                ))}
+                        </div>
+
+                        <div className="action-form__footer">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setIsEditElem(false);
+                                    setPopupFields([]);
+                                }}
+                                className="cancel-button flex-[0_0_fit-content]"
+                                title="Отменить изменения"
+                            >
+                                Отменить
+                            </button>
+
+                            <button
+                                type="button"
+                                className="action-button flex-[0_0_fit-content]"
+                                onClick={() => {
+                                    // if (bookId == "positions") {
+                                    //     hasNameMatch(data.name, data.id);
+                                    // } else {
+                                    editElement(data.id);
+                                    setPopupFields([]);
+                                    // }
+                                }}
+                                title="Сохранить изменения"
+                            >
+                                Сохранить
+                            </button>
+                        </div>
+                    </form>
+                </Popup>
+            )}
         </main>
     );
 };
