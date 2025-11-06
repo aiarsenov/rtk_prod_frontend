@@ -269,7 +269,7 @@ const EmployeeCard = () => {
                                 <input
                                     type="text"
                                     name="program_name"
-                                    value={cardDataCustom?.name || ""}
+                                    value={cardDataCustom?.full_name || ""}
                                     disabled
                                 />
 

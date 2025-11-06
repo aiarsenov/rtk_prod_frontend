@@ -79,7 +79,7 @@ const Employees = () => {
     const COLUMNS = [
         {
             label: "ФИО сотрудника",
-            key: "name",
+            key: "full_name",
             filter: "selectedNames",
             options: nameOptions,
         },
