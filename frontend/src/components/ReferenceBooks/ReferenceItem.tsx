@@ -31,10 +31,9 @@ const ReferenceItem = ({
     const [popupFields, setPopupFields] = useState([]);
 
     const handleOpenPopup = () => {
-        // фильтруем поля объекта
         const editableFields = Object.entries(data)
             .filter(([key]) => ["name", "full_name", "phone"].includes(key))
-            .map(([key, value]) => ({ key, value }));
+            .map(([key, value, label]) => ({ key, value, label }));
 
         setPopupFields(editableFields);
         setIsPopupActive(true);
@@ -317,7 +316,7 @@ const ReferenceItem = ({
                 })}
 
                 {mode === "edit" && bookId != "working-hours" && (
-                    <td>
+                    <td className="max-w-[70px]">
                         <div className="registry-table__item-actions">
                             {mode === "edit" && (
                                 <button
