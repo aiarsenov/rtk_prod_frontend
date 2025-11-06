@@ -882,17 +882,13 @@ const SaleCard = () => {
                                         isValidNewOption={() => false}
                                         value={
                                             (physicalPersons.length > 0 &&
-                                                physicalPersons
-                                                    .map((item) => ({
-                                                        value: item.id,
-                                                        label: item.name,
-                                                    }))
-                                                    .find(
-                                                        (option) =>
-                                                            option.value ===
-                                                            cardDataCustom?.responsible_person_id
-                                                    )) ||
-                                            null
+                                                physicalPersons.find(
+                                                    (option) =>
+                                                        option.value ===
+                                                            cardDataCustom?.responsible_person_id ||
+                                                        ""
+                                                )) ||
+                                            []
                                         }
                                         onChange={(selectedOption) => {
                                             if (mode === "read") return;
