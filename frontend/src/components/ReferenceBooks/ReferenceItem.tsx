@@ -31,9 +31,18 @@ const ReferenceItem = ({
     const [popupFields, setPopupFields] = useState([]);
 
     const handleOpenPopup = () => {
+        const editableKeys = ["name", "full_name", "phone"];
+
         const editableFields = Object.entries(data)
-            .filter(([key]) => ["name", "full_name", "phone"].includes(key))
-            .map(([key, value, label]) => ({ key, value, label }));
+            .filter(([key]) => editableKeys.includes(key))
+            .map(([key, value]) => {
+                const column = columns.find((col) => col.key === key);
+                return {
+                    key,
+                    label: column?.label || key,
+                    value,
+                };
+            });
 
         setPopupFields(editableFields);
         setIsPopupActive(true);
@@ -368,55 +377,60 @@ const ReferenceItem = ({
                     onClick={() => setIsPopupActive(false)}
                     title="Редактировать наименование"
                 >
-                    <div className="action-form__body flex flex-col gap-3">
-                        {popupFields.length > 0 ? (
-                            popupFields.map(({ key, value }) => (
-                                <div key={key} className="flex flex-col gap-1">
-                                    <label className="text-sm font-medium capitalize">
-                                        {key.replace("_", " ")}
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="form-field"
-                                        value={value?.toString() || ""}
-                                        onChange={(e) =>
-                                            handleInputChange(e, key, data.id)
-                                        }
-                                    />
-                                </div>
-                            ))
-                        ) : (
-                            <p className="text-sm text-gray-500">
-                                Нет редактируемых полей
-                            </p>
-                        )}
-                    </div>
+                    <form>
+                        <div className="action-form__body flex flex-col gap-[18px]">
+                            {popupFields.length > 0 &&
+                                popupFields.map(({ key, label, value }) => (
+                                    <div key={key} className="flex flex-col">
+                                        <label
+                                            htmlFor={key}
+                                            className="form-label"
+                                        >
+                                            {label}
+                                        </label>
+                                        <input
+                                            id={key}
+                                            type="text"
+                                            className="form-field"
+                                            value={value?.toString() || ""}
+                                            onChange={(e) =>
+                                                handleInputChange(
+                                                    e,
+                                                    key,
+                                                    data.id
+                                                )
+                                            }
+                                        />
+                                    </div>
+                                ))}
+                        </div>
+                        
+                        <div className="action-form__footer">
+                            <button
+                                type="button"
+                                onClick={() => setIsPopupActive(false)}
+                                className="cancel-button flex-[0_0_fit-content]"
+                                title="Отменить изменения"
+                            >
+                                Отменить
+                            </button>
 
-                    <div className="action-form__footer">
-                        <button
-                            type="button"
-                            onClick={() => setIsPopupActive(false)}
-                            className="cancel-button flex-[0_0_fit-content]"
-                            title="Отменить изменения"
-                        >
-                            Отменить
-                        </button>
-
-                        <button
-                            type="button"
-                            className="action-button flex-[0_0_fit-content]"
-                            onClick={() => {
-                                if (bookId == "positions") {
-                                    hasNameMatch(data.name, data.id);
-                                } else {
-                                    editElement(data.id);
-                                }
-                            }}
-                            title="Сохранить изменения"
-                        >
-                            Сохранить
-                        </button>
-                    </div>
+                            <button
+                                type="button"
+                                className="action-button flex-[0_0_fit-content]"
+                                onClick={() => {
+                                    if (bookId == "positions") {
+                                        hasNameMatch(data.name, data.id);
+                                    } else {
+                                        editElement(data.id);
+                                    }
+                                }}
+                                title="Сохранить изменения"
+                            >
+                                Сохранить
+                            </button>
+                        </div>
+                    </form>
                 </Popup>
             )}
         </>
