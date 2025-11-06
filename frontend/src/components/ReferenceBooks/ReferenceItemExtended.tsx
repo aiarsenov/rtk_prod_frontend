@@ -274,15 +274,15 @@ const ReferenceItemExtended = ({
 
             <td className="align-top">
                 <table className="w-full">
-                    <tbody className="flex flex-col gap-3">
+                    <tbody className="flex flex-col">
                         {data.contacts.map((contact, index) => (
                             <tr
                                 key={contact.id}
                                 ref={(el) => (actionsRefs.current[index] = el)}
                             >
-                                <td className="py-3 px-4 min-w-[50px] text-center">
+                                <td className="min-w-[40px]">
                                     {mode === "edit" && (
-                                        <div className="flex items-center justify-end gap-3">
+                                        <div className="registry-table__item-actions registry-table__item-actions_col">
                                             <button
                                                 onClick={() =>
                                                     editContragentAndCreditorContact(
@@ -291,16 +291,30 @@ const ReferenceItemExtended = ({
                                                         )
                                                     )
                                                 }
-                                                className="delete-button save-icon"
+                                                className="edit-button"
                                                 title="Изменить контакт"
                                             ></button>
+
                                             <button
                                                 onClick={() =>
                                                     deleteContact(contact.id)
                                                 }
-                                                className="delete-button delete-icon"
+                                                className="delete-button extended"
                                                 title="Удалить контакт"
-                                            ></button>
+                                            >
+                                                <svg
+                                                    width="20"
+                                                    height="21"
+                                                    viewBox="0 0 20 21"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        d="M5.833 8v9.166h8.333V8h1.667v10c0 .46-.373.833-.833.833H5A.833.833 0 014.166 18V8h1.667zm3.333 0v7.5H7.5V8h1.666zM12.5 8v7.5h-1.667V8H12.5zm0-5.833c.358 0 .677.229.79.57l.643 1.929h2.733v1.667H3.333V4.666h2.733l.643-1.93a.833.833 0 01.79-.57h5zm-.601 1.666H8.1l-.278.833h4.354l-.277-.833z"
+                                                        fill="currentColor"
+                                                    />
+                                                </svg>
+                                            </button>
                                         </div>
                                     )}
                                 </td>

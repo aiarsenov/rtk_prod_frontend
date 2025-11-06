@@ -187,6 +187,11 @@
             gap: 10px;
             transition: opacity var(--trans);
 
+            &_col {
+                flex-direction: column;
+                gap: 5px;
+            }
+
             @media (min-width: $media-xxl) {
                 opacity: 0;
             }
@@ -353,7 +358,7 @@
         }
 
         .hovered {
-            background-color: #f3f4f6;
+            background-color: var(--color-gray-30);
             transition: background-color 0.2s ease;
         }
     }
