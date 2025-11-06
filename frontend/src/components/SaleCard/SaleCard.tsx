@@ -476,14 +476,14 @@ const SaleCard = () => {
         }
     }, [services]);
 
-    useEffect(() => {
-        const hasErrors =
-            !cardData?.contragent_id ||
-            !cardData?.industries?.main ||
-            !cardData?.request_source_id;
+    // useEffect(() => {
+        // const hasErrors =
+        //     !cardData?.contragent_id ||
+        //     !cardData?.industries?.main ||
+        //     !cardData?.request_source_id;
 
-        setAvailableToChange(!hasErrors);
-    }, [cardData]);
+    //     setAvailableToChange(!hasErrors);
+    // }, [cardData]);
 
     return !isDataLoaded ? (
         <Loader />
