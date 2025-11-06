@@ -1,8 +1,14 @@
+import { getCsrfHeaders } from './csrf.js';
+
 async function postFormData(method = "POST", url = "", data = {}) {
     try {
         const response = await fetch(url, {
             method,
             body: data,
+            headers: {
+                ...getCsrfHeaders(),
+            },
+            credentials: "include",
             withCredentials: true,
         });
 

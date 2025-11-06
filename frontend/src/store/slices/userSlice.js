@@ -12,7 +12,7 @@ export const fetchUser = createAsyncThunk(
                 ...response.data.userinfo,
                 roles: response.data.user?.roles || [],
                 groups: response.data.user?.groups || [],
-                permissions: response.data.permissions || [],
+                permissions: response.data.permissions || {},
             };
         } catch (error) {
             if (error.status === 401) {
