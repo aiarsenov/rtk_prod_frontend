@@ -68,6 +68,7 @@ const SaleCard = () => {
     const [contragents, setContragents] = useState([]); // Заказчики
     const [banks, setBanks] = useState([]); // Банки
 
+    const [physicalPersons, setPhysicalPersons] = useState([]); // Сотрудники
     const [reportTypes, setReportTypes] = useState([]);
     const [services, setServices] = useState([]); // Услуги
     const [sources, setSources] = useState([]); // Источники
@@ -76,6 +77,24 @@ const SaleCard = () => {
     const [newServices, setNewServices] = useState({ report_type_id: [] });
 
     let query;
+
+    // Получение сотрудников
+    const fetchPhysicalpersons = () => {
+        getData(`${import.meta.env.VITE_API_URL}physical-persons`, {
+            Accept: "application/json",
+        }).then((response) => {
+            if (response?.status == 200) {
+                if (response?.data?.length > 0) {
+                    setPhysicalPersons(
+                        response.data?.map((item) => ({
+                            value: item.id,
+                            label: item.name,
+                        }))
+                    );
+                }
+            }
+        });
+    };
 
     // Получение отраслей
     const fetchIndustries = () => {
@@ -363,6 +382,7 @@ const SaleCard = () => {
             setCardDataCustom(response.data);
 
             await Promise.all([
+                fetchPhysicalpersons(),
                 fetchIndustries(),
                 fetchContragents(),
                 fetchBanks(),
@@ -849,7 +869,7 @@ const SaleCard = () => {
                                         <Hint message={"Ответственный"} />
                                     </div>
                                     <CreatableSelect
-                                        // options={contragents}
+                                        options={physicalPersons}
                                         className="form-select-extend"
                                         placeholder={
                                             mode === "edit"
@@ -860,15 +880,19 @@ const SaleCard = () => {
                                             "Совпадений нет"
                                         }
                                         isValidNewOption={() => false}
-                                        value={
-                                            (sources.length > 0 &&
-                                                sources.find(
-                                                    (option) =>
-                                                        option.value ===
-                                                            cardDataCustom?.responsible_person_id ||
-                                                        ""
-                                                )) ||
-                                            []
+                                        defaultValue={
+                                            (physicalPersons.length > 0 &&
+                                                physicalPersons
+                                                    .map((item) => ({
+                                                        value: item.id,
+                                                        label: item.name,
+                                                    }))
+                                                    .find(
+                                                        (option) =>
+                                                            option.value ===
+                                                            cardDataCustom?.responsible_person_id
+                                                    )) ||
+                                            null
                                         }
                                         onChange={(selectedOption) => {
                                             if (mode === "read") return;
