@@ -234,7 +234,9 @@ const ReferenceItemExtendedContacts = ({
                     <td className="px-4 py-5 min-w-[180px] max-w-[200px]"></td>
                     <td className="px-4 py-5 min-w-[180px] max-w-[200px]"></td>
                     <td className="px-4 py-5 min-w-[180px] max-w-[200px]"></td>
-                    <td className="px-4 py-5 min-w-[180px] max-w-[200px]"></td>
+                    <td className="px-4 py-5 min-w-[180px] max-w-[200px]">
+                        {data?.updated_by?.name}
+                    </td>
                     <td className="px-4 py-5 min-w-[50px]"></td>
                 </tr>
             )}

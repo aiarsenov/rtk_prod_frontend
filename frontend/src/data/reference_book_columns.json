@@ -3,7 +3,7 @@
         { "label": "Наименование", "key": "name" },
         { "label": "Кол-во элементов", "key": "projects_count" },
         { "label": "Последнее изменение", "key": "updated_at" },
-        { "label": "Автор измнения", "key": "author" }
+        { "label": "Автор измнения", "key": "updated_by" }
     ],
     "report-types": [
         { "label": "Сокращённое наименование", "key": "name" },
@@ -12,21 +12,21 @@
         { "label": "Указывать стоимость в отчете", "key": "show_cost" },
         { "label": "Кол-во проектов", "key": "count" },
         { "label": "Последнее изменение", "key": "updated_at" },
-        { "label": "Автор измнения", "key": "author" }
+        { "label": "Автор измнения", "key": "updated_by" }
     ],
     "roles": [
         { "label": "Наименование", "key": "name" },
         { "label": "Ответственный за отчеты по проектам", "key": "is_project_report_responsible" },
         { "label": "Кол-во ролей в отчётах", "key": "count" },
         { "label": "Последнее изменение", "key": "updated_at" },
-        { "label": "Автор измнения", "key": "author" }
+        { "label": "Автор измнения", "key": "updated_by" }
     ],
     "banks": [
         { "label": "Сокращённое наименование", "key": "name" },
         { "label": "Полное наименование", "key": "full_name" },
         { "label": "Кол-во проектов", "key": "projects_count" },
         { "label": "Последнее изменение", "key": "updated_at" },
-        { "label": "Автор измнения", "key": "author" }
+        { "label": "Автор измнения", "key": "updated_by" }
     ],
     "contragent": [
         { "label": "Наименование Заказчика", "key": "" },
@@ -53,7 +53,7 @@
         { "label": "Тип должности", "key": "type" },
         { "label": "Кол-во сотрудников", "key": "employees_count" },
         { "label": "Последнее изменение", "key": "updated_at" },
-        { "label": "Автор измнения", "key": "author" }
+        { "label": "Автор измнения", "key": "updated_by" }
     ],
     "suppliers-with-reports": [
         { "label": "Наименование Подрядчика", "key": "" },
@@ -67,19 +67,19 @@
         { "label": "Должность отвественного", "key": "position_id" },
         { "label": "Кол-во отчётов", "key": "count" },
         { "label": "Последнее изменение", "key": "updated_at" },
-        { "label": "Автор измнения", "key": "author" }
+        { "label": "Автор измнения", "key": "updated_by" }
     ],
     "request-sources": [
         { "label": "Наименование", "key": "name" },
         { "label": "Кол-во проектов", "key": "projects_count" },
         { "label": "Последнее изменение", "key": "updated_at" },
-        { "label": "Автор измнения", "key": "author" }
+        { "label": "Автор измнения", "key": "updated_by" }
     ],
     "departments": [
         { "label": "Наименование", "key": "name" },
         { "label": "Учитывать в численности и ФОТ", "key": "include_in_payroll" },
         { "label": "Кол-во сотрудников в подразделении", "key": "employee_count" },
         { "label": "Последнее изменение", "key": "updated_at" },
-        { "label": "Автор измнения", "key": "author" }
+        { "label": "Автор измнения", "key": "updated_by" }
     ]
 }

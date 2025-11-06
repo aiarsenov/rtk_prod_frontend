@@ -73,7 +73,7 @@ const ReferenceItemExtended = ({
                 <strong>{data.name}</strong>
             </td>
 
-            <td className="align-top">
+            <td className="align-top" style={{ padding: 0 }}>
                 <table className="w-full">
                     <tbody>
                         {data.contacts.map((contact, index) => (
@@ -158,7 +158,7 @@ const ReferenceItemExtended = ({
                 </table>
             </td>
 
-            <td className="align-top">
+            <td className="align-top" style={{ padding: 0 }}>
                 <table className="w-full">
                     <tbody className="flex flex-col">
                         {data.contacts.map((contact, index) => (
@@ -249,7 +249,7 @@ const ReferenceItemExtended = ({
                     className="min-w-[180px] max-w-[300px]"
                     ref={(el) => (authorRefs.current[0] = el)}
                 >
-                    {data.author || "-"}
+                    {data.updated_by?.name || "-"}
                 </div>
             </td>
 

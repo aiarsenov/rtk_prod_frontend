@@ -250,6 +250,8 @@ const ReferenceItem = ({
                                 format(parseISO(value), "d MMMM yyyy, HH:mm", {
                                     locale: ru,
                                 }) || "—"
+                            ) : key === "updated_by" ? (
+                                value?.name || "—"
                             ) : key === "hours" ? (
                                 <div className="flex items-center gap-2">
                                     <input
