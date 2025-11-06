@@ -2,7 +2,17 @@ import { useNavigate } from "react-router-dom";
 
 import handleStatus from "../../utils/handleStatus";
 
-const ProjectItem = ({ props, columns, mode, deleteProject }) => {
+const ProjectItem = ({
+    props,
+    columns,
+    mode,
+    deleteProject,
+}: {
+    props: object;
+    columns: object[];
+    mode: string;
+    deleteProject: () => void;
+}) => {
     const navigate = useNavigate();
 
     const handleRowClick = () => {

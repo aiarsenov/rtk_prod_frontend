@@ -860,6 +860,30 @@ const SaleCard = () => {
                                             "Совпадений нет"
                                         }
                                         isValidNewOption={() => false}
+                                        value={
+                                            (sources.length > 0 &&
+                                                sources.find(
+                                                    (option) =>
+                                                        option.value ===
+                                                            cardDataCustom?.responsible_person_id ||
+                                                        ""
+                                                )) ||
+                                            []
+                                        }
+                                        onChange={(selectedOption) => {
+                                            if (mode === "read") return;
+
+                                            const newValue =
+                                                selectedOption?.value || null;
+
+                                            setCardDataCustom((prev) => ({
+                                                ...prev,
+                                                responsible_person_id: newValue,
+                                            }));
+                                            updateCard(true, {
+                                                responsible_person_id: newValue,
+                                            });
+                                        }}
                                         isDisabled={
                                             mode == "read" || !availableToChange
                                         }

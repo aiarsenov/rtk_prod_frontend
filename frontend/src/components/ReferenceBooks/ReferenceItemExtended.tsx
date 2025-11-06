@@ -10,6 +10,11 @@ const ReferenceItemExtended = ({
     data,
     editContragentAndCreditorContact,
     deleteContact,
+}: {
+    mode: string;
+    data: object;
+    editContragentAndCreditorContact: () => void;
+    deleteContact: () => void;
 }) => {
     const PhoneMask = "+{7} (000) 000 00 00";
 
