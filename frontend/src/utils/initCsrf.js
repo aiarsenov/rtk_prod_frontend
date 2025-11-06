@@ -4,9 +4,11 @@
  */
 export async function initCsrfToken(apiBaseUrl) {
   try {
-    // apiBaseUrl уже содержит /api/, поэтому просто добавляем csrf-cookie
     await fetch(`${apiBaseUrl}csrf-cookie`, {
       method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
       credentials: 'include',
     });
     console.log('✅ CSRF токен инициализирован');
