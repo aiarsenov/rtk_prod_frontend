@@ -45,7 +45,7 @@ const SingleBook = () => {
 
     const [popupFields, setPopupFields] = useState([]);
 
-    const handleOpenPopup = (data) => {
+    const handleOpenEditPopup = (data) => {
         const editableKeys = ["name", "full_name", "phone"];
 
         const editableFields = Object.entries(data)
@@ -1055,8 +1055,8 @@ const SingleBook = () => {
                                                     deleteContact={
                                                         deleteContact
                                                     }
-                                                    handleOpenPopup={
-                                                        handleOpenPopup
+                                                    handleOpenEditPopup={
+                                                        handleOpenEditPopup
                                                     }
                                                 />
                                             );
@@ -1083,8 +1083,8 @@ const SingleBook = () => {
                                                         setPopupState
                                                     }
                                                     setnewElem={setnewElem}
-                                                    handleOpenPopup={
-                                                        handleOpenPopup
+                                                    handleOpenEditPopup={
+                                                        handleOpenEditPopup
                                                     }
                                                 />
                                             );
@@ -1101,8 +1101,8 @@ const SingleBook = () => {
                                                     handleInputChange={
                                                         handleInputChange
                                                     }
-                                                    handleOpenPopup={
-                                                        handleOpenPopup
+                                                    handleOpenEditPopup={
+                                                        handleOpenEditPopup
                                                     }
                                                 />
                                             );
@@ -1123,8 +1123,8 @@ const SingleBook = () => {
                                                 editElement={editElement}
                                                 setRolesAction={setRolesAction}
                                                 positions={positions}
-                                                handleOpenPopup={
-                                                    handleOpenPopup
+                                                handleOpenEditPopup={
+                                                    handleOpenEditPopup
                                                 }
                                             />
                                         );
@@ -1321,13 +1321,13 @@ const SingleBook = () => {
 
             {isEditElem && (
                 <Popup
-                    onClick={() => setIsPEditElem(false)}
+                    onClick={() => setIsEditElem(false)}
                     title="Редактирование записи"
                 >
                     <form>
                         <div className="action-form__body flex flex-col gap-[18px]">
                             {popupFields.length > 0 &&
-                                popupFields.map(({ key, label, value }) => (
+                                popupFields.map(({ id, key, label, value }) => (
                                     <div key={key} className="flex flex-col">
                                         <label
                                             htmlFor={key}
@@ -1341,11 +1341,7 @@ const SingleBook = () => {
                                             className="form-field"
                                             value={value?.toString() || ""}
                                             onChange={(e) =>
-                                                handleInputChange(
-                                                    e,
-                                                    key,
-                                                    data.id
-                                                )
+                                                handleInputChange(e, key, id)
                                             }
                                         />
                                     </div>
@@ -1372,7 +1368,7 @@ const SingleBook = () => {
                                     // if (bookId == "positions") {
                                     //     hasNameMatch(data.name, data.id);
                                     // } else {
-                                    editElement(data.id);
+                                    editElement(id);
                                     setPopupFields([]);
                                     // }
                                 }}

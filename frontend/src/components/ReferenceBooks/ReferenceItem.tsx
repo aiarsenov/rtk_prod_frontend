@@ -16,7 +16,7 @@ const ReferenceItem = ({
     deleteElement,
     editElement,
     handleInputChange,
-    handleOpenPopup,
+    handleOpenEditPopup,
     positions,
     setRolesAction,
 }) => {
@@ -89,63 +89,66 @@ const ReferenceItem = ({
                                                                     ([
                                                                         field,
                                                                         val,
-                                                                    ]) =>
-                                                                        field !==
-                                                                            "id" &&
-                                                                        field !==
-                                                                            "updated_at" &&
-                                                                        field !==
-                                                                            "last_updated" &&
-                                                                        (field ===
-                                                                            "name" ||
-                                                                            field ===
-                                                                                "full_name" ||
-                                                                            field ===
-                                                                                "phone") &&
-                                                                        mode ===
-                                                                            "edit" ? (
-                                                                            <div
-                                                                                key={
-                                                                                    field
-                                                                                }
-                                                                                className="flex items-center gap-2"
-                                                                            >
-                                                                                <input
-                                                                                    type="text"
-                                                                                    className="w-full"
-                                                                                    value={
-                                                                                        val?.toString() ||
-                                                                                        "—"
-                                                                                    }
-                                                                                    onChange={(
-                                                                                        e
-                                                                                    ) =>
-                                                                                        handleInputChange(
-                                                                                            e,
-                                                                                            field,
-                                                                                            data.id
-                                                                                        )
-                                                                                    }
-                                                                                />
-                                                                            </div>
-                                                                        ) : (
-                                                                            field !==
-                                                                                "id" &&
-                                                                            field !==
-                                                                                "updated_at" &&
-                                                                            field !==
-                                                                                "last_updated" && (
-                                                                                <div
-                                                                                    className="text-sm"
-                                                                                    key={
-                                                                                        field
-                                                                                    }
-                                                                                >
-                                                                                    {val?.toString() ||
-                                                                                        "—"}
-                                                                                </div>
-                                                                            )
-                                                                        )
+                                                                    ]) => {
+                                                                        val?.toString() ||
+                                                                            "—";
+                                                                    }
+                                                                    // field !==
+                                                                    //     "id" &&
+                                                                    // field !==
+                                                                    //     "updated_at" &&
+                                                                    // field !==
+                                                                    //     "last_updated" &&
+                                                                    // (field ===
+                                                                    //     "name" ||
+                                                                    //     field ===
+                                                                    //         "full_name" ||
+                                                                    //     field ===
+                                                                    //         "phone") &&
+                                                                    // mode ===
+                                                                    //     "edit" ? (
+                                                                    //     <div
+                                                                    //         key={
+                                                                    //             field
+                                                                    //         }
+                                                                    //         className="flex items-center gap-2"
+                                                                    //     >
+                                                                    //         <input
+                                                                    //             type="text"
+                                                                    //             className="w-full"
+                                                                    //             value={
+                                                                    //                 val?.toString() ||
+                                                                    //                 "—"
+                                                                    //             }
+                                                                    //             onChange={(
+                                                                    //                 e
+                                                                    //             ) =>
+                                                                    //                 handleInputChange(
+                                                                    //                     e,
+                                                                    //                     field,
+                                                                    //                     data.id
+                                                                    //                 )
+                                                                    //             }
+                                                                    //         />
+                                                                    //     </div>
+                                                                    // ) : (
+                                                                    //     field !==
+                                                                    //         "id" &&
+                                                                    //     field !==
+                                                                    //         "updated_at" &&
+                                                                    //     field !==
+                                                                    //         "last_updated" && (
+                                                                    //         <div
+                                                                    //             className="text-sm"
+                                                                    //             key={
+                                                                    //                 field
+                                                                    //             }
+                                                                    //         >
+                                                                    //             {val?.toString() ||
+                                                                    //                 "—"}
+                                                                    //         </div>
+                                                                    //     )
+                                                                    // )
                                                                 )}
                                                             </div>
                                                         )}
@@ -165,34 +168,36 @@ const ReferenceItem = ({
                     return (
                         <td className="min-w-[180px] max-w-[300px]" key={key}>
                             {mode === "edit" &&
-                            (key === "name" || key === "phone") ? (
-                                <div className="flex items-center gap-2 relative">
-                                    <input
-                                        type="text"
-                                        className="w-full"
-                                        value={value?.toString() || "—"}
-                                        onChange={(e) => {
-                                            handleInputChange(e, key, data.id);
+                            // (
+                            //     key === "name" || key === "phone") ? (
+                            //     <div className="flex items-center gap-2 relative">
+                            //         <input
+                            //             type="text"
+                            //             className="w-full"
+                            //             value={value?.toString() || "—"}
+                            //             onChange={(e) => {
+                            //                 handleInputChange(e, key, data.id);
 
-                                            if (
-                                                key === "name" &&
-                                                bookId == "positions"
-                                            ) {
-                                                setIsError(false);
-                                            }
-                                        }}
-                                    />
+                            //                 if (
+                            //                     key === "name" &&
+                            //                     bookId == "positions"
+                            //                 ) {
+                            //                     setIsError(false);
+                            //                 }
+                            //             }}
+                            //         />
 
-                                    {key === "name" &&
-                                        bookId == "positions" &&
-                                        isError && (
-                                            <span className="text-red-400 text-sm absolute left-0 bottom-[-15px]">
-                                                Такая должность уже есть
-                                            </span>
-                                        )}
-                                </div>
-                            ) : key === "full_name" &&
-                              bookId != "report-types" ? (
+                            //         {key === "name" &&
+                            //             bookId == "positions" &&
+                            //             isError && (
+                            //                 <span className="text-red-400 text-sm absolute left-0 bottom-[-15px]">
+                            //                     Такая должность уже есть
+                            //                 </span>
+                            //             )}
+                            //     </div>
+                            // ) :
+                            key === "full_name" &&
+                            bookId != "report-types" ? (
                                 <div className="flex items-center gap-2">
                                     <input
                                         type="text"
@@ -303,7 +308,7 @@ const ReferenceItem = ({
                     <div className="registry-table__item-actions">
                         {mode === "edit" && (
                             <button
-                                onClick={() => handleOpenPopup(data)}
+                                onClick={() => handleOpenEditPopup(data)}
                                 className="edit-button"
                                 title="Изменить элемент"
                             ></button>
