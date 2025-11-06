@@ -880,7 +880,7 @@ const SaleCard = () => {
                                             "Совпадений нет"
                                         }
                                         isValidNewOption={() => false}
-                                        defaultValue={
+                                        value={
                                             (physicalPersons.length > 0 &&
                                                 physicalPersons
                                                     .map((item) => ({
