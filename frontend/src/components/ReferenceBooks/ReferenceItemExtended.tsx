@@ -150,7 +150,7 @@ const ReferenceItemExtended = ({
 
             <td className="align-top" style={{ padding: 0 }}>
                 <table className="w-full">
-                    <tbody className="flex flex-col">
+                    <tbody>
                         {data.contacts.map((contact, index) => (
                             <tr
                                 key={index}
@@ -174,7 +174,7 @@ const ReferenceItemExtended = ({
 
             <td className="align-top" style={{ padding: 0 }}>
                 <table className="w-full">
-                    <tbody className="flex flex-col">
+                    <tbody>
                         {data.contacts.map((contact, index) => (
                             <tr
                                 key={index}
@@ -248,39 +248,76 @@ const ReferenceItemExtended = ({
                 </table>
             </td>
 
-            <td className="align-top">
-                <div
-                    className="min-w-[180px] max-w-[300px]"
-                    ref={(el) => (lastChangeRefs.current[0] = el)}
-                >
-                    {format(
-                        parseISO(data.last_updated_at),
-                        "d MMMM yyyy, HH:mm",
-                        {
-                            locale: ru,
-                        }
-                    ) || "-"}
-                </div>
-            </td>
-
-            <td className="align-top">
-                <div
-                    className="min-w-[180px] max-w-[300px]"
-                    ref={(el) => (authorRefs.current[0] = el)}
-                >
-                    {data.updated_by?.name || "-"}
-                </div>
-            </td>
-
-            <td className="align-top">
+            <td className="align-top" style={{ padding: 0 }}>
                 <table className="w-full">
-                    <tbody className="flex flex-col">
+                    <tbody>
+                        {data.contacts.map((contact, index) => (
+                            <tr
+                                key={index}
+                                ref={(el) =>
+                                    (lastChangeRefs.current[index] = el)
+                                }
+                                className={
+                                    hoveredIndex === index ? "hovered" : ""
+                                }
+                                onMouseEnter={() => setHoveredIndex(index)}
+                                onMouseLeave={() => setHoveredIndex(null)}
+                            >
+                                <td className="min-w-[180px] max-w-[300px]">
+                                    <div className="extended__info">
+                                        {format(
+                                            parseISO(contact.last_updated_at),
+                                            "d MMMM yyyy, HH:mm",
+                                            {
+                                                locale: ru,
+                                            }
+                                        ) || "-"}
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </td>
+
+            <td className="align-top" style={{ padding: 0 }}>
+                <table className="w-full">
+                    <tbody>
+                        {data.contacts.map((contact, index) => (
+                            <tr
+                                key={index}
+                                ref={(el) => (authorRefs.current[index] = el)}
+                                className={
+                                    hoveredIndex === index ? "hovered" : ""
+                                }
+                                onMouseEnter={() => setHoveredIndex(index)}
+                                onMouseLeave={() => setHoveredIndex(null)}
+                            >
+                                <td className="min-w-[180px] max-w-[300px]">
+                                    <div className="extended__info">
+                                        {contact.author || "-"}
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </td>
+
+            <td className="align-top" style={{ padding: 0 }}>
+                <table className="w-full">
+                    <tbody>
                         {data.contacts.map((contact, index) => (
                             <tr
                                 key={contact.id}
                                 ref={(el) => (actionsRefs.current[index] = el)}
+                                className={
+                                    hoveredIndex === index ? "hovered" : ""
+                                }
+                                onMouseEnter={() => setHoveredIndex(index)}
+                                onMouseLeave={() => setHoveredIndex(null)}
                             >
-                                <td className="min-w-[40px]">
+                                <td>
                                     {mode === "edit" && (
                                         <div className="registry-table__item-actions registry-table__item-actions_col">
                                             <button

@@ -161,7 +161,9 @@
                 }
             }
 
-            .registry-table__item-actions {
+            .registry-table__item-actions:not(
+                    .registry-table__item-actions_col
+                ) {
                 opacity: 1;
             }
 
@@ -190,6 +192,7 @@
             &_col {
                 flex-direction: column;
                 gap: 5px;
+                padding: 0 15px 0 0;
             }
 
             @media (min-width: $media-xxl) {
@@ -348,6 +351,7 @@
 
     &__item_extended {
         background: var(--color-gray-20);
+        border-radius: 10px;
 
         & > td:first-of-type {
             padding-left: 15px;
@@ -360,6 +364,10 @@
         .hovered {
             background-color: var(--color-gray-30);
             transition: background-color 0.2s ease;
+
+            .registry-table__item-actions_col {
+                opacity: 1;
+            }
         }
     }
 

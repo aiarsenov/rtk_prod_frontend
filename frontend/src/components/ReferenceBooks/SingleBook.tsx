@@ -966,7 +966,15 @@ const SingleBook = () => {
                     <Loader />
                 ) : (
                     <section className="reference-books__table-wrapper registry__table-section w-full">
-                        <table className="registry-table reference-books__table table-auto w-full border-collapse">
+                        <table
+                            className={`registry-table reference-books__table table-auto w-full ${
+                                bookId === "creditor" ||
+                                bookId === "contragent" ||
+                                bookId === "suppliers-with-reports"
+                                    ? "border-separate [border-spacing:0_20px]"
+                                    : "border-collapse"
+                            }`}
+                        >
                             <thead className="registry-table__thead">
                                 <tr>
                                     {COLUMNS[bookId].map(
