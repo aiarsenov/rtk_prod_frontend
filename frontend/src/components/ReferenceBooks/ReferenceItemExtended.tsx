@@ -5,6 +5,8 @@ import { IMaskInput } from "react-imask";
 import { format, parseISO } from "date-fns";
 import { ru } from "date-fns/locale";
 
+const PhoneMask = "+{7} (000) 000 00 00";
+
 const ReferenceItemExtended = ({
     mode,
     data,
@@ -16,7 +18,7 @@ const ReferenceItemExtended = ({
     editContragentAndCreditorContact: () => void;
     deleteContact: () => void;
 }) => {
-    const PhoneMask = "+{7} (000) 000 00 00";
+    const [hoveredIndex, setHoveredIndex] = useState(null);
 
     const [editedContacts, setEditedContacts] = useState(() => {
         return data.contacts?.map((contact) => ({
@@ -68,7 +70,7 @@ const ReferenceItemExtended = ({
     }, [data.contacts]);
 
     return (
-        <tr className="registry-table__item registry-table__item_extended transition text-base text-left cursor-pointer">
+        <tr className="registry-table__item registry-table__item_extended text-left text-base">
             <td className="align-top">
                 <strong>{data.name}</strong>
             </td>
@@ -80,6 +82,11 @@ const ReferenceItemExtended = ({
                             <tr
                                 key={index}
                                 ref={(el) => (targetRefs.current[index] = el)}
+                                className={
+                                    hoveredIndex === index ? "hovered" : ""
+                                }
+                                onMouseEnter={() => setHoveredIndex(index)}
+                                onMouseLeave={() => setHoveredIndex(null)}
                             >
                                 <td className="min-w-[180px] w-full">
                                     {/* {mode === "read" ? ( */}
@@ -141,16 +148,23 @@ const ReferenceItemExtended = ({
                 </table>
             </td>
 
-            <td className="align-top">
+            <td className="align-top" style={{ padding: 0 }}>
                 <table className="w-full">
-                    <tbody className="flex flex-col gap-3">
+                    <tbody className="flex flex-col">
                         {data.contacts.map((contact, index) => (
                             <tr
                                 key={index}
                                 ref={(el) => (projectsRefs.current[index] = el)}
+                                className={
+                                    hoveredIndex === index ? "hovered" : ""
+                                }
+                                onMouseEnter={() => setHoveredIndex(index)}
+                                onMouseLeave={() => setHoveredIndex(null)}
                             >
                                 <td className="min-w-[180px] max-w-[300px]">
-                                    {contact.projects_count}
+                                    <div className="extended__info">
+                                        {contact.projects_count}
+                                    </div>
                                 </td>
                             </tr>
                         ))}
@@ -165,6 +179,11 @@ const ReferenceItemExtended = ({
                             <tr
                                 key={index}
                                 ref={(el) => (phoneRefs.current[index] = el)}
+                                className={
+                                    hoveredIndex === index ? "hovered" : ""
+                                }
+                                onMouseEnter={() => setHoveredIndex(index)}
+                                onMouseLeave={() => setHoveredIndex(null)}
                             >
                                 <td className="min-w-[180px] w-full">
                                     {/* {mode === "read" ? (

@@ -351,6 +351,11 @@
         & > td:last-of-type {
             padding-right: 15px;
         }
+
+        .hovered {
+            background-color: #f3f4f6;
+            transition: background-color 0.2s ease;
+        }
     }
 
     .extended__info {
