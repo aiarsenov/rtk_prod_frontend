@@ -16,11 +16,8 @@ const TeammatesSection = ({
             physicalPersons.length > 0 &&
             physicalPersons.find(
                 (item) => item.id === person?.physical_person_id
-            ).full_name;
+            ).name;
     }
-
-    console.log(physicalPersons);
-    
 
     return (
         <li className="person-block">
@@ -60,7 +57,7 @@ const TeammatesSection = ({
                             physicalPersons.length > 0 &&
                             physicalPersons.map((item) => ({
                                 value: item.id,
-                                label: item.full_name,
+                                label: item.name,
                             }))
                         }
                         className="form-select-extend"
@@ -72,7 +69,7 @@ const TeammatesSection = ({
                                 physicalPersons
                                     .map((item) => ({
                                         value: item.id,
-                                        label: item.full_name,
+                                        label: item.name,
                                     }))
                                     .find(
                                         (option) =>
