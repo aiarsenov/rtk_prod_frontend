@@ -1,11 +1,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 
-import { IMaskInput } from "react-imask";
-
 import { format, parseISO } from "date-fns";
 import { ru } from "date-fns/locale";
-
-const PhoneMask = "+{7} (000) 000 00 00";
 
 const ReferenceItemExtended = ({
     mode,

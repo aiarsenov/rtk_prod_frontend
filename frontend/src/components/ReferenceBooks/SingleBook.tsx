@@ -16,6 +16,7 @@ import { IMaskInput } from "react-imask";
 import { ToastContainer, toast } from "react-toastify";
 
 import COLUMNS from "../../data/reference_book_columns.json";
+import REFERENCE_LABELS from "../../data/reference_labels.json";
 import TITLES from "../../data/reference_book_titles.json";
 
 const PhoneMask = "+{7} (000) 000 00 00";
@@ -24,6 +25,7 @@ const SingleBook = () => {
     const { bookId } = useParams();
 
     const columns = bookId ? COLUMNS[bookId] : COLUMNS;
+    const labels = bookId ? REFERENCE_LABELS[bookId] : REFERENCE_LABELS;
 
     const URL =
         bookId === "creditor" || bookId === "contragent"
@@ -61,26 +63,6 @@ const SingleBook = () => {
     });
 
     let query;
-
-    // Обработка существующих полей контактов подрядчиков
-    // const handleContactInputChange = (e, name, item, contactId) => {
-    //     const value = name === "phone" ? e : e.target.value;
-
-    //     setBooksItems((prevBooksItems) =>
-    //         prevBooksItems.map((book) =>
-    //             book.id === item.id
-    //                 ? {
-    //                       ...book,
-    //                       contacts: book.contacts.map((contact) =>
-    //                           contact.id === contactId
-    //                               ? { ...contact, [name]: value }
-    //                               : contact
-    //                       ),
-    //                   }
-    //                 : book
-    //         )
-    //     );
-    // };
 
     // Обработка полей попапа нового контакта подрядчика
     const handleNewContactElemInputChange = (e, name) => {
@@ -836,7 +818,7 @@ const SingleBook = () => {
         const editableFields = Object.entries(data)
             .filter(([key]) => editableKeys.includes(key))
             .map(([key, value]) => {
-                const column = columns.find((col) => col.key === key);
+                const column = labels.find((col) => col.key === key);
                 return {
                     id: data.id,
                     key,
@@ -1393,25 +1375,37 @@ const SingleBook = () => {
                         <div className="action-form__body flex flex-col gap-[18px]">
                             {popupFields.length > 0 &&
                                 popupFields.map(({ id, key, label, value }) => {
-                                    console.log(key);
                                     if (key === "phone") {
                                         return (
-                                            <IMaskInput
-                                                mask={PhoneMask}
-                                                className="form-field w-full"
-                                                name="phone"
-                                                type="tel"
-                                                inputMode="tel"
-                                                onAccept={(value) => {
-                                                    handlePopupFieldsChange(
-                                                        id,
-                                                        key,
-                                                        value
-                                                    );
-                                                }}
-                                                value={value?.toString() || ""}
-                                                placeholder="Телефон"
-                                            />
+                                            <div
+                                                key={key}
+                                                className="flex flex-col"
+                                            >
+                                                <label
+                                                    htmlFor={key}
+                                                    className="form-label"
+                                                >
+                                                    {label}
+                                                </label>
+                                                <IMaskInput
+                                                    mask={PhoneMask}
+                                                    className="form-field w-full"
+                                                    name="phone"
+                                                    type="tel"
+                                                    inputMode="tel"
+                                                    onAccept={(value) => {
+                                                        handlePopupFieldsChange(
+                                                            id,
+                                                            key,
+                                                            value
+                                                        );
+                                                    }}
+                                                    value={
+                                                        value?.toString() || ""
+                                                    }
+                                                    placeholder="Телефон"
+                                                />
+                                            </div>
                                         );
                                     } else {
                                         return (
