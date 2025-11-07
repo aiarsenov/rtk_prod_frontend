@@ -1392,30 +1392,60 @@ const SingleBook = () => {
                     <form>
                         <div className="action-form__body flex flex-col gap-[18px]">
                             {popupFields.length > 0 &&
-                                popupFields.map(({ id, key, label, value }) => (
-                                    <div key={key} className="flex flex-col">
-                                        <label
-                                            htmlFor={key}
-                                            className="form-label"
-                                        >
-                                            {label}
-                                        </label>
-                                        <input
-                                            id={key}
-                                            type="text"
-                                            className="form-field"
-                                            value={value?.toString() || ""}
-                                            onChange={(e) => {
-                                                const newValue = e.target.value;
-                                                handlePopupFieldsChange(
-                                                    id,
-                                                    key,
-                                                    newValue
-                                                );
-                                            }}
-                                        />
-                                    </div>
-                                ))}
+                                popupFields.map(({ id, key, label, value }) => {
+                                    console.log(key);
+                                    if (key === "phone") {
+                                        return (
+                                            <IMaskInput
+                                                mask={PhoneMask}
+                                                className="form-field w-full"
+                                                name="phone"
+                                                type="tel"
+                                                inputMode="tel"
+                                                onAccept={(value) => {
+                                                    handlePopupFieldsChange(
+                                                        id,
+                                                        key,
+                                                        value
+                                                    );
+                                                }}
+                                                value={value?.toString() || ""}
+                                                placeholder="Телефон"
+                                            />
+                                        );
+                                    } else {
+                                        return (
+                                            <div
+                                                key={key}
+                                                className="flex flex-col"
+                                            >
+                                                <label
+                                                    htmlFor={key}
+                                                    className="form-label"
+                                                >
+                                                    {label}
+                                                </label>
+                                                <input
+                                                    id={key}
+                                                    type="text"
+                                                    className="form-field"
+                                                    value={
+                                                        value?.toString() || ""
+                                                    }
+                                                    onChange={(e) => {
+                                                        const newValue =
+                                                            e.target.value;
+                                                        handlePopupFieldsChange(
+                                                            id,
+                                                            key,
+                                                            newValue
+                                                        );
+                                                    }}
+                                                />
+                                            </div>
+                                        );
+                                    }
+                                })}
                         </div>
 
                         <div className="action-form__footer">
