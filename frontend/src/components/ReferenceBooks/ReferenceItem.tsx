@@ -319,10 +319,12 @@ const ReferenceItem = ({
                                 onClick={() => {
                                     if (data.projects_count) {
                                         if (data.projects_count < 1) {
-                                            handleOpenDeletePopup(data.id);
+                                            handleOpenDeletePopup({
+                                                id: data.id,
+                                            });
                                         }
                                     } else {
-                                        handleOpenDeletePopup(data.id);
+                                        handleOpenDeletePopup({ id: data.id });
                                     }
                                 }}
                                 className="delete-button extended"

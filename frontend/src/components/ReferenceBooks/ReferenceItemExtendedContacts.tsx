@@ -7,7 +7,7 @@ const ReferenceItemExtendedContacts = ({
     data,
     mode = "read",
     editContactElem,
-    deleteContactElem,
+    handleOpenDeletePopup,
     handleContactInputChange,
     setPopupState,
     setnewElem,
@@ -192,10 +192,10 @@ const ReferenceItemExtendedContacts = ({
 
                                         <button
                                             onClick={() =>
-                                                deleteContactElem(
-                                                    data.id,
-                                                    contact.id
-                                                )
+                                                handleOpenDeletePopup({
+                                                    id: data.id,
+                                                    contact: contact.id,
+                                                })
                                             }
                                             className="delete-button delete-icon"
                                             title="Удалить контакт"

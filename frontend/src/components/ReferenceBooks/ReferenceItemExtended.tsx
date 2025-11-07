@@ -11,12 +11,12 @@ const ReferenceItemExtended = ({
     mode,
     data,
     editContragentAndCreditorContact,
-    deleteContact,
+    handleOpenDeletePopup,
 }: {
     mode: string;
     data: object;
     editContragentAndCreditorContact: () => void;
-    deleteContact: () => void;
+    handleOpenDeletePopup: () => void;
 }) => {
     const [hoveredIndex, setHoveredIndex] = useState(null);
 
@@ -334,7 +334,9 @@ const ReferenceItemExtended = ({
 
                                             <button
                                                 onClick={() =>
-                                                    deleteContact(contact.id)
+                                                    handleOpenDeletePopup({
+                                                        id: contact.id,
+                                                    })
                                                 }
                                                 className="delete-button extended"
                                                 title="Удалить контакт"

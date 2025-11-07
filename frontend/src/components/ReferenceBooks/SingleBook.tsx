@@ -45,7 +45,7 @@ const SingleBook = () => {
     const [isDeleteElem, setIsDeleteElem] = useState(false); // Попап удаления записи
 
     const [popupFields, setPopupFields] = useState([]); // Доступные для изменения поля в записи
-    const [elemToDelete, setElemToDelete] = useState(null); // ID записи для удаления
+    const [elemToDelete, setElemToDelete] = useState({}); // ID записи для удаления
 
     const [positions, setPositions] = useState([]); // Должности
     const [availableYears, setAvailableYears] = useState([]); // Доступные года
@@ -78,116 +78,6 @@ const SingleBook = () => {
                       }
                     : book
             )
-        );
-    };
-
-    // Изменение контакта подрядчика
-    const editContactElem = (id, contactId) => {
-        const contractor = booksItems.find((item) => item.id === id);
-
-        const contractorContact = contractor.contacts?.find(
-            (contact) => contact.id === contactId
-        );
-
-        query = toast.loading("Обновление", {
-            containerId: "singleBook",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
-
-        postData(
-            "PATCH",
-            `${URL}/${id}/contacts/${contactId}`,
-            contractorContact
-        ).then((response) => {
-            if (response?.ok) {
-                toast.update(query, {
-                    render: "Запись обновлена",
-                    type: "success",
-                    containerId: "singleBook",
-                    isLoading: false,
-                    autoClose: 1200,
-                    pauseOnFocusLoss: false,
-                    pauseOnHover: false,
-                    draggable: true,
-                    position:
-                        window.innerWidth >= 1440
-                            ? "bottom-right"
-                            : "top-right",
-                });
-            } else {
-                toast.dismiss(query);
-                toast.error("Ошибка обновления записи", {
-                    isLoading: false,
-                    autoClose: 1500,
-                    pauseOnFocusLoss: false,
-                    pauseOnHover: false,
-                    draggable: true,
-                    position:
-                        window.innerWidth >= 1440
-                            ? "bottom-right"
-                            : "top-right",
-                    containerId: "singleBook",
-                });
-            }
-        });
-    };
-
-    // Удаление контакта подрядчика
-    const deleteContactElem = (id, contactId) => {
-        query = toast.loading("Удаление", {
-            containerId: "singleBook",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
-
-        postData("DELETE", `${URL}/${id}/contacts/${contactId}`, {}).then(
-            (response) => {
-                if (response?.ok) {
-                    toast.update(query, {
-                        render: "Контакт удален",
-                        type: "success",
-                        containerId: "singleBook",
-                        isLoading: false,
-                        autoClose: 1200,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
-
-                    setBooksItems((booksItems) =>
-                        booksItems.map((item) => {
-                            if (item.id === id) {
-                                return {
-                                    ...item,
-                                    contacts: item.contacts?.filter(
-                                        (contact) => contact.id !== contactId
-                                    ),
-                                };
-                            }
-                            return item;
-                        })
-                    );
-                } else {
-                    toast.dismiss(query);
-                    toast.error("Ошибка удалении контакта", {
-                        isLoading: false,
-                        autoClose: 1500,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                        containerId: "singleBook",
-                    });
-                }
-            }
         );
     };
 
@@ -663,8 +553,122 @@ const SingleBook = () => {
             });
     };
 
-    // Удаление записи
-    const deleteContact = (id) => {
+    // Изменение контакта подрядчика
+    const editContactElem = (id, contactId) => {
+        const contractor = booksItems.find((item) => item.id === id);
+
+        const contractorContact = contractor.contacts?.find(
+            (contact) => contact.id === contactId
+        );
+
+        query = toast.loading("Обновление", {
+            containerId: "singleBook",
+            draggable: true,
+            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        });
+
+        postData(
+            "PATCH",
+            `${URL}/${id}/contacts/${contactId}`,
+            contractorContact
+        ).then((response) => {
+            if (response?.ok) {
+                toast.update(query, {
+                    render: "Запись обновлена",
+                    type: "success",
+                    containerId: "singleBook",
+                    isLoading: false,
+                    autoClose: 1200,
+                    pauseOnFocusLoss: false,
+                    pauseOnHover: false,
+                    draggable: true,
+                    position:
+                        window.innerWidth >= 1440
+                            ? "bottom-right"
+                            : "top-right",
+                });
+            } else {
+                toast.dismiss(query);
+                toast.error("Ошибка обновления записи", {
+                    isLoading: false,
+                    autoClose: 1500,
+                    pauseOnFocusLoss: false,
+                    pauseOnHover: false,
+                    draggable: true,
+                    position:
+                        window.innerWidth >= 1440
+                            ? "bottom-right"
+                            : "top-right",
+                    containerId: "singleBook",
+                });
+            }
+        });
+    };
+
+    // Удаление контакта подрядчика
+    const deleteContactElem = (data) => {
+        query = toast.loading("Удаление", {
+            containerId: "singleBook",
+            draggable: true,
+            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        });
+
+        postData(
+            "DELETE",
+            `${URL}/${data.id}/contacts/${data.contact}`,
+            {}
+        ).then((response) => {
+            if (response?.ok) {
+                toast.update(query, {
+                    render: "Контакт удален",
+                    type: "success",
+                    containerId: "singleBook",
+                    isLoading: false,
+                    autoClose: 1200,
+                    pauseOnFocusLoss: false,
+                    pauseOnHover: false,
+                    draggable: true,
+                    position:
+                        window.innerWidth >= 1440
+                            ? "bottom-right"
+                            : "top-right",
+                });
+
+                setBooksItems((booksItems) =>
+                    booksItems.map((item) => {
+                        if (item.id === data.id) {
+                            return {
+                                ...item,
+                                contacts: item.contacts?.filter(
+                                    (contact) => contact.id !== data.contact
+                                ),
+                            };
+                        }
+                        return item;
+                    })
+                );
+                setIsDeleteElem(false);
+                setElemToDelete({});
+            } else {
+                toast.dismiss(query);
+                toast.error("Ошибка удалении контакта", {
+                    isLoading: false,
+                    autoClose: 1500,
+                    pauseOnFocusLoss: false,
+                    pauseOnHover: false,
+                    draggable: true,
+                    position:
+                        window.innerWidth >= 1440
+                            ? "bottom-right"
+                            : "top-right",
+                    containerId: "singleBook",
+                });
+            }
+        });
+    };
+
+    // Удаление контакта
+    const deleteContact = (data) => {
         query = toast.loading("Удаление", {
             containerId: "singleBook",
             draggable: true,
@@ -676,17 +680,19 @@ const SingleBook = () => {
         if (bookId == "creditor" || bookId == "contragent") {
             url = `${
                 import.meta.env.VITE_API_URL
-            }responsible-persons/${bookId}/contact/${id}`;
+            }responsible-persons/${bookId}/contact/${data.id}`;
         } else {
             url = `${
                 import.meta.env.VITE_API_URL
-            }${bookId}-responsible-persons/${id}`;
+            }${bookId}-responsible-persons/${data.id}`;
         }
 
         postData("DELETE", url, {})
             .then((response) => {
                 if (response?.ok) {
                     getBooks();
+                    setIsDeleteElem(false);
+                    setElemToDelete({});
 
                     toast.update(query, {
                         render: "Контакт удалена",
@@ -736,21 +742,21 @@ const SingleBook = () => {
     };
 
     // Удаление записи
-    const deleteElement = (id) => {
+    const deleteElement = (data) => {
         query = toast.loading("Удаление", {
             containerId: "singleBook",
             draggable: true,
             position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
         });
 
-        postData("DELETE", `${URL}/${id}`, {})
+        postData("DELETE", `${URL}/${data.id}`, {})
             .then((response) => {
                 if (response?.ok) {
                     setBooksItems((booksItems) =>
-                        booksItems.filter((item) => item.id !== id)
+                        booksItems.filter((item) => item.id !== data.id)
                     );
                     setRefBooksItems((booksItems) =>
-                        booksItems.filter((item) => item.id !== id)
+                        booksItems.filter((item) => item.id !== data.id)
                     );
                     toast.update(query, {
                         render: "Запись удалена",
@@ -767,7 +773,7 @@ const SingleBook = () => {
                                 : "top-right",
                     });
                     setIsDeleteElem(false);
-                    setElemToDelete(null);
+                    setElemToDelete({});
                 } else {
                     toast.dismiss(query);
                     toast.error("Ошибка удаления записи", {
@@ -802,8 +808,8 @@ const SingleBook = () => {
     };
 
     // Открытие попапа удаления зависи
-    const handleOpenDeletePopup = (id) => {
-        setElemToDelete(id);
+    const handleOpenDeletePopup = (data) => {
+        setElemToDelete(data);
         setIsDeleteElem(true);
     };
 
@@ -1057,8 +1063,8 @@ const SingleBook = () => {
                                                     editContragentAndCreditorContact={
                                                         editContragentAndCreditorContact
                                                     }
-                                                    deleteContact={
-                                                        deleteContact
+                                                    handleOpenDeletePopup={
+                                                        handleOpenDeletePopup
                                                     }
                                                     handleOpenEditPopup={
                                                         handleOpenEditPopup
@@ -1078,8 +1084,8 @@ const SingleBook = () => {
                                                     handleContactInputChange={
                                                         handleContactInputChange
                                                     }
-                                                    deleteContactElem={
-                                                        deleteContactElem
+                                                    handleOpenDeletePopup={
+                                                        handleOpenDeletePopup
                                                     }
                                                     editContactElem={
                                                         editContactElem
@@ -1391,7 +1397,13 @@ const SingleBook = () => {
             {isDeleteElem && (
                 <Popup
                     onClick={() => setIsDeleteElem(false)}
-                    title="Удаление записи"
+                    title={
+                        bookId === "creditor" ||
+                        bookId === "contragent" ||
+                        bookId === "suppliers-with-reports"
+                            ? "Удаление контакта"
+                            : "Удаление записи"
+                    }
                 >
                     <form>
                         <div className="action-form__body">
@@ -1415,7 +1427,18 @@ const SingleBook = () => {
                                 type="button"
                                 className="action-button flex-[0_0_fit-content]"
                                 onClick={() => {
-                                    deleteElement(elemToDelete);
+                                    if (
+                                        bookId === "creditor" ||
+                                        bookId === "contragent"
+                                    ) {
+                                        deleteContact(elemToDelete);
+                                    } else if (
+                                        bookId === "suppliers-with-reports"
+                                    ) {
+                                        deleteContactElem(elemToDelete);
+                                    } else {
+                                        deleteElement(elemToDelete);
+                                    }
                                 }}
                                 title="Удалить запись"
                             >
