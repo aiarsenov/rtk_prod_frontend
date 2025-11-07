@@ -41,8 +41,8 @@ const SingleBook = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [listLength, setListLength] = useState(0);
 
-    const [popupState, setPopupState] = useState(false);
     const [rolesAction, setRolesAction] = useState({ action: "", roleId: "" });
+    const [isNewElem, setIsNewElem] = useState(false); // Попап добавления записи
     const [isEditElem, setIsEditElem] = useState(false); // Попап изменения записи
     const [isDeleteElem, setIsDeleteElem] = useState(false); // Попап удаления записи
 
@@ -91,44 +91,8 @@ const SingleBook = () => {
         setFormFields({ ...formFields, [name]: value });
     };
 
-    // Обработка существующих полей справочника
-    // const handleInputChange = (e, name, id) => {
-    //     let value;
-
-    //     if (name === "phone") {
-    //         value = e;
-    //     } else if (name === "hours") {
-    //         value = +e.target.value;
-    //     } else if (
-    //         name === "is_regular" ||
-    //         name === "show_cost" ||
-    //         name === "is_project_report_responsible"
-    //     ) {
-    //         value = e === true;
-    //     } else {
-    //         value = e.target.value;
-    //     }
-
-    //     setBooksItems((prevBooksItems) =>
-    //         prevBooksItems.map((item) =>
-    //             item.id === id ? { ...item, [name]: value } : item
-    //         )
-    //     );
-    // };
-
     // Закрытие попапа
-    const closePopup = (evt) => {
-        if (evt.currentTarget.classList.contains("popup")) {
-            setPopupState(false);
-            setnewElem({
-                contragent_id: "",
-                full_name: "",
-                position: "",
-                email: "",
-                phone: "",
-            });
-        }
-    };
+    const closePopup = (evt) => {};
 
     // Изименение генерации отчетов
     const toggleRoleResponce = (action) => {
@@ -300,6 +264,15 @@ const SingleBook = () => {
                         )
                     );
 
+                    setIsNewElem(false);
+                    setnewElem({
+                        contragent_id: "",
+                        full_name: "",
+                        position: "",
+                        email: "",
+                        phone: "",
+                    });
+
                     toast("Контакт добавлен", {
                         type: "success",
                         containerId: "singleBook",
@@ -311,7 +284,6 @@ const SingleBook = () => {
                                 ? "bottom-right"
                                 : "top-right",
                     });
-                    setPopupState(false);
                 }
             }
         );
@@ -1100,85 +1072,107 @@ const SingleBook = () => {
                 )}
             </div>
 
-            {popupState &&
+            {isNewElem &&
                 mode === "edit" &&
                 bookId === "suppliers-with-reports" && (
-                    <Popup onClick={closePopup} title="Добавить контакт">
-                        <div className="min-w-[300px]">
-                            <div className="action-form__body grid grid-cols-2 gap-3">
-                                <input
-                                    type="text"
-                                    className="w-full text-base border border-gray-300 p-1"
-                                    value={newElem.full_name}
-                                    placeholder="ФИО"
-                                    onChange={(e) =>
-                                        handleNewContactElemInputChange(
-                                            e,
-                                            "full_name"
-                                        )
-                                    }
-                                />
+                    <Popup
+                        onClick={() => {
+                            setIsNewElem(false);
+                            setnewElem({
+                                contragent_id: "",
+                                full_name: "",
+                                position: "",
+                                email: "",
+                                phone: "",
+                            });
+                        }}
+                        title={
+                            bookId === "creditor" ||
+                            bookId === "contragent" ||
+                            bookId === "suppliers-with-reports"
+                                ? "Создать контакт"
+                                : "Создать запись"
+                        }
+                    >
+                        <div className="action-form__body grid grid-cols-2 gap-3">
+                            <input
+                                type="text"
+                                className="w-full text-base border border-gray-300 p-1"
+                                value={newElem.full_name}
+                                placeholder="ФИО"
+                                onChange={(e) =>
+                                    handleNewContactElemInputChange(
+                                        e,
+                                        "full_name"
+                                    )
+                                }
+                            />
 
-                                <input
-                                    type="text"
-                                    className="w-full text-base border border-gray-300 p-1"
-                                    value={newElem.position}
-                                    placeholder="Должность"
-                                    onChange={(e) =>
-                                        handleNewContactElemInputChange(
-                                            e,
-                                            "position"
-                                        )
-                                    }
-                                />
+                            <input
+                                type="text"
+                                className="w-full text-base border border-gray-300 p-1"
+                                value={newElem.position}
+                                placeholder="Должность"
+                                onChange={(e) =>
+                                    handleNewContactElemInputChange(
+                                        e,
+                                        "position"
+                                    )
+                                }
+                            />
 
-                                <IMaskInput
-                                    mask={PhoneMask}
-                                    className="w-full text-base border border-gray-300 p-1"
-                                    name="phone"
-                                    type="tel"
-                                    inputMode="tel"
-                                    onAccept={(value) =>
-                                        handleNewContactElemInputChange(
-                                            value || "",
-                                            "phone"
-                                        )
-                                    }
-                                    value={newElem.phone}
-                                    placeholder="+7 999 999 99 99"
-                                />
+                            <IMaskInput
+                                mask={PhoneMask}
+                                className="w-full text-base border border-gray-300 p-1"
+                                name="phone"
+                                type="tel"
+                                inputMode="tel"
+                                onAccept={(value) =>
+                                    handleNewContactElemInputChange(
+                                        value || "",
+                                        "phone"
+                                    )
+                                }
+                                value={newElem.phone}
+                                placeholder="+7 999 999 99 99"
+                            />
 
-                                <input
-                                    type="text"
-                                    className="w-full text-base border border-gray-300 p-1"
-                                    value={newElem.email}
-                                    placeholder="Email"
-                                    onChange={(e) =>
-                                        handleNewContactElemInputChange(
-                                            e,
-                                            "email"
-                                        )
-                                    }
-                                />
-                            </div>
+                            <input
+                                type="text"
+                                className="w-full text-base border border-gray-300 p-1"
+                                value={newElem.email}
+                                placeholder="Email"
+                                onChange={(e) =>
+                                    handleNewContactElemInputChange(e, "email")
+                                }
+                            />
+                        </div>
 
-                            <div className="action-form__footer mt-5 flex items-center gap-6 justify-between">
-                                <button
-                                    type="button"
-                                    className="rounded-lg py-2 px-5 bg-black text-white flex-[1_1_50%]"
-                                    onClick={() => addNewContact(newElem)}
-                                >
-                                    Добавить
-                                </button>
+                        <div className="action-form__footer">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setIsNewElem(false);
+                                    setnewElem({
+                                        contragent_id: "",
+                                        full_name: "",
+                                        position: "",
+                                        email: "",
+                                        phone: "",
+                                    });
+                                }}
+                                className="cancel-button flex-[0_0_fit-content]"
+                            >
+                                Отменить
+                            </button>
 
-                                <button
-                                    type="button"
-                                    onClick={() => setPopupState(false)}
-                                    className="border rounded-lg py-2 px-5 flex-[1_1_50%]"
-                                >
-                                    Отменить
-                                </button>
-                            </div>
+                            <button
+                                type="button"
+                                className="action-button flex-[0_0_fit-content]"
+                                onClick={() => addNewContact(newElem)}
+                            >
+                                Добавить
+                            </button>
                         </div>
                     </Popup>
                 )}
