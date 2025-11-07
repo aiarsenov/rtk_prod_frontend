@@ -6,11 +6,13 @@ import { ru } from "date-fns/locale";
 const ReferenceItemExtended = ({
     mode,
     data,
+    bookId,
     handleOpenEditPopup,
     handleOpenDeletePopup,
 }: {
     mode: string;
     data: object;
+    bookId: string;
     handleOpenEditPopup: () => void;
     handleOpenDeletePopup: () => void;
 }) => {
@@ -67,7 +69,7 @@ const ReferenceItemExtended = ({
 
     return (
         <tr className="registry-table__item registry-table__item_extended text-left text-base">
-            <td className="align-top">
+            <td className="align-top max-w-[300px]">
                 <strong>{data.name}</strong>
             </td>
 
@@ -84,7 +86,7 @@ const ReferenceItemExtended = ({
                                 onMouseEnter={() => setHoveredIndex(index)}
                                 onMouseLeave={() => setHoveredIndex(null)}
                             >
-                                <td className="min-w-[180px] w-full">
+                                <td className="min-w-[180px] max-w-[300px] w-full">
                                     <div className="extended__info">
                                         <div>{contact.full_name}</div>
                                         <span>{contact.position}</span>
@@ -96,29 +98,33 @@ const ReferenceItemExtended = ({
                 </table>
             </td>
 
-            <td className="align-top" style={{ padding: 0 }}>
-                <table className="w-full">
-                    <tbody>
-                        {data.contacts.map((contact, index) => (
-                            <tr
-                                key={index}
-                                ref={(el) => (projectsRefs.current[index] = el)}
-                                className={
-                                    hoveredIndex === index ? "hovered" : ""
-                                }
-                                onMouseEnter={() => setHoveredIndex(index)}
-                                onMouseLeave={() => setHoveredIndex(null)}
-                            >
-                                <td className="min-w-[180px] max-w-[300px]">
-                                    <div className="extended__info">
-                                        {contact.projects_count}
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </td>
+            {bookId !== "suppliers-with-reports" && (
+                <td className="align-top" style={{ padding: 0 }}>
+                    <table className="w-full">
+                        <tbody>
+                            {data.contacts.map((contact, index) => (
+                                <tr
+                                    key={index}
+                                    ref={(el) =>
+                                        (projectsRefs.current[index] = el)
+                                    }
+                                    className={
+                                        hoveredIndex === index ? "hovered" : ""
+                                    }
+                                    onMouseEnter={() => setHoveredIndex(index)}
+                                    onMouseLeave={() => setHoveredIndex(null)}
+                                >
+                                    <td className="min-w-[180px] max-w-[300px]">
+                                        <div className="extended__info">
+                                            {contact.projects_count}
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </td>
+            )}
 
             <td className="align-top" style={{ padding: 0 }}>
                 <table className="w-full">
@@ -218,23 +224,47 @@ const ReferenceItemExtended = ({
                                     {mode === "edit" && (
                                         <div className="registry-table__item-actions registry-table__item-actions_col">
                                             <button
-                                                onClick={() =>
-                                                    handleOpenEditPopup(
-                                                        findObjectById(
-                                                            contact.id
-                                                        )
-                                                    )
-                                                }
+                                                onClick={() => {
+                                                    if (
+                                                        bookId !==
+                                                        "suppliers-with-reports"
+                                                    ) {
+                                                        handleOpenEditPopup(
+                                                            findObjectById(
+                                                                contact.id
+                                                            )
+                                                        );
+                                                    } else {
+                                                        let updatedData =
+                                                            contact;
+                                                        updatedData.contactId =
+                                                            data.id;
+
+                                                        handleOpenEditPopup(
+                                                            updatedData
+                                                        );
+                                                    }
+                                                }}
                                                 className="edit-button"
                                                 title="Изменить контакт"
                                             ></button>
 
                                             <button
-                                                onClick={() =>
-                                                    handleOpenDeletePopup({
-                                                        id: contact.id,
-                                                    })
-                                                }
+                                                onClick={() => {
+                                                    if (
+                                                        bookId !==
+                                                        "suppliers-with-reports"
+                                                    ) {
+                                                        handleOpenDeletePopup({
+                                                            id: contact.id,
+                                                        });
+                                                    } else {
+                                                        handleOpenDeletePopup({
+                                                            id: data.id,
+                                                            contact: contact.id,
+                                                        });
+                                                    }
+                                                }}
                                                 className="delete-button extended"
                                                 title="Удалить контакт"
                                             >

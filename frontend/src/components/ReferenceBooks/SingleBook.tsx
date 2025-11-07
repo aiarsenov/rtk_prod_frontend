@@ -7,7 +7,7 @@ import postData from "../../utils/postData";
 import Popup from "../Popup/Popup";
 import ReferenceItem from "./ReferenceItem";
 import ReferenceItemExtended from "./ReferenceItemExtended";
-import ReferenceItemExtendedContacts from "./ReferenceItemExtendedContacts";
+// import ReferenceItemExtendedContacts from "./ReferenceItemExtendedContacts";
 import ReferenceItemNew from "./ReferenceItemNew";
 import Loader from "../Loader";
 
@@ -1070,7 +1070,8 @@ const SingleBook = () => {
                                     booksItems.map((item) => {
                                         if (
                                             bookId === "creditor" ||
-                                            bookId === "contragent"
+                                            bookId === "contragent" ||
+                                            bookId === "suppliers-with-reports"
                                         ) {
                                             return (
                                                 <ReferenceItemExtended
@@ -1087,28 +1088,6 @@ const SingleBook = () => {
                                                     handleOpenEditPopup={
                                                         handleOpenEditPopup
                                                     }
-                                                />
-                                            );
-                                        }
-
-                                        if (
-                                            bookId === "suppliers-with-reports"
-                                        ) {
-                                            return (
-                                                <ReferenceItemExtendedContacts
-                                                    key={item.id}
-                                                    data={item}
-                                                    mode={mode}
-                                                    handleOpenEditPopup={
-                                                        handleOpenEditPopup
-                                                    }
-                                                    handleOpenDeletePopup={
-                                                        handleOpenDeletePopup
-                                                    }
-                                                    setPopupState={
-                                                        setPopupState
-                                                    }
-                                                    setnewElem={setnewElem}
                                                 />
                                             );
                                         }
