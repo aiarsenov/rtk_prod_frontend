@@ -18,6 +18,8 @@ import { ToastContainer, toast } from "react-toastify";
 import COLUMNS from "../../data/reference_book_columns.json";
 import TITLES from "../../data/reference_book_titles.json";
 
+const PhoneMask = "+{7} (000) 000 00 00";
+
 const SingleBook = () => {
     const { bookId } = useParams();
 
@@ -28,45 +30,26 @@ const SingleBook = () => {
             ? `${import.meta.env.VITE_API_URL}responsible-persons/${bookId}`
             : `${import.meta.env.VITE_API_URL}${bookId ? bookId : "books"}`;
 
-    const [booksItems, setBooksItems] = useState([]);
-    const [refBooksItems, setRefBooksItems] = useState([]);
-
     const [mode, setMode] = useState("edit");
 
+    const [booksItems, setBooksItems] = useState([]);
+    const [refBooksItems, setRefBooksItems] = useState([]);
     const [formFields, setFormFields] = useState({});
 
     const [isLoading, setIsLoading] = useState(true);
-
     const [listLength, setListLength] = useState(0);
 
     const [popupState, setPopupState] = useState(false);
     const [rolesAction, setRolesAction] = useState({ action: "", roleId: "" });
-    const [isEditElem, setIsEditElem] = useState(false);
+    const [isEditElem, setIsEditElem] = useState(false); // Попап изменения записи
+    const [isDeleteElem, setIsDeleteElem] = useState(false); // Попап удаления записи
 
-    const [popupFields, setPopupFields] = useState([]);
+    const [popupFields, setPopupFields] = useState([]); // Доступные для изменения поля в записи
+    const [elemToDelete, setElemToDelete] = useState(null); // ID записи для удаления
 
-    const handleOpenEditPopup = (data) => {
-        const editableKeys = ["name", "full_name", "phone"];
-
-        const editableFields = Object.entries(data)
-            .filter(([key]) => editableKeys.includes(key))
-            .map(([key, value]) => {
-                const column = columns.find((col) => col.key === key);
-                return {
-                    id: data.id,
-                    key,
-                    label: column?.label || key,
-                    value,
-                };
-            });
-
-        setPopupFields(editableFields);
-        setIsEditElem(true);
-    };
-
-    const [positions, setPositions] = useState([]);
-    const [availableYears, setAvailableYears] = useState([]);
-    const [currentYear, setCurrentYear] = useState("");
+    const [positions, setPositions] = useState([]); // Должности
+    const [availableYears, setAvailableYears] = useState([]); // Доступные года
+    const [currentYear, setCurrentYear] = useState(""); // Текущий год
 
     const [newElem, setnewElem] = useState({
         contragent_id: "",
@@ -76,13 +59,7 @@ const SingleBook = () => {
         phone: "",
     });
 
-    const PhoneMask = "+{7} (000) 000 00 00";
-
     let query;
-
-    useEffect(() => {
-        console.log(popupFields);
-    }, [popupFields]);
 
     // Обработка существующих полей контактов подрядчиков
     const handleContactInputChange = (e, name, item, contactId) => {
@@ -789,6 +766,8 @@ const SingleBook = () => {
                                 ? "bottom-right"
                                 : "top-right",
                     });
+                    setIsDeleteElem(false);
+                    setElemToDelete(null);
                 } else {
                     toast.dismiss(query);
                     toast.error("Ошибка удаления записи", {
@@ -820,6 +799,32 @@ const SingleBook = () => {
                     containerId: "singleBook",
                 });
             });
+    };
+
+    // Открытие попапа удаления зависи
+    const handleOpenDeletePopup = (id) => {
+        setElemToDelete(id);
+        setIsDeleteElem(true);
+    };
+
+    // Открытие попапа изменения зависи
+    const handleOpenEditPopup = (data) => {
+        const editableKeys = ["name", "full_name", "phone"];
+
+        const editableFields = Object.entries(data)
+            .filter(([key]) => editableKeys.includes(key))
+            .map(([key, value]) => {
+                const column = columns.find((col) => col.key === key);
+                return {
+                    id: data.id,
+                    key,
+                    label: column?.label || key,
+                    value,
+                };
+            });
+
+        setPopupFields(editableFields);
+        setIsEditElem(true);
     };
 
     // Получение должностей
@@ -1018,24 +1023,24 @@ const SingleBook = () => {
                             </thead>
 
                             <tbody className="registry-table__tbody">
-                                {/* {mode === "edit" &&
-                            bookId != "creditor" &&
-                            bookId != "contragent" &&
-                            bookId != "suppliers-with-reports" &&
-                            bookId != "working-hours" &&
-                            bookId !== "report-types" && (
-                                <ReferenceItemNew
-                                    handleNewElementInputChange={
-                                        handleNewElementInputChange
-                                    }
-                                    columns={columns}
-                                    formFields={formFields}
-                                    booksItems={booksItems}
-                                    bookId={bookId}
-                                    positions={positions}
-                                    addNewElement={addNewElement}
-                                />
-                            )} */}
+                                {mode === "edit" &&
+                                    bookId != "creditor" &&
+                                    bookId != "contragent" &&
+                                    bookId != "suppliers-with-reports" &&
+                                    bookId != "working-hours" &&
+                                    bookId !== "report-types" && (
+                                        <ReferenceItemNew
+                                            handleNewElementInputChange={
+                                                handleNewElementInputChange
+                                            }
+                                            columns={columns}
+                                            formFields={formFields}
+                                            booksItems={booksItems}
+                                            bookId={bookId}
+                                            positions={positions}
+                                            addNewElement={addNewElement}
+                                        />
+                                    )}
 
                                 {booksItems?.length > 0 &&
                                     booksItems.map((item) => {
@@ -1119,7 +1124,9 @@ const SingleBook = () => {
                                                 handleInputChange={
                                                     handleInputChange
                                                 }
-                                                deleteElement={deleteElement}
+                                                handleOpenDeletePopup={
+                                                    handleOpenDeletePopup
+                                                }
                                                 editElement={editElement}
                                                 setRolesAction={setRolesAction}
                                                 positions={positions}
@@ -1375,6 +1382,44 @@ const SingleBook = () => {
                                 title="Сохранить изменения"
                             >
                                 Сохранить
+                            </button>
+                        </div>
+                    </form>
+                </Popup>
+            )}
+
+            {isDeleteElem && (
+                <Popup
+                    onClick={() => setIsDeleteElem(false)}
+                    title="Удаление записи"
+                >
+                    <form>
+                        <div className="action-form__body">
+                            <p>Данные будут безвозвратно утеряны.</p>
+                        </div>
+
+                        <div className="action-form__footer">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setIsDeleteElem(false);
+                                    setElemToDelete(null);
+                                }}
+                                className="cancel-button flex-[0_0_fit-content]"
+                                title="Отменить удаление"
+                            >
+                                Отменить
+                            </button>
+
+                            <button
+                                type="button"
+                                className="action-button flex-[0_0_fit-content]"
+                                onClick={() => {
+                                    deleteElement(elemToDelete);
+                                }}
+                                title="Удалить запись"
+                            >
+                                Удалить
                             </button>
                         </div>
                     </form>

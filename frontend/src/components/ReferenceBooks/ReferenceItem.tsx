@@ -13,7 +13,7 @@ const ReferenceItem = ({
     columns,
     mode = "read",
     bookId,
-    deleteElement,
+    handleOpenDeletePopup,
     editElement,
     handleInputChange,
     handleOpenEditPopup,
@@ -319,10 +319,10 @@ const ReferenceItem = ({
                                 onClick={() => {
                                     if (data.projects_count) {
                                         if (data.projects_count < 1) {
-                                            deleteElement(data.id);
+                                            handleOpenDeletePopup(data.id);
                                         }
                                     } else {
-                                        deleteElement(data.id);
+                                        handleOpenDeletePopup(data.id);
                                     }
                                 }}
                                 className="delete-button extended"
