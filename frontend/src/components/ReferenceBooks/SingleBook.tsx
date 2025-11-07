@@ -323,16 +323,24 @@ const SingleBook = () => {
     };
 
     // Изменение рабочих часов
-    const saveAllList = () => {
+    const editWokrHours = (data) => {
+        let updatedData = tempData;
+        updatedData.hours = +data.hours;
+
         query = toast.loading("Сохранение", {
             containerId: "singleBook",
             draggable: true,
             position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
         });
 
-        postData("PATCH", URL, { year: currentYear, hours: booksItems })
+        postData("PATCH", URL, { year: currentYear, hours: [updatedData] })
             .then((response) => {
                 if (response?.ok) {
+                    setIsEditElem(false);
+                    setPopupFields([]);
+                    setTempData({});
+                    getBooks();
+
                     toast.update(query, {
                         render: response.message || "Успешно сохранено",
                         type: "success",
@@ -942,8 +950,9 @@ const SingleBook = () => {
     }, [mode]);
 
     useEffect(() => {
+        console.log(tempData);
         console.log(popupFields);
-    }, [popupFields]);
+    }, [popupFields, tempData]);
 
     return (
         <main className="page reference-books">
@@ -955,16 +964,11 @@ const SingleBook = () => {
                         {TITLES[bookId]} <span>{listLength}</span>
                     </h1>
 
-                    <div
-                        className={`flex ${
-                            bookId === "working-hours"
-                                ? "justify-between"
-                                : "justify-end"
-                        } items-center gap-6 flex-grow`}
-                    >
+                    <div className="flex justify-end items-center gap-[20px] flex-grow">
                         {bookId === "working-hours" && (
                             <select
-                                className="form-select"
+                                className="form-select max-w-[150px]"
+                                style={{ minWidth: "100px" }}
                                 value={currentYear}
                                 onChange={(evt) =>
                                     setCurrentYear(evt.target.value)
@@ -979,41 +983,29 @@ const SingleBook = () => {
                             </select>
                         )}
 
-                        <div className="flex items-center gap-6">
-                            {mode === "edit" && bookId === "working-hours" && (
-                                <button
-                                    onClick={() => {
-                                        saveAllList();
-                                    }}
-                                    className="delete-button save-icon"
-                                    title="Сохранить рабочие часы"
-                                ></button>
-                            )}
-
-                            {mode === "edit" && (
-                                <button
-                                    type="button"
-                                    className="button-active"
-                                    // onClick={}
-                                >
-                                    <span>Создать</span>
-                                    <div className="button-active__icon">
-                                        <svg
-                                            width="12"
-                                            height="13"
-                                            viewBox="0 0 12 13"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                d="M6.75 5.75h3.75v1.5H6.75V11h-1.5V7.25H1.5v-1.5h3.75V2h1.5v3.75z"
-                                                fill="#fff"
-                                            />
-                                        </svg>
-                                    </div>
-                                </button>
-                            )}
-                        </div>
+                        {mode === "edit" && (
+                            <button
+                                type="button"
+                                className="button-active"
+                                // onClick={}
+                            >
+                                <span>Создать</span>
+                                <div className="button-active__icon">
+                                    <svg
+                                        width="12"
+                                        height="13"
+                                        viewBox="0 0 12 13"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            d="M6.75 5.75h3.75v1.5H6.75V11h-1.5V7.25H1.5v-1.5h3.75V2h1.5v3.75z"
+                                            fill="#fff"
+                                        />
+                                    </svg>
+                                </div>
+                            </button>
+                        )}
                     </div>
                 </section>
 
@@ -1079,9 +1071,6 @@ const SingleBook = () => {
                                                     data={item}
                                                     mode={mode}
                                                     bookId={bookId}
-                                                    editContragentAndCreditorContact={
-                                                        editContragentAndCreditorContact
-                                                    }
                                                     handleOpenDeletePopup={
                                                         handleOpenDeletePopup
                                                     }
@@ -1519,6 +1508,8 @@ const SingleBook = () => {
                                         bookId === "suppliers-with-reports"
                                     ) {
                                         editContactElem(updatedData);
+                                    } else if (bookId === "working-hours") {
+                                        editWokrHours(updatedData);
                                     } else {
                                         editElement(updatedData);
                                     }
