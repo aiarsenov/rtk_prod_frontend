@@ -491,7 +491,7 @@ const SingleBook = () => {
             });
     };
 
-    // Изменение записи
+    // Изменение контактов
     const editContragentAndCreditorContact = (data) => {
         query = toast.loading("Обновление", {
             containerId: "singleBook",
@@ -522,6 +522,9 @@ const SingleBook = () => {
                                 ? "bottom-right"
                                 : "top-right",
                     });
+                    setIsEditElem(false);
+                    setPopupFields([]);
+                    getBooks();
                 } else {
                     toast.dismiss(query);
                     toast.error("Ошибка обновления контакта", {
@@ -817,7 +820,13 @@ const SingleBook = () => {
 
     // Открытие попапа изменения зависи
     const handleOpenEditPopup = (data) => {
-        const editableKeys = ["name", "full_name", "phone"];
+        const editableKeys = [
+            "name",
+            "full_name",
+            "phone",
+            "email",
+            "position",
+        ];
 
         const editableFields = Object.entries(data)
             .filter(([key]) => editableKeys.includes(key))
@@ -1156,16 +1165,16 @@ const SingleBook = () => {
                                                 columns={columns}
                                                 mode={mode}
                                                 bookId={bookId}
-                                                handleInputChange={
-                                                    handleInputChange
-                                                }
-                                                handleOpenDeletePopup={
-                                                    handleOpenDeletePopup
-                                                }
+                                                // handleInputChange={
+                                                //     handleInputChange
+                                                // }
                                                 setRolesAction={setRolesAction}
                                                 positions={positions}
                                                 handleOpenEditPopup={
                                                     handleOpenEditPopup
+                                                }
+                                                handleOpenDeletePopup={
+                                                    handleOpenDeletePopup
                                                 }
                                             />
                                         );
@@ -1424,7 +1433,21 @@ const SingleBook = () => {
                                     //     hasNameMatch(data.name, data.id);
                                     // } else {
                                     const updatedData = collectEditFieldsData();
-                                    editElement(updatedData);
+
+                                    if (
+                                        bookId === "creditor" ||
+                                        bookId === "contragent"
+                                    ) {
+                                        editContragentAndCreditorContact(
+                                            updatedData
+                                        );
+                                    } else if (
+                                        bookId === "suppliers-with-reports"
+                                    ) {
+                                        return;
+                                    } else {
+                                        editElement(updatedData);
+                                    }
 
                                     // }
                                 }}

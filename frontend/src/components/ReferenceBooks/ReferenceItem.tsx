@@ -13,7 +13,6 @@ const ReferenceItem = ({
     mode = "read",
     bookId,
     handleOpenDeletePopup,
-    handleInputChange,
     handleOpenEditPopup,
     positions,
     setRolesAction,
@@ -107,9 +106,9 @@ const ReferenceItem = ({
                                         type="text"
                                         className="w-full"
                                         value={value?.toString() || "—"}
-                                        onChange={(e) =>
-                                            handleInputChange(e, key, data.id)
-                                        }
+                                        // onChange={(e) =>
+                                        //     // handleInputChange(e, key, data.id)
+                                        // }
                                     />
                                 </div>
                             ) : key === "type" || key === "position_id" ? (
@@ -121,9 +120,9 @@ const ReferenceItem = ({
                                     }`}
                                     name={key}
                                     value={value || ""}
-                                    onChange={(e) =>
-                                        handleInputChange(e, key, data.id)
-                                    }
+                                    // onChange={(e) =>
+                                    //     // handleInputChange(e, key, data.id)
+                                    // }
                                     disabled={mode == "read"}
                                 >
                                     {bookId === "management-report-types" ? (
@@ -160,11 +159,11 @@ const ReferenceItem = ({
                                     value={value === true || value === "true"}
                                     label={`${key}_${data.id}`}
                                     onChange={(updated) => {
-                                        handleInputChange(
-                                            updated,
-                                            key,
-                                            data.id
-                                        );
+                                        // handleInputChange(
+                                        //     updated,
+                                        //     key,
+                                        //     data.id
+                                        // );
                                         if (
                                             key ===
                                             "is_project_report_responsible"
@@ -194,9 +193,9 @@ const ReferenceItem = ({
                                                 : "border-gray-300"
                                         }`}
                                         value={value?.toString() || "—"}
-                                        onChange={(e) =>
-                                            handleInputChange(e, key, data.id)
-                                        }
+                                        // onChange={(e) =>
+                                        //     // handleInputChange(e, key, data.id)
+                                        // }
                                     />
                                 </div>
                             ) : (

@@ -11,11 +11,13 @@ const ReferenceItemExtended = ({
     mode,
     data,
     editContragentAndCreditorContact,
+    handleOpenEditPopup,
     handleOpenDeletePopup,
 }: {
     mode: string;
     data: object;
     editContragentAndCreditorContact: () => void;
+    handleOpenEditPopup: () => void;
     handleOpenDeletePopup: () => void;
 }) => {
     const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -322,7 +324,7 @@ const ReferenceItemExtended = ({
                                         <div className="registry-table__item-actions registry-table__item-actions_col">
                                             <button
                                                 onClick={() =>
-                                                    editContragentAndCreditorContact(
+                                                    handleOpenEditPopup(
                                                         findObjectById(
                                                             contact.id
                                                         )
