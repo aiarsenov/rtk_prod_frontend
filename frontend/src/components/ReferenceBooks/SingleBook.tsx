@@ -127,11 +127,6 @@ const SingleBook = () => {
                 email: "",
                 phone: "",
             });
-
-            if (bookId == "roles") {
-                setRolesAction({ action: "", roleId: "" });
-                getBooks();
-            }
         }
     };
 
@@ -1192,98 +1187,98 @@ const SingleBook = () => {
                 mode === "edit" &&
                 bookId === "roles" && (
                     <Popup
-                        onClick={closePopup}
+                        onClick={() => {
+                            setRolesAction({ action: "", roleId: "" });
+                        }}
                         title={`${
                             rolesAction.action === "true"
                                 ? "Включение генерации отчетов"
                                 : "Отключение генерации отчетов"
                         }`}
                     >
-                        <div className="min-w-[300px] max-w-[450px]">
-                            <div className="action-form__body grid grid-cols-1 gap-3">
-                                <p>
-                                    {rolesAction.action === "true"
-                                        ? "Отчеты сотрудников с данной ролью начнут генерироваться, начиная с текущего месяца. Следует ли сгенерировать отчеты сотрудников для прошлого периода?"
-                                        : "Отчеты сотрудников с данной ролью перестанут генерироваться начиная с текущего месяца. Что следует сделать с ранее созданными отчетами?"}
-                                </p>
+                        <div className="action-form__body">
+                            <p>
+                                {rolesAction.action === "true"
+                                    ? "Отчеты сотрудников с данной ролью начнут генерироваться, начиная с текущего месяца. Следует ли сгенерировать отчеты сотрудников для прошлого периода?"
+                                    : "Отчеты сотрудников с данной ролью перестанут генерироваться начиная с текущего месяца. Что следует сделать с ранее созданными отчетами?"}
+                            </p>
 
-                                <div className="flex flex-col gap-4 mt-4">
-                                    {rolesAction.action === "true" ? (
-                                        <>
-                                            <button
-                                                type="button"
-                                                className="rounded-lg py-3 px-5 border"
-                                                title="Да"
-                                                onClick={() =>
-                                                    toggleRoleResponce({
-                                                        action: "enable",
-                                                        backfill: true,
-                                                    })
-                                                }
-                                            >
-                                                Да
-                                            </button>
+                            <div className="flex flex-col gap-[15px] mt-[15px]">
+                                {rolesAction.action === "true" ? (
+                                    <div className="grid item-center grid-cols-2 gap-[15px]">
+                                        <button
+                                            type="button"
+                                            className="cancel-button"
+                                            title="Не генерировать отчеты сотрудников для прошлого периода"
+                                            onClick={() =>
+                                                toggleRoleResponce({
+                                                    action: "enable",
+                                                    backfill: false,
+                                                })
+                                            }
+                                        >
+                                            Нет
+                                        </button>
 
-                                            <button
-                                                type="button"
-                                                className="rounded-lg py-3 px-5 border"
-                                                title="Нет"
-                                                onClick={() =>
-                                                    toggleRoleResponce({
-                                                        action: "enable",
-                                                        backfill: false,
-                                                    })
-                                                }
-                                            >
-                                                Нет
-                                            </button>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <button
-                                                type="button"
-                                                className="rounded-lg py-3 px-5 border"
-                                                title="Безвозвратно удалить"
-                                                onClick={() =>
-                                                    toggleRoleResponce({
-                                                        action: "disable",
-                                                        policy: "delete",
-                                                    })
-                                                }
-                                            >
-                                                Безвозвратно удалить
-                                            </button>
+                                        <button
+                                            type="button"
+                                            className="action-button"
+                                            title="Сгенерировать отчеты сотрудников для прошлого периода"
+                                            onClick={() =>
+                                                toggleRoleResponce({
+                                                    action: "enable",
+                                                    backfill: true,
+                                                })
+                                            }
+                                        >
+                                            Да
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <button
+                                            type="button"
+                                            className="cancel-button"
+                                            title="Безвозвратно удалить"
+                                            onClick={() =>
+                                                toggleRoleResponce({
+                                                    action: "disable",
+                                                    policy: "delete",
+                                                })
+                                            }
+                                        >
+                                            Безвозвратно удалить
+                                        </button>
 
-                                            <button
-                                                type="button"
-                                                className="rounded-lg py-3 px-5 border"
-                                                title="Скрыть из списка"
-                                                onClick={() =>
-                                                    toggleRoleResponce({
-                                                        action: "disable",
-                                                        policy: "hide",
-                                                    })
-                                                }
-                                            >
-                                                Скрыть из списка
-                                            </button>
+                                        <button
+                                            type="button"
+                                            className="cancel-button"
+                                            title="Скрыть из списка"
+                                            onClick={() =>
+                                                toggleRoleResponce({
+                                                    action: "disable",
+                                                    policy: "hide",
+                                                })
+                                            }
+                                        >
+                                            Скрыть из списка
+                                        </button>
 
-                                            <button
-                                                type="button"
-                                                className="rounded-lg py-3 px-5 border"
-                                                title="Оставить в списке"
-                                                onClick={() =>
-                                                    toggleRoleResponce({
-                                                        action: "disable",
-                                                        policy: "keep",
-                                                    })
-                                                }
-                                            >
-                                                Оставить в списке
-                                            </button>
-                                        </>
-                                    )}
-                                </div>
+                                        <button
+                                            type="button"
+                                            className="action-button"
+                                            title="Оставить в списке"
+                                            onClick={() =>
+                                                toggleRoleResponce({
+                                                    action: "disable",
+                                                    policy: "keep",
+                                                })
+                                            }
+                                        >
+                                            Оставить в списке
+                                        </button>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </Popup>

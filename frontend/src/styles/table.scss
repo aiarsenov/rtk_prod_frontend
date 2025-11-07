@@ -111,13 +111,13 @@
             }
         }
 
-        th:first-of-type {
-            padding-left: 0;
-        }
+        // th:first-of-type {
+        //     padding-left: 0;
+        // }
 
-        th:last-of-type {
-            padding-right: 0;
-        }
+        // th:last-of-type {
+        //     padding-right: 0;
+        // }
     }
 
     &__tbody {
@@ -134,19 +134,19 @@
         color: var(--color-gray-100);
         border-bottom: 1px solid var(--color-gray-30);
         z-index: 0;
+        transition: background var(--trans);
 
         > td {
             padding: 15px;
-            z-index: 0;
         }
 
-        > td:first-of-type {
-            padding-left: 0;
-        }
+        // > td:first-of-type {
+        //     // padding-left: 0;
+        // }
 
-        > td:last-of-type {
-            padding-right: 0;
-        }
+        // > td:last-of-type {
+        //     // padding-right: 0;
+        // }
 
         strong {
             font-weight: 600;
@@ -155,6 +155,8 @@
         }
 
         &:hover {
+            background: var(--color-gray-20);
+
             .delete-button {
                 @media (min-width: $media-xxl) {
                     opacity: 1;
@@ -166,21 +168,6 @@
                 ) {
                 opacity: 1;
             }
-
-            // @media (min-width: $media-xxl) {
-            //     &::after {
-            //         content: "";
-            //         position: absolute;
-            //         left: 50%;
-            //         top: 50%;
-            //         transform: translate(-50%, -50%);
-            //         height: 100%;
-            //         width: 100vw;
-            //         background: var(--color-gray-20);
-            //         z-index: -1;
-            //         pointer-events: none;
-            //     }
-            // }
         }
 
         &-actions {
