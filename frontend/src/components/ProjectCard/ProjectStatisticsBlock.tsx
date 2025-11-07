@@ -39,14 +39,7 @@ const ProjectStatisticsBlock = ({ revenue, getRevenue, period, setPeriod }) => {
                         Выручка
                         <Hint message={"Выручка"} />
                     </div>
-                    <div
-                        className="statistics-block__item-value"
-                        title={
-                            revenue.revenue?.value +
-                            " " +
-                            revenue.revenue?.label
-                        }
-                    >
+                    <div className="statistics-block__item-value">
                         {revenue.revenue?.value !== "0" ? (
                             <div>
                                 <strong>
@@ -75,14 +68,7 @@ const ProjectStatisticsBlock = ({ revenue, getRevenue, period, setPeriod }) => {
                         Поступления
                         <Hint message={"Поступления"} />
                     </div>
-                    <div
-                        className="statistics-block__item-value"
-                        title={
-                            revenue.receipts?.value +
-                            " " +
-                            revenue.receipts?.label
-                        }
-                    >
+                    <div className="statistics-block__item-value">
                         {revenue.receipts?.value !== "0" ? (
                             <div>
                                 <strong>
@@ -111,12 +97,7 @@ const ProjectStatisticsBlock = ({ revenue, getRevenue, period, setPeriod }) => {
                         ДЗ
                         <Hint message={"ДЗ"} />
                     </div>
-                    <div
-                        className="statistics-block__item-value"
-                        title={
-                            revenue.debts?.value + " " + revenue.debts?.label
-                        }
-                    >
+                    <div className="statistics-block__item-value">
                         {revenue.debts?.value !== "0" ? (
                             <div>
                                 <strong>
@@ -145,14 +126,7 @@ const ProjectStatisticsBlock = ({ revenue, getRevenue, period, setPeriod }) => {
                         Валовая прибыль
                         <Hint message={"Валовая прибыль"} />
                     </div>
-                    <div
-                        className="statistics-block__item-value"
-                        title={
-                            revenue.gross_profit?.value +
-                            " " +
-                            revenue.gross_profit?.label
-                        }
-                    >
+                    <div className="statistics-block__item-value">
                         {revenue.gross_profit?.value !== "0" ? (
                             <>
                                 <div>
@@ -200,10 +174,7 @@ const ProjectStatisticsBlock = ({ revenue, getRevenue, period, setPeriod }) => {
                         ФОТ
                         <Hint message={"ФОТ"} />
                     </div>
-                    <div
-                        className="statistics-block__item-value"
-                        title={revenue.fot?.value + " " + revenue.fot?.label}
-                    >
+                    <div className="statistics-block__item-value">
                         {revenue.fot?.value !== "0" ? (
                             <>
                                 <div>
@@ -252,14 +223,7 @@ const ProjectStatisticsBlock = ({ revenue, getRevenue, period, setPeriod }) => {
                         Подрячики
                         <Hint message={"Подрячики"} />
                     </div>
-                    <div
-                        className="statistics-block__item-value"
-                        title={
-                            revenue.suppliers_expenses?.value +
-                            " " +
-                            revenue.suppliers_expenses?.label
-                        }
-                    >
+                    <div className="statistics-block__item-value">
                         {revenue.suppliers_expenses?.value !== "0" ? (
                             <>
                                 <div>

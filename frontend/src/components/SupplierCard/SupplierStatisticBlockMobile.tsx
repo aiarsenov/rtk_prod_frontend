@@ -62,14 +62,7 @@ const SupplierStatisticBlockMobile = ({
                         Выполнено
                         <Hint message={"Выполнено"} />
                     </div>
-                    <div
-                        className="statistics-block__item-value"
-                        title={
-                            revenue.revenue?.value +
-                            " " +
-                            revenue.revenue?.label
-                        }
-                    >
+                    <div className="statistics-block__item-value">
                         {revenue.revenue?.value !== "0" ? (
                             <div>
                                 <strong>
@@ -98,14 +91,7 @@ const SupplierStatisticBlockMobile = ({
                         Оплачено
                         <Hint message={"Оплачено"} />
                     </div>
-                    <div
-                        className="statistics-block__item-value"
-                        title={
-                            revenue.receipts?.value +
-                            " " +
-                            revenue.receipts?.label
-                        }
-                    >
+                    <div className="statistics-block__item-value">
                         {revenue.receipts?.value !== "0" ? (
                             <div>
                                 <strong>
@@ -134,12 +120,7 @@ const SupplierStatisticBlockMobile = ({
                         КЗ
                         <Hint message={"КЗ"} />
                     </div>
-                    <div
-                        className="statistics-block__item-value"
-                        title={
-                            revenue.debts?.value + " " + revenue.debts?.label
-                        }
-                    >
+                    <div className="statistics-block__item-value">
                         {revenue.debts?.value !== "0" ? (
                             <div>
                                 <strong>
