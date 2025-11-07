@@ -1133,7 +1133,6 @@ const SingleBook = () => {
                                                 handleOpenDeletePopup={
                                                     handleOpenDeletePopup
                                                 }
-                                                editElement={editElement}
                                                 setRolesAction={setRolesAction}
                                                 positions={positions}
                                                 handleOpenEditPopup={

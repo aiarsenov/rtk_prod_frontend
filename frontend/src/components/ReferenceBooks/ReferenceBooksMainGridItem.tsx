@@ -31,8 +31,8 @@ const ReferenceBooksMainGridItem = ({ data }: { data: object }) => {
                 <br />
 
                 <div>
-                    <span>{data.last_updated_by?.name}</span>
-                    {data.last_updated_by?.name && data.last_updated && "•"}
+                    <span>{data.last_updated_by}</span>
+                    {data.last_updated_by && data.last_updated && "•"}
                     <span>{formatToFullDate(data.last_updated)}</span>
                 </div>
             </div>
