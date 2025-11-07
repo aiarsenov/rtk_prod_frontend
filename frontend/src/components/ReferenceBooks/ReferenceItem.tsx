@@ -14,6 +14,7 @@ const ReferenceItem = ({
     handleOpenEditPopup,
     positions,
     setRolesAction,
+    handleSwitchChange,
 }) => {
     const navigate = useNavigate();
 
@@ -129,7 +130,12 @@ const ReferenceItem = ({
                                                 roleId: data.id,
                                             });
                                         } else {
-                                            
+                                            handleSwitchChange(
+                                                updated,
+                                                key,
+                                                data.id
+                                            );
+                                            console.log(updated);
                                         }
                                     }}
                                     disabled={mode === "read"}

@@ -41,7 +41,7 @@ const SingleBook = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [listLength, setListLength] = useState(0);
 
-    const [rolesAction, setRolesAction] = useState({ action: "", roleId: "" });
+    const [rolesAction, setRolesAction] = useState({ action: "", roleId: "" }); // Состояние генерации отчетов в справочнике Роли в проектах
     const [isNewElem, setIsNewElem] = useState(false); // Попап добавления записи
     const [isEditElem, setIsEditElem] = useState(false); // Попап изменения записи
     const [isDeleteElem, setIsDeleteElem] = useState(false); // Попап удаления записи
@@ -63,6 +63,15 @@ const SingleBook = () => {
     });
 
     let query;
+
+    // Обработка существующих полей справочника
+    const handleSwitchChange = (evt, name, id) => {
+        setBooksItems((prevBooksItems) =>
+            prevBooksItems.map((item) =>
+                item.id === id ? { ...item, [name]: evt === true } : item
+            )
+        );
+    };
 
     // Обработка полей попапа нового контакта подрядчика
     const handleNewContactElemInputChange = (e, name) => {
@@ -90,9 +99,6 @@ const SingleBook = () => {
 
         setFormFields({ ...formFields, [name]: value });
     };
-
-    // Закрытие попапа
-    const closePopup = (evt) => {};
 
     // Изименение генерации отчетов
     const toggleRoleResponce = (action) => {
@@ -232,7 +238,7 @@ const SingleBook = () => {
             });
     };
 
-    // Добавить новый контакт подрядчику
+    // Добавление нового контакта подрядчику
     const addNewContact = (data) => {
         postData("POST", `${URL}/${data.contragent_id}`, data).then(
             (response) => {
@@ -1063,6 +1069,9 @@ const SingleBook = () => {
                                                 handleOpenDeletePopup={
                                                     handleOpenDeletePopup
                                                 }
+                                                handleSwitchChange={
+                                                    handleSwitchChange
+                                                }
                                             />
                                         );
                                     })}
@@ -1173,107 +1182,6 @@ const SingleBook = () => {
                             >
                                 Добавить
                             </button>
-                        </div>
-                    </Popup>
-                )}
-
-            {rolesAction.action != "" &&
-                mode === "edit" &&
-                bookId === "roles" && (
-                    <Popup
-                        onClick={() => {
-                            setRolesAction({ action: "", roleId: "" });
-                        }}
-                        title={`${
-                            rolesAction.action === "true"
-                                ? "Включение генерации отчетов"
-                                : "Отключение генерации отчетов"
-                        }`}
-                    >
-                        <div className="action-form__body">
-                            <p>
-                                {rolesAction.action === "true"
-                                    ? "Отчеты сотрудников с данной ролью начнут генерироваться, начиная с текущего месяца. Следует ли сгенерировать отчеты сотрудников для прошлого периода?"
-                                    : "Отчеты сотрудников с данной ролью перестанут генерироваться начиная с текущего месяца. Что следует сделать с ранее созданными отчетами?"}
-                            </p>
-
-                            <div className="flex flex-col gap-[15px] mt-[15px]">
-                                {rolesAction.action === "true" ? (
-                                    <div className="grid item-center grid-cols-2 gap-[15px]">
-                                        <button
-                                            type="button"
-                                            className="cancel-button"
-                                            title="Не генерировать отчеты сотрудников для прошлого периода"
-                                            onClick={() =>
-                                                toggleRoleResponce({
-                                                    action: "enable",
-                                                    backfill: false,
-                                                })
-                                            }
-                                        >
-                                            Нет
-                                        </button>
-
-                                        <button
-                                            type="button"
-                                            className="action-button"
-                                            title="Сгенерировать отчеты сотрудников для прошлого периода"
-                                            onClick={() =>
-                                                toggleRoleResponce({
-                                                    action: "enable",
-                                                    backfill: true,
-                                                })
-                                            }
-                                        >
-                                            Да
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <>
-                                        <button
-                                            type="button"
-                                            className="cancel-button"
-                                            title="Безвозвратно удалить"
-                                            onClick={() =>
-                                                toggleRoleResponce({
-                                                    action: "disable",
-                                                    policy: "delete",
-                                                })
-                                            }
-                                        >
-                                            Безвозвратно удалить
-                                        </button>
-
-                                        <button
-                                            type="button"
-                                            className="cancel-button"
-                                            title="Скрыть из списка"
-                                            onClick={() =>
-                                                toggleRoleResponce({
-                                                    action: "disable",
-                                                    policy: "hide",
-                                                })
-                                            }
-                                        >
-                                            Скрыть из списка
-                                        </button>
-
-                                        <button
-                                            type="button"
-                                            className="action-button"
-                                            title="Оставить в списке"
-                                            onClick={() =>
-                                                toggleRoleResponce({
-                                                    action: "disable",
-                                                    policy: "keep",
-                                                })
-                                            }
-                                        >
-                                            Оставить в списке
-                                        </button>
-                                    </>
-                                )}
-                            </div>
                         </div>
                     </Popup>
                 )}
@@ -1569,6 +1477,107 @@ const SingleBook = () => {
                     </form>
                 </Popup>
             )}
+
+            {rolesAction.action != "" &&
+                mode === "edit" &&
+                bookId === "roles" && (
+                    <Popup
+                        onClick={() => {
+                            setRolesAction({ action: "", roleId: "" });
+                        }}
+                        title={`${
+                            rolesAction.action === "true"
+                                ? "Включение генерации отчетов"
+                                : "Отключение генерации отчетов"
+                        }`}
+                    >
+                        <div className="action-form__body">
+                            <p>
+                                {rolesAction.action === "true"
+                                    ? "Отчеты сотрудников с данной ролью начнут генерироваться, начиная с текущего месяца. Следует ли сгенерировать отчеты сотрудников для прошлого периода?"
+                                    : "Отчеты сотрудников с данной ролью перестанут генерироваться начиная с текущего месяца. Что следует сделать с ранее созданными отчетами?"}
+                            </p>
+
+                            <div className="flex flex-col gap-[15px] mt-[15px]">
+                                {rolesAction.action === "true" ? (
+                                    <div className="grid item-center grid-cols-2 gap-[15px]">
+                                        <button
+                                            type="button"
+                                            className="cancel-button"
+                                            title="Не генерировать отчеты сотрудников для прошлого периода"
+                                            onClick={() =>
+                                                toggleRoleResponce({
+                                                    action: "enable",
+                                                    backfill: false,
+                                                })
+                                            }
+                                        >
+                                            Нет
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            className="action-button"
+                                            title="Сгенерировать отчеты сотрудников для прошлого периода"
+                                            onClick={() =>
+                                                toggleRoleResponce({
+                                                    action: "enable",
+                                                    backfill: true,
+                                                })
+                                            }
+                                        >
+                                            Да
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <button
+                                            type="button"
+                                            className="cancel-button"
+                                            title="Безвозвратно удалить"
+                                            onClick={() =>
+                                                toggleRoleResponce({
+                                                    action: "disable",
+                                                    policy: "delete",
+                                                })
+                                            }
+                                        >
+                                            Безвозвратно удалить
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            className="cancel-button"
+                                            title="Скрыть из списка"
+                                            onClick={() =>
+                                                toggleRoleResponce({
+                                                    action: "disable",
+                                                    policy: "hide",
+                                                })
+                                            }
+                                        >
+                                            Скрыть из списка
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            className="action-button"
+                                            title="Оставить в списке"
+                                            onClick={() =>
+                                                toggleRoleResponce({
+                                                    action: "disable",
+                                                    policy: "keep",
+                                                })
+                                            }
+                                        >
+                                            Оставить в списке
+                                        </button>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    </Popup>
+                )}
         </main>
     );
 };
