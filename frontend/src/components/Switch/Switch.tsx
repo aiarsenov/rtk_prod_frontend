@@ -1,6 +1,6 @@
 import "./Switch.scss";
 
-const Switch = ({ value, label, onChange }) => {
+const Switch = ({ value, label, onChange, disabled }) => {
     return (
         <label className={`switch ${value ? "checked" : ""}`} htmlFor={label}>
             <input
@@ -8,7 +8,11 @@ const Switch = ({ value, label, onChange }) => {
                 name="switch"
                 id={label}
                 checked={value}
-                onChange={() => onChange(!value)}
+                onChange={() => {
+                    if (disabled) return;
+                    onChange(!value);
+                }}
+                disabled={disabled}
             />
         </label>
     );

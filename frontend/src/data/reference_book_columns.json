@@ -46,7 +46,9 @@
     ],
     "working-hours": [
         { "label": "Месяц", "key": "month_name" },
-        { "label": "Часы", "key": "hours" }
+        { "label": "Часы", "key": "hours" },
+        { "label": "Последнее изменение", "key": "updated_at" },
+        { "label": "Автор измнения", "key": "updated_by" }
     ],
     "positions": [
         { "label": "Наименование", "key": "name" },

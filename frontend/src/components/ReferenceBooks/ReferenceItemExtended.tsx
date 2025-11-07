@@ -6,13 +6,11 @@ import { ru } from "date-fns/locale";
 const ReferenceItemExtended = ({
     mode,
     data,
-    editContragentAndCreditorContact,
     handleOpenEditPopup,
     handleOpenDeletePopup,
 }: {
     mode: string;
     data: object;
-    editContragentAndCreditorContact: () => void;
     handleOpenEditPopup: () => void;
     handleOpenDeletePopup: () => void;
 }) => {
@@ -87,58 +85,10 @@ const ReferenceItemExtended = ({
                                 onMouseLeave={() => setHoveredIndex(null)}
                             >
                                 <td className="min-w-[180px] w-full">
-                                    {/* {mode === "read" ? ( */}
-                                    {/* <> */}
                                     <div className="extended__info">
                                         <div>{contact.full_name}</div>
                                         <span>{contact.position}</span>
                                     </div>
-
-                                    {/* </> */}
-                                    {/* ) : (
-                                        <>
-                                            <input
-                                                className="text-xl border border-gray-300 p-1"
-                                                value={
-                                                    editedContacts[index]
-                                                        ?.full_name || ""
-                                                }
-                                                onChange={(e) => {
-                                                    const newEdited = [
-                                                        ...editedContacts,
-                                                    ];
-                                                    newEdited[index] = {
-                                                        ...newEdited[index],
-                                                        full_name:
-                                                            e.target.value,
-                                                    };
-                                                    setEditedContacts(
-                                                        newEdited
-                                                    );
-                                                }}
-                                            />
-                                            <input
-                                                className="text-xl border border-gray-300 p-1"
-                                                value={
-                                                    editedContacts[index]
-                                                        ?.position || ""
-                                                }
-                                                onChange={(e) => {
-                                                    const newEdited = [
-                                                        ...editedContacts,
-                                                    ];
-                                                    newEdited[index] = {
-                                                        ...newEdited[index],
-                                                        position:
-                                                            e.target.value,
-                                                    };
-                                                    setEditedContacts(
-                                                        newEdited
-                                                    );
-                                                }}
-                                            />
-                                        </>
-                                    )} */}
                                 </td>
                             </tr>
                         ))}
@@ -184,61 +134,10 @@ const ReferenceItemExtended = ({
                                 onMouseLeave={() => setHoveredIndex(null)}
                             >
                                 <td className="min-w-[180px] w-full">
-                                    {/* {mode === "read" ? (
-                                        <> */}
-
                                     <div className="extended__info">
                                         <div>{contact.phone}</div>
                                         <div>{contact.email}</div>
                                     </div>
-
-                                    {/* </>
-                                    ) : (
-                                        <>
-                                            <IMaskInput
-                                                mask={PhoneMask}
-                                                className="text-xl border border-gray-300 p-1"
-                                                name="phone"
-                                                type="tel"
-                                                inputMode="tel"
-                                                value={
-                                                    editedContacts[index]
-                                                        ?.phone || ""
-                                                }
-                                                onAccept={(value) => {
-                                                    const newEdited = [
-                                                        ...editedContacts,
-                                                    ];
-                                                    newEdited[index] = {
-                                                        ...newEdited[index],
-                                                        phone: value,
-                                                    };
-                                                    setEditedContacts(
-                                                        newEdited
-                                                    );
-                                                }}
-                                            />
-                                            <input
-                                                className="text-xl border border-gray-300 p-1"
-                                                value={
-                                                    editedContacts[index]
-                                                        ?.email || ""
-                                                }
-                                                onChange={(e) => {
-                                                    const newEdited = [
-                                                        ...editedContacts,
-                                                    ];
-                                                    newEdited[index] = {
-                                                        ...newEdited[index],
-                                                        email: e.target.value,
-                                                    };
-                                                    setEditedContacts(
-                                                        newEdited
-                                                    );
-                                                }}
-                                            />
-                                        </>
-                                    )} */}
                                 </td>
                             </tr>
                         ))}

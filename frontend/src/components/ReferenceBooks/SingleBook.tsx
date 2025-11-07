@@ -9,7 +9,6 @@ import ReferenceItem from "./ReferenceItem";
 import ReferenceItemExtended from "./ReferenceItemExtended";
 import ReferenceItemExtendedContacts from "./ReferenceItemExtendedContacts";
 import ReferenceItemNew from "./ReferenceItemNew";
-import ReferenceItemWorkingHours from "./ReferenceItemWorkingHours";
 import Loader from "../Loader";
 
 import { IMaskInput } from "react-imask";
@@ -18,6 +17,7 @@ import { ToastContainer, toast } from "react-toastify";
 import COLUMNS from "../../data/reference_book_columns.json";
 import REFERENCE_LABELS from "../../data/reference_labels.json";
 import TITLES from "../../data/reference_book_titles.json";
+import EDITABLE_KEYS from "../../data/editable_keys.json";
 
 const PhoneMask = "+{7} (000) 000 00 00";
 
@@ -92,29 +92,29 @@ const SingleBook = () => {
     };
 
     // Обработка существующих полей справочника
-    const handleInputChange = (e, name, id) => {
-        let value;
+    // const handleInputChange = (e, name, id) => {
+    //     let value;
 
-        if (name === "phone") {
-            value = e;
-        } else if (name === "hours") {
-            value = +e.target.value;
-        } else if (
-            name === "is_regular" ||
-            name === "show_cost" ||
-            name === "is_project_report_responsible"
-        ) {
-            value = e === true;
-        } else {
-            value = e.target.value;
-        }
+    //     if (name === "phone") {
+    //         value = e;
+    //     } else if (name === "hours") {
+    //         value = +e.target.value;
+    //     } else if (
+    //         name === "is_regular" ||
+    //         name === "show_cost" ||
+    //         name === "is_project_report_responsible"
+    //     ) {
+    //         value = e === true;
+    //     } else {
+    //         value = e.target.value;
+    //     }
 
-        setBooksItems((prevBooksItems) =>
-            prevBooksItems.map((item) =>
-                item.id === id ? { ...item, [name]: value } : item
-            )
-        );
-    };
+    //     setBooksItems((prevBooksItems) =>
+    //         prevBooksItems.map((item) =>
+    //             item.id === id ? { ...item, [name]: value } : item
+    //         )
+    //     );
+    // };
 
     // Закрытие попапа
     const closePopup = (evt) => {
@@ -322,6 +322,7 @@ const SingleBook = () => {
         );
     };
 
+    // Изменение рабочих часов
     const saveAllList = () => {
         query = toast.loading("Сохранение", {
             containerId: "singleBook",
@@ -807,16 +808,8 @@ const SingleBook = () => {
     const handleOpenEditPopup = (data) => {
         setTempData(data);
 
-        const editableKeys = [
-            "name",
-            "full_name",
-            "phone",
-            "email",
-            "position",
-        ];
-
         const editableFields = Object.entries(data)
-            .filter(([key]) => editableKeys.includes(key))
+            .filter(([key]) => EDITABLE_KEYS.includes(key))
             .map(([key, value]) => {
                 const column = labels.find((col) => col.key === key);
                 return {
@@ -853,10 +846,6 @@ const SingleBook = () => {
 
         return result;
     };
-
-    useEffect(() => {
-        console.log(popupFields);
-    }, [popupFields]);
 
     // Получение должностей
     const getPositions = () => {
@@ -951,6 +940,10 @@ const SingleBook = () => {
             setBooksItems(refBooksItems);
         }
     }, [mode]);
+
+    useEffect(() => {
+        console.log(popupFields);
+    }, [popupFields]);
 
     return (
         <main className="page reference-books">
@@ -1106,18 +1099,12 @@ const SingleBook = () => {
                                                     key={item.id}
                                                     data={item}
                                                     mode={mode}
-                                                    // handleContactInputChange={
-                                                    //     handleContactInputChange
-                                                    // }
                                                     handleOpenEditPopup={
                                                         handleOpenEditPopup
                                                     }
                                                     handleOpenDeletePopup={
                                                         handleOpenDeletePopup
                                                     }
-                                                    // editContactElem={
-                                                    //     editContactElem
-                                                    // }
                                                     setPopupState={
                                                         setPopupState
                                                     }
@@ -1126,35 +1113,13 @@ const SingleBook = () => {
                                             );
                                         }
 
-                                        if (bookId === "working-hours") {
-                                            return (
-                                                <ReferenceItemWorkingHours
-                                                    key={item.id}
-                                                    data={item}
-                                                    columns={columns}
-                                                    mode={mode}
-                                                    bookId={bookId}
-                                                    handleInputChange={
-                                                        handleInputChange
-                                                    }
-                                                    handleOpenEditPopup={
-                                                        handleOpenEditPopup
-                                                    }
-                                                />
-                                            );
-                                        }
-
                                         return (
                                             <ReferenceItem
                                                 key={item.id}
                                                 data={item}
-                                                booksItems={booksItems}
                                                 columns={columns}
                                                 mode={mode}
                                                 bookId={bookId}
-                                                // handleInputChange={
-                                                //     handleInputChange
-                                                // }
                                                 setRolesAction={setRolesAction}
                                                 positions={positions}
                                                 handleOpenEditPopup={
@@ -1407,6 +1372,104 @@ const SingleBook = () => {
                                                 />
                                             </div>
                                         );
+                                    } else if (key === "hours") {
+                                        return (
+                                            <div
+                                                key={key}
+                                                className="flex flex-col"
+                                            >
+                                                <label
+                                                    htmlFor={key}
+                                                    className="form-label"
+                                                >
+                                                    {label}
+                                                </label>
+                                                <input
+                                                    id={key}
+                                                    type="number"
+                                                    className="form-field"
+                                                    value={
+                                                        value?.toString() || ""
+                                                    }
+                                                    onChange={(e) => {
+                                                        const newValue =
+                                                            e.target.value;
+                                                        handlePopupFieldsChange(
+                                                            id,
+                                                            key,
+                                                            newValue
+                                                        );
+                                                    }}
+                                                />
+                                            </div>
+                                        );
+                                    } else if (
+                                        key === "type" ||
+                                        key === "position_id"
+                                    ) {
+                                        return (
+                                            <div
+                                                key={key}
+                                                className="flex flex-col"
+                                            >
+                                                <label
+                                                    htmlFor={key}
+                                                    className="form-label"
+                                                >
+                                                    {label}
+                                                </label>
+                                                <select
+                                                    id={key}
+                                                    className="form-select"
+                                                    value={value || ""}
+                                                    onChange={(e) => {
+                                                        const newValue =
+                                                            e.target.value;
+                                                        handlePopupFieldsChange(
+                                                            id,
+                                                            key,
+                                                            newValue
+                                                        );
+                                                    }}
+                                                >
+                                                    {bookId ===
+                                                    "management-report-types" ? (
+                                                        <>
+                                                            {positions.map(
+                                                                (position) => (
+                                                                    <option
+                                                                        value={
+                                                                            position.id
+                                                                        }
+                                                                        key={
+                                                                            position.id
+                                                                        }
+                                                                    >
+                                                                        {
+                                                                            position.name
+                                                                        }
+                                                                    </option>
+                                                                )
+                                                            )}
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <option value="one_to_one">
+                                                                Один к одному
+                                                            </option>
+                                                            <option value="one_to_many">
+                                                                Один ко многим
+                                                            </option>
+                                                        </>
+                                                    )}{" "}
+                                                </select>
+                                            </div>
+                                        );
+                                    } else if (
+                                        key === "full_name" &&
+                                        bookId === "report-types"
+                                    ) {
+                                        return;
                                     } else {
                                         return (
                                             <div

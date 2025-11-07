@@ -1,0 +1,10 @@
+[
+    "name",
+    "full_name",
+    "phone",
+    "email",
+    "position",
+    "hours",
+    "type",
+    "position_id"
+]
