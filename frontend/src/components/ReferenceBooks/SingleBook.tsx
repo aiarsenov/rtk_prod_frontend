@@ -44,6 +44,7 @@ const SingleBook = () => {
     const [isEditElem, setIsEditElem] = useState(false); // Попап изменения записи
     const [isDeleteElem, setIsDeleteElem] = useState(false); // Попап удаления записи
 
+    const [tempData, setTempData] = useState({}); // Временные данные, которые нужно прокинуть в обход popupFields
     const [popupFields, setPopupFields] = useState([]); // Доступные для изменения поля в записи
     const [elemToDelete, setElemToDelete] = useState({}); // ID записи для удаления
 
@@ -62,24 +63,24 @@ const SingleBook = () => {
     let query;
 
     // Обработка существующих полей контактов подрядчиков
-    const handleContactInputChange = (e, name, item, contactId) => {
-        const value = name === "phone" ? e : e.target.value;
+    // const handleContactInputChange = (e, name, item, contactId) => {
+    //     const value = name === "phone" ? e : e.target.value;
 
-        setBooksItems((prevBooksItems) =>
-            prevBooksItems.map((book) =>
-                book.id === item.id
-                    ? {
-                          ...book,
-                          contacts: book.contacts.map((contact) =>
-                              contact.id === contactId
-                                  ? { ...contact, [name]: value }
-                                  : contact
-                          ),
-                      }
-                    : book
-            )
-        );
-    };
+    //     setBooksItems((prevBooksItems) =>
+    //         prevBooksItems.map((book) =>
+    //             book.id === item.id
+    //                 ? {
+    //                       ...book,
+    //                       contacts: book.contacts.map((contact) =>
+    //                           contact.id === contactId
+    //                               ? { ...contact, [name]: value }
+    //                               : contact
+    //                       ),
+    //                   }
+    //                 : book
+    //         )
+    //     );
+    // };
 
     // Обработка полей попапа нового контакта подрядчика
     const handleNewContactElemInputChange = (e, name) => {
@@ -457,6 +458,7 @@ const SingleBook = () => {
                     });
                     setIsEditElem(false);
                     setPopupFields([]);
+                    setTempData({});
                     getBooks();
                 } else {
                     toast.dismiss(query);
@@ -508,6 +510,11 @@ const SingleBook = () => {
         )
             .then((response) => {
                 if (response?.ok) {
+                    setIsEditElem(false);
+                    setPopupFields([]);
+                    setTempData({});
+                    getBooks();
+
                     toast.update(query, {
                         render: "Контакт обновлен",
                         type: "success",
@@ -522,9 +529,6 @@ const SingleBook = () => {
                                 ? "bottom-right"
                                 : "top-right",
                     });
-                    setIsEditElem(false);
-                    setPopupFields([]);
-                    getBooks();
                 } else {
                     toast.dismiss(query);
                     toast.error("Ошибка обновления контакта", {
@@ -559,13 +563,7 @@ const SingleBook = () => {
     };
 
     // Изменение контакта подрядчика
-    const editContactElem = (id, contactId) => {
-        const contractor = booksItems.find((item) => item.id === id);
-
-        const contractorContact = contractor.contacts?.find(
-            (contact) => contact.id === contactId
-        );
-
+    const editContactElem = (data) => {
         query = toast.loading("Обновление", {
             containerId: "singleBook",
             draggable: true,
@@ -574,10 +572,15 @@ const SingleBook = () => {
 
         postData(
             "PATCH",
-            `${URL}/${id}/contacts/${contactId}`,
-            contractorContact
+            `${URL}/${tempData.contactId}/contacts/${data.id}`,
+            data
         ).then((response) => {
             if (response?.ok) {
+                setIsEditElem(false);
+                setPopupFields([]);
+                setTempData({});
+                getBooks();
+
                 toast.update(query, {
                     render: "Запись обновлена",
                     type: "success",
@@ -820,6 +823,8 @@ const SingleBook = () => {
 
     // Открытие попапа изменения зависи
     const handleOpenEditPopup = (data) => {
+        setTempData(data);
+
         const editableKeys = [
             "name",
             "full_name",
@@ -1119,22 +1124,22 @@ const SingleBook = () => {
                                                     key={item.id}
                                                     data={item}
                                                     mode={mode}
-                                                    handleContactInputChange={
-                                                        handleContactInputChange
+                                                    // handleContactInputChange={
+                                                    //     handleContactInputChange
+                                                    // }
+                                                    handleOpenEditPopup={
+                                                        handleOpenEditPopup
                                                     }
                                                     handleOpenDeletePopup={
                                                         handleOpenDeletePopup
                                                     }
-                                                    editContactElem={
-                                                        editContactElem
-                                                    }
+                                                    // editContactElem={
+                                                    //     editContactElem
+                                                    // }
                                                     setPopupState={
                                                         setPopupState
                                                     }
                                                     setnewElem={setnewElem}
-                                                    handleOpenEditPopup={
-                                                        handleOpenEditPopup
-                                                    }
                                                 />
                                             );
                                         }
@@ -1374,6 +1379,7 @@ const SingleBook = () => {
                     onClick={() => {
                         setIsEditElem(false);
                         setPopupFields([]);
+                        setTempData({});
                     }}
                     title={
                         bookId === "creditor" ||
@@ -1418,6 +1424,7 @@ const SingleBook = () => {
                                 onClick={() => {
                                     setIsEditElem(false);
                                     setPopupFields([]);
+                                    setTempData({});
                                 }}
                                 className="cancel-button flex-[0_0_fit-content]"
                                 title="Отменить изменения"
@@ -1432,6 +1439,7 @@ const SingleBook = () => {
                                     // if (bookId == "positions") {
                                     //     hasNameMatch(data.name, data.id);
                                     // } else {
+                                    // }
                                     const updatedData = collectEditFieldsData();
 
                                     if (
@@ -1444,12 +1452,10 @@ const SingleBook = () => {
                                     } else if (
                                         bookId === "suppliers-with-reports"
                                     ) {
-                                        return;
+                                        editContactElem(updatedData);
                                     } else {
                                         editElement(updatedData);
                                     }
-
-                                    // }
                                 }}
                                 title="Сохранить изменения"
                             >
