@@ -1362,7 +1362,10 @@ const SingleBook = () => {
 
             {isEditElem && (
                 <Popup
-                    onClick={() => setIsEditElem(false)}
+                    onClick={() => {
+                        setIsEditElem(false);
+                        setPopupFields([]);
+                    }}
                     title={
                         bookId === "creditor" ||
                         bookId === "contragent" ||
@@ -1436,7 +1439,10 @@ const SingleBook = () => {
 
             {isDeleteElem && (
                 <Popup
-                    onClick={() => setIsDeleteElem(false)}
+                    onClick={() => {
+                        setIsDeleteElem(false);
+                        setElemToDelete(null);
+                    }}
                     title={
                         bookId === "creditor" ||
                         bookId === "contragent" ||
