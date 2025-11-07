@@ -339,19 +339,76 @@ const SingleBook = () => {
         );
     };
 
+    const saveAllList = () => {
+        query = toast.loading("Сохранение", {
+            containerId: "singleBook",
+            draggable: true,
+            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        });
+
+        postData("PATCH", URL, { year: currentYear, hours: booksItems })
+            .then((response) => {
+                if (response?.ok) {
+                    toast.update(query, {
+                        render: response.message || "Успешно сохранено",
+                        type: "success",
+                        containerId: "singleBook",
+                        isLoading: false,
+                        autoClose: 1200,
+                        pauseOnFocusLoss: false,
+                        pauseOnHover: false,
+                        draggable: true,
+                        position:
+                            window.innerWidth >= 1440
+                                ? "bottom-right"
+                                : "top-right",
+                    });
+                } else {
+                    toast.dismiss(query);
+                    toast.error("Ошибка сохранения", {
+                        isLoading: false,
+                        autoClose: 1500,
+                        pauseOnFocusLoss: false,
+                        pauseOnHover: false,
+                        draggable: true,
+                        position:
+                            window.innerWidth >= 1440
+                                ? "bottom-right"
+                                : "top-right",
+                        containerId: "singleBook",
+                    });
+                }
+            })
+            .catch((error) => {
+                toast.dismiss(query);
+                toast.error(error.message || "Ошибка сохранения", {
+                    isLoading: false,
+                    autoClose: 1500,
+                    pauseOnFocusLoss: false,
+                    pauseOnHover: false,
+                    draggable: true,
+                    position:
+                        window.innerWidth >= 1440
+                            ? "bottom-right"
+                            : "top-right",
+                    containerId: "singleBook",
+                });
+            });
+    };
+
     // Изменение записи
-    const editElement = (id) => {
-        const data = booksItems.find((book) => book.id === id);
-        delete data?.projects_count;
-        delete data?.updated_at;
+    const editElement = (updatedData) => {
+        let data = updatedData;
+        // delete data?.projects_count;
+        // delete data?.updated_at;
 
         if (bookId === "management-report-types") {
             if (data.position_id) {
                 data.position_id = +data?.position_id;
             }
 
-            delete data?.count;
-            delete data?.position;
+            // delete data?.count;
+            // delete data?.position;
         }
 
         if (bookId === "departments") {
@@ -398,6 +455,8 @@ const SingleBook = () => {
                                 ? "bottom-right"
                                 : "top-right",
                     });
+                    setIsEditElem(false);
+                    setPopupFields([]);
                     getBooks();
                 } else {
                     toast.dismiss(query);
@@ -418,63 +477,6 @@ const SingleBook = () => {
             .catch((error) => {
                 toast.dismiss(query);
                 toast.error(error.message || "Ошибка обновления записи", {
-                    isLoading: false,
-                    autoClose: 1500,
-                    pauseOnFocusLoss: false,
-                    pauseOnHover: false,
-                    draggable: true,
-                    position:
-                        window.innerWidth >= 1440
-                            ? "bottom-right"
-                            : "top-right",
-                    containerId: "singleBook",
-                });
-            });
-    };
-
-    const saveAllList = () => {
-        query = toast.loading("Сохранение", {
-            containerId: "singleBook",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
-
-        postData("PATCH", URL, { year: currentYear, hours: booksItems })
-            .then((response) => {
-                if (response?.ok) {
-                    toast.update(query, {
-                        render: response.message || "Успешно сохранено",
-                        type: "success",
-                        containerId: "singleBook",
-                        isLoading: false,
-                        autoClose: 1200,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
-                } else {
-                    toast.dismiss(query);
-                    toast.error("Ошибка сохранения", {
-                        isLoading: false,
-                        autoClose: 1500,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                        containerId: "singleBook",
-                    });
-                }
-            })
-            .catch((error) => {
-                toast.dismiss(query);
-                toast.error(error.message || "Ошибка сохранения", {
                     isLoading: false,
                     autoClose: 1500,
                     pauseOnFocusLoss: false,
@@ -832,6 +834,33 @@ const SingleBook = () => {
         setPopupFields(editableFields);
         setIsEditElem(true);
     };
+
+    // Обработка полей при изменении записи
+    const handlePopupFieldsChange = (id, key, newValue) => {
+        setPopupFields((prev) =>
+            prev.map((field) =>
+                field.id === id && field.key === key
+                    ? { ...field, value: newValue }
+                    : field
+            )
+        );
+    };
+
+    // Cобираем все поля в единый объект
+    const collectEditFieldsData = () => {
+        const result = {};
+
+        popupFields.forEach(({ id, key, value }) => {
+            result[key] = value;
+            result.id = id;
+        });
+
+        return result;
+    };
+
+    useEffect(() => {
+        console.log(popupFields);
+    }, [popupFields]);
 
     // Получение должностей
     const getPositions = () => {
@@ -1334,7 +1363,13 @@ const SingleBook = () => {
             {isEditElem && (
                 <Popup
                     onClick={() => setIsEditElem(false)}
-                    title="Редактирование записи"
+                    title={
+                        bookId === "creditor" ||
+                        bookId === "contragent" ||
+                        bookId === "suppliers-with-reports"
+                            ? "Редактирование контакта"
+                            : "Редактирование записи"
+                    }
                 >
                     <form>
                         <div className="action-form__body flex flex-col gap-[18px]">
@@ -1352,9 +1387,14 @@ const SingleBook = () => {
                                             type="text"
                                             className="form-field"
                                             value={value?.toString() || ""}
-                                            onChange={(e) =>
-                                                handleInputChange(e, key, id)
-                                            }
+                                            onChange={(e) => {
+                                                const newValue = e.target.value;
+                                                handlePopupFieldsChange(
+                                                    id,
+                                                    key,
+                                                    newValue
+                                                );
+                                            }}
                                         />
                                     </div>
                                 ))}
@@ -1380,8 +1420,9 @@ const SingleBook = () => {
                                     // if (bookId == "positions") {
                                     //     hasNameMatch(data.name, data.id);
                                     // } else {
-                                    editElement(id);
-                                    setPopupFields([]);
+                                    const updatedData = collectEditFieldsData();
+                                    editElement(updatedData);
+
                                     // }
                                 }}
                                 title="Сохранить изменения"
