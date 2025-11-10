@@ -820,7 +820,19 @@ const SingleBook = () => {
         setIsDeleteElem(true);
     };
 
-    // Открытие попапа изменения зависи
+    // Открытие попапа добавления зависи
+    const handleOpenNewPopup = () => {
+        const editableFields = (REFERENCE_LABELS[bookId] || [])
+            .filter((field) => EDITABLE_KEYS.includes(field.key))
+            .map((field) => ({
+                key: field.key,
+                label: field.label || field.key,
+            }));
+
+        setPopupFields(editableFields);
+        setIsNewElem(true);
+    };
+
     const handleOpenEditPopup = (data) => {
         setTempData(data);
 
@@ -968,11 +980,11 @@ const SingleBook = () => {
 
             <div className="container registry__container reference-books__container">
                 <section className="registry__header flex justify-between items-center">
-                    <h1 className="title">
-                        {TITLES[bookId]} <span>{listLength}</span>
-                    </h1>
+                    <div className="flex items-center gap-[20px]">
+                        <h1 className="title">
+                            {TITLES[bookId]} <span>{listLength}</span>
+                        </h1>
 
-                    <div className="flex justify-end items-center gap-[20px] flex-grow">
                         {bookId === "working-hours" && (
                             <select
                                 className="form-select max-w-[150px]"
@@ -990,30 +1002,36 @@ const SingleBook = () => {
                                     ))}
                             </select>
                         )}
+                    </div>
 
-                        {mode === "edit" && (
-                            <button
-                                type="button"
-                                className="button-active"
-                                // onClick={}
-                            >
-                                <span>Создать</span>
-                                <div className="button-active__icon">
-                                    <svg
-                                        width="12"
-                                        height="13"
-                                        viewBox="0 0 12 13"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            d="M6.75 5.75h3.75v1.5H6.75V11h-1.5V7.25H1.5v-1.5h3.75V2h1.5v3.75z"
-                                            fill="#fff"
-                                        />
-                                    </svg>
-                                </div>
-                            </button>
-                        )}
+                    <div className="flex justify-end items-center gap-[20px] flex-grow">
+                        {mode === "edit" &&
+                            bookId != "creditor" &&
+                            bookId != "contragent" &&
+                            bookId != "working-hours" &&
+                            bookId != "report-types" && (
+                                <button
+                                    type="button"
+                                    className="button-active"
+                                    onClick={handleOpenNewPopup}
+                                >
+                                    <span>Создать</span>
+                                    <div className="button-active__icon">
+                                        <svg
+                                            width="12"
+                                            height="13"
+                                            viewBox="0 0 12 13"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                d="M6.75 5.75h3.75v1.5H6.75V11h-1.5V7.25H1.5v-1.5h3.75V2h1.5v3.75z"
+                                                fill="#fff"
+                                            />
+                                        </svg>
+                                    </div>
+                                </button>
+                            )}
                     </div>
                 </section>
 
@@ -1047,7 +1065,7 @@ const SingleBook = () => {
                             </thead>
 
                             <tbody className="registry-table__tbody">
-                                {mode === "edit" &&
+                                {/* {mode === "edit" &&
                                     bookId != "creditor" &&
                                     bookId != "contragent" &&
                                     bookId != "suppliers-with-reports" &&
@@ -1064,7 +1082,7 @@ const SingleBook = () => {
                                             positions={positions}
                                             addNewElement={addNewElement}
                                         />
-                                    )}
+                                    )} */}
 
                                 {booksItems?.length > 0 &&
                                     booksItems.map((item) => {
@@ -1116,110 +1134,220 @@ const SingleBook = () => {
                 )}
             </div>
 
-            {isNewElem &&
-                mode === "edit" &&
-                bookId === "suppliers-with-reports" && (
-                    <Popup
-                        onClick={() => {
-                            setIsNewElem(false);
-                            setnewElem({
-                                contragent_id: "",
-                                full_name: "",
-                                position: "",
-                                email: "",
-                                phone: "",
-                            });
-                        }}
-                        title={
-                            bookId === "creditor" ||
-                            bookId === "contragent" ||
-                            bookId === "suppliers-with-reports"
-                                ? "Создать контакт"
-                                : "Создать запись"
-                        }
-                    >
-                        <div className="action-form__body grid grid-cols-2 gap-3">
-                            <input
-                                type="text"
-                                className="w-full text-base border border-gray-300 p-1"
-                                value={newElem.full_name}
-                                placeholder="ФИО"
-                                onChange={(e) =>
-                                    handleNewContactElemInputChange(
-                                        e,
-                                        "full_name"
-                                    )
+            {isNewElem && mode === "edit" && (
+                <Popup
+                    onClick={() => {
+                        setIsNewElem(false);
+                        setnewElem({
+                            contragent_id: "",
+                            full_name: "",
+                            position: "",
+                            email: "",
+                            phone: "",
+                        });
+                    }}
+                    title={
+                        bookId === "creditor" ||
+                        bookId === "contragent" ||
+                        bookId === "suppliers-with-reports"
+                            ? "Создать контакт"
+                            : "Создать запись"
+                    }
+                >
+                    <div className="action-form__body flex flex-col gap-[18px]">
+                        {popupFields.length > 0 &&
+                            popupFields.map(({ key, label }) => {
+                                if (key === "phone") {
+                                    return (
+                                        <div
+                                            key={key}
+                                            className="flex flex-col"
+                                        >
+                                            <label
+                                                htmlFor={key}
+                                                className="form-label"
+                                            >
+                                                {label}
+                                            </label>
+                                            <IMaskInput
+                                                mask={PhoneMask}
+                                                className="form-field w-full"
+                                                name="phone"
+                                                type="tel"
+                                                inputMode="tel"
+                                                onAccept={(value) => {
+                                                    // handlePopupFieldsChange(
+                                                    //     key,
+                                                    //     value
+                                                    // );
+                                                }}
+                                                // value={
+                                                //     value?.toString() || ""
+                                                // }
+                                                placeholder="Телефон"
+                                            />
+                                        </div>
+                                    );
+                                } else if (key === "hours") {
+                                    return (
+                                        <div
+                                            key={key}
+                                            className="flex flex-col"
+                                        >
+                                            <label
+                                                htmlFor={key}
+                                                className="form-label"
+                                            >
+                                                {label}
+                                            </label>
+                                            <input
+                                                id={key}
+                                                type="number"
+                                                className="form-field"
+                                                // value={
+                                                //     value?.toString() || ""
+                                                // }
+                                                onChange={(e) => {
+                                                    const newValue =
+                                                        e.target.value;
+                                                    // handlePopupFieldsChange(
+                                                    //     key,
+                                                    //     newValue
+                                                    // );
+                                                }}
+                                            />
+                                        </div>
+                                    );
+                                } else if (
+                                    key === "type" ||
+                                    key === "position_id"
+                                ) {
+                                    return (
+                                        <div
+                                            key={key}
+                                            className="flex flex-col"
+                                        >
+                                            <label
+                                                htmlFor={key}
+                                                className="form-label"
+                                            >
+                                                {label}
+                                            </label>
+                                            <select
+                                                id={key}
+                                                className="form-select"
+                                                // value={value || ""}
+                                                onChange={(e) => {
+                                                    const newValue =
+                                                        e.target.value;
+                                                    // handlePopupFieldsChange(
+                                                    //     id,
+                                                    //     key,
+                                                    //     newValue
+                                                    // );
+                                                }}
+                                            >
+                                                {bookId ===
+                                                "management-report-types" ? (
+                                                    <>
+                                                        {positions.map(
+                                                            (position) => (
+                                                                <option
+                                                                    value={
+                                                                        position.id
+                                                                    }
+                                                                    key={
+                                                                        position.id
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        position.name
+                                                                    }
+                                                                </option>
+                                                            )
+                                                        )}
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <option value="one_to_one">
+                                                            Один к одному
+                                                        </option>
+                                                        <option value="one_to_many">
+                                                            Один ко многим
+                                                        </option>
+                                                    </>
+                                                )}
+                                            </select>
+                                        </div>
+                                    );
+                                } else if (
+                                    key === "full_name" &&
+                                    bookId === "report-types"
+                                ) {
+                                    return;
+                                } else {
+                                    return (
+                                        <div
+                                            key={key}
+                                            className="flex flex-col"
+                                        >
+                                            <label
+                                                htmlFor={key}
+                                                className="form-label"
+                                            >
+                                                {label}
+                                            </label>
+                                            <input
+                                                id={key}
+                                                type="text"
+                                                className="form-field"
+                                                // value={
+                                                //     value?.toString() || ""
+                                                // }
+                                                onChange={(e) => {
+                                                    const newValue =
+                                                        e.target.value;
+                                                    // handlePopupFieldsChange(
+                                                    //     id,
+                                                    //     key,
+                                                    //     newValue
+                                                    // );
+                                                }}
+                                            />
+                                        </div>
+                                    );
                                 }
-                            />
+                            })}
+                    </div>
 
-                            <input
-                                type="text"
-                                className="w-full text-base border border-gray-300 p-1"
-                                value={newElem.position}
-                                placeholder="Должность"
-                                onChange={(e) =>
-                                    handleNewContactElemInputChange(
-                                        e,
-                                        "position"
-                                    )
-                                }
-                            />
+                    <div className="action-form__footer">
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setIsNewElem(false);
+                                setnewElem({
+                                    contragent_id: "",
+                                    full_name: "",
+                                    position: "",
+                                    email: "",
+                                    phone: "",
+                                });
+                            }}
+                            className="cancel-button flex-[0_0_fit-content]"
+                        >
+                            Отменить
+                        </button>
 
-                            <IMaskInput
-                                mask={PhoneMask}
-                                className="w-full text-base border border-gray-300 p-1"
-                                name="phone"
-                                type="tel"
-                                inputMode="tel"
-                                onAccept={(value) =>
-                                    handleNewContactElemInputChange(
-                                        value || "",
-                                        "phone"
-                                    )
-                                }
-                                value={newElem.phone}
-                                placeholder="+7 999 999 99 99"
-                            />
-
-                            <input
-                                type="text"
-                                className="w-full text-base border border-gray-300 p-1"
-                                value={newElem.email}
-                                placeholder="Email"
-                                onChange={(e) =>
-                                    handleNewContactElemInputChange(e, "email")
-                                }
-                            />
-                        </div>
-
-                        <div className="action-form__footer">
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setIsNewElem(false);
-                                    setnewElem({
-                                        contragent_id: "",
-                                        full_name: "",
-                                        position: "",
-                                        email: "",
-                                        phone: "",
-                                    });
-                                }}
-                                className="cancel-button flex-[0_0_fit-content]"
-                            >
-                                Отменить
-                            </button>
-
-                            <button
-                                type="button"
-                                className="action-button flex-[0_0_fit-content]"
-                                onClick={() => addNewContact(newElem)}
-                            >
-                                Добавить
-                            </button>
-                        </div>
-                    </Popup>
-                )}
+                        <button
+                            type="button"
+                            className="action-button flex-[0_0_fit-content]"
+                            onClick={() => addNewContact(newElem)}
+                        >
+                            Добавить
+                        </button>
+                    </div>
+                </Popup>
+            )}
 
             {isEditElem && (
                 <Popup
@@ -1361,7 +1489,7 @@ const SingleBook = () => {
                                                                 Один ко многим
                                                             </option>
                                                         </>
-                                                    )}{" "}
+                                                    )}
                                                 </select>
                                             </div>
                                         );
