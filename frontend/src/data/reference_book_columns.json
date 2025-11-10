@@ -17,6 +17,7 @@
     "roles": [
         { "label": "Наименование", "key": "name" },
         { "label": "Ответственный за отчеты по проектам", "key": "is_project_report_responsible" },
+        { "label": "Ответственный за проект", "key": "is_project_leader" },
         { "label": "Кол-во ролей в отчётах", "key": "count" },
         { "label": "Последнее изменение", "key": "updated_at" },
         { "label": "Автор измнения", "key": "updated_by" }

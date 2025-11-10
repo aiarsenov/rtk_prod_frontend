@@ -7,7 +7,6 @@ import postData from "../../utils/postData";
 import Popup from "../Popup/Popup";
 import ReferenceItem from "./ReferenceItem";
 import ReferenceItemExtended from "./ReferenceItemExtended";
-// import ReferenceItemExtendedContacts from "./ReferenceItemExtendedContacts";
 import ReferenceItemNew from "./ReferenceItemNew";
 import Loader from "../Loader";
 
@@ -66,15 +65,31 @@ const SingleBook = () => {
 
     // Обработка существующих полей справочника
     const handleSwitchChange = (evt, name, data) => {
-        // console.log(evt);
-        // console.log(name);
-        // console.log(data);
-
-        setBooksItems((prevBooksItems) =>
-            prevBooksItems.map((item) =>
-                item.id === data.id ? { ...item, [name]: evt === true } : item
-            )
-        );
+        if (name == "is_project_leader") {
+            setBooksItems((prevBooksItems) =>
+                prevBooksItems.map((item) => {
+                    if (item.is_project_leader === true) {
+                        return { ...item, is_project_leader: false };
+                    }
+                    return item;
+                })
+            );
+            setBooksItems((prevBooksItems) =>
+                prevBooksItems.map((item) =>
+                    item.id === data.id
+                        ? { ...item, [name]: evt === true }
+                        : item
+                )
+            );
+        } else {
+            setBooksItems((prevBooksItems) =>
+                prevBooksItems.map((item) =>
+                    item.id === data.id
+                        ? { ...item, [name]: evt === true }
+                        : item
+                )
+            );
+        }
 
         let updatedData = data;
         updatedData[name] = evt;
@@ -147,7 +162,7 @@ const SingleBook = () => {
                     toast.dismiss(query);
                     toast.error(response.message || "Ошибка операции", {
                         isLoading: false,
-                        autoClose: 1500,
+                        autoClose: 2500,
                         pauseOnFocusLoss: false,
                         pauseOnHover: false,
                         position:
@@ -162,7 +177,7 @@ const SingleBook = () => {
                 toast.dismiss(query);
                 toast.error(error.message || "Ошибка операции", {
                     isLoading: false,
-                    autoClose: 1500,
+                    autoClose: 2500,
                     pauseOnFocusLoss: false,
                     pauseOnHover: false,
                     position:
@@ -234,7 +249,7 @@ const SingleBook = () => {
                 toast.dismiss(query);
                 toast.error(error.message || "Ошибка добавления записи", {
                     isLoading: false,
-                    autoClose: 1500,
+                    autoClose: 2500,
                     pauseOnFocusLoss: false,
                     pauseOnHover: false,
                     draggable: true,
@@ -341,7 +356,7 @@ const SingleBook = () => {
                     toast.dismiss(query);
                     toast.error("Ошибка сохранения", {
                         isLoading: false,
-                        autoClose: 1500,
+                        autoClose: 2500,
                         pauseOnFocusLoss: false,
                         pauseOnHover: false,
                         draggable: true,
@@ -357,7 +372,7 @@ const SingleBook = () => {
                 toast.dismiss(query);
                 toast.error(error.message || "Ошибка сохранения", {
                     isLoading: false,
-                    autoClose: 1500,
+                    autoClose: 2500,
                     pauseOnFocusLoss: false,
                     pauseOnHover: false,
                     draggable: true,
@@ -437,10 +452,14 @@ const SingleBook = () => {
                         getBooks();
                     }
                 } else {
+                    if (!reloadList) {
+                        getBooks();
+                    }
+
                     toast.dismiss(query);
                     toast.error("Ошибка обновления записи", {
                         isLoading: false,
-                        autoClose: 1500,
+                        autoClose: 2500,
                         pauseOnFocusLoss: false,
                         pauseOnHover: false,
                         draggable: true,
@@ -453,10 +472,14 @@ const SingleBook = () => {
                 }
             })
             .catch((error) => {
+                if (!reloadList) {
+                    getBooks();
+                }
+
                 toast.dismiss(query);
                 toast.error(error.message || "Ошибка обновления записи", {
                     isLoading: false,
-                    autoClose: 1500,
+                    autoClose: 2500,
                     pauseOnFocusLoss: false,
                     pauseOnHover: false,
                     draggable: true,
@@ -509,7 +532,7 @@ const SingleBook = () => {
                     toast.dismiss(query);
                     toast.error("Ошибка обновления контакта", {
                         isLoading: false,
-                        autoClose: 1500,
+                        autoClose: 2500,
                         pauseOnFocusLoss: false,
                         pauseOnHover: false,
                         draggable: true,
@@ -525,7 +548,7 @@ const SingleBook = () => {
                 toast.dismiss(query);
                 toast.error(error.message || "Ошибка обновления контакта", {
                     isLoading: false,
-                    autoClose: 1500,
+                    autoClose: 2500,
                     pauseOnFocusLoss: false,
                     pauseOnHover: false,
                     draggable: true,
@@ -575,7 +598,7 @@ const SingleBook = () => {
                 toast.dismiss(query);
                 toast.error("Ошибка обновления записи", {
                     isLoading: false,
-                    autoClose: 1500,
+                    autoClose: 2500,
                     pauseOnFocusLoss: false,
                     pauseOnHover: false,
                     draggable: true,
@@ -637,7 +660,7 @@ const SingleBook = () => {
                 toast.dismiss(query);
                 toast.error("Ошибка удалении контакта", {
                     isLoading: false,
-                    autoClose: 1500,
+                    autoClose: 2500,
                     pauseOnFocusLoss: false,
                     pauseOnHover: false,
                     draggable: true,
@@ -696,7 +719,7 @@ const SingleBook = () => {
                     toast.dismiss(query);
                     toast.error("Ошибка удаления контакта", {
                         isLoading: false,
-                        autoClose: 1500,
+                        autoClose: 2500,
                         pauseOnFocusLoss: false,
                         pauseOnHover: false,
                         draggable: true,
@@ -712,7 +735,7 @@ const SingleBook = () => {
                 toast.dismiss(query);
                 toast.error(error.message || "Ошибка удаления контакта", {
                     isLoading: false,
-                    autoClose: 1500,
+                    autoClose: 2500,
                     pauseOnFocusLoss: false,
                     pauseOnHover: false,
                     draggable: true,
@@ -762,7 +785,7 @@ const SingleBook = () => {
                     toast.dismiss(query);
                     toast.error("Ошибка удаления записи", {
                         isLoading: false,
-                        autoClose: 1500,
+                        autoClose: 2500,
                         pauseOnFocusLoss: false,
                         pauseOnHover: false,
                         draggable: true,
@@ -778,7 +801,7 @@ const SingleBook = () => {
                 toast.dismiss(query);
                 toast.error(error.message || "Ошибка удаления записи", {
                     isLoading: false,
-                    autoClose: 1500,
+                    autoClose: 2500,
                     pauseOnFocusLoss: false,
                     pauseOnHover: false,
                     draggable: true,

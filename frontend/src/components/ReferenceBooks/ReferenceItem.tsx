@@ -116,6 +116,7 @@ const ReferenceItem = ({
                                   "include_in_payroll",
                                   "show_cost",
                                   "is_project_report_responsible",
+                                  "is_project_leader",
                               ].includes(key) ? (
                                 <Switch
                                     value={value === true || value === "true"}
