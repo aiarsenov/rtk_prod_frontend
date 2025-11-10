@@ -138,7 +138,12 @@ const ReferenceItem = ({
                                             );
                                         }
                                     }}
-                                    disabled={mode === "read"}
+                                    disabled={
+                                        mode === "read" ||
+                                        (key === "is_project_leader" &&
+                                            data.is_project_report_responsible ===
+                                                false)
+                                    }
                                 />
                             ) : key === "updated_at" && value ? (
                                 format(parseISO(value), "d MMMM yyyy, HH:mm", {
