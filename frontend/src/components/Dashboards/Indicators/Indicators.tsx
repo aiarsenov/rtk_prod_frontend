@@ -140,7 +140,7 @@ const Indicators = () => {
                 fill: false,
                 pointBackgroundColor: "#36BFFA",
                 pointRadius: 4,
-                tension: 0.3,
+                tension: 0,
                 yAxisID: "y1",
             },
             {
