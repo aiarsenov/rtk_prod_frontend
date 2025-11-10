@@ -135,7 +135,7 @@ const ReferenceItem = ({
                                                 key,
                                                 data.id
                                             );
-                                            console.log(updated);
+                                            // console.log(updated);
                                         }
                                     }}
                                     disabled={mode === "read"}
