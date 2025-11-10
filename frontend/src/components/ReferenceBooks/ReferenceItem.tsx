@@ -133,9 +133,8 @@ const ReferenceItem = ({
                                             handleSwitchChange(
                                                 updated,
                                                 key,
-                                                data.id
+                                                data
                                             );
-                                            // console.log(updated);
                                         }
                                     }}
                                     disabled={mode === "read"}

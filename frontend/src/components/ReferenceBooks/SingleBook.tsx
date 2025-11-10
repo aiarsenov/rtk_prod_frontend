@@ -65,12 +65,21 @@ const SingleBook = () => {
     let query;
 
     // Обработка существующих полей справочника
-    const handleSwitchChange = (evt, name, id) => {
+    const handleSwitchChange = (evt, name, data) => {
+        // console.log(evt);
+        // console.log(name);
+        // console.log(data);
+
         setBooksItems((prevBooksItems) =>
             prevBooksItems.map((item) =>
-                item.id === id ? { ...item, [name]: evt === true } : item
+                item.id === data.id ? { ...item, [name]: evt === true } : item
             )
         );
+
+        let updatedData = data;
+        updatedData[name] = evt;
+
+        editElement(updatedData, false);
     };
 
     // Обработка полей попапа нового контакта подрядчика
@@ -362,7 +371,7 @@ const SingleBook = () => {
     };
 
     // Изменение записи
-    const editElement = (updatedData) => {
+    const editElement = (updatedData, reloadList = true) => {
         let data = updatedData;
         // delete data?.projects_count;
         // delete data?.updated_at;
@@ -423,7 +432,10 @@ const SingleBook = () => {
                     setIsEditElem(false);
                     setPopupFields([]);
                     setTempData({});
-                    getBooks();
+
+                    if (reloadList) {
+                        getBooks();
+                    }
                 } else {
                     toast.dismiss(query);
                     toast.error("Ошибка обновления записи", {
