@@ -1065,25 +1065,6 @@ const SingleBook = () => {
                             </thead>
 
                             <tbody className="registry-table__tbody">
-                                {/* {mode === "edit" &&
-                                    bookId != "creditor" &&
-                                    bookId != "contragent" &&
-                                    bookId != "suppliers-with-reports" &&
-                                    bookId != "working-hours" &&
-                                    bookId !== "report-types" && (
-                                        <ReferenceItemNew
-                                            handleNewElementInputChange={
-                                                handleNewElementInputChange
-                                            }
-                                            columns={columns}
-                                            formFields={formFields}
-                                            booksItems={booksItems}
-                                            bookId={bookId}
-                                            positions={positions}
-                                            addNewElement={addNewElement}
-                                        />
-                                    )} */}
-
                                 {booksItems?.length > 0 &&
                                     booksItems.map((item) => {
                                         if (
