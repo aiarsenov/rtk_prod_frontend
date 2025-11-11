@@ -6,5 +6,6 @@
     "position",
     "hours",
     "type",
-    "position_id"
+    "position_id",
+    "contragent_id"
 ]

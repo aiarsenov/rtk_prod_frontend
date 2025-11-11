@@ -11,6 +11,7 @@ const ReferenceNewElemForm = ({
     resetElemPopupState,
     handlePopupFieldsChange,
     addNewElement,
+    booksItems,
 }) => {
     return (
         <Popup
@@ -25,6 +26,38 @@ const ReferenceNewElemForm = ({
         >
             <form>
                 <div className="action-form__body flex flex-col gap-[18px]">
+                    {/* {bookId === "suppliers-with-reports" && (
+                        <div className="flex flex-col">
+                            <label
+                                htmlFor="contragent_id"
+                                className="form-label"
+                            >
+                                Наименование подрядчика
+                            </label>
+                            <select
+                                id="contragent_id"
+                                className="form-select"
+                                value={+popupFields?.contragent_id?.value || ""}
+                                onChange={(e) => {
+                                    const newValue = e.target.value;
+                                    handlePopupFieldsChange(
+                                        null,
+                                        "contragent_id",
+                                        newValue
+                                    );
+                                }}
+                            >
+                                <option value="">Выбрать</option>
+
+                                {booksItems.map((item) => (
+                                    <option value={item.id} key={item.id}>
+                                        {item.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )} */}
+
                     {popupFields.length > 0 &&
                         popupFields.map(({ key, label, value }) => {
                             if (key === "phone") {
@@ -50,7 +83,7 @@ const ReferenceNewElemForm = ({
                                                 );
                                             }}
                                             value={value?.toString() || ""}
-                                            placeholder="Телефон"
+                                            placeholder={label}
                                         />
                                     </div>
                                 );
@@ -68,6 +101,7 @@ const ReferenceNewElemForm = ({
                                             type="number"
                                             className="form-field"
                                             value={value?.toString() || ""}
+                                            placeholder={label}
                                             onChange={(e) => {
                                                 const newValue = e.target.value;
 
@@ -82,7 +116,9 @@ const ReferenceNewElemForm = ({
                                 );
                             } else if (
                                 key === "type" ||
-                                key === "position_id"
+                                key === "position_id" ||
+                                (bookId === "suppliers-with-reports" &&
+                                    key === "contragent_id")
                             ) {
                                 return (
                                     <div key={key} className="flex flex-col">
@@ -106,10 +142,12 @@ const ReferenceNewElemForm = ({
                                             }}
                                         >
                                             <option value="">Выбрать</option>
-                                            {bookId ===
-                                            "management-report-types" ? (
-                                                <>
-                                                    {positions.map(
+                                            {(() => {
+                                                if (
+                                                    bookId ===
+                                                    "management-report-types"
+                                                ) {
+                                                    return positions.map(
                                                         (position) => (
                                                             <option
                                                                 value={
@@ -122,18 +160,36 @@ const ReferenceNewElemForm = ({
                                                                 {position.name}
                                                             </option>
                                                         )
-                                                    )}
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <option value="one_to_one">
-                                                        Один к одному
-                                                    </option>
-                                                    <option value="one_to_many">
-                                                        Один ко многим
-                                                    </option>
-                                                </>
-                                            )}
+                                                    );
+                                                }
+
+                                                if (
+                                                    bookId ===
+                                                    "suppliers-with-reports"
+                                                ) {
+                                                    return booksItems.map(
+                                                        (item) => (
+                                                            <option
+                                                                value={item.id}
+                                                                key={item.id}
+                                                            >
+                                                                {item.name}
+                                                            </option>
+                                                        )
+                                                    );
+                                                }
+
+                                                return (
+                                                    <>
+                                                        <option value="one_to_one">
+                                                            Один к одному
+                                                        </option>
+                                                        <option value="one_to_many">
+                                                            Один ко многим
+                                                        </option>
+                                                    </>
+                                                );
+                                            })()}
                                         </select>
                                     </div>
                                 );
@@ -156,6 +212,7 @@ const ReferenceNewElemForm = ({
                                             type="text"
                                             className="form-field"
                                             value={value?.toString() || ""}
+                                            placeholder={label}
                                             onChange={(e) => {
                                                 const newValue = e.target.value;
 

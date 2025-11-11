@@ -63,6 +63,78 @@ const SingleBook = () => {
         setElemToDelete({});
     };
 
+    // Валидация обязательных полей
+    const validateReferenceData = (updatedData) => {
+        if (bookId === "suppliers-with-reports") {
+            if (!updatedData.contragent_id) {
+                toast.error("Необходимо выбрать подрядчика", {
+                    isLoading: false,
+                    autoClose: 2500,
+                    pauseOnFocusLoss: false,
+                    pauseOnHover: false,
+                    draggable: true,
+                    position:
+                        window.innerWidth >= 1440
+                            ? "bottom-right"
+                            : "top-right",
+                    containerId: "singleBook",
+                });
+                return false;
+            }
+
+            if (!updatedData.full_name) {
+                toast.error("ФИО должно быть заполнено", {
+                    isLoading: false,
+                    autoClose: 2500,
+                    pauseOnFocusLoss: false,
+                    pauseOnHover: false,
+                    draggable: true,
+                    position:
+                        window.innerWidth >= 1440
+                            ? "bottom-right"
+                            : "top-right",
+                    containerId: "singleBook",
+                });
+                return false;
+            }
+
+            return true;
+        }
+
+        if (
+            (bookId === "report-types" || bookId === "banks") &&
+            !updatedData.full_name
+        ) {
+            toast.error("Полное наименование должно быть заполнено", {
+                isLoading: false,
+                autoClose: 2500,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+                position:
+                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+                containerId: "singleBook",
+            });
+            return false;
+        }
+
+        if (!updatedData.name) {
+            toast.error("Наименование должно быть заполнено", {
+                isLoading: false,
+                autoClose: 2500,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+                position:
+                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+                containerId: "singleBook",
+            });
+            return false;
+        }
+
+        return true;
+    };
+
     // Изименение генерации отчетов
     const toggleRoleResponse = (action) => {
         query = toast.loading("Обновление", {
@@ -135,18 +207,14 @@ const SingleBook = () => {
             return acc;
         }, {});
 
-        if (
-            !updatedData.name ||
-            ((bookId === "report-types" || bookId === "banks") &&
-                !updatedData.full_name)
-        ) {
-            alert(
-                bookId === "report-types" || bookId === "banks"
-                    ? "'Полное наименование' должно быть заполнено."
-                    : "'Наименование' должно быть заполнено."
-            );
+        if (!validateReferenceData(updatedData)) {
             return;
         }
+
+        const newUrl =
+            bookId === "suppliers-with-reports"
+                ? `${URL}/${updatedData.contragent_id}`
+                : URL;
 
         query = toast.loading("Обновление", {
             containerId: "singleBook",
@@ -154,7 +222,7 @@ const SingleBook = () => {
             position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
         });
 
-        postData("POST", URL, updatedData)
+        postData("POST", newUrl, updatedData)
             .then((response) => {
                 if (response?.ok) {
                     toast.update(query, {
@@ -192,58 +260,6 @@ const SingleBook = () => {
                 });
             });
     };
-
-    // Добавление нового контакта подрядчику
-    // const addNewContact = (data) => {
-    //     postData("POST", `${URL}/${data.contragent_id}`, data).then(
-    //         (response) => {
-    //             if (response?.ok) {
-    //                 setBooksItems((booksItems) =>
-    //                     booksItems.map((item) =>
-    //                         item.id === data.contragent_id
-    //                             ? {
-    //                                   ...item,
-    //                                   contacts: [
-    //                                       ...(item.contacts || []),
-    //                                       response,
-    //                                   ],
-    //                               }
-    //                             : item
-    //                     )
-    //                 );
-    //                 setRefBooksItems((booksItems) =>
-    //                     booksItems.map((item) =>
-    //                         item.id === data.contragent_id
-    //                             ? {
-    //                                   ...item,
-    //                                   contacts: [
-    //                                       ...(item.contacts || []),
-    //                                       response,
-    //                                   ],
-    //                               }
-    //                             : item
-    //                     )
-    //                 );
-
-    //                 setIsNewElem(false);
-    //                 setPopupFields([]);
-    //                 setTempData({});
-
-    //                 toast("Контакт добавлен", {
-    //                     type: "success",
-    //                     containerId: "singleBook",
-    //                     autoClose: 1200,
-    //                     pauseOnFocusLoss: false,
-    //                     pauseOnHover: false,
-    //                     position:
-    //                         window.innerWidth >= 1440
-    //                             ? "bottom-right"
-    //                             : "top-right",
-    //                 });
-    //             }
-    //         }
-    //     );
-    // };
 
     // Изменение рабочих часов
     const editWokrHours = (data) => {
@@ -328,7 +344,7 @@ const SingleBook = () => {
                 alert(
                     bookId === "report-types" || bookId === "banks"
                         ? "Полное и сокращенное наименования должны быть заполнены."
-                        : "'Наименование' должно быть заполнено."
+                        : "Наименование должно быть заполнено."
                 );
                 return;
             }
@@ -761,19 +777,29 @@ const SingleBook = () => {
 
     // Обработка полей при изменении записи
     const handlePopupFieldsChange = (id, key, newValue) => {
-        setPopupFields((prev) =>
-            prev.map((field) => {
-                if (id) {
-                    return field.id === id && field.key === key
+        setPopupFields((prev) => {
+            const exists = prev.some((field) =>
+                id ? field.id === id && field.key === key : field.key === key
+            );
+
+            if (exists) {
+                return prev.map((field) =>
+                    id
+                        ? field.id === id && field.key === key
+                            ? { ...field, value: newValue }
+                            : field
+                        : field.key === key
                         ? { ...field, value: newValue }
-                        : field;
-                } else {
-                    return field.key === key
-                        ? { ...field, value: newValue }
-                        : field;
-                }
-            })
-        );
+                        : field
+                );
+            } else {
+                const newField = id
+                    ? { id, key, value: newValue }
+                    : { key, value: newValue };
+
+                return [...prev, newField];
+            }
+        });
     };
 
     // Обработка существующих полей справочника
@@ -1070,6 +1096,7 @@ const SingleBook = () => {
                     resetElemPopupState={resetElemPopupState}
                     handlePopupFieldsChange={handlePopupFieldsChange}
                     addNewElement={addNewElement}
+                    booksItems={booksItems}
                 />
             )}
 
@@ -1097,7 +1124,8 @@ const SingleBook = () => {
                     resetElemPopupState={resetElemPopupState}
                     deleteContact={deleteContact}
                     deleteContactElem={deleteContactElem}
-                    deleteElement={deleteElement}ƒ
+                    deleteElement={deleteElement}
+                    ƒ
                 />
             )}
 

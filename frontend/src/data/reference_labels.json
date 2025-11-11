@@ -37,6 +37,7 @@
         { "label": "Тип должности", "key": "type" }
     ],
     "suppliers-with-reports": [
+        { "label": "Наименование подрядчика", "key": "contragent_id" },
         { "label": "ФИО", "key": "full_name" },
         { "label": "Должность", "key": "position" },
         { "label": "Телефон", "key": "phone" },
