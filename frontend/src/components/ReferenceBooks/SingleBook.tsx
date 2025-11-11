@@ -9,6 +9,7 @@ import ReferenceItem from "./ReferenceItem";
 import ReferenceItemExtended from "./ReferenceItemExtended";
 import ReferenceNewElemForm from "./ReferenceNewElemForm";
 import ReferenceEditElemForm from "./ReferenceEditElemForm";
+import ReferenceDeleteElemForm from "./ReferenceDeleteElemForm";
 import Loader from "../Loader";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -1089,56 +1090,15 @@ const SingleBook = () => {
                 />
             )}
 
-            {isDeleteElem && (
-                <Popup
-                    onClick={resetElemPopupState}
-                    title={
-                        bookId === "creditor" ||
-                        bookId === "contragent" ||
-                        bookId === "suppliers-with-reports"
-                            ? "Удаление контакта"
-                            : "Удаление записи"
-                    }
-                >
-                    <form>
-                        <div className="action-form__body">
-                            <p>Данные будут безвозвратно утеряны.</p>
-                        </div>
-
-                        <div className="action-form__footer">
-                            <button
-                                type="button"
-                                onClick={resetElemPopupState}
-                                className="cancel-button flex-[0_0_fit-content]"
-                                title="Отменить удаление"
-                            >
-                                Отменить
-                            </button>
-
-                            <button
-                                type="button"
-                                className="action-button flex-[0_0_fit-content]"
-                                onClick={() => {
-                                    if (
-                                        bookId === "creditor" ||
-                                        bookId === "contragent"
-                                    ) {
-                                        deleteContact(elemToDelete);
-                                    } else if (
-                                        bookId === "suppliers-with-reports"
-                                    ) {
-                                        deleteContactElem(elemToDelete);
-                                    } else {
-                                        deleteElement(elemToDelete);
-                                    }
-                                }}
-                                title="Удалить запись"
-                            >
-                                Удалить
-                            </button>
-                        </div>
-                    </form>
-                </Popup>
+            {isDeleteElem && mode === "edit" && (
+                <ReferenceDeleteElemForm
+                    bookId={bookId}
+                    elemToDelete={elemToDelete}
+                    resetElemPopupState={resetElemPopupState}
+                    deleteContact={deleteContact}
+                    deleteContactElem={deleteContactElem}
+                    deleteElement={deleteElement}ƒ
+                />
             )}
 
             {rolesAction.action != "" &&
