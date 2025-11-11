@@ -7,17 +7,16 @@ import postData from "../../utils/postData";
 import Popup from "../Popup/Popup";
 import ReferenceItem from "./ReferenceItem";
 import ReferenceItemExtended from "./ReferenceItemExtended";
+import ReferenceNewElemForm from "./ReferenceNewElemForm";
+import ReferenceEditElemForm from "./ReferenceEditElemForm";
 import Loader from "../Loader";
 
-import { IMaskInput } from "react-imask";
 import { ToastContainer, toast } from "react-toastify";
 
 import COLUMNS from "../../data/reference_book_columns.json";
 import REFERENCE_LABELS from "../../data/reference_labels.json";
 import TITLES from "../../data/reference_book_titles.json";
 import EDITABLE_KEYS from "../../data/editable_keys.json";
-
-const PhoneMask = "+{7} (000) 000 00 00";
 
 const SingleBook = () => {
     const { bookId } = useParams();
@@ -53,42 +52,18 @@ const SingleBook = () => {
 
     let query;
 
-    // Обработка существующих полей справочника
-    const handleSwitchChange = (evt, name, data) => {
-        if (name == "is_project_leader") {
-            setBooksItems((prevBooksItems) =>
-                prevBooksItems.map((item) => {
-                    if (item.is_project_leader === true) {
-                        return { ...item, is_project_leader: false };
-                    }
-                    return item;
-                })
-            );
-            setBooksItems((prevBooksItems) =>
-                prevBooksItems.map((item) =>
-                    item.id === data.id
-                        ? { ...item, [name]: evt === true }
-                        : item
-                )
-            );
-        } else {
-            setBooksItems((prevBooksItems) =>
-                prevBooksItems.map((item) =>
-                    item.id === data.id
-                        ? { ...item, [name]: evt === true }
-                        : item
-                )
-            );
-        }
-
-        let updatedData = data;
-        updatedData[name] = evt;
-
-        editElement(updatedData, false);
+    // Сбрасываем состояние попапа и полей
+    const resetElemPopupState = () => {
+        setIsNewElem(false);
+        setIsEditElem(false);
+        setIsDeleteElem(false);
+        setPopupFields([]);
+        setTempData({});
+        setElemToDelete({});
     };
 
     // Изименение генерации отчетов
-    const toggleRoleResponce = (action) => {
+    const toggleRoleResponse = (action) => {
         query = toast.loading("Обновление", {
             containerId: "singleBook",
             position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
@@ -196,9 +171,7 @@ const SingleBook = () => {
                                 : "top-right",
                     });
 
-                    setIsNewElem(false);
-                    setPopupFields([]);
-                    setTempData({});
+                    resetElemPopupState();
                     getBooks();
                 }
             })
@@ -285,9 +258,7 @@ const SingleBook = () => {
         postData("PATCH", URL, { year: currentYear, hours: [updatedData] })
             .then((response) => {
                 if (response?.ok) {
-                    setIsEditElem(false);
-                    setPopupFields([]);
-                    setTempData({});
+                    resetElemPopupState();
                     getBooks();
 
                     toast.update(query, {
@@ -371,6 +342,12 @@ const SingleBook = () => {
         postData("PATCH", `${URL}/${data.id}`, data)
             .then((response) => {
                 if (response?.ok) {
+                    resetElemPopupState();
+
+                    if (reloadList) {
+                        getBooks();
+                    }
+
                     toast.update(query, {
                         render: "Запись обновлена",
                         type: "success",
@@ -385,13 +362,6 @@ const SingleBook = () => {
                                 ? "bottom-right"
                                 : "top-right",
                     });
-                    setIsEditElem(false);
-                    setPopupFields([]);
-                    setTempData({});
-
-                    if (reloadList) {
-                        getBooks();
-                    }
                 } else {
                     if (!reloadList) {
                         getBooks();
@@ -450,9 +420,7 @@ const SingleBook = () => {
         )
             .then((response) => {
                 if (response?.ok) {
-                    setIsEditElem(false);
-                    setPopupFields([]);
-                    setTempData({});
+                    resetElemPopupState();
                     getBooks();
 
                     toast.update(query, {
@@ -516,9 +484,7 @@ const SingleBook = () => {
             data
         ).then((response) => {
             if (response?.ok) {
-                setIsEditElem(false);
-                setPopupFields([]);
-                setTempData({});
+                resetElemPopupState();
                 getBooks();
 
                 toast.update(query, {
@@ -567,6 +533,21 @@ const SingleBook = () => {
             {}
         ).then((response) => {
             if (response?.ok) {
+                setBooksItems((booksItems) =>
+                    booksItems.map((item) => {
+                        if (item.id === data.id) {
+                            return {
+                                ...item,
+                                contacts: item.contacts?.filter(
+                                    (contact) => contact.id !== data.contact
+                                ),
+                            };
+                        }
+                        return item;
+                    })
+                );
+                resetElemPopupState();
+
                 toast.update(query, {
                     render: "Контакт удален",
                     type: "success",
@@ -581,22 +562,6 @@ const SingleBook = () => {
                             ? "bottom-right"
                             : "top-right",
                 });
-
-                setBooksItems((booksItems) =>
-                    booksItems.map((item) => {
-                        if (item.id === data.id) {
-                            return {
-                                ...item,
-                                contacts: item.contacts?.filter(
-                                    (contact) => contact.id !== data.contact
-                                ),
-                            };
-                        }
-                        return item;
-                    })
-                );
-                setIsDeleteElem(false);
-                setElemToDelete({});
             } else {
                 toast.dismiss(query);
                 toast.error("Ошибка удалении контакта", {
@@ -639,8 +604,7 @@ const SingleBook = () => {
             .then((response) => {
                 if (response?.ok) {
                     getBooks();
-                    setIsDeleteElem(false);
-                    setElemToDelete({});
+                    resetElemPopupState();
 
                     toast.update(query, {
                         render: "Контакт удалена",
@@ -706,6 +670,9 @@ const SingleBook = () => {
                     setRefBooksItems((booksItems) =>
                         booksItems.filter((item) => item.id !== data.id)
                     );
+
+                    resetElemPopupState();
+
                     toast.update(query, {
                         render: "Запись удалена",
                         type: "success",
@@ -720,8 +687,6 @@ const SingleBook = () => {
                                 ? "bottom-right"
                                 : "top-right",
                     });
-                    setIsDeleteElem(false);
-                    setElemToDelete({});
                 } else {
                     toast.dismiss(query);
                     toast.error("Ошибка удаления записи", {
@@ -808,6 +773,40 @@ const SingleBook = () => {
                 }
             })
         );
+    };
+
+    // Обработка существующих полей справочника
+    const handleSwitchChange = (evt, name, data) => {
+        if (name == "is_project_leader") {
+            setBooksItems((prevBooksItems) =>
+                prevBooksItems.map((item) => {
+                    if (item.is_project_leader === true) {
+                        return { ...item, is_project_leader: false };
+                    }
+                    return item;
+                })
+            );
+            setBooksItems((prevBooksItems) =>
+                prevBooksItems.map((item) =>
+                    item.id === data.id
+                        ? { ...item, [name]: evt === true }
+                        : item
+                )
+            );
+        } else {
+            setBooksItems((prevBooksItems) =>
+                prevBooksItems.map((item) =>
+                    item.id === data.id
+                        ? { ...item, [name]: evt === true }
+                        : item
+                )
+            );
+        }
+
+        let updatedData = data;
+        updatedData[name] = evt;
+
+        editElement(updatedData, false);
     };
 
     // Cобираем все поля в единый объект
@@ -1063,453 +1062,36 @@ const SingleBook = () => {
             </div>
 
             {isNewElem && mode === "edit" && (
-                <Popup
-                    onClick={() => {
-                        setIsNewElem(false);
-                        setPopupFields([]);
-                        setTempData({});
-                    }}
-                    title={
-                        bookId === "creditor" ||
-                        bookId === "contragent" ||
-                        bookId === "suppliers-with-reports"
-                            ? "Создать контакт"
-                            : "Создать запись"
-                    }
-                >
-                    <div className="action-form__body flex flex-col gap-[18px]">
-                        {popupFields.length > 0 &&
-                            popupFields.map(({ key, label, value }) => {
-                                if (key === "phone") {
-                                    return (
-                                        <div
-                                            key={key}
-                                            className="flex flex-col"
-                                        >
-                                            <label
-                                                htmlFor={key}
-                                                className="form-label"
-                                            >
-                                                {label}
-                                            </label>
-                                            <IMaskInput
-                                                mask={PhoneMask}
-                                                className="form-field w-full"
-                                                name="phone"
-                                                type="tel"
-                                                inputMode="tel"
-                                                onAccept={(value) => {
-                                                    handlePopupFieldsChange(
-                                                        null,
-                                                        key,
-                                                        value
-                                                    );
-                                                }}
-                                                value={value?.toString() || ""}
-                                                placeholder="Телефон"
-                                            />
-                                        </div>
-                                    );
-                                } else if (key === "hours") {
-                                    return (
-                                        <div
-                                            key={key}
-                                            className="flex flex-col"
-                                        >
-                                            <label
-                                                htmlFor={key}
-                                                className="form-label"
-                                            >
-                                                {label}
-                                            </label>
-                                            <input
-                                                id={key}
-                                                type="number"
-                                                className="form-field"
-                                                value={value?.toString() || ""}
-                                                onChange={(e) => {
-                                                    const newValue =
-                                                        e.target.value;
-
-                                                    handlePopupFieldsChange(
-                                                        null,
-                                                        key,
-                                                        newValue
-                                                    );
-                                                }}
-                                            />
-                                        </div>
-                                    );
-                                } else if (
-                                    key === "type" ||
-                                    key === "position_id"
-                                ) {
-                                    return (
-                                        <div
-                                            key={key}
-                                            className="flex flex-col"
-                                        >
-                                            <label
-                                                htmlFor={key}
-                                                className="form-label"
-                                            >
-                                                {label}
-                                            </label>
-                                            <select
-                                                id={key}
-                                                className="form-select"
-                                                value={value || ""}
-                                                onChange={(e) => {
-                                                    const newValue =
-                                                        e.target.value;
-                                                    handlePopupFieldsChange(
-                                                        null,
-                                                        key,
-                                                        newValue
-                                                    );
-                                                }}
-                                            >
-                                                <option value="">
-                                                    Выбрать
-                                                </option>
-                                                {bookId ===
-                                                "management-report-types" ? (
-                                                    <>
-                                                        {positions.map(
-                                                            (position) => (
-                                                                <option
-                                                                    value={
-                                                                        position.id
-                                                                    }
-                                                                    key={
-                                                                        position.id
-                                                                    }
-                                                                >
-                                                                    {
-                                                                        position.name
-                                                                    }
-                                                                </option>
-                                                            )
-                                                        )}
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <option value="one_to_one">
-                                                            Один к одному
-                                                        </option>
-                                                        <option value="one_to_many">
-                                                            Один ко многим
-                                                        </option>
-                                                    </>
-                                                )}
-                                            </select>
-                                        </div>
-                                    );
-                                } else if (
-                                    key === "full_name" &&
-                                    bookId === "report-types"
-                                ) {
-                                    return;
-                                } else {
-                                    return (
-                                        <div
-                                            key={key}
-                                            className="flex flex-col"
-                                        >
-                                            <label
-                                                htmlFor={key}
-                                                className="form-label"
-                                            >
-                                                {label}
-                                            </label>
-                                            <input
-                                                id={key}
-                                                type="text"
-                                                className="form-field"
-                                                value={value?.toString() || ""}
-                                                onChange={(e) => {
-                                                    const newValue =
-                                                        e.target.value;
-
-                                                    handlePopupFieldsChange(
-                                                        null,
-                                                        key,
-                                                        newValue
-                                                    );
-                                                }}
-                                            />
-                                        </div>
-                                    );
-                                }
-                            })}
-                    </div>
-
-                    <div className="action-form__footer">
-                        <button
-                            type="button"
-                            onClick={() => {
-                                setIsNewElem(false);
-                                setPopupFields([]);
-                                setTempData({});
-                            }}
-                            className="cancel-button flex-[0_0_fit-content]"
-                            title="Отменить создание записи"
-                        >
-                            Отменить
-                        </button>
-
-                        <button
-                            type="button"
-                            className="action-button flex-[0_0_fit-content]"
-                            onClick={addNewElement}
-                            title="Создать запись"
-                        >
-                            Создать
-                        </button>
-                    </div>
-                </Popup>
+                <ReferenceNewElemForm
+                    bookId={bookId}
+                    popupFields={popupFields}
+                    positions={positions}
+                    resetElemPopupState={resetElemPopupState}
+                    handlePopupFieldsChange={handlePopupFieldsChange}
+                    addNewElement={addNewElement}
+                />
             )}
 
-            {isEditElem && (
-                <Popup
-                    onClick={() => {
-                        setIsEditElem(false);
-                        setPopupFields([]);
-                        setTempData({});
-                    }}
-                    title={
-                        bookId === "creditor" ||
-                        bookId === "contragent" ||
-                        bookId === "suppliers-with-reports"
-                            ? "Редактирование контакта"
-                            : "Редактирование записи"
+            {isEditElem && mode === "edit" && (
+                <ReferenceEditElemForm
+                    bookId={bookId}
+                    popupFields={popupFields}
+                    positions={positions}
+                    resetElemPopupState={resetElemPopupState}
+                    handlePopupFieldsChange={handlePopupFieldsChange}
+                    collectEditFieldsData={collectEditFieldsData}
+                    editContragentAndCreditorContact={
+                        editContragentAndCreditorContact
                     }
-                >
-                    <form>
-                        <div className="action-form__body flex flex-col gap-[18px]">
-                            {popupFields.length > 0 &&
-                                popupFields.map(({ id, key, label, value }) => {
-                                    if (key === "phone") {
-                                        return (
-                                            <div
-                                                key={key}
-                                                className="flex flex-col"
-                                            >
-                                                <label
-                                                    htmlFor={key}
-                                                    className="form-label"
-                                                >
-                                                    {label}
-                                                </label>
-                                                <IMaskInput
-                                                    mask={PhoneMask}
-                                                    className="form-field w-full"
-                                                    name="phone"
-                                                    type="tel"
-                                                    inputMode="tel"
-                                                    onAccept={(value) => {
-                                                        handlePopupFieldsChange(
-                                                            id,
-                                                            key,
-                                                            value
-                                                        );
-                                                    }}
-                                                    value={
-                                                        value?.toString() || ""
-                                                    }
-                                                    placeholder="Телефон"
-                                                />
-                                            </div>
-                                        );
-                                    } else if (key === "hours") {
-                                        return (
-                                            <div
-                                                key={key}
-                                                className="flex flex-col"
-                                            >
-                                                <label
-                                                    htmlFor={key}
-                                                    className="form-label"
-                                                >
-                                                    {label}
-                                                </label>
-                                                <input
-                                                    id={key}
-                                                    type="number"
-                                                    className="form-field"
-                                                    value={
-                                                        value?.toString() || ""
-                                                    }
-                                                    onChange={(e) => {
-                                                        const newValue =
-                                                            e.target.value;
-                                                        handlePopupFieldsChange(
-                                                            id,
-                                                            key,
-                                                            newValue
-                                                        );
-                                                    }}
-                                                />
-                                            </div>
-                                        );
-                                    } else if (
-                                        key === "type" ||
-                                        key === "position_id"
-                                    ) {
-                                        return (
-                                            <div
-                                                key={key}
-                                                className="flex flex-col"
-                                            >
-                                                <label
-                                                    htmlFor={key}
-                                                    className="form-label"
-                                                >
-                                                    {label}
-                                                </label>
-                                                <select
-                                                    id={key}
-                                                    className="form-select"
-                                                    value={value || ""}
-                                                    onChange={(e) => {
-                                                        const newValue =
-                                                            e.target.value;
-                                                        handlePopupFieldsChange(
-                                                            id,
-                                                            key,
-                                                            newValue
-                                                        );
-                                                    }}
-                                                >
-                                                    {bookId ===
-                                                    "management-report-types" ? (
-                                                        <>
-                                                            {positions.map(
-                                                                (position) => (
-                                                                    <option
-                                                                        value={
-                                                                            position.id
-                                                                        }
-                                                                        key={
-                                                                            position.id
-                                                                        }
-                                                                    >
-                                                                        {
-                                                                            position.name
-                                                                        }
-                                                                    </option>
-                                                                )
-                                                            )}
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <option value="one_to_one">
-                                                                Один к одному
-                                                            </option>
-                                                            <option value="one_to_many">
-                                                                Один ко многим
-                                                            </option>
-                                                        </>
-                                                    )}
-                                                </select>
-                                            </div>
-                                        );
-                                    } else if (
-                                        key === "full_name" &&
-                                        bookId === "report-types"
-                                    ) {
-                                        return;
-                                    } else {
-                                        return (
-                                            <div
-                                                key={key}
-                                                className="flex flex-col"
-                                            >
-                                                <label
-                                                    htmlFor={key}
-                                                    className="form-label"
-                                                >
-                                                    {label}
-                                                </label>
-                                                <input
-                                                    id={key}
-                                                    type="text"
-                                                    className="form-field"
-                                                    value={
-                                                        value?.toString() || ""
-                                                    }
-                                                    onChange={(e) => {
-                                                        const newValue =
-                                                            e.target.value;
-                                                        handlePopupFieldsChange(
-                                                            id,
-                                                            key,
-                                                            newValue
-                                                        );
-                                                    }}
-                                                />
-                                            </div>
-                                        );
-                                    }
-                                })}
-                        </div>
-
-                        <div className="action-form__footer">
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setIsEditElem(false);
-                                    setPopupFields([]);
-                                    setTempData({});
-                                }}
-                                className="cancel-button flex-[0_0_fit-content]"
-                                title="Отменить изменения"
-                            >
-                                Отменить
-                            </button>
-
-                            <button
-                                type="button"
-                                className="action-button flex-[0_0_fit-content]"
-                                onClick={() => {
-                                    // if (bookId == "positions") {
-                                    //     hasNameMatch(data.name, data.id);
-                                    // } else {
-                                    // }
-                                    const updatedData = collectEditFieldsData();
-
-                                    if (
-                                        bookId === "creditor" ||
-                                        bookId === "contragent"
-                                    ) {
-                                        editContragentAndCreditorContact(
-                                            updatedData
-                                        );
-                                    } else if (
-                                        bookId === "suppliers-with-reports"
-                                    ) {
-                                        editContactElem(updatedData);
-                                    } else if (bookId === "working-hours") {
-                                        editWokrHours(updatedData);
-                                    } else {
-                                        editElement(updatedData);
-                                    }
-                                }}
-                                title="Сохранить изменения"
-                            >
-                                Сохранить
-                            </button>
-                        </div>
-                    </form>
-                </Popup>
+                    editContactElem={editContactElem}
+                    editWokrHours={editWokrHours}
+                    editElement={editElement}
+                />
             )}
 
             {isDeleteElem && (
                 <Popup
-                    onClick={() => {
-                        setIsDeleteElem(false);
-                        setElemToDelete(null);
-                    }}
+                    onClick={resetElemPopupState}
                     title={
                         bookId === "creditor" ||
                         bookId === "contragent" ||
@@ -1526,10 +1108,7 @@ const SingleBook = () => {
                         <div className="action-form__footer">
                             <button
                                 type="button"
-                                onClick={() => {
-                                    setIsDeleteElem(false);
-                                    setElemToDelete(null);
-                                }}
+                                onClick={resetElemPopupState}
                                 className="cancel-button flex-[0_0_fit-content]"
                                 title="Отменить удаление"
                             >
@@ -1590,7 +1169,7 @@ const SingleBook = () => {
                                             className="cancel-button"
                                             title="Не генерировать отчеты сотрудников для прошлого периода"
                                             onClick={() =>
-                                                toggleRoleResponce({
+                                                toggleRoleResponse({
                                                     action: "enable",
                                                     backfill: false,
                                                 })
@@ -1604,7 +1183,7 @@ const SingleBook = () => {
                                             className="action-button"
                                             title="Сгенерировать отчеты сотрудников для прошлого периода"
                                             onClick={() =>
-                                                toggleRoleResponce({
+                                                toggleRoleResponse({
                                                     action: "enable",
                                                     backfill: true,
                                                 })
@@ -1620,7 +1199,7 @@ const SingleBook = () => {
                                             className="cancel-button"
                                             title="Безвозвратно удалить"
                                             onClick={() =>
-                                                toggleRoleResponce({
+                                                toggleRoleResponse({
                                                     action: "disable",
                                                     policy: "delete",
                                                 })
@@ -1634,7 +1213,7 @@ const SingleBook = () => {
                                             className="cancel-button"
                                             title="Скрыть из списка"
                                             onClick={() =>
-                                                toggleRoleResponce({
+                                                toggleRoleResponse({
                                                     action: "disable",
                                                     policy: "hide",
                                                 })
@@ -1648,7 +1227,7 @@ const SingleBook = () => {
                                             className="action-button"
                                             title="Оставить в списке"
                                             onClick={() =>
-                                                toggleRoleResponce({
+                                                toggleRoleResponse({
                                                     action: "disable",
                                                     policy: "keep",
                                                 })
