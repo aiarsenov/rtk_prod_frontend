@@ -7,7 +7,6 @@ import postData from "../../utils/postData";
 import Popup from "../Popup/Popup";
 import ReferenceItem from "./ReferenceItem";
 import ReferenceItemExtended from "./ReferenceItemExtended";
-import ReferenceItemNew from "./ReferenceItemNew";
 import Loader from "../Loader";
 
 import { IMaskInput } from "react-imask";
@@ -35,7 +34,6 @@ const SingleBook = () => {
 
     const [booksItems, setBooksItems] = useState([]);
     const [refBooksItems, setRefBooksItems] = useState([]);
-    const [formFields, setFormFields] = useState({});
 
     const [isLoading, setIsLoading] = useState(true);
     const [listLength, setListLength] = useState(0);
@@ -52,14 +50,6 @@ const SingleBook = () => {
     const [positions, setPositions] = useState([]); // Должности
     const [availableYears, setAvailableYears] = useState([]); // Доступные года
     const [currentYear, setCurrentYear] = useState(""); // Текущий год
-
-    const [newElem, setnewElem] = useState({
-        contragent_id: "",
-        full_name: "",
-        position: "",
-        email: "",
-        phone: "",
-    });
 
     let query;
 
@@ -95,33 +85,6 @@ const SingleBook = () => {
         updatedData[name] = evt;
 
         editElement(updatedData, false);
-    };
-
-    // Обработка полей попапа нового контакта подрядчика
-    const handleNewContactElemInputChange = (e, name) => {
-        const value = name === "phone" ? e : e.target.value;
-
-        setnewElem((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
-    };
-
-    // Обработка полей новой записи в справочнике
-    const handleNewElementInputChange = (e, name) => {
-        let value;
-
-        if (
-            name === "is_regular" ||
-            name === "show_cost" ||
-            name === "is_project_report_responsible"
-        ) {
-            value = e.target.value === "true";
-        } else {
-            value = e.target.value;
-        }
-
-        setFormFields({ ...formFields, [name]: value });
     };
 
     // Изименение генерации отчетов
@@ -191,10 +154,15 @@ const SingleBook = () => {
 
     // Добавление записи
     const addNewElement = () => {
+        let updatedData = popupFields.reduce((acc, field) => {
+            acc[field.key] = field.value;
+            return acc;
+        }, {});
+
         if (
-            !formFields.name ||
+            !updatedData.name ||
             ((bookId === "report-types" || bookId === "banks") &&
-                !formFields.full_name)
+                !updatedData.full_name)
         ) {
             alert(
                 bookId === "report-types" || bookId === "banks"
@@ -204,21 +172,13 @@ const SingleBook = () => {
             return;
         }
 
-        if (bookId === "departments") {
-            if (formFields.include_in_payroll !== "") {
-                formFields.include_in_payroll = JSON.parse(
-                    formFields?.include_in_payroll
-                );
-            }
-        }
-
         query = toast.loading("Обновление", {
             containerId: "singleBook",
             draggable: true,
             position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
         });
 
-        postData("POST", URL, formFields)
+        postData("POST", URL, updatedData)
             .then((response) => {
                 if (response?.ok) {
                     toast.update(query, {
@@ -236,12 +196,9 @@ const SingleBook = () => {
                                 : "top-right",
                     });
 
-                    setFormFields((prev) => ({
-                        ...prev,
-                        name: "",
-                        counterparty_name: "",
-                        full_name: "",
-                    }));
+                    setIsNewElem(false);
+                    setPopupFields([]);
+                    setTempData({});
                     getBooks();
                 }
             })
@@ -263,61 +220,56 @@ const SingleBook = () => {
     };
 
     // Добавление нового контакта подрядчику
-    const addNewContact = (data) => {
-        postData("POST", `${URL}/${data.contragent_id}`, data).then(
-            (response) => {
-                if (response?.ok) {
-                    setBooksItems((booksItems) =>
-                        booksItems.map((item) =>
-                            item.id === data.contragent_id
-                                ? {
-                                      ...item,
-                                      contacts: [
-                                          ...(item.contacts || []),
-                                          response,
-                                      ],
-                                  }
-                                : item
-                        )
-                    );
-                    setRefBooksItems((booksItems) =>
-                        booksItems.map((item) =>
-                            item.id === data.contragent_id
-                                ? {
-                                      ...item,
-                                      contacts: [
-                                          ...(item.contacts || []),
-                                          response,
-                                      ],
-                                  }
-                                : item
-                        )
-                    );
+    // const addNewContact = (data) => {
+    //     postData("POST", `${URL}/${data.contragent_id}`, data).then(
+    //         (response) => {
+    //             if (response?.ok) {
+    //                 setBooksItems((booksItems) =>
+    //                     booksItems.map((item) =>
+    //                         item.id === data.contragent_id
+    //                             ? {
+    //                                   ...item,
+    //                                   contacts: [
+    //                                       ...(item.contacts || []),
+    //                                       response,
+    //                                   ],
+    //                               }
+    //                             : item
+    //                     )
+    //                 );
+    //                 setRefBooksItems((booksItems) =>
+    //                     booksItems.map((item) =>
+    //                         item.id === data.contragent_id
+    //                             ? {
+    //                                   ...item,
+    //                                   contacts: [
+    //                                       ...(item.contacts || []),
+    //                                       response,
+    //                                   ],
+    //                               }
+    //                             : item
+    //                     )
+    //                 );
 
-                    setIsNewElem(false);
-                    setnewElem({
-                        contragent_id: "",
-                        full_name: "",
-                        position: "",
-                        email: "",
-                        phone: "",
-                    });
+    //                 setIsNewElem(false);
+    //                 setPopupFields([]);
+    //                 setTempData({});
 
-                    toast("Контакт добавлен", {
-                        type: "success",
-                        containerId: "singleBook",
-                        autoClose: 1200,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
-                }
-            }
-        );
-    };
+    //                 toast("Контакт добавлен", {
+    //                     type: "success",
+    //                     containerId: "singleBook",
+    //                     autoClose: 1200,
+    //                     pauseOnFocusLoss: false,
+    //                     pauseOnHover: false,
+    //                     position:
+    //                         window.innerWidth >= 1440
+    //                             ? "bottom-right"
+    //                             : "top-right",
+    //                 });
+    //             }
+    //         }
+    //     );
+    // };
 
     // Изменение рабочих часов
     const editWokrHours = (data) => {
@@ -388,21 +340,10 @@ const SingleBook = () => {
     // Изменение записи
     const editElement = (updatedData, reloadList = true) => {
         let data = updatedData;
-        // delete data?.projects_count;
-        // delete data?.updated_at;
 
         if (bookId === "management-report-types") {
             if (data.position_id) {
                 data.position_id = +data?.position_id;
-            }
-
-            // delete data?.count;
-            // delete data?.position;
-        }
-
-        if (bookId === "departments") {
-            if (data.include_in_payroll !== "") {
-                data.include_in_payroll = JSON.parse(data?.include_in_payroll);
             }
         }
 
@@ -855,11 +796,17 @@ const SingleBook = () => {
     // Обработка полей при изменении записи
     const handlePopupFieldsChange = (id, key, newValue) => {
         setPopupFields((prev) =>
-            prev.map((field) =>
-                field.id === id && field.key === key
-                    ? { ...field, value: newValue }
-                    : field
-            )
+            prev.map((field) => {
+                if (id) {
+                    return field.id === id && field.key === key
+                        ? { ...field, value: newValue }
+                        : field;
+                } else {
+                    return field.key === key
+                        ? { ...field, value: newValue }
+                        : field;
+                }
+            })
         );
     };
 
@@ -1119,13 +1066,8 @@ const SingleBook = () => {
                 <Popup
                     onClick={() => {
                         setIsNewElem(false);
-                        setnewElem({
-                            contragent_id: "",
-                            full_name: "",
-                            position: "",
-                            email: "",
-                            phone: "",
-                        });
+                        setPopupFields([]);
+                        setTempData({});
                     }}
                     title={
                         bookId === "creditor" ||
@@ -1137,7 +1079,7 @@ const SingleBook = () => {
                 >
                     <div className="action-form__body flex flex-col gap-[18px]">
                         {popupFields.length > 0 &&
-                            popupFields.map(({ key, label }) => {
+                            popupFields.map(({ key, label, value }) => {
                                 if (key === "phone") {
                                     return (
                                         <div
@@ -1157,14 +1099,13 @@ const SingleBook = () => {
                                                 type="tel"
                                                 inputMode="tel"
                                                 onAccept={(value) => {
-                                                    // handlePopupFieldsChange(
-                                                    //     key,
-                                                    //     value
-                                                    // );
+                                                    handlePopupFieldsChange(
+                                                        null,
+                                                        key,
+                                                        value
+                                                    );
                                                 }}
-                                                // value={
-                                                //     value?.toString() || ""
-                                                // }
+                                                value={value?.toString() || ""}
                                                 placeholder="Телефон"
                                             />
                                         </div>
@@ -1185,16 +1126,16 @@ const SingleBook = () => {
                                                 id={key}
                                                 type="number"
                                                 className="form-field"
-                                                // value={
-                                                //     value?.toString() || ""
-                                                // }
+                                                value={value?.toString() || ""}
                                                 onChange={(e) => {
                                                     const newValue =
                                                         e.target.value;
-                                                    // handlePopupFieldsChange(
-                                                    //     key,
-                                                    //     newValue
-                                                    // );
+
+                                                    handlePopupFieldsChange(
+                                                        null,
+                                                        key,
+                                                        newValue
+                                                    );
                                                 }}
                                             />
                                         </div>
@@ -1217,17 +1158,20 @@ const SingleBook = () => {
                                             <select
                                                 id={key}
                                                 className="form-select"
-                                                // value={value || ""}
+                                                value={value || ""}
                                                 onChange={(e) => {
                                                     const newValue =
                                                         e.target.value;
-                                                    // handlePopupFieldsChange(
-                                                    //     id,
-                                                    //     key,
-                                                    //     newValue
-                                                    // );
+                                                    handlePopupFieldsChange(
+                                                        null,
+                                                        key,
+                                                        newValue
+                                                    );
                                                 }}
                                             >
+                                                <option value="">
+                                                    Выбрать
+                                                </option>
                                                 {bookId ===
                                                 "management-report-types" ? (
                                                     <>
@@ -1282,17 +1226,16 @@ const SingleBook = () => {
                                                 id={key}
                                                 type="text"
                                                 className="form-field"
-                                                // value={
-                                                //     value?.toString() || ""
-                                                // }
+                                                value={value?.toString() || ""}
                                                 onChange={(e) => {
                                                     const newValue =
                                                         e.target.value;
-                                                    // handlePopupFieldsChange(
-                                                    //     id,
-                                                    //     key,
-                                                    //     newValue
-                                                    // );
+
+                                                    handlePopupFieldsChange(
+                                                        null,
+                                                        key,
+                                                        newValue
+                                                    );
                                                 }}
                                             />
                                         </div>
@@ -1306,15 +1249,11 @@ const SingleBook = () => {
                             type="button"
                             onClick={() => {
                                 setIsNewElem(false);
-                                setnewElem({
-                                    contragent_id: "",
-                                    full_name: "",
-                                    position: "",
-                                    email: "",
-                                    phone: "",
-                                });
+                                setPopupFields([]);
+                                setTempData({});
                             }}
                             className="cancel-button flex-[0_0_fit-content]"
+                            title="Отменить создание записи"
                         >
                             Отменить
                         </button>
@@ -1322,9 +1261,10 @@ const SingleBook = () => {
                         <button
                             type="button"
                             className="action-button flex-[0_0_fit-content]"
-                            onClick={() => addNewContact(newElem)}
+                            onClick={addNewElement}
+                            title="Создать запись"
                         >
-                            Добавить
+                            Создать
                         </button>
                     </div>
                 </Popup>
