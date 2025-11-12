@@ -26,49 +26,20 @@ const ReferenceNewElemForm = ({
         >
             <form>
                 <div className="action-form__body flex flex-col gap-[18px]">
-                    {/* {bookId === "suppliers-with-reports" && (
-                        <div className="flex flex-col">
-                            <label
-                                htmlFor="contragent_id"
-                                className="form-label"
-                            >
-                                Наименование подрядчика
-                            </label>
-                            <select
-                                id="contragent_id"
-                                className="form-select"
-                                value={+popupFields?.contragent_id?.value || ""}
-                                onChange={(e) => {
-                                    const newValue = e.target.value;
-                                    handlePopupFieldsChange(
-                                        null,
-                                        "contragent_id",
-                                        newValue
-                                    );
-                                }}
-                            >
-                                <option value="">Выбрать</option>
-
-                                {booksItems.map((item) => (
-                                    <option value={item.id} key={item.id}>
-                                        {item.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    )} */}
-
                     {popupFields.length > 0 &&
                         popupFields.map(({ key, label, value }) => {
                             if (key === "phone") {
                                 return (
                                     <div key={key} className="flex flex-col">
-                                        <label
-                                            htmlFor={key}
-                                            className="form-label"
-                                        >
-                                            {label}
-                                        </label>
+                                        {bookId !==
+                                            "suppliers-with-reports" && (
+                                            <label
+                                                htmlFor={key}
+                                                className="form-label"
+                                            >
+                                                {label}
+                                            </label>
+                                        )}
                                         <IMaskInput
                                             mask={PhoneMask}
                                             className="form-field w-full"
@@ -201,12 +172,15 @@ const ReferenceNewElemForm = ({
                             } else {
                                 return (
                                     <div key={key} className="flex flex-col">
-                                        <label
-                                            htmlFor={key}
-                                            className="form-label"
-                                        >
-                                            {label}
-                                        </label>
+                                        {bookId !==
+                                            "suppliers-with-reports" && (
+                                            <label
+                                                htmlFor={key}
+                                                className="form-label"
+                                            >
+                                                {label}
+                                            </label>
+                                        )}
                                         <input
                                             id={key}
                                             type="text"
