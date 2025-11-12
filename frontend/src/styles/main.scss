@@ -87,7 +87,7 @@ body {
 }
 
 .container {
-    max-width: 1600px;
+    max-width: 1920px;
     margin: 0 auto;
     padding-left: 15px;
     padding-right: 15px;
@@ -112,7 +112,7 @@ body {
         padding-right: 40px;
     }
 
-    @media (min-width: $media-xxxl) {
+    @media (min-width: 2000px) {
         padding-left: 0;
         padding-right: 0;
     }

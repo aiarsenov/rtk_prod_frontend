@@ -25,6 +25,14 @@
             margin: 0;
             grid-template-columns: 155px 22% 22% 80px;
         }
+
+        @media (min-width: 1920px) {
+            padding: 20px 0;
+            grid-template-columns: 1fr minmax(20%, 26%) minmax(20%, 28%) minmax(
+                    80px,
+                    90px
+                );
+        }
     }
 
     &__item {
@@ -42,6 +50,14 @@
         @media (min-width: $media-xxl) {
             padding: 20px 0;
             grid-template-columns: 150px 20% 20% 80px;
+        }
+
+        @media (min-width: 1920px) {
+            padding: 20px 0;
+            grid-template-columns: 1fr minmax(20%, 25%) minmax(20%, 25%) minmax(
+                    80px,
+                    90px
+                );
         }
     }
 
