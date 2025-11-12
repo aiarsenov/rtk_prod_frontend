@@ -22,22 +22,6 @@ const ReferenceItem = ({
         navigate(`/reference-books/${data.alias}`);
     };
 
-    // const [isError, setIsError] = useState(false);
-
-    // const hasNameMatch = (input, currentId) => {
-    //     const result = booksItems.some(
-    //         (item) =>
-    //             item.id !== currentId &&
-    //             item.name.toLowerCase() === input.trim().toLowerCase()
-    //     );
-
-    //     if (result) {
-    //         setIsError(true);
-    //     } else {
-    //         editElement(data.id);
-    //     }
-    // };
-
     return (
         <tr
             className="registry-table__item transition text-base text-left cursor-pointer"
@@ -152,7 +136,19 @@ const ReferenceItem = ({
                             ) : key === "updated_by" ? (
                                 value?.name || "—"
                             ) : (
-                                value?.toString() || "—"
+                                <div
+                                    style={
+                                        bookId === "banks"
+                                            ? {}
+                                            : {
+                                                  whiteSpace: "nowrap",
+                                                  overflow: "hidden",
+                                                  textOverflow: "ellipsis",
+                                              }
+                                    }
+                                >
+                                    {value?.toString() || "—"}
+                                </div>
                             )}
                         </td>
                     );

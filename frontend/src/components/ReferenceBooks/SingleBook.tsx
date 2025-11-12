@@ -30,7 +30,7 @@ const SingleBook = () => {
             ? `${import.meta.env.VITE_API_URL}responsible-persons/${bookId}`
             : `${import.meta.env.VITE_API_URL}${bookId ? bookId : "books"}`;
 
-    const [mode, setMode] = useState("edit");
+    const [mode, setMode] = useState("read");
 
     const [booksItems, setBooksItems] = useState([]);
     const [refBooksItems, setRefBooksItems] = useState([]);
@@ -137,6 +137,10 @@ const SingleBook = () => {
 
     // Изименение генерации отчетов
     const toggleRoleResponse = (action) => {
+        if (mode === "read") {
+            return;
+        }
+
         query = toast.loading("Обновление", {
             containerId: "singleBook",
             position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
@@ -202,6 +206,10 @@ const SingleBook = () => {
 
     // Добавление записи
     const addNewElement = () => {
+        if (mode === "read") {
+            return;
+        }
+
         let updatedData = popupFields.reduce((acc, field) => {
             acc[field.key] = field.value;
             return acc;
@@ -263,6 +271,10 @@ const SingleBook = () => {
 
     // Изменение рабочих часов
     const editWokrHours = (data) => {
+        if (mode === "read") {
+            return;
+        }
+
         let updatedData = tempData;
         updatedData.hours = +data.hours;
 
@@ -327,6 +339,10 @@ const SingleBook = () => {
 
     // Изменение записи
     const editElement = (updatedData, reloadList = true) => {
+        if (mode === "read") {
+            return;
+        }
+
         let data = updatedData;
 
         if (bookId === "management-report-types") {
@@ -422,6 +438,10 @@ const SingleBook = () => {
 
     // Изменение контактов
     const editContragentAndCreditorContact = (data) => {
+        if (mode === "read") {
+            return;
+        }
+
         query = toast.loading("Обновление", {
             containerId: "singleBook",
             draggable: true,
@@ -489,6 +509,10 @@ const SingleBook = () => {
 
     // Изменение контакта подрядчика
     const editContactElem = (data) => {
+        if (mode === "read") {
+            return;
+        }
+
         query = toast.loading("Обновление", {
             containerId: "singleBook",
             draggable: true,
@@ -538,6 +562,10 @@ const SingleBook = () => {
 
     // Удаление контакта подрядчика
     const deleteContactElem = (data) => {
+        if (mode === "read") {
+            return;
+        }
+
         query = toast.loading("Удаление", {
             containerId: "singleBook",
             draggable: true,
@@ -599,6 +627,10 @@ const SingleBook = () => {
 
     // Удаление контакта
     const deleteContact = (data) => {
+        if (mode === "read") {
+            return;
+        }
+
         query = toast.loading("Удаление", {
             containerId: "singleBook",
             draggable: true,
@@ -672,6 +704,10 @@ const SingleBook = () => {
 
     // Удаление записи
     const deleteElement = (data) => {
+        if (mode === "read") {
+            return;
+        }
+
         query = toast.loading("Удаление", {
             containerId: "singleBook",
             draggable: true,
@@ -804,6 +840,10 @@ const SingleBook = () => {
 
     // Обработка существующих полей справочника
     const handleSwitchChange = (evt, name, data) => {
+        if (mode === "read") {
+            return;
+        }
+
         if (name == "is_project_leader") {
             setBooksItems((prevBooksItems) =>
                 prevBooksItems.map((item) => {
