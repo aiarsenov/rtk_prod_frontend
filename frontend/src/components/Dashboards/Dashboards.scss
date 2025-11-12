@@ -113,9 +113,10 @@
         max-width: 100%;
 
         &__wrapper {
+            height: 345px;
             padding: 1px;
             overflow-x: auto;
-            overflow-y: hidden;
+            overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
 
