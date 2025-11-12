@@ -1,6 +1,6 @@
 import Popup from "../Popup/Popup";
-
 import { IMaskInput } from "react-imask";
+import CreatableSelect from "react-select/creatable";
 
 const PhoneMask = "+{7} (000) 000 00 00";
 
@@ -95,48 +95,70 @@ const ReferenceEditElemForm = ({
                                         >
                                             {label}
                                         </label>
-                                        <select
-                                            id={key}
-                                            className="form-select"
-                                            value={value || ""}
-                                            onChange={(e) => {
-                                                const newValue = e.target.value;
+                                        <CreatableSelect
+                                            className="form-select-extend"
+                                            placeholder="Выбрать"
+                                            isValidNewOption={() => false}
+                                            noOptionsMessage={() =>
+                                                "Совпадений нет"
+                                            }
+                                            options={
+                                                bookId ===
+                                                "management-report-types"
+                                                    ? positions.map(
+                                                          (position) => ({
+                                                              value: position.id,
+                                                              label: position.name,
+                                                          })
+                                                      )
+                                                    : [
+                                                          {
+                                                              value: "one_to_one",
+                                                              label: "Один к одному",
+                                                          },
+                                                          {
+                                                              value: "one_to_many",
+                                                              label: "Один ко многим",
+                                                          },
+                                                      ]
+                                            }
+                                            value={(() => {
+                                                const opts =
+                                                    bookId ===
+                                                    "management-report-types"
+                                                        ? positions.map(
+                                                              (p) => ({
+                                                                  value: p.id,
+                                                                  label: p.name,
+                                                              })
+                                                          )
+                                                        : [
+                                                              {
+                                                                  value: "one_to_one",
+                                                                  label: "Один к одному",
+                                                              },
+                                                              {
+                                                                  value: "one_to_many",
+                                                                  label: "Один ко многим",
+                                                              },
+                                                          ];
+                                                return (
+                                                    opts.find(
+                                                        (opt) =>
+                                                            opt.value === value
+                                                    ) || null
+                                                );
+                                            })()}
+                                            onChange={(selectedOption) => {
+                                                const newValue =
+                                                    selectedOption?.value || "";
                                                 handlePopupFieldsChange(
                                                     id,
                                                     key,
                                                     newValue
                                                 );
                                             }}
-                                        >
-                                            {bookId ===
-                                            "management-report-types" ? (
-                                                <>
-                                                    {positions.map(
-                                                        (position) => (
-                                                            <option
-                                                                value={
-                                                                    position.id
-                                                                }
-                                                                key={
-                                                                    position.id
-                                                                }
-                                                            >
-                                                                {position.name}
-                                                            </option>
-                                                        )
-                                                    )}
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <option value="one_to_one">
-                                                        Один к одному
-                                                    </option>
-                                                    <option value="one_to_many">
-                                                        Один ко многим
-                                                    </option>
-                                                </>
-                                            )}
-                                        </select>
+                                        />
                                     </div>
                                 );
                             } else if (

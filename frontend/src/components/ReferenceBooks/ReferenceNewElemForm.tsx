@@ -1,6 +1,6 @@
 import Popup from "../Popup/Popup";
-
 import { IMaskInput } from "react-imask";
+import CreatableSelect from "react-select/creatable";
 
 const PhoneMask = "+{7} (000) 000 00 00";
 
@@ -99,69 +99,87 @@ const ReferenceNewElemForm = ({
                                         >
                                             {label}
                                         </label>
-                                        <select
-                                            id={key}
-                                            className="form-select"
-                                            value={value || ""}
-                                            onChange={(e) => {
-                                                const newValue = e.target.value;
+
+                                        <CreatableSelect
+                                            className="form-select-extend"
+                                            placeholder="Выбрать"
+                                            isValidNewOption={() => false}
+                                            noOptionsMessage={() =>
+                                                "Совпадений нет"
+                                            }
+                                            options={
+                                                bookId ===
+                                                "management-report-types"
+                                                    ? positions.map(
+                                                          (position) => ({
+                                                              value: position.id,
+                                                              label: position.name,
+                                                          })
+                                                      )
+                                                    : bookId ===
+                                                      "suppliers-with-reports"
+                                                    ? booksItems.map(
+                                                          (item) => ({
+                                                              value: item.id,
+                                                              label: item.name,
+                                                          })
+                                                      )
+                                                    : [
+                                                          {
+                                                              value: "one_to_one",
+                                                              label: "Один к одному",
+                                                          },
+                                                          {
+                                                              value: "one_to_many",
+                                                              label: "Один ко многим",
+                                                          },
+                                                      ]
+                                            }
+                                            value={(() => {
+                                                const opts =
+                                                    bookId ===
+                                                    "management-report-types"
+                                                        ? positions.map(
+                                                              (p) => ({
+                                                                  value: p.id,
+                                                                  label: p.name,
+                                                              })
+                                                          )
+                                                        : bookId ===
+                                                          "suppliers-with-reports"
+                                                        ? booksItems.map(
+                                                              (i) => ({
+                                                                  value: i.id,
+                                                                  label: i.name,
+                                                              })
+                                                          )
+                                                        : [
+                                                              {
+                                                                  value: "one_to_one",
+                                                                  label: "Один к одному",
+                                                              },
+                                                              {
+                                                                  value: "one_to_many",
+                                                                  label: "Один ко многим",
+                                                              },
+                                                          ];
+                                                return (
+                                                    opts.find(
+                                                        (opt) =>
+                                                            opt.value === value
+                                                    ) || null
+                                                );
+                                            })()}
+                                            onChange={(selectedOption) => {
+                                                const newValue =
+                                                    selectedOption?.value || "";
                                                 handlePopupFieldsChange(
                                                     null,
                                                     key,
                                                     newValue
                                                 );
                                             }}
-                                        >
-                                            <option value="">Выбрать</option>
-                                            {(() => {
-                                                if (
-                                                    bookId ===
-                                                    "management-report-types"
-                                                ) {
-                                                    return positions.map(
-                                                        (position) => (
-                                                            <option
-                                                                value={
-                                                                    position.id
-                                                                }
-                                                                key={
-                                                                    position.id
-                                                                }
-                                                            >
-                                                                {position.name}
-                                                            </option>
-                                                        )
-                                                    );
-                                                }
-
-                                                if (
-                                                    bookId ===
-                                                    "suppliers-with-reports"
-                                                ) {
-                                                    return booksItems.map(
-                                                        (item) => (
-                                                            <option
-                                                                value={item.id}
-                                                                key={item.id}
-                                                            >
-                                                                {item.name}
-                                                            </option>
-                                                        )
-                                                    );
-                                                }
-
-                                                return (
-                                                    <>
-                                                        <option value="one_to_one">
-                                                            Один к одному
-                                                        </option>
-                                                        <option value="one_to_many">
-                                                            Один ко многим
-                                                        </option>
-                                                    </>
-                                                );
-                                            })()}
-                                        </select>
+                                        />
                                     </div>
                                 );
                             } else if (

@@ -11,6 +11,7 @@ import ReferenceNewElemForm from "./ReferenceNewElemForm";
 import ReferenceEditElemForm from "./ReferenceEditElemForm";
 import ReferenceDeleteElemForm from "./ReferenceDeleteElemForm";
 import Loader from "../Loader";
+import CreatableSelect from "react-select/creatable";
 
 import { ToastContainer, toast } from "react-toastify";
 
@@ -999,21 +1000,39 @@ const SingleBook = () => {
                         </h1>
 
                         {bookId === "working-hours" && (
-                            <select
-                                className="form-select max-w-[150px]"
-                                style={{ minWidth: "100px" }}
-                                value={currentYear}
-                                onChange={(evt) =>
-                                    setCurrentYear(evt.target.value)
+                            <CreatableSelect
+                                className="form-select-extend max-w-[180px]"
+                                styles={{
+                                    container: (base) => ({
+                                        ...base,
+                                        minWidth: "100px",
+                                    }),
+                                }}
+                                placeholder="Год"
+                                isValidNewOption={() => false}
+                                noOptionsMessage={() => "Нет доступных годов"}
+                                options={
+                                    availableYears.length > 0
+                                        ? availableYears.map((item) => ({
+                                              value: item,
+                                              label: item.toString(),
+                                          }))
+                                        : []
                                 }
-                            >
-                                {availableYears.length > 0 &&
-                                    availableYears.map((item) => (
-                                        <option key={item} value={item}>
-                                            {item}
-                                        </option>
-                                    ))}
-                            </select>
+                                value={
+                                    availableYears
+                                        .map((item) => ({
+                                            value: item,
+                                            label: item.toString(),
+                                        }))
+                                        .find(
+                                            (opt) => opt.value === currentYear
+                                        ) || null
+                                }
+                                onChange={(selectedOption) => {
+                                    setCurrentYear(selectedOption?.value || "");
+                                }}
+                            />
                         )}
                     </div>
 
