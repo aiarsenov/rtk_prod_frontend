@@ -30,7 +30,7 @@ const SingleBook = () => {
             ? `${import.meta.env.VITE_API_URL}responsible-persons/${bookId}`
             : `${import.meta.env.VITE_API_URL}${bookId ? bookId : "books"}`;
 
-    const [mode, setMode] = useState("read");
+    const [mode, setMode] = useState("edit");
 
     const [booksItems, setBooksItems] = useState([]);
     const [refBooksItems, setRefBooksItems] = useState([]);
