@@ -1,16 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 
 import getData from "../../utils/getData";
 import postData from "../../utils/postData";
 
+import Loader from "../Loader";
 import Popup from "../Popup/Popup";
 import ReferenceItem from "./ReferenceItem";
 import ReferenceItemExtended from "./ReferenceItemExtended";
 import ReferenceNewElemForm from "./ReferenceNewElemForm";
 import ReferenceEditElemForm from "./ReferenceEditElemForm";
 import ReferenceDeleteElemForm from "./ReferenceDeleteElemForm";
-import Loader from "../Loader";
+import ReferenceBooksTheadItems from "./ReferenceBooksTheadItems";
 import CreatableSelect from "react-select/creatable";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -35,6 +36,7 @@ const SingleBook = () => {
 
     const [booksItems, setBooksItems] = useState([]);
     const [refBooksItems, setRefBooksItems] = useState([]);
+    const [openFilter, setOpenFilter] = useState("");
 
     const [isLoading, setIsLoading] = useState(true);
     const [listLength, setListLength] = useState(0);
@@ -53,6 +55,29 @@ const SingleBook = () => {
     const [currentYear, setCurrentYear] = useState(""); // Текущий год
 
     let query;
+
+    // Заполняем фильтры
+    const filterOptions = useMemo(() => {
+        const nameOptions = Array.from(
+            new Set(
+                booksItems
+                    .map((item) => item.name)
+                    .filter((name) => name !== null)
+            )
+        );
+
+        const contactOptions = Array.from(
+            new Set(
+                booksItems.flatMap((item) =>
+                    (item.contacts || []).flatMap((contact) =>
+                        [contact.email, contact.phone].filter(Boolean)
+                    )
+                )
+            )
+        );
+
+        return { nameOptions, contactOptions };
+    }, [booksItems]);
 
     // Сбрасываем состояние попапа и полей
     const resetElemPopupState = () => {
@@ -983,10 +1008,41 @@ const SingleBook = () => {
         }
     }, [mode]);
 
-    useEffect(() => {
-        console.log(tempData);
-        console.log(popupFields);
-    }, [popupFields, tempData]);
+    const [filters, setFilters] = useState({
+        selectedNames: [],
+        selectedContacts: [],
+    });
+
+    const filteredList = useMemo(() => {
+        if (
+            bookId === "creditor" ||
+            bookId === "contragent" ||
+            bookId === "suppliers-with-reports"
+        ) {
+            return booksItems
+                .map((item) => {
+                    const filteredContacts = (item.contacts || []).filter(
+                        (contact) =>
+                            filters.selectedContacts.length === 0 ||
+                            filters.selectedContacts.includes(contact.email) ||
+                            filters.selectedContacts.includes(contact.phone)
+                    );
+
+                    if (
+                        (filters.selectedNames.length === 0 ||
+                            filters.selectedNames.includes(item.name)) &&
+                        filteredContacts.length > 0
+                    ) {
+                        return { ...item, contacts: filteredContacts };
+                    }
+
+                    return null;
+                })
+                .filter(Boolean);
+        } else {
+            return booksItems;
+        }
+    }, [filters, booksItems]);
 
     return (
         <main className="page reference-books">
@@ -1082,23 +1138,167 @@ const SingleBook = () => {
                         >
                             <thead className="registry-table__thead">
                                 <tr>
-                                    {COLUMNS[bookId].map(
-                                        ({ label, key, index }) => (
-                                            <th
-                                                className="min-w-[125px]"
-                                                rowSpan="2"
-                                                key={key || index}
-                                            >
-                                                {label}
-                                            </th>
-                                        )
-                                    )}
+                                    {/* {COLUMNS[bookId].map(
+                                        ({ label, key, filter, options }) => {
+                                            return (
+                                                <th
+                                                    className="min-w-[125px]"
+                                                    rowSpan="2"
+                                                    key={key}
+                                                >
+                                                    <div className="registry-table__thead-item">
+                                                        {filter ? (
+                                                            <>
+                                                                <div
+                                                                    className="registry-table__thead-label"
+                                                                    style={{
+                                                                        maxWidth:
+                                                                            "200px",
+                                                                    }}
+                                                                >
+                                                                    {label}
+                                                                </div>
+
+                                                                {filters[filter]
+                                                                    .length >
+                                                                    0 && (
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => {
+                                                                            setFilters(
+                                                                                (
+                                                                                    prev
+                                                                                ) => ({
+                                                                                    ...prev,
+                                                                                    [filter]:
+                                                                                        [],
+                                                                                })
+                                                                            );
+                                                                        }}
+                                                                    >
+                                                                        <svg
+                                                                            width="16"
+                                                                            height="16"
+                                                                            viewBox="0 0 16 16"
+                                                                            fill="none"
+                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                        >
+                                                                            <path
+                                                                                d="M9.06 8l3.713 3.712-1.06 1.06L8 9.06l-3.712 3.713-1.061-1.06L6.939 8 3.227 4.287l1.06-1.06L8 6.939l3.712-3.712 1.061 1.06L9.061 8z"
+                                                                                fill="#000"
+                                                                            />
+                                                                        </svg>
+                                                                    </button>
+                                                                )}
+
+                                                                {filterOptions[
+                                                                    options
+                                                                ]?.length > 0 &&
+                                                                    filterOptions[
+                                                                        options
+                                                                    ]?.some(
+                                                                        (val) =>
+                                                                            val !==
+                                                                            undefined
+                                                                    ) && (
+                                                                        <FilterButton
+                                                                            label={
+                                                                                label
+                                                                            }
+                                                                            key={
+                                                                                key
+                                                                            }
+                                                                            filterKey={
+                                                                                key
+                                                                            }
+                                                                            openFilter={
+                                                                                openFilter
+                                                                            }
+                                                                            setOpenFilter={
+                                                                                setOpenFilter
+                                                                            }
+                                                                        />
+                                                                    )}
+
+                                                                {openFilter ===
+                                                                    key && (
+                                                                    <MultiSelectWithSearch
+                                                                        options={
+                                                                            filterOptions[
+                                                                                options
+                                                                            ]
+                                                                                ?.length >
+                                                                            0
+                                                                                ? filterOptions[
+                                                                                      options
+                                                                                  ]?.map(
+                                                                                      (
+                                                                                          name
+                                                                                      ) => ({
+                                                                                          value: name,
+                                                                                          label: name,
+                                                                                      })
+                                                                                  )
+                                                                                : []
+                                                                        }
+                                                                        selectedValues={
+                                                                            filters[
+                                                                                filter
+                                                                            ]
+                                                                        }
+                                                                        onChange={(
+                                                                            updated
+                                                                        ) =>
+                                                                            setFilters(
+                                                                                (
+                                                                                    prev
+                                                                                ) => ({
+                                                                                    ...prev,
+                                                                                    ...updated,
+                                                                                })
+                                                                            )
+                                                                        }
+                                                                        fieldName={
+                                                                            filter
+                                                                        }
+                                                                        close={
+                                                                            setOpenFilter
+                                                                        }
+                                                                    />
+                                                                )}
+                                                            </>
+                                                        ) : (
+                                                            <div
+                                                                className="registry-table__thead-label"
+                                                                style={{
+                                                                    maxWidth:
+                                                                        "200px",
+                                                                }}
+                                                            >
+                                                                {label}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </th>
+                                            );
+                                        }
+                                    )} */}
+
+                                    <ReferenceBooksTheadItems
+                                        bookId={bookId}
+                                        COLUMNS={COLUMNS}
+                                        filterOptions={filterOptions}
+                                        filters={filters}
+                                        setFilters={setFilters}
+                                        openFilter={openFilter}
+                                        setOpenFilter={setOpenFilter}
+                                    />
                                 </tr>
                             </thead>
 
                             <tbody className="registry-table__tbody">
-                                {booksItems?.length > 0 &&
-                                    booksItems.map((item) => {
+                                {filteredList?.length > 0 &&
+                                    filteredList.map((item) => {
                                         if (
                                             bookId === "creditor" ||
                                             bookId === "contragent" ||

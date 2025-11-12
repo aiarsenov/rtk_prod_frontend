@@ -30,18 +30,18 @@
         { "label": "Автор измнения", "key": "updated_by" }
     ],
     "contragent": [
-        { "label": "Наименование Заказчика", "key": "" },
+        { "label": "Наименование", "key": "name", "filter": "selectedNames", "options": "nameOptions" },
         { "label": "ФИО и должность", "key": "" },
         { "label": "Кол-во проектов", "key": "" },
-        { "label": "Контакты", "key": "" },
+        { "label": "Контакты", "key": "contacts", "filter": "selectedContacts", "options": "contactOptions" },
         { "label": "Последнее изменение", "key": "" },
         { "label": "Автор измнения", "key": "" }
     ],
     "creditor": [
-        { "label": "Наименование кредитора", "key": "" },
+        { "label": "Наименование", "key": "name", "filter": "selectedNames", "options": "nameOptions" },
         { "label": "ФИО и должность", "key": "" },
         { "label": "Кол-во проектов", "key": "" },
-        { "label": "Контакты", "key": "" },
+        { "label": "Контакты", "key": "contacts", "filter": "selectedContacts", "options": "contactOptions" },
         { "label": "Последнее изменение", "key": "" },
         { "label": "Автор измнения", "key": "" }
     ],
@@ -59,9 +59,9 @@
         { "label": "Автор измнения", "key": "updated_by" }
     ],
     "suppliers-with-reports": [
-        { "label": "Наименование Подрядчика", "key": "" },
+        { "label": "Наименование", "key": "name", "filter": "selectedNames", "options": "nameOptions" },
         { "label": "ФИО и должность", "key": "" },
-        { "label": "Контакты", "key": "" },
+        { "label": "Контакты", "key": "contacts", "filter": "selectedContacts", "options": "contactOptions" },
         { "label": "Последнее изменение", "key": "" },
         { "label": "Автор измнения", "key": "" }
     ],
