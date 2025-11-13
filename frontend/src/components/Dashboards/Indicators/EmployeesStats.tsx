@@ -47,11 +47,48 @@ const EmployeesStats = ({
 }) => {
     const [activeTab, setActiveTab] = useState("employee_new");
 
+    const EmployeeMetricsData = {
+        labels: employeeMetrics.positions_histogram?.map((item) => item.name),
+        datasets: [
+            {
+                label: "",
+                data: employeeMetrics.positions_histogram?.map(
+                    (item) => item.previous_value
+                ),
+                backgroundColor: "#F4F3FF",
+                hoverBackgroundColor: "#E0E0FF",
+                borderColor: "#BDB4FE",
+                borderWidth: { right: 2 },
+                borderRadius: 0,
+                barPercentage: 1,
+                categoryPercentage: 0.8,
+                barThickness: 45,
+                datalabels: {
+                    display: false,
+                },
+                borderSkipped: false,
+                order: 2,
+            },
+            {
+                label: "",
+                data: employeeMetrics.positions_histogram?.map(
+                    (item) => item.value
+                ),
+                backgroundColor: "#BDB4FE",
+                borderRadius: 5,
+                barThickness: 25,
+                categoryPercentage: 1,
+                barPercentage: 1,
+                order: 1,
+            },
+        ],
+    };
+
     const horizontalOptions = {
+        indexAxis: "y",
         responsive: true,
         maintainAspectRatio: false,
         animation: false,
-        indexAxis: "y",
         plugins: {
             legend: {
                 display: false,
@@ -85,6 +122,7 @@ const EmployeesStats = ({
 
         scales: {
             y: {
+                stacked: true,
                 position: "left",
                 ticks: {
                     color: "#002033",
@@ -115,6 +153,7 @@ const EmployeesStats = ({
             },
 
             x: {
+                beginAtZero: true,
                 ticks: {
                     display: false,
                 },
@@ -129,22 +168,6 @@ const EmployeesStats = ({
                 },
             },
         },
-    };
-
-    const EmployeeMetricsData = {
-        labels: employeeMetrics.positions_histogram?.map((item) => item.name),
-        datasets: [
-            {
-                label: "",
-                data: employeeMetrics.positions_histogram?.map(
-                    (item) => item.value
-                ),
-                backgroundColor: "#BDB4FE",
-                borderRadius: 5,
-                categoryPercentage: 0.3,
-                barThickness: 25,
-            },
-        ],
     };
 
     return (
