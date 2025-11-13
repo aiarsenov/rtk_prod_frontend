@@ -2,6 +2,28 @@ import { useNavigate } from "react-router-dom";
 
 import handleStatus from "../../utils/handleStatus";
 
+const handleLastReport = (string) => {
+    if (!string) return;
+
+    if (string.toLowerCase() === "в работе") {
+        return "inprogress";
+    } else if (string.toLowerCase() === "завершен") {
+        return "completed";
+    } else {
+        return "";
+    }
+};
+
+// onClick={(e) => {
+//     e.stopPropagation();
+//     window.scrollTo(0, 0);
+//     navigate(
+//         `${
+//             import.meta.env.VITE_BASE_URL
+//         }employees/${value?.id}`
+//     );
+// }}
+
 const ProjectItem = ({
     props,
     columns,
@@ -34,6 +56,10 @@ const ProjectItem = ({
                         statusClass = "registry-table__item-status_completed";
                     } else if (value === "active") {
                         statusClass = "registry-table__item-status_active";
+                    } else if (value === "undefined") {
+                        statusClass = "registry-table__item-status_canceled";
+                    } else {
+                        return "";
                     }
                 }
 
@@ -49,13 +75,10 @@ const ProjectItem = ({
                                                     {value?.map(
                                                         (item, index) => (
                                                             <div
-                                                                className={`${
+                                                                className={`${handleLastReport(
                                                                     item.status
-                                                                        ?.name ===
-                                                                    "Завершен"
-                                                                        ? "completed"
-                                                                        : ""
-                                                                }`}
+                                                                        .name
+                                                                )}`}
                                                                 key={index}
                                                             >
                                                                 {
@@ -134,7 +157,7 @@ const ProjectItem = ({
                 } else {
                     if (key === "name") {
                         return (
-                            <td className="w-[130px] text-blue" key={key}>
+                            <td className="w-[130px]" key={key}>
                                 <div className="hidden-group">
                                     <div className="visible-text">
                                         <div>{value?.toString() || "—"}</div>

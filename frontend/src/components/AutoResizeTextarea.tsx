@@ -7,20 +7,21 @@ function AutoResizeTextarea({
     disabled,
     placeholder,
     className,
+    minHeight = 78,
 }) {
     const textareaRef = useRef(null);
-
+    
     const resizeTextarea = () => {
         const el = textareaRef.current;
         if (el) {
             el.style.height = "auto";
-            el.style.height = el.scrollHeight + "px";
+            el.style.height = Math.max(el.scrollHeight, minHeight) + "px";
         }
     };
 
     useEffect(() => {
         resizeTextarea();
-    }, [value]);
+    }, [value, minHeight]);
 
     return (
         <textarea

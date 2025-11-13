@@ -1082,6 +1082,7 @@ const ProjectCard = () => {
                                                 ? "Страна, город, область..."
                                                 : ""
                                         }
+                                        minHeight={31}
                                         value={
                                             projectDataCustom?.location || ""
                                         }
@@ -1123,6 +1124,7 @@ const ProjectCard = () => {
                                                 ? "Заполните ТЭП"
                                                 : ""
                                         }
+                                        minHeight={31}
                                         value={projectDataCustom?.tep || ""}
                                         onChange={(e) => {
                                             if (mode === "read") return;

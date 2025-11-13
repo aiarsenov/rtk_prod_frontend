@@ -112,6 +112,13 @@
         margin-bottom: 20px;
     }
 
+    &__location,
+    &__tep {
+        textarea {
+            min-height: 30px;
+        }
+    }
+
     &__team {
         &-list {
             display: grid;
