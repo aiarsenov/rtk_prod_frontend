@@ -27,7 +27,9 @@ const FinancialMetrics = ({ financialMetrics }) => {
                                 />
                             </strong>
 
-                            <small>{financialMetrics.revenue?.label}</small>
+                            <small>
+                                млн <br /> руб.
+                            </small>
 
                             {typeof financialMetrics.revenue?.change_percent ===
                                 "string" && (
@@ -78,7 +80,9 @@ const FinancialMetrics = ({ financialMetrics }) => {
                                 />
                             </strong>
 
-                            <small>{financialMetrics.receipts?.label}</small>
+                            <small>
+                                млн <br /> руб.
+                            </small>
 
                             {typeof financialMetrics.receipts
                                 ?.change_percent === "string" && (
@@ -128,7 +132,9 @@ const FinancialMetrics = ({ financialMetrics }) => {
                                 />
                             </strong>
 
-                            <small>{financialMetrics.debts?.label}</small>
+                            <small>
+                                млн <br /> руб.
+                            </small>
 
                             {typeof financialMetrics.debts?.change_percent ===
                                 "string" && (

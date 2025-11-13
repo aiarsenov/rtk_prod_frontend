@@ -28,7 +28,7 @@ const GrossMetrics = ({ financialMetrics }) => {
                             </strong>
 
                             <small>
-                                {financialMetrics.gross_profit?.label}
+                                млн <br /> руб.
                             </small>
 
                             {typeof financialMetrics.gross_profit
