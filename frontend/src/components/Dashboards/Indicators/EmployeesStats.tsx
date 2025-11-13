@@ -203,6 +203,7 @@ const EmployeesStats = ({
                     <div className="h-[225px] overflow-auto">
                         <div
                             style={{
+                                minWidth: "600px",
                                 height:
                                     (EmployeeMetricsData.labels?.length || 0) >
                                     5
