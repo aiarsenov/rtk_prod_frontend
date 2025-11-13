@@ -113,30 +113,33 @@
         max-width: 100%;
 
         &__wrapper {
-            height: 345px;
+            position: relative;
+            height: 350px;
             padding: 1px;
             overflow-x: auto;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
 
-        &__header,
         &__body {
             width: 100%;
             display: grid;
             align-items: center;
             grid-template-columns: minmax(410px, 30%) repeat(3, 300px);
 
+            & > div {
+                min-height: 300px;
+                min-width: 300px;
+            }
+
             @media (min-width: 1441px) {
                 grid-template-columns: minmax(410px, 30%) repeat(3, 1fr);
             }
         }
 
-        &__body {
-            & > div {
-                min-height: 300px;
-                min-width: 300px;
-            }
+        .loader {
+            position: absolute;
+            z-index: 1;
         }
     }
 
