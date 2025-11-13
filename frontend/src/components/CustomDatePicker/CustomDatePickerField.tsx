@@ -43,25 +43,28 @@ const CustomDatePickerField = ({
           })
         : null;
 
+    const formatMonthYear = (date) => {
+        const d = new Date(date);
+        if (isNaN(d.getTime())) return "";
+
+        const formatted = new Intl.DateTimeFormat("ru-RU", {
+            month: "long",
+            year: "numeric",
+        }).format(d);
+
+        return formatted
+            .replace(" г.", "")
+            .replace(/^./, (ch) => ch.toUpperCase());
+    };
+
     const displayValue = (() => {
-        const formatMonthYear = (date) => {
-            const formatted = new Intl.DateTimeFormat("ru-RU", {
-                month: "long",
-                year: "numeric",
-            }).format(date);
-
-            return formatted
-                .replace(" г.", "")
-                .replace(/^./, (ch) => ch.toUpperCase());
-        };
-
         if (showMonthYear) {
             if (startDate && endDate)
                 return `${formatMonthYear(startDate)} - ${formatMonthYear(
                     endDate
                 )}`;
             if (startDate) return formatMonthYear(startDate);
-            return formatted;
+            return formatted || "";
         }
 
         if (startDate && endDate)
@@ -70,7 +73,7 @@ const CustomDatePickerField = ({
                 type
             )}`;
         if (startDate) return formatDateDMY(startDate, type);
-        return formatted;
+        return formatted || "";
     })();
 
     return (
