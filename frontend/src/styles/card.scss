@@ -71,6 +71,10 @@
         @media (min-width: $media-xxxl) {
             grid-template-columns: 1fr 620px;
         }
+
+        @media (min-width: 1920px) {
+            grid-template-columns: 1fr 700px;
+        }
     }
 
     &__main-content {
