@@ -9,19 +9,27 @@ const ProjectReportsList = ({
     isDataLoaded,
 }) => {
     return (
-        <ul className="reports__list">
-            {!isDataLoaded && <Loader />}
+        <>
+            <div className="card-reports-list__header project-card-reports-list__header">
+                <span>Отчёт</span>
+                <span>Период вып.</span>
+                <span>Статус</span>
+            </div>
 
-            {reports.map((report, index) => (
-                <ProjectReportItem
-                    key={report.id || index}
-                    {...report}
-                    deleteReport={deleteReport}
-                    openReportEditor={openReportEditor}
-                    mode={mode}
-                />
-            ))}
-        </ul>
+            <ul className="reports__list">
+                {!isDataLoaded && <Loader />}
+
+                {reports.map((report, index) => (
+                    <ProjectReportItem
+                        key={report.id || index}
+                        {...report}
+                        deleteReport={deleteReport}
+                        openReportEditor={openReportEditor}
+                        mode={mode}
+                    />
+                ))}
+            </ul>
+        </>
     );
 };
 

@@ -258,6 +258,14 @@
             color: var(--color-red-70);
         }
     }
+
+    &-reports-list__header {
+        grid-template-columns: 1fr 1fr 165px !important;
+    }
+
+    &__bottom-actions {
+        bottom: 80px !important;
+    }
 }
 
 .project-budget__block {

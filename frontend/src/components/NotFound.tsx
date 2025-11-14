@@ -10,13 +10,15 @@ const NotFound = () => {
 
     return (
         <main className="page grid min-h-full place-items-center">
-            <div className="container">
+            <div className="container pt-[80px]">
                 <div className="text-center">
                     <p className="font-semibold text-blue-400 text-5xl">404</p>
                     <h1 className="mt-4 text-5xl font-semibold tracking-tight text-balance text-gray-900 sm:text-6xl">
                         {message}
                     </h1>
-                    {additionalInfo && <p className="block my-2">{additionalInfo}</p>}
+                    {additionalInfo && (
+                        <p className="block my-2">{additionalInfo}</p>
+                    )}
                     <div className="mt-10 flex items-center justify-center gap-x-6">
                         <a
                             href="/"

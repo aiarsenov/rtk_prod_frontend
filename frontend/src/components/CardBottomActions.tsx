@@ -1,6 +1,10 @@
-const CardBottomActions = ({ setReportWindowsState, setActiveWindow }) => {
+const CardBottomActions = ({
+    setReportWindowsState,
+    setActiveWindow,
+    className,
+}) => {
     return (
-        <div className="card__bottom-actions">
+        <div className={`card__bottom-actions ${className}`}>
             <button
                 type="button"
                 title="Открыть отчёты"

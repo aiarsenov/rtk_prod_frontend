@@ -1,5 +1,9 @@
 @use "../../styles/media-breakpoints" as *;
 
+.management-reports__list {
+    gap: 0;
+}
+
 .management-reports__item {
     display: grid;
     gap: 10px;
@@ -7,7 +11,12 @@
     justify-content: space-between;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
+    padding: 20px 0;
     cursor: pointer;
+
+    &:not(:last-of-type) {
+        border-bottom: 1px solid var(--color-gray-30);
+    }
 
     @media (min-width: 480px) {
         grid-template-columns: 1fr 1fr 90px 60px;
@@ -19,7 +28,7 @@
     }
 
     @media (min-width: $media-xxl) {
-        padding: 20px 0;
+        padding: 20px;
     }
 
     .reports__list-item__status {

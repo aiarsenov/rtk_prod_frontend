@@ -1625,6 +1625,7 @@ const ProjectCard = () => {
             <CardBottomActions
                 setReportWindowsState={setReportWindowsState}
                 setActiveWindow={setActiveWindow}
+                className={"project-card__bottom-actions"}
             />
 
             <BottomNavCard>

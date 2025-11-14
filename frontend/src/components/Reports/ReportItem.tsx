@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 type Column = {
     label: string;
     key: string;
@@ -12,6 +14,8 @@ type ReportItemProps = {
 };
 
 const ReportItem = ({ columns, props, openReportEditor }: ReportItemProps) => {
+    const navigate = useNavigate();
+
     return (
         <tr
             className="registry-table__item transition text-base text-left cursor-pointer"
@@ -56,7 +60,25 @@ const ReportItem = ({ columns, props, openReportEditor }: ReportItemProps) => {
 
                                             if (key === "project_managers") {
                                                 cellContent = (
-                                                    <div className="hidden-group text-blue">
+                                                    <div
+                                                        className="hidden-group text-blue"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            window.scrollTo(
+                                                                0,
+                                                                0
+                                                            );
+                                                            navigate(
+                                                                `${
+                                                                    import.meta
+                                                                        .env
+                                                                        .VITE_BASE_URL
+                                                                }employees/${
+                                                                    item?.id
+                                                                }`
+                                                            );
+                                                        }}
+                                                    >
                                                         <div className="visible-text">
                                                             <div>
                                                                 {item.name.toString() ||
@@ -113,7 +135,21 @@ const ReportItem = ({ columns, props, openReportEditor }: ReportItemProps) => {
                 } else if (typeof value === "object" && value !== null) {
                     if (key === "project" || key === "contragent") {
                         return (
-                            <td className="w-[130px] text-blue" key={key}>
+                            <td
+                                className="w-[130px] text-blue"
+                                key={key}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    window.scrollTo(0, 0);
+                                    navigate(
+                                        `${import.meta.env.VITE_BASE_URL}${
+                                            key === "project"
+                                                ? "projects"
+                                                : "contragents"
+                                        }/${value?.id}`
+                                    );
+                                }}
+                            >
                                 <div className="hidden-group">
                                     <div className="visible-text">
                                         <div>
@@ -140,7 +176,7 @@ const ReportItem = ({ columns, props, openReportEditor }: ReportItemProps) => {
                     if (key === "report_period_code") {
                         return (
                             <td
-                                className="min-w-[120px] max-w-[155px]"
+                                className="min-w-[120px] max-w-[165px]"
                                 key={key}
                             >
                                 <div>{value?.toString() || "—"}</div>
@@ -185,7 +221,7 @@ const ReportItem = ({ columns, props, openReportEditor }: ReportItemProps) => {
                     } else if (key === "implementation_period") {
                         return (
                             <td
-                                className="w-[127px] registry-table__item-period"
+                                className="w-[125px] registry-table__item-period"
                                 key={key}
                             >
                                 {value?.toString() ? (

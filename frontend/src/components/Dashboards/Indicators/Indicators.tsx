@@ -530,7 +530,7 @@ const Indicators = () => {
         mainFilters.project_id,
     ]);
 
-    useBodyScrollLock(isActiveFilters);
+    useBodyScrollLock(isLoading || isActiveFilters);
 
     const width = useWindowWidth(); // Снимаем блокировку на десктопе
 
