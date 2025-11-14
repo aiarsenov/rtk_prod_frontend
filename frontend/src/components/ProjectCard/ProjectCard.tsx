@@ -935,45 +935,71 @@ const ProjectCard = () => {
                                         <Hint message={"Основная отрасль"} />
                                     </div>
 
-                                    <select
-                                        className="form-select"
-                                        value={
-                                            projectData?.industries?.main || ""
+                                    <CreatableSelect
+                                        options={industries.map((item) => ({
+                                            value: item.id,
+                                            label: item.name,
+                                        }))}
+                                        className="form-select-extend"
+                                        placeholder={
+                                            mode === "edit"
+                                                ? "Выбрать из списка"
+                                                : ""
                                         }
-                                        onChange={(evt) => {
+                                        noOptionsMessage={() =>
+                                            "Совпадений нет"
+                                        }
+                                        isValidNewOption={() => false}
+                                        value={
+                                            (industries.length > 0 &&
+                                                industries
+                                                    .map((item) => ({
+                                                        value: item.id,
+                                                        label: item.name,
+                                                    }))
+                                                    .find(
+                                                        (item) =>
+                                                            item.value ===
+                                                            projectDataCustom
+                                                                ?.industries
+                                                                ?.main
+                                                    )) ||
+                                            null
+                                        }
+                                        onChange={(selectedOption) => {
                                             if (mode === "read") return;
+
+                                            const newValue =
+                                                +selectedOption?.value || null;
+
                                             setProjectDataCustom({
                                                 ...projectDataCustom,
                                                 industries: {
                                                     ...projectDataCustom.industries,
-                                                    main: +evt.target.value,
+                                                    main: newValue,
                                                 },
                                             });
 
                                             updateCard(true, {
                                                 industries: {
                                                     ...projectDataCustom.industries,
-                                                    main: +evt.target.value,
+                                                    main: newValue,
                                                 },
                                             });
                                         }}
                                         disabled={
                                             mode == "read" || !availableToChange
                                         }
-                                    >
-                                        <option value="">
-                                            Выбрать из списка
-                                        </option>
-                                        {industries.length > 0 &&
-                                            industries.map((item) => (
-                                                <option
-                                                    value={item.id}
-                                                    key={item.id}
-                                                >
-                                                    {item.name}
-                                                </option>
-                                            ))}
-                                    </select>
+                                        styles={{
+                                            input: (base) => ({
+                                                ...base,
+                                                maxWidth: "100%",
+                                                whiteSpace: "nowrap",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                            }),
+                                        }}
+                                    />
                                 </div>
 
                                 <div className="project-card__industries">
