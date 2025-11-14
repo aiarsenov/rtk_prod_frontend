@@ -28,6 +28,8 @@ const CardProjects = ({
                         statusClass = "registry-table__item-status_active";
                     } else if (item.status === "active") {
                         statusClass = "registry-table__item-status_completed";
+                    } else if (item.status === "undefined") {
+                        statusClass = "registry-table__item-status_canceled";
                     }
 
                     return (
