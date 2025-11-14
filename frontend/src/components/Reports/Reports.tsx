@@ -26,7 +26,11 @@ const Reports = () => {
     const REPORTS_URL = `${import.meta.env.VITE_API_URL}reports`;
     const MANAGEMENT_URL = `${import.meta.env.VITE_API_URL}management-reports`;
 
-    const [activeTab, setActiveTab] = useState("projects");
+    const [activeTab, setActiveTab] = useState(() => {
+        const saved = localStorage.getItem("reportsActiveTab");
+        return saved || "projects";
+    });
+
     const [isLoading, setIsLoading] = useState(true);
 
     const [sortBy, setSortBy] = useState({ key: "", action: "" });
@@ -686,6 +690,10 @@ const Reports = () => {
         );
     }, [sortBy, filteredManagementReports]);
 
+    useEffect(() => {
+        localStorage.setItem("reportsActiveTab", activeTab);
+    }, [activeTab]);
+
     return (
         <main className="page reports-registry">
             <ToastContainer containerId="report" />
@@ -700,7 +708,7 @@ const Reports = () => {
                                 type="radio"
                                 name="active_tab"
                                 id="project_reports"
-                                defaultChecked
+                                checked={activeTab == "projects"}
                                 onChange={() => setActiveTab("projects")}
                             />
                             <label htmlFor="project_reports">
@@ -714,6 +722,7 @@ const Reports = () => {
                                 type="radio"
                                 name="active_tab"
                                 id="management_reports"
+                                checked={activeTab == "management"}
                                 onChange={() => setActiveTab("management")}
                             />
                             <label htmlFor="management_reports">
