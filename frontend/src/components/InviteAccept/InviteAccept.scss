@@ -1,0 +1,95 @@
+@use "../../styles/media-breakpoints" as *;
+
+.invite-accept {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-gray-20);
+    padding: 20px;
+
+    &__container {
+        width: 100%;
+        max-width: 500px;
+    }
+
+    &__card {
+        background: var(--color-white);
+        border-radius: 16px;
+        padding: 40px;
+        box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.08);
+
+        @media (max-width: $media-md) {
+            padding: 24px;
+        }
+    }
+
+    &__title {
+        font-weight: 600;
+        font-size: 24px;
+        line-height: 140%;
+        color: var(--color-gray-100);
+        margin: 0 0 8px 0;
+        text-align: center;
+    }
+
+    &__subtitle {
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 150%;
+        color: var(--color-gray-70);
+        margin: 0 0 24px 0;
+        text-align: center;
+    }
+
+    &__email {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        background: var(--color-gray-20);
+        border-radius: 10px;
+        margin-bottom: 24px;
+
+        &-label {
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 150%;
+            color: var(--color-gray-70);
+        }
+
+        &-value {
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 150%;
+            color: var(--color-gray-100);
+        }
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    &__field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    &__submit {
+        width: 100%;
+        margin-top: 8px;
+    }
+}
+
+.message {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 140%;
+
+    &-error {
+        color: var(--color-red-70);
+    }
+}

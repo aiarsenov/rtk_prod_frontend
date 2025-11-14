@@ -18,14 +18,24 @@ import Reports from "./Reports/Reports";
 import Sales from "./Sales/Sales";
 import SaleCard from "./SaleCard/SaleCard";
 import Admin from "./Admin/Admin";
+import InviteAccept from "./InviteAccept/InviteAccept";
 
 function Router() {
     return (
         <BrowserRouter basename="/">
-            <Header />
-
             <Routes>
-                <Route path="/" element={<MainLayout />}>
+                {/* Роут для принятия приглашения без Header */}
+                <Route path="/invite/accept" element={<InviteAccept />} />
+
+                {/* Остальные роуты с Header */}
+                <Route
+                    element={
+                        <>
+                            <Header />
+                            <MainLayout />
+                        </>
+                    }
+                >
                     <Route index element={<Home />} />
                     <Route path="*" element={<NotFound />} />
 
