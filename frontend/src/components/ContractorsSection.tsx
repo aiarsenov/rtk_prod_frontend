@@ -121,7 +121,51 @@ const ContractorsSection = ({
                     />
                 )}
 
-                <select
+                <CreatableSelect
+                    options={roles.map((item) => ({
+                        label: item.name,
+                        value: item.id,
+                    }))}
+                    className="form-select-extend"
+                    placeholder={mode === "edit" ? "Выберите роль" : ""}
+                    noOptionsMessage={() => "Совпадений нет"}
+                    isValidNewOption={() => false}
+                    defaultValue={
+                        (roles.length > 0 &&
+                            roles
+                                .map((item) => ({
+                                    value: item.id,
+                                    label: item.name,
+                                }))
+                                .find(
+                                    (item) => item.value === person?.role_id
+                                )) ||
+                        null
+                    }
+                    onChange={(selectedOption) => {
+                        if (mode === "read") return;
+
+                        const newValue = selectedOption?.value || null;
+
+                        handleContractorChange(
+                            index,
+                            "role_id",
+                            Number(newValue)
+                        );
+                    }}
+                    isDisabled={mode === "read"}
+                    styles={{
+                        input: (base) => ({
+                            ...base,
+                            maxWidth: "100%",
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                        }),
+                    }}
+                />
+
+                {/* <select
                     className="form-select"
                     value={person?.role_id}
                     onChange={(e) =>
@@ -139,7 +183,7 @@ const ContractorsSection = ({
                             {role.name}
                         </option>
                     ))}
-                </select>
+                </select> */}
 
                 {person?.contract_id ? (
                     <CreatableSelect

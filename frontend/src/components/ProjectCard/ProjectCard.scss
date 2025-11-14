@@ -266,6 +266,14 @@
     &__bottom-actions {
         bottom: 80px !important;
     }
+
+    &__bottom-nav {
+        @media (min-width: $media-xxl) {
+            display: none;
+            visibility: hidden;
+            pointer-events: none;
+        }
+    }
 }
 
 .project-budget__block {

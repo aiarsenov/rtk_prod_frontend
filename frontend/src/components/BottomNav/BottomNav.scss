@@ -58,10 +58,4 @@
         padding-left: 40px;
         padding-right: 40px;
     }
-
-    @media (min-width: $media-xxl) {
-        display: none;
-        visibility: hidden;
-        pointer-events: none;
-    }
 }

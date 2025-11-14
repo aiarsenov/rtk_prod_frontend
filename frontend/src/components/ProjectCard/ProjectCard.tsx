@@ -987,7 +987,7 @@ const ProjectCard = () => {
                                                 },
                                             });
                                         }}
-                                        disabled={
+                                        isDisabled={
                                             mode == "read" || !availableToChange
                                         }
                                         styles={{
@@ -1654,7 +1654,7 @@ const ProjectCard = () => {
                 className={"project-card__bottom-actions"}
             />
 
-            <BottomNavCard>
+            <BottomNavCard className="project-card__bottom-nav">
                 {mode == "edit" && availableToChange && (
                     <button
                         type="button"

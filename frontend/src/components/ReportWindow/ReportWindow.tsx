@@ -274,11 +274,11 @@ const ReportWindow = ({
             name === "report_period" ||
             name === "implementation_period" ||
             name === "execution_period" ||
+            name === "report_type_id" ||
+            name === "regularity" ||
             name === "contract_id"
         ) {
             value = e;
-        } else if (name === "report_type_id") {
-            value = +e.target.value;
         } else {
             value = e.target.value;
         }
@@ -646,10 +646,27 @@ const ReportWindow = ({
             setReportStatuses(reportStatusesRes.value.data); // Получение статусов отчета
 
         if (regularityOptionsRes.status === "fulfilled")
-            setRegularityOptions(regularityOptionsRes.value.data); // Получение статусов отчета
+            setRegularityOptions(regularityOptionsRes.value.data); // Получение списка регулярностей
 
         setIsDataLoaded(true);
     };
+
+    const filteredRegularityOptions = regularityOptions
+        .filter((item) => {
+            if (reportData.is_regular && item.alias === "one_time") {
+                return false;
+            }
+            return true;
+        })
+        .map((item) => ({
+            label: item.name,
+            value: item.alias,
+        }));
+
+    const selectedValue =
+        filteredRegularityOptions.find(
+            (item) => item.value === reportData.regularity
+        ) || null;
 
     // События зависимости от выбранного типа отчета
     useEffect(() => {
@@ -769,100 +786,135 @@ const ReportWindow = ({
 
                                         <div className="report-window__fields">
                                             <div>
-                                                {" "}
                                                 <label className="form-label">
                                                     Тип отчёта
                                                 </label>
-                                                <select
-                                                    className="form-select"
-                                                    onChange={(e) =>
-                                                        handleInputChange(
-                                                            e,
-                                                            "report_type_id"
-                                                        )
+                                                <CreatableSelect
+                                                    options={[
+                                                        {
+                                                            value: "",
+                                                            label: "Выбрать тип",
+                                                        },
+                                                        ...reportTypes.map(
+                                                            (item) => ({
+                                                                value: item.id,
+                                                                label: item.name,
+                                                            })
+                                                        ),
+                                                    ]}
+                                                    className="form-select-extend"
+                                                    placeholder={
+                                                        mode === "edit"
+                                                            ? "Выбрать тип"
+                                                            : ""
+                                                    }
+                                                    noOptionsMessage={() =>
+                                                        "Совпадений нет"
+                                                    }
+                                                    isValidNewOption={() =>
+                                                        false
                                                     }
                                                     value={
-                                                        reportData.report_type_id
+                                                        (reportTypes.length >
+                                                            0 &&
+                                                            reportTypes
+                                                                .map(
+                                                                    (item) => ({
+                                                                        value: item.id,
+                                                                        label: item.name,
+                                                                    })
+                                                                )
+                                                                .find(
+                                                                    (item) =>
+                                                                        item.value ===
+                                                                        reportData.report_type_id
+                                                                )) ||
+                                                        null
                                                     }
-                                                    disabled={mode === "read"}
-                                                >
-                                                    <option value="">
-                                                        Выбрать тип
-                                                    </option>
-                                                    {reportTypes.length > 0 &&
-                                                        reportTypes.map(
-                                                            (type) => (
-                                                                <option
-                                                                    key={
-                                                                        type.id
-                                                                    }
-                                                                    value={
-                                                                        type.id
-                                                                    }
-                                                                >
-                                                                    {type.name}
-                                                                </option>
-                                                            )
-                                                        )}
-                                                </select>
+                                                    onChange={(
+                                                        selectedOption
+                                                    ) => {
+                                                        if (mode === "read")
+                                                            return;
+
+                                                        const newValue =
+                                                            +selectedOption?.value ||
+                                                            null;
+
+                                                        handleInputChange(
+                                                            newValue,
+                                                            "report_type_id"
+                                                        );
+                                                    }}
+                                                    disabled={mode == "read"}
+                                                    styles={{
+                                                        input: (base) => ({
+                                                            ...base,
+                                                            maxWidth: "100%",
+                                                            whiteSpace:
+                                                                "nowrap",
+                                                            overflow: "hidden",
+                                                            textOverflow:
+                                                                "ellipsis",
+                                                        }),
+                                                    }}
+                                                />
                                             </div>
 
                                             <div>
-                                                {" "}
                                                 <label className="form-label">
                                                     Регулярность
                                                 </label>
-                                                <select
-                                                    className="form-select"
-                                                    onChange={(e) =>
+
+                                                <CreatableSelect
+                                                    options={
+                                                        filteredRegularityOptions
+                                                    }
+                                                    className="form-select-extend"
+                                                    placeholder={
+                                                        mode === "edit"
+                                                            ? "Регулярность"
+                                                            : ""
+                                                    }
+                                                    noOptionsMessage={() =>
+                                                        "Совпадений нет"
+                                                    }
+                                                    isValidNewOption={() =>
+                                                        false
+                                                    }
+                                                    value={selectedValue}
+                                                    onChange={(
+                                                        selectedOption
+                                                    ) => {
+                                                        if (mode === "read")
+                                                            return;
+
+                                                        const newValue =
+                                                            selectedOption?.value ||
+                                                            null;
+
                                                         handleInputChange(
-                                                            e,
+                                                            newValue,
                                                             "regularity"
-                                                        )
-                                                    }
-                                                    value={
-                                                        reportData.regularity ||
-                                                        ""
-                                                    }
-                                                    disabled={
+                                                        );
+                                                    }}
+                                                    isDisabled={
                                                         mode === "read" ||
                                                         reportData.is_regular ===
                                                             false
                                                     }
-                                                >
-                                                    <option value="">
-                                                        Выбрать из списка
-                                                    </option>
-                                                    {regularityOptions.length >
-                                                        0 &&
-                                                        regularityOptions.map(
-                                                            (item) => {
-                                                                if (
-                                                                    item.alias ===
-                                                                        "one_time" &&
-                                                                    reportData.is_regular ===
-                                                                        true
-                                                                ) {
-                                                                    return null;
-                                                                }
-
-                                                                return (
-                                                                    <option
-                                                                        value={
-                                                                            item.alias
-                                                                        }
-                                                                        key={
-                                                                            item.alias
-                                                                        }
-                                                                    >
-                                                                        {
-                                                                            item.name
-                                                                        }
-                                                                    </option>
-                                                                );
-                                                            }
-                                                        )}
-                                                </select>
+                                                    styles={{
+                                                        input: (base) => ({
+                                                            ...base,
+                                                            maxWidth: "100%",
+                                                            whiteSpace:
+                                                                "nowrap",
+                                                            overflow: "hidden",
+                                                            textOverflow:
+                                                                "ellipsis",
+                                                        }),
+                                                    }}
+                                                />
                                             </div>
                                         </div>
 

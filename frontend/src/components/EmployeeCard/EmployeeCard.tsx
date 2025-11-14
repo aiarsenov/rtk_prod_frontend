@@ -521,7 +521,7 @@ const EmployeeCard = () => {
                                                     department_id: newValue,
                                                 });
                                             }}
-                                            disabled={mode == "read"}
+                                            isDisabled={mode == "read"}
                                             styles={{
                                                 input: (base) => ({
                                                     ...base,
@@ -578,7 +578,7 @@ const EmployeeCard = () => {
                                                         JSON.parse(newValue),
                                                 });
                                             }}
-                                            disabled={mode == "read"}
+                                            isDisabled={mode == "read"}
                                             styles={{
                                                 input: (base) => ({
                                                     ...base,
@@ -635,7 +635,7 @@ const EmployeeCard = () => {
                                                     position_id: newValue,
                                                 });
                                             }}
-                                            disabled={mode == "read"}
+                                            isDisabled={mode == "read"}
                                             styles={{
                                                 input: (base) => ({
                                                     ...base,
@@ -718,7 +718,7 @@ const EmployeeCard = () => {
                                                         });
                                                     }
                                                 }}
-                                                disabled={mode == "read"}
+                                                isDisabled={mode == "read"}
                                                 styles={{
                                                     input: (base) => ({
                                                         ...base,
