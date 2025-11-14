@@ -118,7 +118,7 @@ const Projects = () => {
         { label: "Бюджет", key: "project_budget", is_sortable: true },
         { label: "Срок", key: "implementation_period" },
         {
-            label: "Руководитель проекта",
+            label: "Ответственный за проект",
             key: "project_manager",
             filter: "selectedManagers",
             options: projectManagerOptions,

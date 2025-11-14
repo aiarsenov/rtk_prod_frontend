@@ -1,3 +1,13 @@
+const handleStatusColor = (string) => {
+    if (!string) return;
+
+    if (string.toLowerCase() === "завершен") {
+        return "active";
+    } else if (string.toLowerCase() === "в работе") {
+        return "completed";
+    }
+};
+
 const ReportServices = ({ services }) => {
     return (
         <ul className="grid gap-3 max-h-[175px] overflow-y-auto">
@@ -11,7 +21,13 @@ const ReportServices = ({ services }) => {
                             {service.name}
                         </div>
                         <div className="project-card__services-list__item-status">
-                            <div> {service.status}</div>
+                            <div
+                                className={`status ${handleStatusColor(
+                                    service.status
+                                )}`}
+                            >
+                                {service.status}
+                            </div>
                         </div>
                         <div className="project-card__services-list__item-period">
                             {service.regularity}

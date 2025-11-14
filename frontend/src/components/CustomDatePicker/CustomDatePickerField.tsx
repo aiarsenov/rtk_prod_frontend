@@ -18,6 +18,7 @@ const CustomDatePickerField = ({
         : single
         ? "дд.мм.гггг"
         : "мм.гггг - мм.гггг",
+    showMonthYear = false,
     onChange,
     disabled,
     minDate,
@@ -26,6 +27,7 @@ const CustomDatePickerField = ({
     type: string;
     startDate: string;
     endDate: string;
+    showMonthYear: boolean;
     single: boolean;
     disabled: boolean;
 }) => {
@@ -41,14 +43,37 @@ const CustomDatePickerField = ({
           })
         : null;
 
+    const formatMonthYear = (date) => {
+        const d = new Date(date);
+        if (isNaN(d.getTime())) return "";
+
+        const formatted = new Intl.DateTimeFormat("ru-RU", {
+            month: "long",
+            year: "numeric",
+        }).format(d);
+
+        return formatted
+            .replace(" г.", "")
+            .replace(/^./, (ch) => ch.toUpperCase());
+    };
+
     const displayValue = (() => {
+        if (showMonthYear) {
+            if (startDate && endDate)
+                return `${formatMonthYear(startDate)} - ${formatMonthYear(
+                    endDate
+                )}`;
+            if (startDate) return formatMonthYear(startDate);
+            return formatted || "";
+        }
+
         if (startDate && endDate)
             return `${formatDateDMY(startDate, type)} - ${formatDateDMY(
                 endDate,
                 type
             )}`;
         if (startDate) return formatDateDMY(startDate, type);
-        return formatted;
+        return formatted || "";
     })();
 
     return (

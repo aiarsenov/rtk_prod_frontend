@@ -44,9 +44,12 @@
         }
 
         @media (min-width: $media-xxl) {
+            padding-bottom: 0;
+        }
+
+        @media (min-width: 2000px) {
             padding-right: 0;
             padding-left: 0;
-            padding-bottom: 0;
         }
     }
 
@@ -61,12 +64,12 @@
         }
 
         @media (min-width: $media-xxl) {
-            grid-template-columns: 840px 575px;
+            grid-template-columns: 1fr 600px;
             gap: 40px;
         }
 
         @media (min-width: $media-xxxl) {
-            grid-template-columns: 1fr 575px;
+            grid-template-columns: 1fr 620px;
         }
     }
 
@@ -263,7 +266,7 @@
 
     &__bottom-actions {
         position: fixed;
-        bottom: 80px;
+        bottom: 40px;
         right: 15px;
         display: flex;
         align-items: center;

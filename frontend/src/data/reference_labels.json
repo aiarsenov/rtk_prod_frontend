@@ -1,0 +1,57 @@
+{
+    "industries": [
+        { "label": "Наименование", "key": "name" }
+    ],
+    "report-types": [
+        { "label": "Сокращённое наименование", "key": "name" },
+        { "label": "Полное наименование", "key": "full_name" },
+        { "label": "Регулярный", "key": "is_regular" },
+        { "label": "Указывать стоимость в отчете", "key": "show_cost" }
+    ],
+    "roles": [
+        { "label": "Наименование", "key": "name" },
+        { "label": "Ответственный за отчеты по проектам", "key": "is_project_report_responsible" }
+    ],
+    "banks": [
+        { "label": "Сокращённое наименование", "key": "name" },
+        { "label": "Полное наименование", "key": "full_name" }
+    ],
+    "contragent": [
+        { "label": "ФИО", "key": "full_name" },
+        { "label": "Должность", "key": "position" },
+        { "label": "Телефон", "key": "phone" },
+        { "label": "Email", "key": "email" }
+    ],
+    "creditor": [
+        { "label": "ФИО", "key": "full_name" },
+        { "label": "Должность", "key": "position" },
+        { "label": "Телефон", "key": "phone" },
+        { "label": "Email", "key": "email" }
+    ],
+    "working-hours": [
+        { "label": "Месяц", "key": "month_name" },
+        { "label": "Часы", "key": "hours" }
+    ],
+    "positions": [
+        { "label": "Наименование", "key": "name" },
+        { "label": "Тип должности", "key": "type" }
+    ],
+    "suppliers-with-reports": [
+        { "label": "Наименование подрядчика", "key": "contragent_id" },
+        { "label": "ФИО", "key": "full_name" },
+        { "label": "Должность", "key": "position" },
+        { "label": "Телефон", "key": "phone" },
+        { "label": "Email", "key": "email" }
+    ],
+    "management-report-types": [
+        { "label": "Наименование", "key": "name" },
+        { "label": "Должность отвественного", "key": "position_id" }
+    ],
+    "request-sources": [
+        { "label": "Наименование", "key": "name" }
+    ],
+    "departments": [
+        { "label": "Наименование", "key": "name" },
+        { "label": "Учитывать в численности и ФОТ", "key": "include_in_payroll" }
+    ]
+}

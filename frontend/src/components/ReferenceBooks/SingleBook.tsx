@@ -1,122 +1,101 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 
 import getData from "../../utils/getData";
 import postData from "../../utils/postData";
 
+import Loader from "../Loader";
 import Popup from "../Popup/Popup";
 import ReferenceItem from "./ReferenceItem";
 import ReferenceItemExtended from "./ReferenceItemExtended";
-import ReferenceItemExtendedContacts from "./ReferenceItemExtendedContacts";
-import ReferenceItemNew from "./ReferenceItemNew";
-import ReferenceItemWorkingHours from "./ReferenceItemWorkingHours";
-import Loader from "../Loader";
+import ReferenceNewElemForm from "./ReferenceNewElemForm";
+import ReferenceEditElemForm from "./ReferenceEditElemForm";
+import ReferenceDeleteElemForm from "./ReferenceDeleteElemForm";
+import ReferenceBooksTheadItems from "./ReferenceBooksTheadItems";
+import CreatableSelect from "react-select/creatable";
 
-import { IMaskInput } from "react-imask";
 import { ToastContainer, toast } from "react-toastify";
 
 import COLUMNS from "../../data/reference_book_columns.json";
+import REFERENCE_LABELS from "../../data/reference_labels.json";
 import TITLES from "../../data/reference_book_titles.json";
+import EDITABLE_KEYS from "../../data/editable_keys.json";
 
 const SingleBook = () => {
     const { bookId } = useParams();
 
     const columns = bookId ? COLUMNS[bookId] : COLUMNS;
+    const labels = bookId ? REFERENCE_LABELS[bookId] : REFERENCE_LABELS;
 
     const URL =
         bookId === "creditor" || bookId === "contragent"
             ? `${import.meta.env.VITE_API_URL}responsible-persons/${bookId}`
             : `${import.meta.env.VITE_API_URL}${bookId ? bookId : "books"}`;
 
-    const [booksItems, setBooksItems] = useState([]);
-    const [refBooksItems, setRefBooksItems] = useState([]);
-
     const [mode, setMode] = useState("edit");
 
-    const [formFields, setFormFields] = useState({});
+    const [booksItems, setBooksItems] = useState([]);
+    const [refBooksItems, setRefBooksItems] = useState([]);
+    const [openFilter, setOpenFilter] = useState("");
 
     const [isLoading, setIsLoading] = useState(true);
-
     const [listLength, setListLength] = useState(0);
 
-    const [popupState, setPopupState] = useState(false);
-    const [rolesAction, setRolesAction] = useState({ action: "", roleId: "" });
+    const [rolesAction, setRolesAction] = useState({ action: "", roleId: "" }); // Состояние генерации отчетов в справочнике Роли в проектах
+    const [isNewElem, setIsNewElem] = useState(false); // Попап добавления записи
+    const [isEditElem, setIsEditElem] = useState(false); // Попап изменения записи
+    const [isDeleteElem, setIsDeleteElem] = useState(false); // Попап удаления записи
 
-    const [positions, setPositions] = useState([]);
-    const [availableYears, setAvailableYears] = useState([]);
-    const [currentYear, setCurrentYear] = useState("");
+    const [tempData, setTempData] = useState({}); // Временные данные, которые нужно прокинуть в обход popupFields
+    const [popupFields, setPopupFields] = useState([]); // Доступные для изменения поля в записи
+    const [elemToDelete, setElemToDelete] = useState({}); // ID записи для удаления
 
-    const [newElem, setnewElem] = useState({
-        contragent_id: "",
-        full_name: "",
-        position: "",
-        email: "",
-        phone: "",
-    });
-
-    const PhoneMask = "+{7} (000) 000 00 00";
+    const [positions, setPositions] = useState([]); // Должности
+    const [availableYears, setAvailableYears] = useState([]); // Доступные года
+    const [currentYear, setCurrentYear] = useState(""); // Текущий год
 
     let query;
 
-    // Обработка существующих полей контактов подрядчиков
-    const handleContactInputChange = (e, name, item, contactId) => {
-        const value = name === "phone" ? e : e.target.value;
-
-        setBooksItems((prevBooksItems) =>
-            prevBooksItems.map((book) =>
-                book.id === item.id
-                    ? {
-                          ...book,
-                          contacts: book.contacts.map((contact) =>
-                              contact.id === contactId
-                                  ? { ...contact, [name]: value }
-                                  : contact
-                          ),
-                      }
-                    : book
+    // Заполняем фильтры
+    const filterOptions = useMemo(() => {
+        const nameOptions = Array.from(
+            new Set(
+                booksItems
+                    .map((item) => item.name)
+                    .filter((name) => name !== null)
             )
         );
-    };
 
-    // Изменение контакта подрядчика
-    const editContactElem = (id, contactId) => {
-        const contractor = booksItems.find((item) => item.id === id);
-
-        const contractorContact = contractor.contacts?.find(
-            (contact) => contact.id === contactId
+        const contactOptions = Array.from(
+            new Set(
+                booksItems.flatMap((item) =>
+                    (item.contacts || []).flatMap((contact) =>
+                        [contact.email, contact.phone].filter(Boolean)
+                    )
+                )
+            )
         );
 
-        query = toast.loading("Обновление", {
-            containerId: "singleBook",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        return { nameOptions, contactOptions };
+    }, [booksItems]);
 
-        postData(
-            "PATCH",
-            `${URL}/${id}/contacts/${contactId}`,
-            contractorContact
-        ).then((response) => {
-            if (response?.ok) {
-                toast.update(query, {
-                    render: "Запись обновлена",
-                    type: "success",
-                    containerId: "singleBook",
+    // Сбрасываем состояние попапа и полей
+    const resetElemPopupState = () => {
+        setIsNewElem(false);
+        setIsEditElem(false);
+        setIsDeleteElem(false);
+        setPopupFields([]);
+        setTempData({});
+        setElemToDelete({});
+    };
+
+    // Валидация обязательных полей
+    const validateReferenceData = (updatedData) => {
+        if (bookId === "suppliers-with-reports") {
+            if (!updatedData.contragent_id) {
+                toast.error("Необходимо выбрать подрядчика", {
                     isLoading: false,
-                    autoClose: 1200,
-                    pauseOnFocusLoss: false,
-                    pauseOnHover: false,
-                    draggable: true,
-                    position:
-                        window.innerWidth >= 1440
-                            ? "bottom-right"
-                            : "top-right",
-                });
-            } else {
-                toast.dismiss(query);
-                toast.error("Ошибка обновления записи", {
-                    isLoading: false,
-                    autoClose: 1500,
+                    autoClose: 2500,
                     pauseOnFocusLoss: false,
                     pauseOnHover: false,
                     draggable: true,
@@ -126,141 +105,68 @@ const SingleBook = () => {
                             : "top-right",
                     containerId: "singleBook",
                 });
+                return false;
             }
-        });
-    };
 
-    // Удаление контакта подрядчика
-    const deleteContactElem = (id, contactId) => {
-        query = toast.loading("Удаление", {
-            containerId: "singleBook",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
-
-        postData("DELETE", `${URL}/${id}/contacts/${contactId}`, {}).then(
-            (response) => {
-                if (response?.ok) {
-                    toast.update(query, {
-                        render: "Контакт удален",
-                        type: "success",
-                        containerId: "singleBook",
-                        isLoading: false,
-                        autoClose: 1200,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
-
-                    setBooksItems((booksItems) =>
-                        booksItems.map((item) => {
-                            if (item.id === id) {
-                                return {
-                                    ...item,
-                                    contacts: item.contacts?.filter(
-                                        (contact) => contact.id !== contactId
-                                    ),
-                                };
-                            }
-                            return item;
-                        })
-                    );
-                } else {
-                    toast.dismiss(query);
-                    toast.error("Ошибка удалении контакта", {
-                        isLoading: false,
-                        autoClose: 1500,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                        containerId: "singleBook",
-                    });
-                }
+            if (!updatedData.full_name) {
+                toast.error("ФИО должно быть заполнено", {
+                    isLoading: false,
+                    autoClose: 2500,
+                    pauseOnFocusLoss: false,
+                    pauseOnHover: false,
+                    draggable: true,
+                    position:
+                        window.innerWidth >= 1440
+                            ? "bottom-right"
+                            : "top-right",
+                    containerId: "singleBook",
+                });
+                return false;
             }
-        );
-    };
 
-    // Обработка полей попапа нового контакта подрядчика
-    const handleNewContactElemInputChange = (e, name) => {
-        const value = name === "phone" ? e : e.target.value;
-
-        setnewElem((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
-    };
-
-    // Обработка полей новой записи в справочнике
-    const handleNewElementInputChange = (e, name) => {
-        let value;
+            return true;
+        }
 
         if (
-            name === "is_regular" ||
-            name === "show_cost" ||
-            name === "is_project_report_responsible"
+            (bookId === "report-types" || bookId === "banks") &&
+            !updatedData.full_name
         ) {
-            value = e.target.value === "true";
-        } else {
-            value = e.target.value;
-        }
-
-        setFormFields({ ...formFields, [name]: value });
-    };
-
-    // Обработка существующих полей справочника
-    const handleInputChange = (e, name, id) => {
-        let value;
-
-        if (name === "phone") {
-            value = e;
-        } else if (name === "hours") {
-            value = +e.target.value;
-        } else if (
-            name === "is_regular" ||
-            name === "show_cost" ||
-            name === "is_project_report_responsible"
-        ) {
-            value = e === true;
-        } else {
-            value = e.target.value;
-        }
-
-        setBooksItems((prevBooksItems) =>
-            prevBooksItems.map((item) =>
-                item.id === id ? { ...item, [name]: value } : item
-            )
-        );
-    };
-
-    // Закрытие попапа
-    const closePopup = (evt) => {
-        if (evt.currentTarget.classList.contains("popup")) {
-            setPopupState(false);
-            setnewElem({
-                contragent_id: "",
-                full_name: "",
-                position: "",
-                email: "",
-                phone: "",
+            toast.error("Полное наименование должно быть заполнено", {
+                isLoading: false,
+                autoClose: 2500,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+                position:
+                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+                containerId: "singleBook",
             });
-
-            if (bookId == "roles") {
-                setRolesAction({ action: "", roleId: "" });
-                getBooks();
-            }
+            return false;
         }
+
+        if (!updatedData.name) {
+            toast.error("Наименование должно быть заполнено", {
+                isLoading: false,
+                autoClose: 2500,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+                position:
+                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+                containerId: "singleBook",
+            });
+            return false;
+        }
+
+        return true;
     };
 
     // Изименение генерации отчетов
-    const toggleRoleResponce = (action) => {
+    const toggleRoleResponse = (action) => {
+        if (mode === "read") {
+            return;
+        }
+
         query = toast.loading("Обновление", {
             containerId: "singleBook",
             position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
@@ -297,7 +203,7 @@ const SingleBook = () => {
                     toast.dismiss(query);
                     toast.error(response.message || "Ошибка операции", {
                         isLoading: false,
-                        autoClose: 1500,
+                        autoClose: 2500,
                         pauseOnFocusLoss: false,
                         pauseOnHover: false,
                         position:
@@ -312,7 +218,7 @@ const SingleBook = () => {
                 toast.dismiss(query);
                 toast.error(error.message || "Ошибка операции", {
                     isLoading: false,
-                    autoClose: 1500,
+                    autoClose: 2500,
                     pauseOnFocusLoss: false,
                     pauseOnHover: false,
                     position:
@@ -326,26 +232,23 @@ const SingleBook = () => {
 
     // Добавление записи
     const addNewElement = () => {
-        if (
-            !formFields.name ||
-            ((bookId === "report-types" || bookId === "banks") &&
-                !formFields.full_name)
-        ) {
-            alert(
-                bookId === "report-types" || bookId === "banks"
-                    ? "'Полное наименование' должно быть заполнено."
-                    : "'Наименование' должно быть заполнено."
-            );
+        if (mode === "read") {
             return;
         }
 
-        if (bookId === "departments") {
-            if (formFields.include_in_payroll !== "") {
-                formFields.include_in_payroll = JSON.parse(
-                    formFields?.include_in_payroll
-                );
-            }
+        let updatedData = popupFields.reduce((acc, field) => {
+            acc[field.key] = field.value;
+            return acc;
+        }, {});
+
+        if (!validateReferenceData(updatedData)) {
+            return;
         }
+
+        const newUrl =
+            bookId === "suppliers-with-reports"
+                ? `${URL}/${updatedData.contragent_id}`
+                : URL;
 
         query = toast.loading("Обновление", {
             containerId: "singleBook",
@@ -353,7 +256,7 @@ const SingleBook = () => {
             position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
         });
 
-        postData("POST", URL, formFields)
+        postData("POST", newUrl, updatedData)
             .then((response) => {
                 if (response?.ok) {
                     toast.update(query, {
@@ -371,12 +274,7 @@ const SingleBook = () => {
                                 : "top-right",
                     });
 
-                    setFormFields((prev) => ({
-                        ...prev,
-                        name: "",
-                        counterparty_name: "",
-                        full_name: "",
-                    }));
+                    resetElemPopupState();
                     getBooks();
                 }
             })
@@ -384,7 +282,7 @@ const SingleBook = () => {
                 toast.dismiss(query);
                 toast.error(error.message || "Ошибка добавления записи", {
                     isLoading: false,
-                    autoClose: 1500,
+                    autoClose: 2500,
                     pauseOnFocusLoss: false,
                     pauseOnHover: false,
                     draggable: true,
@@ -397,158 +295,27 @@ const SingleBook = () => {
             });
     };
 
-    // Добавить новый контакт подрядчику
-    const addNewContact = (data) => {
-        postData("POST", `${URL}/${data.contragent_id}`, data).then(
-            (response) => {
-                if (response?.ok) {
-                    setBooksItems((booksItems) =>
-                        booksItems.map((item) =>
-                            item.id === data.contragent_id
-                                ? {
-                                      ...item,
-                                      contacts: [
-                                          ...(item.contacts || []),
-                                          response,
-                                      ],
-                                  }
-                                : item
-                        )
-                    );
-                    setRefBooksItems((booksItems) =>
-                        booksItems.map((item) =>
-                            item.id === data.contragent_id
-                                ? {
-                                      ...item,
-                                      contacts: [
-                                          ...(item.contacts || []),
-                                          response,
-                                      ],
-                                  }
-                                : item
-                        )
-                    );
-
-                    toast("Контакт добавлен", {
-                        type: "success",
-                        containerId: "singleBook",
-                        autoClose: 1200,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
-                    setPopupState(false);
-                }
-            }
-        );
-    };
-
-    // Изменение записи
-    const editElement = (id) => {
-        const data = booksItems.find((book) => book.id === id);
-        delete data?.projects_count;
-        delete data?.updated_at;
-
-        if (bookId === "management-report-types") {
-            if (data.position_id) {
-                data.position_id = +data?.position_id;
-            }
-
-            delete data?.count;
-            delete data?.position;
+    // Изменение рабочих часов
+    const editWokrHours = (data) => {
+        if (mode === "read") {
+            return;
         }
 
-        if (bookId === "departments") {
-            if (data.include_in_payroll !== "") {
-                data.include_in_payroll = JSON.parse(data?.include_in_payroll);
-            }
-        }
+        let updatedData = tempData;
+        updatedData.hours = +data.hours;
 
-        if (bookId !== "working-hours") {
-            if (
-                !data.name ||
-                ((bookId === "report-types" || bookId === "banks") &&
-                    !data.full_name)
-            ) {
-                alert(
-                    bookId === "report-types" || bookId === "banks"
-                        ? "Полное и сокращенное наименования должны быть заполнены."
-                        : "'Наименование' должно быть заполнено."
-                );
-                return;
-            }
-        }
-
-        query = toast.loading("Обновление", {
-            containerId: "singleBook",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
-
-        postData("PATCH", `${URL}/${data.id}`, data)
-            .then((response) => {
-                if (response?.ok) {
-                    toast.update(query, {
-                        render: "Запись обновлена",
-                        type: "success",
-                        containerId: "singleBook",
-                        isLoading: false,
-                        autoClose: 1200,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
-                    getBooks();
-                } else {
-                    toast.dismiss(query);
-                    toast.error("Ошибка обновления записи", {
-                        isLoading: false,
-                        autoClose: 1500,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                        containerId: "singleBook",
-                    });
-                }
-            })
-            .catch((error) => {
-                toast.dismiss(query);
-                toast.error(error.message || "Ошибка обновления записи", {
-                    isLoading: false,
-                    autoClose: 1500,
-                    pauseOnFocusLoss: false,
-                    pauseOnHover: false,
-                    draggable: true,
-                    position:
-                        window.innerWidth >= 1440
-                            ? "bottom-right"
-                            : "top-right",
-                    containerId: "singleBook",
-                });
-            });
-    };
-
-    const saveAllList = () => {
         query = toast.loading("Сохранение", {
             containerId: "singleBook",
             draggable: true,
             position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
         });
 
-        postData("PATCH", URL, { year: currentYear, hours: booksItems })
+        postData("PATCH", URL, { year: currentYear, hours: [updatedData] })
             .then((response) => {
                 if (response?.ok) {
+                    resetElemPopupState();
+                    getBooks();
+
                     toast.update(query, {
                         render: response.message || "Успешно сохранено",
                         type: "success",
@@ -567,7 +334,7 @@ const SingleBook = () => {
                     toast.dismiss(query);
                     toast.error("Ошибка сохранения", {
                         isLoading: false,
-                        autoClose: 1500,
+                        autoClose: 2500,
                         pauseOnFocusLoss: false,
                         pauseOnHover: false,
                         draggable: true,
@@ -583,7 +350,7 @@ const SingleBook = () => {
                 toast.dismiss(query);
                 toast.error(error.message || "Ошибка сохранения", {
                     isLoading: false,
-                    autoClose: 1500,
+                    autoClose: 2500,
                     pauseOnFocusLoss: false,
                     pauseOnHover: false,
                     draggable: true,
@@ -597,7 +364,110 @@ const SingleBook = () => {
     };
 
     // Изменение записи
+    const editElement = (updatedData, reloadList = true) => {
+        if (mode === "read") {
+            return;
+        }
+
+        let data = updatedData;
+
+        if (bookId === "management-report-types") {
+            if (data.position_id) {
+                data.position_id = +data?.position_id;
+            }
+        }
+
+        if (bookId !== "working-hours") {
+            if (
+                !data.name ||
+                ((bookId === "report-types" || bookId === "banks") &&
+                    !data.full_name)
+            ) {
+                alert(
+                    bookId === "report-types" || bookId === "banks"
+                        ? "Полное и сокращенное наименования должны быть заполнены."
+                        : "Наименование должно быть заполнено."
+                );
+                return;
+            }
+        }
+
+        query = toast.loading("Обновление", {
+            containerId: "singleBook",
+            draggable: true,
+            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        });
+
+        postData("PATCH", `${URL}/${data.id}`, data)
+            .then((response) => {
+                if (response?.ok) {
+                    resetElemPopupState();
+
+                    if (reloadList) {
+                        getBooks();
+                    }
+
+                    toast.update(query, {
+                        render: "Запись обновлена",
+                        type: "success",
+                        containerId: "singleBook",
+                        isLoading: false,
+                        autoClose: 1200,
+                        pauseOnFocusLoss: false,
+                        pauseOnHover: false,
+                        draggable: true,
+                        position:
+                            window.innerWidth >= 1440
+                                ? "bottom-right"
+                                : "top-right",
+                    });
+                } else {
+                    if (!reloadList) {
+                        getBooks();
+                    }
+
+                    toast.dismiss(query);
+                    toast.error("Ошибка обновления записи", {
+                        isLoading: false,
+                        autoClose: 2500,
+                        pauseOnFocusLoss: false,
+                        pauseOnHover: false,
+                        draggable: true,
+                        position:
+                            window.innerWidth >= 1440
+                                ? "bottom-right"
+                                : "top-right",
+                        containerId: "singleBook",
+                    });
+                }
+            })
+            .catch((error) => {
+                if (!reloadList) {
+                    getBooks();
+                }
+
+                toast.dismiss(query);
+                toast.error(error.message || "Ошибка обновления записи", {
+                    isLoading: false,
+                    autoClose: 2500,
+                    pauseOnFocusLoss: false,
+                    pauseOnHover: false,
+                    draggable: true,
+                    position:
+                        window.innerWidth >= 1440
+                            ? "bottom-right"
+                            : "top-right",
+                    containerId: "singleBook",
+                });
+            });
+    };
+
+    // Изменение контактов
     const editContragentAndCreditorContact = (data) => {
+        if (mode === "read") {
+            return;
+        }
+
         query = toast.loading("Обновление", {
             containerId: "singleBook",
             draggable: true,
@@ -613,6 +483,9 @@ const SingleBook = () => {
         )
             .then((response) => {
                 if (response?.ok) {
+                    resetElemPopupState();
+                    getBooks();
+
                     toast.update(query, {
                         render: "Контакт обновлен",
                         type: "success",
@@ -631,7 +504,7 @@ const SingleBook = () => {
                     toast.dismiss(query);
                     toast.error("Ошибка обновления контакта", {
                         isLoading: false,
-                        autoClose: 1500,
+                        autoClose: 2500,
                         pauseOnFocusLoss: false,
                         pauseOnHover: false,
                         draggable: true,
@@ -647,7 +520,7 @@ const SingleBook = () => {
                 toast.dismiss(query);
                 toast.error(error.message || "Ошибка обновления контакта", {
                     isLoading: false,
-                    autoClose: 1500,
+                    autoClose: 2500,
                     pauseOnFocusLoss: false,
                     pauseOnHover: false,
                     draggable: true,
@@ -660,8 +533,130 @@ const SingleBook = () => {
             });
     };
 
-    // Удаление записи
-    const deleteContact = (id) => {
+    // Изменение контакта подрядчика
+    const editContactElem = (data) => {
+        if (mode === "read") {
+            return;
+        }
+
+        query = toast.loading("Обновление", {
+            containerId: "singleBook",
+            draggable: true,
+            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        });
+
+        postData(
+            "PATCH",
+            `${URL}/${tempData.contactId}/contacts/${data.id}`,
+            data
+        ).then((response) => {
+            if (response?.ok) {
+                resetElemPopupState();
+                getBooks();
+
+                toast.update(query, {
+                    render: "Запись обновлена",
+                    type: "success",
+                    containerId: "singleBook",
+                    isLoading: false,
+                    autoClose: 1200,
+                    pauseOnFocusLoss: false,
+                    pauseOnHover: false,
+                    draggable: true,
+                    position:
+                        window.innerWidth >= 1440
+                            ? "bottom-right"
+                            : "top-right",
+                });
+            } else {
+                toast.dismiss(query);
+                toast.error("Ошибка обновления записи", {
+                    isLoading: false,
+                    autoClose: 2500,
+                    pauseOnFocusLoss: false,
+                    pauseOnHover: false,
+                    draggable: true,
+                    position:
+                        window.innerWidth >= 1440
+                            ? "bottom-right"
+                            : "top-right",
+                    containerId: "singleBook",
+                });
+            }
+        });
+    };
+
+    // Удаление контакта подрядчика
+    const deleteContactElem = (data) => {
+        if (mode === "read") {
+            return;
+        }
+
+        query = toast.loading("Удаление", {
+            containerId: "singleBook",
+            draggable: true,
+            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        });
+
+        postData(
+            "DELETE",
+            `${URL}/${data.id}/contacts/${data.contact}`,
+            {}
+        ).then((response) => {
+            if (response?.ok) {
+                setBooksItems((booksItems) =>
+                    booksItems.map((item) => {
+                        if (item.id === data.id) {
+                            return {
+                                ...item,
+                                contacts: item.contacts?.filter(
+                                    (contact) => contact.id !== data.contact
+                                ),
+                            };
+                        }
+                        return item;
+                    })
+                );
+                resetElemPopupState();
+
+                toast.update(query, {
+                    render: "Контакт удален",
+                    type: "success",
+                    containerId: "singleBook",
+                    isLoading: false,
+                    autoClose: 1200,
+                    pauseOnFocusLoss: false,
+                    pauseOnHover: false,
+                    draggable: true,
+                    position:
+                        window.innerWidth >= 1440
+                            ? "bottom-right"
+                            : "top-right",
+                });
+            } else {
+                toast.dismiss(query);
+                toast.error("Ошибка удалении контакта", {
+                    isLoading: false,
+                    autoClose: 2500,
+                    pauseOnFocusLoss: false,
+                    pauseOnHover: false,
+                    draggable: true,
+                    position:
+                        window.innerWidth >= 1440
+                            ? "bottom-right"
+                            : "top-right",
+                    containerId: "singleBook",
+                });
+            }
+        });
+    };
+
+    // Удаление контакта
+    const deleteContact = (data) => {
+        if (mode === "read") {
+            return;
+        }
+
         query = toast.loading("Удаление", {
             containerId: "singleBook",
             draggable: true,
@@ -673,17 +668,18 @@ const SingleBook = () => {
         if (bookId == "creditor" || bookId == "contragent") {
             url = `${
                 import.meta.env.VITE_API_URL
-            }responsible-persons/${bookId}/contact/${id}`;
+            }responsible-persons/${bookId}/contact/${data.id}`;
         } else {
             url = `${
                 import.meta.env.VITE_API_URL
-            }${bookId}-responsible-persons/${id}`;
+            }${bookId}-responsible-persons/${data.id}`;
         }
 
         postData("DELETE", url, {})
             .then((response) => {
                 if (response?.ok) {
                     getBooks();
+                    resetElemPopupState();
 
                     toast.update(query, {
                         render: "Контакт удалена",
@@ -703,7 +699,7 @@ const SingleBook = () => {
                     toast.dismiss(query);
                     toast.error("Ошибка удаления контакта", {
                         isLoading: false,
-                        autoClose: 1500,
+                        autoClose: 2500,
                         pauseOnFocusLoss: false,
                         pauseOnHover: false,
                         draggable: true,
@@ -719,7 +715,7 @@ const SingleBook = () => {
                 toast.dismiss(query);
                 toast.error(error.message || "Ошибка удаления контакта", {
                     isLoading: false,
-                    autoClose: 1500,
+                    autoClose: 2500,
                     pauseOnFocusLoss: false,
                     pauseOnHover: false,
                     draggable: true,
@@ -733,22 +729,29 @@ const SingleBook = () => {
     };
 
     // Удаление записи
-    const deleteElement = (id) => {
+    const deleteElement = (data) => {
+        if (mode === "read") {
+            return;
+        }
+
         query = toast.loading("Удаление", {
             containerId: "singleBook",
             draggable: true,
             position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
         });
 
-        postData("DELETE", `${URL}/${id}`, {})
+        postData("DELETE", `${URL}/${data.id}`, {})
             .then((response) => {
                 if (response?.ok) {
                     setBooksItems((booksItems) =>
-                        booksItems.filter((item) => item.id !== id)
+                        booksItems.filter((item) => item.id !== data.id)
                     );
                     setRefBooksItems((booksItems) =>
-                        booksItems.filter((item) => item.id !== id)
+                        booksItems.filter((item) => item.id !== data.id)
                     );
+
+                    resetElemPopupState();
+
                     toast.update(query, {
                         render: "Запись удалена",
                         type: "success",
@@ -767,7 +770,7 @@ const SingleBook = () => {
                     toast.dismiss(query);
                     toast.error("Ошибка удаления записи", {
                         isLoading: false,
-                        autoClose: 1500,
+                        autoClose: 2500,
                         pauseOnFocusLoss: false,
                         pauseOnHover: false,
                         draggable: true,
@@ -783,7 +786,7 @@ const SingleBook = () => {
                 toast.dismiss(query);
                 toast.error(error.message || "Ошибка удаления записи", {
                     isLoading: false,
-                    autoClose: 1500,
+                    autoClose: 2500,
                     pauseOnFocusLoss: false,
                     pauseOnHover: false,
                     draggable: true,
@@ -794,6 +797,121 @@ const SingleBook = () => {
                     containerId: "singleBook",
                 });
             });
+    };
+
+    // Открытие попапа удаления зависи
+    const handleOpenDeletePopup = (data) => {
+        setElemToDelete(data);
+        setIsDeleteElem(true);
+    };
+
+    // Открытие попапа добавления зависи
+    const handleOpenNewPopup = () => {
+        const editableFields = (REFERENCE_LABELS[bookId] || [])
+            .filter((field) => EDITABLE_KEYS.includes(field.key))
+            .map((field) => ({
+                key: field.key,
+                label: field.label || field.key,
+            }));
+
+        setPopupFields(editableFields);
+        setIsNewElem(true);
+    };
+
+    const handleOpenEditPopup = (data) => {
+        setTempData(data);
+
+        const editableFields = Object.entries(data)
+            .filter(([key]) => EDITABLE_KEYS.includes(key))
+            .map(([key, value]) => {
+                const column = labels.find((col) => col.key === key);
+                return {
+                    id: data.id,
+                    key,
+                    label: column?.label || key,
+                    value,
+                };
+            });
+
+        setPopupFields(editableFields);
+        setIsEditElem(true);
+    };
+
+    // Обработка полей при изменении записи
+    const handlePopupFieldsChange = (id, key, newValue) => {
+        setPopupFields((prev) => {
+            const exists = prev.some((field) =>
+                id ? field.id === id && field.key === key : field.key === key
+            );
+
+            if (exists) {
+                return prev.map((field) =>
+                    id
+                        ? field.id === id && field.key === key
+                            ? { ...field, value: newValue }
+                            : field
+                        : field.key === key
+                        ? { ...field, value: newValue }
+                        : field
+                );
+            } else {
+                const newField = id
+                    ? { id, key, value: newValue }
+                    : { key, value: newValue };
+
+                return [...prev, newField];
+            }
+        });
+    };
+
+    // Обработка существующих полей справочника
+    const handleSwitchChange = (evt, name, data) => {
+        if (mode === "read") {
+            return;
+        }
+
+        if (name == "is_project_leader") {
+            setBooksItems((prevBooksItems) =>
+                prevBooksItems.map((item) => {
+                    if (item.is_project_leader === true) {
+                        return { ...item, is_project_leader: false };
+                    }
+                    return item;
+                })
+            );
+            setBooksItems((prevBooksItems) =>
+                prevBooksItems.map((item) =>
+                    item.id === data.id
+                        ? { ...item, [name]: evt === true }
+                        : item
+                )
+            );
+        } else {
+            setBooksItems((prevBooksItems) =>
+                prevBooksItems.map((item) =>
+                    item.id === data.id
+                        ? { ...item, [name]: evt === true }
+                        : item
+                )
+            );
+        }
+
+        let updatedData = data;
+        updatedData[name] = evt;
+
+        editElement(updatedData, false);
+    };
+
+    // Cобираем все поля в единый объект
+    const collectEditFieldsData = () => {
+        const result = {};
+
+        popupFields.forEach(({ id, key, value }) => {
+            result[key] = value;
+            result.id = id;
+        });
+
+        return result;
     };
 
     // Получение должностей
@@ -890,56 +1008,100 @@ const SingleBook = () => {
         }
     }, [mode]);
 
+    const [filters, setFilters] = useState({
+        selectedNames: [],
+        selectedContacts: [],
+    });
+
+    const filteredList = useMemo(() => {
+        if (
+            bookId === "creditor" ||
+            bookId === "contragent" ||
+            bookId === "suppliers-with-reports"
+        ) {
+            return booksItems
+                .map((item) => {
+                    const filteredContacts = (item.contacts || []).filter(
+                        (contact) =>
+                            filters.selectedContacts.length === 0 ||
+                            filters.selectedContacts.includes(contact.email) ||
+                            filters.selectedContacts.includes(contact.phone)
+                    );
+
+                    if (
+                        (filters.selectedNames.length === 0 ||
+                            filters.selectedNames.includes(item.name)) &&
+                        filteredContacts.length > 0
+                    ) {
+                        return { ...item, contacts: filteredContacts };
+                    }
+
+                    return null;
+                })
+                .filter(Boolean);
+        } else {
+            return booksItems;
+        }
+    }, [filters, booksItems]);
+
     return (
         <main className="page reference-books">
             <ToastContainer containerId="singleBook" />
 
             <div className="container registry__container reference-books__container">
                 <section className="registry__header flex justify-between items-center">
-                    <h1 className="title">
-                        {TITLES[bookId]} <span>{listLength}</span>
-                    </h1>
+                    <div className="flex items-center gap-[20px]">
+                        <h1 className="title">
+                            {TITLES[bookId]} <span>{listLength}</span>
+                        </h1>
 
-                    <div
-                        className={`flex ${
-                            bookId === "working-hours"
-                                ? "justify-between"
-                                : "justify-end"
-                        } items-center gap-6 flex-grow`}
-                    >
                         {bookId === "working-hours" && (
-                            <select
-                                className="form-select"
-                                value={currentYear}
-                                onChange={(evt) =>
-                                    setCurrentYear(evt.target.value)
+                            <CreatableSelect
+                                className="form-select-extend max-w-[180px]"
+                                styles={{
+                                    container: (base) => ({
+                                        ...base,
+                                        minWidth: "100px",
+                                    }),
+                                }}
+                                placeholder="Год"
+                                isValidNewOption={() => false}
+                                noOptionsMessage={() => "Нет доступных годов"}
+                                options={
+                                    availableYears.length > 0
+                                        ? availableYears.map((item) => ({
+                                              value: item,
+                                              label: item.toString(),
+                                          }))
+                                        : []
                                 }
-                            >
-                                {availableYears.length > 0 &&
-                                    availableYears.map((item) => (
-                                        <option key={item} value={item}>
-                                            {item}
-                                        </option>
-                                    ))}
-                            </select>
+                                value={
+                                    availableYears
+                                        .map((item) => ({
+                                            value: item,
+                                            label: item.toString(),
+                                        }))
+                                        .find(
+                                            (opt) => opt.value === currentYear
+                                        ) || null
+                                }
+                                onChange={(selectedOption) => {
+                                    setCurrentYear(selectedOption?.value || "");
+                                }}
+                            />
                         )}
+                    </div>
 
-                        <div className="flex items-center gap-6">
-                            {mode === "edit" && bookId === "working-hours" && (
-                                <button
-                                    onClick={() => {
-                                        saveAllList();
-                                    }}
-                                    className="delete-button save-icon"
-                                    title="Сохранить рабочие часы"
-                                ></button>
-                            )}
-
-                            {mode === "edit" && (
+                    <div className="flex justify-end items-center gap-[20px] flex-grow">
+                        {mode === "edit" &&
+                            bookId != "creditor" &&
+                            bookId != "contragent" &&
+                            bookId != "working-hours" &&
+                            bookId != "report-types" && (
                                 <button
                                     type="button"
                                     className="button-active"
-                                    // onClick={}
+                                    onClick={handleOpenNewPopup}
                                 >
                                     <span>Создать</span>
                                     <div className="button-active__icon">
@@ -958,7 +1120,6 @@ const SingleBook = () => {
                                     </div>
                                 </button>
                             )}
-                        </div>
                     </div>
                 </section>
 
@@ -966,48 +1127,36 @@ const SingleBook = () => {
                     <Loader />
                 ) : (
                     <section className="reference-books__table-wrapper registry__table-section w-full">
-                        <table className="registry-table reference-books__table table-auto w-full border-collapse">
+                        <table
+                            className={`registry-table reference-books__table table-auto w-full ${
+                                bookId === "creditor" ||
+                                bookId === "contragent" ||
+                                bookId === "suppliers-with-reports"
+                                    ? "border-separate [border-spacing:0_20px]"
+                                    : "border-collapse"
+                            }`}
+                        >
                             <thead className="registry-table__thead">
                                 <tr>
-                                    {COLUMNS[bookId].map(
-                                        ({ label, key, index }) => (
-                                            <th
-                                                className="min-w-[125px]"
-                                                rowSpan="2"
-                                                key={key || index}
-                                            >
-                                                {label}
-                                            </th>
-                                        )
-                                    )}
+                                    <ReferenceBooksTheadItems
+                                        bookId={bookId}
+                                        COLUMNS={COLUMNS}
+                                        filterOptions={filterOptions}
+                                        filters={filters}
+                                        setFilters={setFilters}
+                                        openFilter={openFilter}
+                                        setOpenFilter={setOpenFilter}
+                                    />
                                 </tr>
                             </thead>
 
                             <tbody className="registry-table__tbody">
-                                {/* {mode === "edit" &&
-                            bookId != "creditor" &&
-                            bookId != "contragent" &&
-                            bookId != "suppliers-with-reports" &&
-                            bookId != "working-hours" &&
-                            bookId !== "report-types" && (
-                                <ReferenceItemNew
-                                    handleNewElementInputChange={
-                                        handleNewElementInputChange
-                                    }
-                                    columns={columns}
-                                    formFields={formFields}
-                                    booksItems={booksItems}
-                                    bookId={bookId}
-                                    positions={positions}
-                                    addNewElement={addNewElement}
-                                />
-                            )} */}
-
-                                {booksItems?.length > 0 &&
-                                    booksItems.map((item) => {
+                                {filteredList?.length > 0 &&
+                                    filteredList.map((item) => {
                                         if (
                                             bookId === "creditor" ||
-                                            bookId === "contragent"
+                                            bookId === "contragent" ||
+                                            bookId === "suppliers-with-reports"
                                         ) {
                                             return (
                                                 <ReferenceItemExtended
@@ -1015,51 +1164,11 @@ const SingleBook = () => {
                                                     data={item}
                                                     mode={mode}
                                                     bookId={bookId}
-                                                    editContragentAndCreditorContact={
-                                                        editContragentAndCreditorContact
+                                                    handleOpenDeletePopup={
+                                                        handleOpenDeletePopup
                                                     }
-                                                    deleteContact={
-                                                        deleteContact
-                                                    }
-                                                />
-                                            );
-                                        }
-
-                                        if (
-                                            bookId === "suppliers-with-reports"
-                                        ) {
-                                            return (
-                                                <ReferenceItemExtendedContacts
-                                                    key={item.id}
-                                                    data={item}
-                                                    mode={mode}
-                                                    handleContactInputChange={
-                                                        handleContactInputChange
-                                                    }
-                                                    deleteContactElem={
-                                                        deleteContactElem
-                                                    }
-                                                    editContactElem={
-                                                        editContactElem
-                                                    }
-                                                    setPopupState={
-                                                        setPopupState
-                                                    }
-                                                    setnewElem={setnewElem}
-                                                />
-                                            );
-                                        }
-
-                                        if (bookId === "working-hours") {
-                                            return (
-                                                <ReferenceItemWorkingHours
-                                                    key={item.id}
-                                                    data={item}
-                                                    columns={columns}
-                                                    mode={mode}
-                                                    bookId={bookId}
-                                                    handleInputChange={
-                                                        handleInputChange
+                                                    handleOpenEditPopup={
+                                                        handleOpenEditPopup
                                                     }
                                                 />
                                             );
@@ -1069,17 +1178,20 @@ const SingleBook = () => {
                                             <ReferenceItem
                                                 key={item.id}
                                                 data={item}
-                                                booksItems={booksItems}
                                                 columns={columns}
                                                 mode={mode}
                                                 bookId={bookId}
-                                                handleInputChange={
-                                                    handleInputChange
-                                                }
-                                                deleteElement={deleteElement}
-                                                editElement={editElement}
                                                 setRolesAction={setRolesAction}
                                                 positions={positions}
+                                                handleOpenEditPopup={
+                                                    handleOpenEditPopup
+                                                }
+                                                handleOpenDeletePopup={
+                                                    handleOpenDeletePopup
+                                                }
+                                                handleSwitchChange={
+                                                    handleSwitchChange
+                                                }
                                             />
                                         );
                                     })}
@@ -1089,185 +1201,143 @@ const SingleBook = () => {
                 )}
             </div>
 
-            {popupState &&
-                mode === "edit" &&
-                bookId === "suppliers-with-reports" && (
-                    <Popup onClick={closePopup} title="Добавить контакт">
-                        <div className="min-w-[300px]">
-                            <div className="action-form__body grid grid-cols-2 gap-3">
-                                <input
-                                    type="text"
-                                    className="w-full text-base border border-gray-300 p-1"
-                                    value={newElem.full_name}
-                                    placeholder="ФИО"
-                                    onChange={(e) =>
-                                        handleNewContactElemInputChange(
-                                            e,
-                                            "full_name"
-                                        )
-                                    }
-                                />
+            {isNewElem && mode === "edit" && (
+                <ReferenceNewElemForm
+                    bookId={bookId}
+                    popupFields={popupFields}
+                    positions={positions}
+                    resetElemPopupState={resetElemPopupState}
+                    handlePopupFieldsChange={handlePopupFieldsChange}
+                    addNewElement={addNewElement}
+                    booksItems={booksItems}
+                />
+            )}
 
-                                <input
-                                    type="text"
-                                    className="w-full text-base border border-gray-300 p-1"
-                                    value={newElem.position}
-                                    placeholder="Должность"
-                                    onChange={(e) =>
-                                        handleNewContactElemInputChange(
-                                            e,
-                                            "position"
-                                        )
-                                    }
-                                />
+            {isEditElem && mode === "edit" && (
+                <ReferenceEditElemForm
+                    bookId={bookId}
+                    popupFields={popupFields}
+                    positions={positions}
+                    resetElemPopupState={resetElemPopupState}
+                    handlePopupFieldsChange={handlePopupFieldsChange}
+                    collectEditFieldsData={collectEditFieldsData}
+                    editContragentAndCreditorContact={
+                        editContragentAndCreditorContact
+                    }
+                    editContactElem={editContactElem}
+                    editWokrHours={editWokrHours}
+                    editElement={editElement}
+                />
+            )}
 
-                                <IMaskInput
-                                    mask={PhoneMask}
-                                    className="w-full text-base border border-gray-300 p-1"
-                                    name="phone"
-                                    type="tel"
-                                    inputMode="tel"
-                                    onAccept={(value) =>
-                                        handleNewContactElemInputChange(
-                                            value || "",
-                                            "phone"
-                                        )
-                                    }
-                                    value={newElem.phone}
-                                    placeholder="+7 999 999 99 99"
-                                />
-
-                                <input
-                                    type="text"
-                                    className="w-full text-base border border-gray-300 p-1"
-                                    value={newElem.email}
-                                    placeholder="Email"
-                                    onChange={(e) =>
-                                        handleNewContactElemInputChange(
-                                            e,
-                                            "email"
-                                        )
-                                    }
-                                />
-                            </div>
-
-                            <div className="action-form__footer mt-5 flex items-center gap-6 justify-between">
-                                <button
-                                    type="button"
-                                    className="rounded-lg py-2 px-5 bg-black text-white flex-[1_1_50%]"
-                                    onClick={() => addNewContact(newElem)}
-                                >
-                                    Добавить
-                                </button>
-
-                                <button
-                                    type="button"
-                                    onClick={() => setPopupState(false)}
-                                    className="border rounded-lg py-2 px-5 flex-[1_1_50%]"
-                                >
-                                    Отменить
-                                </button>
-                            </div>
-                        </div>
-                    </Popup>
-                )}
+            {isDeleteElem && mode === "edit" && (
+                <ReferenceDeleteElemForm
+                    bookId={bookId}
+                    elemToDelete={elemToDelete}
+                    resetElemPopupState={resetElemPopupState}
+                    deleteContact={deleteContact}
+                    deleteContactElem={deleteContactElem}
+                    deleteElement={deleteElement}
+                    ƒ
+                />
+            )}
 
             {rolesAction.action != "" &&
                 mode === "edit" &&
                 bookId === "roles" && (
                     <Popup
-                        onClick={closePopup}
+                        onClick={() => {
+                            setRolesAction({ action: "", roleId: "" });
+                        }}
                         title={`${
                             rolesAction.action === "true"
                                 ? "Включение генерации отчетов"
                                 : "Отключение генерации отчетов"
                         }`}
                     >
-                        <div className="min-w-[300px] max-w-[450px]">
-                            <div className="action-form__body grid grid-cols-1 gap-3">
-                                <p>
-                                    {rolesAction.action === "true"
-                                        ? "Отчеты сотрудников с данной ролью начнут генерироваться, начиная с текущего месяца. Следует ли сгенерировать отчеты сотрудников для прошлого периода?"
-                                        : "Отчеты сотрудников с данной ролью перестанут генерироваться начиная с текущего месяца. Что следует сделать с ранее созданными отчетами?"}
-                                </p>
+                        <div className="action-form__body">
+                            <p>
+                                {rolesAction.action === "true"
+                                    ? "Отчеты сотрудников с данной ролью начнут генерироваться, начиная с текущего месяца. Следует ли сгенерировать отчеты сотрудников для прошлого периода?"
+                                    : "Отчеты сотрудников с данной ролью перестанут генерироваться начиная с текущего месяца. Что следует сделать с ранее созданными отчетами?"}
+                            </p>
 
-                                <div className="flex flex-col gap-4 mt-4">
-                                    {rolesAction.action === "true" ? (
-                                        <>
-                                            <button
-                                                type="button"
-                                                className="rounded-lg py-3 px-5 border"
-                                                title="Да"
-                                                onClick={() =>
-                                                    toggleRoleResponce({
-                                                        action: "enable",
-                                                        backfill: true,
-                                                    })
-                                                }
-                                            >
-                                                Да
-                                            </button>
+                            <div className="flex flex-col gap-[15px] mt-[15px]">
+                                {rolesAction.action === "true" ? (
+                                    <div className="grid item-center grid-cols-2 gap-[15px]">
+                                        <button
+                                            type="button"
+                                            className="cancel-button"
+                                            title="Не генерировать отчеты сотрудников для прошлого периода"
+                                            onClick={() =>
+                                                toggleRoleResponse({
+                                                    action: "enable",
+                                                    backfill: false,
+                                                })
+                                            }
+                                        >
+                                            Нет
+                                        </button>
 
-                                            <button
-                                                type="button"
-                                                className="rounded-lg py-3 px-5 border"
-                                                title="Нет"
-                                                onClick={() =>
-                                                    toggleRoleResponce({
-                                                        action: "enable",
-                                                        backfill: false,
-                                                    })
-                                                }
-                                            >
-                                                Нет
-                                            </button>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <button
-                                                type="button"
-                                                className="rounded-lg py-3 px-5 border"
-                                                title="Безвозвратно удалить"
-                                                onClick={() =>
-                                                    toggleRoleResponce({
-                                                        action: "disable",
-                                                        policy: "delete",
-                                                    })
-                                                }
-                                            >
-                                                Безвозвратно удалить
-                                            </button>
+                                        <button
+                                            type="button"
+                                            className="action-button"
+                                            title="Сгенерировать отчеты сотрудников для прошлого периода"
+                                            onClick={() =>
+                                                toggleRoleResponse({
+                                                    action: "enable",
+                                                    backfill: true,
+                                                })
+                                            }
+                                        >
+                                            Да
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <button
+                                            type="button"
+                                            className="cancel-button"
+                                            title="Безвозвратно удалить"
+                                            onClick={() =>
+                                                toggleRoleResponse({
+                                                    action: "disable",
+                                                    policy: "delete",
+                                                })
+                                            }
+                                        >
+                                            Безвозвратно удалить
+                                        </button>
 
-                                            <button
-                                                type="button"
-                                                className="rounded-lg py-3 px-5 border"
-                                                title="Скрыть из списка"
-                                                onClick={() =>
-                                                    toggleRoleResponce({
-                                                        action: "disable",
-                                                        policy: "hide",
-                                                    })
-                                                }
-                                            >
-                                                Скрыть из списка
-                                            </button>
+                                        <button
+                                            type="button"
+                                            className="cancel-button"
+                                            title="Скрыть из списка"
+                                            onClick={() =>
+                                                toggleRoleResponse({
+                                                    action: "disable",
+                                                    policy: "hide",
+                                                })
+                                            }
+                                        >
+                                            Скрыть из списка
+                                        </button>
 
-                                            <button
-                                                type="button"
-                                                className="rounded-lg py-3 px-5 border"
-                                                title="Оставить в списке"
-                                                onClick={() =>
-                                                    toggleRoleResponce({
-                                                        action: "disable",
-                                                        policy: "keep",
-                                                    })
-                                                }
-                                            >
-                                                Оставить в списке
-                                            </button>
-                                        </>
-                                    )}
-                                </div>
+                                        <button
+                                            type="button"
+                                            className="action-button"
+                                            title="Оставить в списке"
+                                            onClick={() =>
+                                                toggleRoleResponse({
+                                                    action: "disable",
+                                                    policy: "keep",
+                                                })
+                                            }
+                                        >
+                                            Оставить в списке
+                                        </button>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </Popup>

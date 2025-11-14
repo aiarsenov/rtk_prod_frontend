@@ -5,6 +5,7 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 
 import Select from "react-select";
 import SortBtn from "../../SortBtn";
+import Loader from "../../Loader";
 
 import {
     Chart as ChartJS,
@@ -44,6 +45,7 @@ const FinancialIndicators = ({
     setFinancialListFilters,
     setFinancialProfitListFilters,
 }) => {
+    const [isLoading, setIsLoading] = useState(true);
     const [mergedList, setMergetList] = useState([]);
     const [sortedMergedList, setSortedMergetList] = useState([]);
 
@@ -149,12 +151,14 @@ const FinancialIndicators = ({
                 color: "#002033",
                 clip: false,
                 formatter: (value) => {
-                    return typeof value === "number"
-                        ? value.toFixed(2).toString().replace(".", ",")
-                        : value;
+                    if (!Number.isFinite(value)) return "";
+
+                    return value.toFixed(2).toString().replace(".", ",");
                 },
             },
-            tooltip: { enabled: false },
+            tooltip: {
+                enabled: false,
+            },
         },
         scales: {
             y: {
@@ -162,19 +166,27 @@ const FinancialIndicators = ({
                 ticks: {
                     color: "#002033",
                     font: { size: 14 },
-                    padding: 2,
+                    padding: 0,
                     crossAlign: "far",
                     autoSkip: false,
                     maxRotation: 0,
                     callback: function (value) {
                         let label = this.getLabelForValue(value);
 
-                        const maxLength = 20;
-                        if (label.length > maxLength) {
-                            return label.slice(0, maxLength) + "…";
-                        }
+                        const isUpperCase = label === label.toUpperCase();
 
-                        return label;
+                        const maxLength = isUpperCase ? 14 : 17;
+
+                        if (label.length > maxLength) {
+                            label = label.slice(0, maxLength) + "…";
+
+                            return label + "\u00A0\u00A0\u00A0";
+                        } else {
+                            return (
+                                label +
+                                "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"
+                            );
+                        }
                     },
                 },
 
@@ -202,7 +214,7 @@ const FinancialIndicators = ({
                 border: { display: false },
                 afterDataLimits: (axis) => {
                     const max = axis.max ?? 0;
-                    axis.max = max * 1.1;
+                    axis.max = max * 1.15;
                 },
             },
         },
@@ -228,9 +240,9 @@ const FinancialIndicators = ({
                 color: "#002033",
                 clip: false,
                 formatter: (value) => {
-                    return typeof value === "number"
-                        ? value.toFixed(2).toString().replace(".", ",")
-                        : value;
+                    if (!Number.isFinite(value)) return "";
+
+                    return value.toFixed(2).toString().replace(".", ",");
                 },
             },
             tooltip: { enabled: false },
@@ -242,7 +254,7 @@ const FinancialIndicators = ({
                     font: { size: 14 },
                     autoSkip: false,
                     maxRotation: 0,
-                    padding: 2,
+                    padding: 0,
                     callback: function (value) {
                         let label = this.getLabelForValue(value);
                         return label.length > 0 ? label.slice(0, 0) : label;
@@ -300,7 +312,11 @@ const FinancialIndicators = ({
                 offset: 8,
                 color: "#002033",
                 clip: false,
-                formatter: (value) => `${value}%`,
+                formatter: (value) => {
+                    if (!Number.isFinite(value)) return "";
+
+                    return `${value}%`;
+                },
             },
             tooltip: {
                 enabled: false,
@@ -311,7 +327,7 @@ const FinancialIndicators = ({
                 ticks: {
                     autoSkip: false,
                     maxRotation: 0,
-                    padding: 2,
+                    padding: 0,
                     font: { size: 14 },
                     callback: function (value) {
                         let label = this.getLabelForValue(value);
@@ -351,6 +367,7 @@ const FinancialIndicators = ({
     useEffect(() => {
         if (mergedList.length > 0) {
             setSortedMergetList(sortFinanceValues(mergedList, sortBy));
+            setIsLoading(false);
         }
     }, [sortBy, mergedList]);
 
@@ -379,137 +396,155 @@ const FinancialIndicators = ({
 
     return (
         <div className="dashboards__block indicators__financial-indicators">
-            <div style={{ minWidth: "calc(32% + 900px)" }}>
-                <div className="indicators__financial-indicators__header">
-                    <div className="flex items-center gap-[40px]">
-                        <Select
-                            className="form-select-extend w-[120px]"
-                            options={OPTIONS}
-                            placeholder="Выбрать"
-                            value={OPTIONS.find(
-                                (opt) =>
-                                    opt.value ===
-                                    (financialListFilters?.type?.[0] ||
-                                        "project")
-                            )}
-                            onChange={(evt) => {
-                                setFinancialListFilters((prev) => ({
-                                    ...prev,
-                                    type: [evt.value],
-                                }));
-                                setFinancialProfitListFilters((prev) => ({
-                                    ...prev,
-                                    type: [evt.value],
-                                }));
-                            }}
-                        />
+            <div className="indicators__financial-indicators__wrapper">
+                {isLoading ? (
+                    <Loader />
+                ) : (
+                    <div className="indicators__financial-indicators__body">
+                        <div className="flex flex-col">
+                            <div className="flex items-center gap-[40px]">
+                                <Select
+                                    className="form-select-extend w-[120px]"
+                                    options={OPTIONS}
+                                    placeholder="Выбрать"
+                                    value={OPTIONS.find(
+                                        (opt) =>
+                                            opt.value ===
+                                            (financialListFilters?.type?.[0] ||
+                                                "project")
+                                    )}
+                                    onChange={(evt) => {
+                                        setMergetList([]);
+                                        setSortedMergetList([]);
 
-                        <SortBtn
-                            label="Поступления, млн руб."
-                            value="receipts.value"
-                            sortBy={sortBy}
-                            setSortBy={setSortBy}
-                        />
+                                        setIsLoading(true);
+
+                                        setFinancialListFilters((prev) => ({
+                                            ...prev,
+                                            type: [evt.value],
+                                        }));
+                                        setFinancialProfitListFilters(
+                                            (prev) => ({
+                                                ...prev,
+                                                type: [evt.value],
+                                            })
+                                        );
+                                    }}
+                                />
+
+                                <SortBtn
+                                    label="Поступления, млн руб."
+                                    value="receipts.value"
+                                    sortBy={sortBy}
+                                    setSortBy={setSortBy}
+                                    className="h-[40px]"
+                                />
+                            </div>
+
+                            <div
+                                style={{
+                                    height:
+                                        (financialProfitListData1.labels
+                                            ?.length || 0) > 5
+                                            ? `${
+                                                  financialProfitListData1
+                                                      .labels.length * 60
+                                              }px`
+                                            : "300px",
+                                }}
+                            >
+                                <Bar
+                                    data={financialListData1}
+                                    options={horizontalOptions}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col">
+                            <SortBtn
+                                label={"Выручка, млн руб."}
+                                value={"revenue.value"}
+                                sortBy={sortBy}
+                                setSortBy={setSortBy}
+                                className={"text-left h-[40px]"}
+                            />
+
+                            <div
+                                style={{
+                                    height:
+                                        (financialProfitListData1.labels
+                                            ?.length || 0) > 5
+                                            ? `${
+                                                  financialProfitListData1
+                                                      .labels.length * 60
+                                              }px`
+                                            : "300px",
+                                }}
+                            >
+                                <Bar
+                                    data={financialListData2}
+                                    options={horizontalOptionsNoLabels}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col">
+                            <SortBtn
+                                label={"Валовая прибыль, млн руб."}
+                                value={"gross_profit.value"}
+                                sortBy={sortBy}
+                                setSortBy={setSortBy}
+                                className={"text-left h-[40px]"}
+                            />
+
+                            <div
+                                style={{
+                                    height:
+                                        (financialProfitListData1.labels
+                                            ?.length || 0) > 5
+                                            ? `${
+                                                  financialProfitListData1
+                                                      .labels.length * 60
+                                              }px`
+                                            : "300px",
+                                }}
+                            >
+                                <Bar
+                                    data={financialProfitListData1}
+                                    options={horizontalOptionsNoLabels}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col">
+                            <SortBtn
+                                label={"Валовая рентабельность"}
+                                value={"gross_margin.value"}
+                                sortBy={sortBy}
+                                setSortBy={setSortBy}
+                                className={"text-left h-[40px]"}
+                            />
+
+                            <div
+                                style={{
+                                    height:
+                                        (financialProfitListData1.labels
+                                            ?.length || 0) > 5
+                                            ? `${
+                                                  financialProfitListData1
+                                                      .labels.length * 60
+                                              }px`
+                                            : "300px",
+                                }}
+                            >
+                                <Bar
+                                    data={financialProfitListData2}
+                                    options={horizontalOptionsWithPercent}
+                                />
+                            </div>
+                        </div>
                     </div>
-
-                    <SortBtn
-                        label={"Выручка, млн руб."}
-                        value={"revenue.value"}
-                        sortBy={sortBy}
-                        setSortBy={setSortBy}
-                        className={"text-left ml-[10px]"}
-                    />
-
-                    <SortBtn
-                        label={"Валовая прибыль, млн руб."}
-                        value={"gross_profit.value"}
-                        sortBy={sortBy}
-                        setSortBy={setSortBy}
-                        className={"text-left ml-[10px]"}
-                    />
-
-                    <SortBtn
-                        label={"Валовая рентабельность"}
-                        value={"gross_margin.value"}
-                        sortBy={sortBy}
-                        setSortBy={setSortBy}
-                        className={"text-left ml-[10px]"}
-                    />
-                </div>
-
-                <div className="indicators__financial-indicators__body">
-                    <div
-                        style={{
-                            height:
-                                (financialProfitListData1.labels?.length || 0) >
-                                5
-                                    ? `${
-                                          financialProfitListData1.labels
-                                              .length * 60
-                                      }px`
-                                    : "300px",
-                        }}
-                    >
-                        <Bar
-                            data={financialListData1}
-                            options={horizontalOptions}
-                        />
-                    </div>
-
-                    <div
-                        style={{
-                            height:
-                                (financialProfitListData1.labels?.length || 0) >
-                                5
-                                    ? `${
-                                          financialProfitListData1.labels
-                                              .length * 60
-                                      }px`
-                                    : "300px",
-                        }}
-                    >
-                        <Bar
-                            data={financialListData2}
-                            options={horizontalOptionsNoLabels}
-                        />
-                    </div>
-
-                    <div
-                        style={{
-                            height:
-                                (financialProfitListData1.labels?.length || 0) >
-                                5
-                                    ? `${
-                                          financialProfitListData1.labels
-                                              .length * 60
-                                      }px`
-                                    : "300px",
-                        }}
-                    >
-                        <Bar
-                            data={financialProfitListData1}
-                            options={horizontalOptionsNoLabels}
-                        />
-                    </div>
-
-                    <div
-                        style={{
-                            height:
-                                (financialProfitListData1.labels?.length || 0) >
-                                5
-                                    ? `${
-                                          financialProfitListData1.labels
-                                              .length * 60
-                                      }px`
-                                    : "300px",
-                        }}
-                    >
-                        <Bar
-                            data={financialProfitListData2}
-                            options={horizontalOptionsWithPercent}
-                        />
-                    </div>
-                </div>
+                )}
             </div>
         </div>
     );

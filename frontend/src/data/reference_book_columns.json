@@ -17,6 +17,7 @@
     "roles": [
         { "label": "Наименование", "key": "name" },
         { "label": "Ответственный за отчеты по проектам", "key": "is_project_report_responsible" },
+        { "label": "Ответственный за проект", "key": "is_project_leader" },
         { "label": "Кол-во ролей в отчётах", "key": "count" },
         { "label": "Последнее изменение", "key": "updated_at" },
         { "label": "Автор измнения", "key": "updated_by" }
@@ -29,24 +30,26 @@
         { "label": "Автор измнения", "key": "updated_by" }
     ],
     "contragent": [
-        { "label": "Наименование Заказчика", "key": "" },
+        { "label": "Наименование", "key": "name", "filter": "selectedNames", "options": "nameOptions" },
         { "label": "ФИО и должность", "key": "" },
         { "label": "Кол-во проектов", "key": "" },
-        { "label": "Контакты", "key": "" },
+        { "label": "Контакты", "key": "contacts", "filter": "selectedContacts", "options": "contactOptions" },
         { "label": "Последнее изменение", "key": "" },
         { "label": "Автор измнения", "key": "" }
     ],
     "creditor": [
-        { "label": "Наименование кредитора", "key": "" },
+        { "label": "Наименование", "key": "name", "filter": "selectedNames", "options": "nameOptions" },
         { "label": "ФИО и должность", "key": "" },
         { "label": "Кол-во проектов", "key": "" },
-        { "label": "Контакты", "key": "" },
+        { "label": "Контакты", "key": "contacts", "filter": "selectedContacts", "options": "contactOptions" },
         { "label": "Последнее изменение", "key": "" },
         { "label": "Автор измнения", "key": "" }
     ],
     "working-hours": [
         { "label": "Месяц", "key": "month_name" },
-        { "label": "Часы", "key": "hours" }
+        { "label": "Часы", "key": "hours" },
+        { "label": "Последнее изменение", "key": "updated_at" },
+        { "label": "Автор измнения", "key": "updated_by" }
     ],
     "positions": [
         { "label": "Наименование", "key": "name" },
@@ -56,9 +59,9 @@
         { "label": "Автор измнения", "key": "updated_by" }
     ],
     "suppliers-with-reports": [
-        { "label": "Наименование Подрядчика", "key": "" },
+        { "label": "Наименование", "key": "name", "filter": "selectedNames", "options": "nameOptions" },
         { "label": "ФИО и должность", "key": "" },
-        { "label": "Контакты", "key": "" },
+        { "label": "Контакты", "key": "contacts", "filter": "selectedContacts", "options": "contactOptions" },
         { "label": "Последнее изменение", "key": "" },
         { "label": "Автор измнения", "key": "" }
     ],

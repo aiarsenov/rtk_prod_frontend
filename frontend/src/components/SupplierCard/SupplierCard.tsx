@@ -24,7 +24,6 @@ import CardManagementReportList from "../CardReportsList/CardManagementReportLis
 import SupplierEmptyExecutorBlock from "./SupplierEmptyExecutorBlock";
 
 import BottomSheet from "../BottomSheet/BottomSheet";
-import BottomNavCard from "../BottomNav/BottomNavCard";
 import AutoResizeTextarea from "../AutoResizeTextarea";
 
 import Loader from "../Loader.jsx";
@@ -837,8 +836,6 @@ const SupplierCard = () => {
                     setActiveWindow={setActiveWindow}
                 />
             </div>
-
-            <BottomNavCard />
         </main>
     );
 };

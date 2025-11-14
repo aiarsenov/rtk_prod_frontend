@@ -21,7 +21,6 @@ import ContragentStatisticBlock from "./ContragentStatisticBlock";
 import ContragentStatisticBlockMobile from "./ContragentStatisticBlockMobile";
 
 import BottomSheet from "../BottomSheet/BottomSheet";
-import BottomNavCard from "../BottomNav/BottomNavCard";
 import AutoResizeTextarea from "../AutoResizeTextarea";
 import ContragentResponsiblePersons from "./ContragentResponsiblePersons";
 
@@ -750,8 +749,6 @@ const ContragentCard = () => {
                     setActiveWindow={setActiveWindow}
                 />
             </div>
-
-            <BottomNavCard />
         </main>
     );
 };

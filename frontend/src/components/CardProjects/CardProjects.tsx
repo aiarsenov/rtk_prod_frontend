@@ -17,8 +17,6 @@ const CardProjects = ({
     getProjectContact: () => void;
     withLink: boolean;
 }) => {
-    console.log(import.meta.env.VITE_BASE_URL);
-
     return (
         <ul className="card-projects">
             {projects &&

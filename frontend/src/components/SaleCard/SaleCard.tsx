@@ -16,7 +16,6 @@ import SaleFunnelStages from "./SaleFunnelStages";
 import Popup from "../Popup/Popup";
 import Loader from "../Loader";
 import Hint from "../Hint/Hint";
-import BottomNavCard from "../BottomNav/BottomNavCard";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -476,14 +475,14 @@ const SaleCard = () => {
         }
     }, [services]);
 
-    useEffect(() => {
-        const hasErrors =
-            !cardData?.contragent_id ||
-            !cardData?.industries?.main ||
-            !cardData?.request_source_id;
+    // useEffect(() => {
+    // const hasErrors =
+    //     !cardData?.contragent_id ||
+    //     !cardData?.industries?.main ||
+    //     !cardData?.request_source_id;
 
-        setAvailableToChange(!hasErrors);
-    }, [cardData]);
+    //     setAvailableToChange(!hasErrors);
+    // }, [cardData]);
 
     return !isDataLoaded ? (
         <Loader />
@@ -1129,8 +1128,6 @@ const SaleCard = () => {
                     />
                 </Popup>
             )}
-
-            <BottomNavCard />
         </main>
     );
 };

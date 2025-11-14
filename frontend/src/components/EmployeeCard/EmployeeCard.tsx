@@ -10,15 +10,25 @@ import { IMaskInput } from "react-imask";
 import { ToastContainer, toast } from "react-toastify";
 
 import CustomDatePickerField from "../CustomDatePicker/CustomDatePickerField";
+import CreatableSelect from "react-select/creatable";
 
 import EmployeeWorkloadSummary from "./EmployeeWorkloadSummary";
 import EmployeeCurrentWorkload from "./EmployeeCurrentWorkload";
 import PersonalWorkload from "./PersonalWorkload";
-import BottomNavCard from "../BottomNav/BottomNavCard";
 
 import Loader from "../Loader.js";
 
 import "./EmployeeCard.scss";
+
+const TYPES = [
+    { value: "true", label: "штатный" },
+    { value: "false", label: "внештатный" },
+];
+
+const STATUSES = [
+    { value: "true", label: "работает" },
+    { value: "false", label: "        не работает" },
+];
 
 const EmployeeCard = () => {
     const { employeeId } = useParams();
@@ -56,25 +66,6 @@ const EmployeeCard = () => {
         ).then((response) => {
             if (response.status == 200) {
                 setworkload(response.data.workload);
-            }
-        });
-    };
-
-    const getTypes = () => {
-        getData(
-            `${import.meta.env.VITE_API_URL}report-types?with-count=true`
-        ).then((response) => {
-            if (response.status === 200) {
-                setReportTypes(response.data.data);
-            }
-        });
-    };
-
-    // Получаем список должностей
-    const getPositions = () => {
-        getData(`${import.meta.env.VITE_API_URL}positions`).then((response) => {
-            if (response.status === 200) {
-                setPositions(response.data.data);
             }
         });
     };
@@ -218,12 +209,51 @@ const EmployeeCard = () => {
         }
     };
 
+    // Получаем типы отчетов
+    const getTypes = () => {
+        getData(
+            `${import.meta.env.VITE_API_URL}report-types?with-count=true`
+        ).then((response) => {
+            if (response.status === 200) {
+                setReportTypes([
+                    {
+                        value: "",
+                        label: "Тип отчётов",
+                    },
+                    ...response.data.data.map((item) => ({
+                        value: item.id,
+                        label: item.name,
+                    })),
+                ]);
+            }
+        });
+    };
+
+    // Получаем список должностей
+    const getPositions = () => {
+        getData(`${import.meta.env.VITE_API_URL}positions`).then((response) => {
+            if (response.status === 200) {
+                setPositions(
+                    response.data.data.map((item) => ({
+                        value: item.id,
+                        label: item.name,
+                    }))
+                );
+            }
+        });
+    };
+
     // Получение списка подразделений
     const getDepartments = () => {
         getData(`${import.meta.env.VITE_API_URL}departments`).then(
             (response) => {
                 if (response.status == 200) {
-                    setDepartments(response.data.data);
+                    setDepartments(
+                        response.data.data.map((item) => ({
+                            value: item.id,
+                            label: item.name,
+                        }))
+                    );
                 }
             }
         );
@@ -454,78 +484,111 @@ const EmployeeCard = () => {
                                             Подразделение
                                         </div>
 
-                                        <select
-                                            className="form-select"
-                                            value={
-                                                cardDataCustom.department_id ||
-                                                ""
+                                        <CreatableSelect
+                                            options={departments}
+                                            className="form-select-extend"
+                                            placeholder={
+                                                mode === "edit"
+                                                    ? "Выбрать из списка"
+                                                    : ""
                                             }
-                                            onChange={(evt) => {
+                                            noOptionsMessage={() =>
+                                                "Совпадений нет"
+                                            }
+                                            isValidNewOption={() => false}
+                                            value={
+                                                (departments.length > 0 &&
+                                                    departments.find(
+                                                        (item) =>
+                                                            item.value ===
+                                                            cardDataCustom.department_id
+                                                    )) ||
+                                                null
+                                            }
+                                            onChange={(selectedOption) => {
                                                 if (mode === "read") return;
+
+                                                const newValue =
+                                                    +selectedOption?.value ||
+                                                    null;
 
                                                 setCardDataCustom((prev) => ({
                                                     ...prev,
-                                                    department_id:
-                                                        evt.target.value,
+                                                    department_id: newValue,
                                                 }));
 
                                                 updateData(true, {
-                                                    department_id:
-                                                        evt.target.value,
+                                                    department_id: newValue,
                                                 });
                                             }}
-                                            disabled={mode == "read"}
-                                        >
-                                            <option value="">
-                                                Подразделение
-                                            </option>
-                                            {departments.length > 0 &&
-                                                departments.map((item) => (
-                                                    <option
-                                                        value={item.id}
-                                                        key={item.id}
-                                                    >
-                                                        {item.name}
-                                                    </option>
-                                                ))}
-                                        </select>
+                                            isDisabled={mode == "read"}
+                                            styles={{
+                                                input: (base) => ({
+                                                    ...base,
+                                                    maxWidth: "100%",
+                                                    whiteSpace: "nowrap",
+                                                    overflow: "hidden",
+                                                    textOverflow: "ellipsis",
+                                                }),
+                                            }}
+                                        />
                                     </div>
 
                                     <div>
                                         <div className="form-label">Тип</div>
 
-                                        <select
-                                            className="form-select"
-                                            value={
-                                                String(
-                                                    cardDataCustom.is_staff
-                                                ) || ""
+                                        <CreatableSelect
+                                            options={TYPES}
+                                            className="form-select-extend"
+                                            placeholder={
+                                                mode === "edit"
+                                                    ? "Выбрать из списка"
+                                                    : ""
                                             }
-                                            onChange={(evt) => {
+                                            noOptionsMessage={() =>
+                                                "Совпадений нет"
+                                            }
+                                            isValidNewOption={() => false}
+                                            value={
+                                                (TYPES.length > 0 &&
+                                                    TYPES.find(
+                                                        (item) =>
+                                                            item.value ===
+                                                            String(
+                                                                cardDataCustom.is_staff
+                                                            )
+                                                    )) ||
+                                                null
+                                            }
+                                            onChange={(selectedOption) => {
                                                 if (mode === "read") return;
+
+                                                const newValue =
+                                                    selectedOption?.value ||
+                                                    null;
 
                                                 setCardDataCustom((prev) => ({
                                                     ...prev,
-                                                    is_staff: JSON.parse(
-                                                        evt.target.value
-                                                    ),
+                                                    is_staff:
+                                                        JSON.parse(newValue),
                                                 }));
 
                                                 updateData(true, {
-                                                    is_staff: JSON.parse(
-                                                        evt.target.value
-                                                    ),
+                                                    is_staff:
+                                                        JSON.parse(newValue),
                                                 });
                                             }}
-                                            disabled={mode == "read"}
-                                        >
-                                            <option value="true">
-                                                штатный
-                                            </option>
-                                            <option value="false">
-                                                внештатный
-                                            </option>
-                                        </select>
+                                            isDisabled={mode == "read"}
+                                            styles={{
+                                                input: (base) => ({
+                                                    ...base,
+                                                    maxWidth: "100%",
+                                                    whiteSpace: "nowrap",
+                                                    overflow: "hidden",
+                                                    textOverflow: "ellipsis",
+                                                }),
+                                            }}
+                                        />
                                     </div>
                                 </div>
 
@@ -535,73 +598,101 @@ const EmployeeCard = () => {
                                             Должность
                                         </div>
 
-                                        <select
-                                            className="form-select"
-                                            name="position_id"
-                                            onChange={(evt) => {
+                                        <CreatableSelect
+                                            options={positions}
+                                            className="form-select-extend"
+                                            placeholder={
+                                                mode === "edit"
+                                                    ? "Выбрать из списка"
+                                                    : ""
+                                            }
+                                            noOptionsMessage={() =>
+                                                "Совпадений нет"
+                                            }
+                                            isValidNewOption={() => false}
+                                            value={
+                                                (positions.length > 0 &&
+                                                    positions.find(
+                                                        (item) =>
+                                                            item.value ===
+                                                            cardDataCustom.position_id
+                                                    )) ||
+                                                null
+                                            }
+                                            onChange={(selectedOption) => {
                                                 if (mode === "read") return;
+
+                                                const newValue =
+                                                    +selectedOption?.value ||
+                                                    null;
 
                                                 setCardDataCustom((prev) => ({
                                                     ...prev,
-                                                    position_id:
-                                                        evt.target.value,
+                                                    position_id: newValue,
                                                 }));
 
                                                 updateData(true, {
-                                                    position_id:
-                                                        evt.target.value,
+                                                    position_id: newValue,
                                                 });
                                             }}
-                                            value={
-                                                cardDataCustom.position_id || ""
-                                            }
-                                            disabled={mode == "read"}
-                                        >
-                                            <option value="">
-                                                Выбрать должность
-                                            </option>
-                                            {positions.length > 0 &&
-                                                positions.map((position) => (
-                                                    <option
-                                                        key={position.id}
-                                                        value={position.id}
-                                                    >
-                                                        {position.name}
-                                                    </option>
-                                                ))}
-                                        </select>
+                                            isDisabled={mode == "read"}
+                                            styles={{
+                                                input: (base) => ({
+                                                    ...base,
+                                                    maxWidth: "100%",
+                                                    whiteSpace: "nowrap",
+                                                    overflow: "hidden",
+                                                    textOverflow: "ellipsis",
+                                                }),
+                                            }}
+                                        />
                                     </div>
 
                                     <div>
                                         <div className="form-label">Статус</div>
 
                                         {cardDataCustom.is_staff && (
-                                            <select
-                                                className="form-select"
-                                                value={
-                                                    String(
-                                                        cardDataCustom.is_active
-                                                    ) || ""
+                                            <CreatableSelect
+                                                options={STATUSES}
+                                                className="form-select-extend"
+                                                placeholder={
+                                                    mode === "edit"
+                                                        ? "Выбрать из списка"
+                                                        : ""
                                                 }
-                                                onChange={(evt) => {
+                                                noOptionsMessage={() =>
+                                                    "Совпадений нет"
+                                                }
+                                                isValidNewOption={() => false}
+                                                value={
+                                                    (STATUSES.length > 0 &&
+                                                        STATUSES.find(
+                                                            (item) =>
+                                                                item.value ===
+                                                                String(
+                                                                    cardDataCustom.is_active
+                                                                )
+                                                        )) ||
+                                                    null
+                                                }
+                                                onChange={(selectedOption) => {
                                                     if (mode === "read") return;
+
+                                                    const newValue =
+                                                        selectedOption?.value ||
+                                                        null;
 
                                                     setCardDataCustom(
                                                         (prev) => ({
                                                             ...prev,
                                                             is_active:
                                                                 JSON.parse(
-                                                                    evt.target
-                                                                        .value
+                                                                    newValue
                                                                 ),
                                                         })
                                                     );
 
-                                                    if (
-                                                        JSON.parse(
-                                                            evt.target.value
-                                                        )
-                                                    ) {
+                                                    if (JSON.parse(newValue)) {
                                                         setCardDataCustom(
                                                             (prev) => ({
                                                                 ...prev,
@@ -613,8 +704,7 @@ const EmployeeCard = () => {
                                                         updateData(true, {
                                                             is_active:
                                                                 JSON.parse(
-                                                                    evt.target
-                                                                        .value
+                                                                    newValue
                                                                 ),
                                                             dismissal_date:
                                                                 null,
@@ -623,21 +713,23 @@ const EmployeeCard = () => {
                                                         updateData(true, {
                                                             is_active:
                                                                 JSON.parse(
-                                                                    evt.target
-                                                                        .value
+                                                                    newValue
                                                                 ),
                                                         });
                                                     }
                                                 }}
-                                                disabled={mode == "read"}
-                                            >
-                                                <option value="true">
-                                                    работает
-                                                </option>
-                                                <option value="false">
-                                                    не работает
-                                                </option>
-                                            </select>
+                                                isDisabled={mode == "read"}
+                                                styles={{
+                                                    input: (base) => ({
+                                                        ...base,
+                                                        maxWidth: "100%",
+                                                        whiteSpace: "nowrap",
+                                                        overflow: "hidden",
+                                                        textOverflow:
+                                                            "ellipsis",
+                                                    }),
+                                                }}
+                                            />
                                         )}
                                     </div>
                                 </div>
@@ -684,22 +776,45 @@ const EmployeeCard = () => {
                                         />
                                     </div>
 
-                                    <select
-                                        className="form-select"
-                                        value={selectedTypes}
-                                        onChange={(evt) =>
-                                            setSelecterTypes(evt.target.value)
+                                    <CreatableSelect
+                                        options={reportTypes}
+                                        className="form-select-extend"
+                                        placeholder={
+                                            mode === "edit"
+                                                ? "Выбрать из списка"
+                                                : ""
                                         }
-                                    >
-                                        <option value="">Тип отчётов</option>
+                                        noOptionsMessage={() =>
+                                            "Совпадений нет"
+                                        }
+                                        isValidNewOption={() => false}
+                                        value={
+                                            (reportTypes.length > 0 &&
+                                                reportTypes.find(
+                                                    (item) =>
+                                                        item.value ===
+                                                        selectedTypes
+                                                )) ||
+                                            ""
+                                        }
+                                        onChange={(selectedOption) => {
+                                            if (mode === "read") return;
 
-                                        {reportTypes.length > 0 &&
-                                            reportTypes.map((item) => (
-                                                <option value={item.id}>
-                                                    {item.name}
-                                                </option>
-                                            ))}
-                                    </select>
+                                            const newValue =
+                                                +selectedOption?.value || "";
+
+                                            setSelecterTypes(newValue);
+                                        }}
+                                        styles={{
+                                            input: (base) => ({
+                                                ...base,
+                                                maxWidth: "100%",
+                                                whiteSpace: "nowrap",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                            }),
+                                        }}
+                                    />
                                 </div>
 
                                 <div className="employee-card__workload-summary__body">
@@ -721,8 +836,6 @@ const EmployeeCard = () => {
                     </div>
                 </div>
             </section>
-
-            <BottomNavCard />
         </main>
     );
 };

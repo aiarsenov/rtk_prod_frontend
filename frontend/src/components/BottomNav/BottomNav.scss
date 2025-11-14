@@ -27,9 +27,8 @@
         gap: 10px;
 
         @media (min-width: $media-md) {
-            max-width: 300px;
             margin: 0;
-            justify-content: flex-start;
+            justify-content: center;
         }
 
         button:not(.cancel-button) {
@@ -53,10 +52,6 @@
                 display: none !important;
             }
         }
-    }
-
-    @media (min-width: $media-lg) {
-        padding: 10px 40px 40px;
     }
 
     @media (min-width: 1680px) {

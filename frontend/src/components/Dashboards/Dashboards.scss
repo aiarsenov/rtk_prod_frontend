@@ -110,34 +110,36 @@
     }
 
     &__financial-indicators {
-        // width: 100%;
         max-width: 100%;
-        overflow-x: auto;
-        overflow-y: hidden;
-        // min-width: calc(32% + 3 * 300px);
 
-        &__header {
-            width: 100%;
-            display: grid;
-            align-items: center;
-            grid-template-columns: 32% repeat(3, 300px);
-            min-width: calc(32% + 3 * 300px);
-            width: fit-content;
+        &__wrapper {
+            position: relative;
+            height: 350px;
+            padding: 1px;
+            overflow-x: auto;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         &__body {
-            height: 300px;
-            width: fit-content;
+            width: 100%;
             display: grid;
             align-items: center;
-            grid-template-columns: 32% repeat(3, 300px);
-            min-width: calc(32% + 3 * 300px);
+            grid-template-columns: minmax(410px, 30%) repeat(3, 300px);
 
             & > div {
-                width: 100%;
+                min-height: 300px;
                 min-width: 300px;
-                max-width: 100%;
             }
+
+            @media (min-width: 1441px) {
+                grid-template-columns: minmax(410px, 30%) repeat(3, 1fr);
+            }
+        }
+
+        .loader {
+            position: absolute;
+            z-index: 1;
         }
     }
 
@@ -420,7 +422,8 @@
     }
 
     &__content {
-        display: grid;
+        display: flex;
+        flex-direction: column;
         gap: 20px;
     }
 

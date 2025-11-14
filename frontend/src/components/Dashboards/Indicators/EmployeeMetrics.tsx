@@ -76,7 +76,9 @@ const EmployeeMetrics = ({
                                 />
                             </strong>
 
-                            <small>{gross_salary?.label}</small>
+                            <small>
+                                млн <br /> руб.
+                            </small>
 
                             {typeof gross_salary?.change_percent ===
                                 "number" && (
@@ -124,7 +126,9 @@ const EmployeeMetrics = ({
                                 />
                             </strong>
 
-                            <small>{average_salary?.label}</small>
+                            <small>
+                                тыс. <br /> руб.
+                            </small>
 
                             {typeof average_salary?.change_percent ===
                                 "number" && (

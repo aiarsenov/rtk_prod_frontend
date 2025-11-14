@@ -5,11 +5,14 @@
 
     &__container {
         padding-top: 40px;
-        padding-bottom: 40px;
+
+        @media (min-width: $media-xl) {
+            padding-bottom: 40px;
+        }
     }
 
     &__tabs {
-        flex-wrap: nowrap;
+        flex-wrap: nowrap !important;
         overflow-x: auto;
         margin: 0 -15px;
         white-space: nowrap;

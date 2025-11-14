@@ -1,35 +1,9 @@
-import { useNavigate } from "react-router-dom";
-
 import "./BottomNav.scss";
 
-const BottomNavCard = ({ children, update }) => {
-    const navigate = useNavigate();
-
+const BottomNavCard = ({ children, className = "" }) => {
     return (
-        <nav className="bottom-nav">
-            <div className="container bottom-nav__container">
-                <button
-                    type="button"
-                    className="cancel-button"
-                    title="Вернуться на предыдущую страницу"
-                    onClick={() => navigate(-1)}
-                >
-                    Назад
-                </button>
-
-                {update && (
-                    <button
-                        type="button"
-                        className="action-button"
-                        title="Сохранить изменения"
-                        onClick={update}
-                    >
-                        Сохранить
-                    </button>
-                )}
-
-                {children}
-            </div>
+        <nav className={`bottom-nav ${className}`}>
+            <div className="container bottom-nav__container">{children}</div>
         </nav>
     );
 };

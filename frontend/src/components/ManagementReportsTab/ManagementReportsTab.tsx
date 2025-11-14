@@ -74,7 +74,17 @@ const ManagementReportsTab = ({
                 <Loader />
             ) : (
                 <>
-                    <ul className="reports__list">
+                    <div
+                        className="management-card-reports-list__header"
+                        style={{ gridTemplateColumns: "1fr 1fr 100px 60px" }}
+                    >
+                        <span>Месяц</span>
+                        <span>Рук</span>
+                        <span>Статус</span>
+                        <span>Оценка</span>
+                    </div>
+
+                    <ul className="reports__list management-reports__list">
                         {list.length > 0 &&
                             list.map((item) => (
                                 <ManagementReportListItem

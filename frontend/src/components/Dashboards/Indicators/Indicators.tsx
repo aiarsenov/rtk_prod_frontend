@@ -104,9 +104,11 @@ const Indicators = () => {
                     parseFloat(item.revenue?.toString().replace(",", "."))
                 ),
                 backgroundColor: "#7CD4FD",
-                stack: "stack1",
                 barPercentage: 0.25,
-                order: 2,
+                borderRadius: 3,
+                barThickness: 10,
+                categoryPercentage: 0.8,
+                order: 1,
             },
             {
                 label: "Поступления",
@@ -115,9 +117,10 @@ const Indicators = () => {
                 ),
                 backgroundColor: "#E0F2FE",
                 borderRadius: 10,
-                stack: "stack1",
                 barPercentage: 1,
-                order: 1,
+                barThickness: 40,
+                categoryPercentage: 0.8,
+                order: 2,
             },
         ],
     };
@@ -137,7 +140,7 @@ const Indicators = () => {
                 fill: false,
                 pointBackgroundColor: "#36BFFA",
                 pointRadius: 4,
-                tension: 0.3,
+                tension: 0,
                 yAxisID: "y1",
             },
             {
@@ -527,7 +530,7 @@ const Indicators = () => {
         mainFilters.project_id,
     ]);
 
-    useBodyScrollLock(isActiveFilters);
+    useBodyScrollLock(isLoading || isActiveFilters);
 
     const width = useWindowWidth(); // Снимаем блокировку на десктопе
 

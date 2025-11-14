@@ -1,22 +1,20 @@
 import { useLayoutEffect, useRef, useState } from "react";
 
-import { IMaskInput } from "react-imask";
-
 import { format, parseISO } from "date-fns";
 import { ru } from "date-fns/locale";
-
-const PhoneMask = "+{7} (000) 000 00 00";
 
 const ReferenceItemExtended = ({
     mode,
     data,
-    editContragentAndCreditorContact,
-    deleteContact,
+    bookId,
+    handleOpenEditPopup,
+    handleOpenDeletePopup,
 }: {
     mode: string;
     data: object;
-    editContragentAndCreditorContact: () => void;
-    deleteContact: () => void;
+    bookId: string;
+    handleOpenEditPopup: () => void;
+    handleOpenDeletePopup: () => void;
 }) => {
     const [hoveredIndex, setHoveredIndex] = useState(null);
 
@@ -71,7 +69,7 @@ const ReferenceItemExtended = ({
 
     return (
         <tr className="registry-table__item registry-table__item_extended text-left text-base">
-            <td className="align-top">
+            <td className="align-top max-w-[300px]">
                 <strong>{data.name}</strong>
             </td>
 
@@ -88,59 +86,11 @@ const ReferenceItemExtended = ({
                                 onMouseEnter={() => setHoveredIndex(index)}
                                 onMouseLeave={() => setHoveredIndex(null)}
                             >
-                                <td className="min-w-[180px] w-full">
-                                    {/* {mode === "read" ? ( */}
-                                    {/* <> */}
+                                <td className="min-w-[180px] max-w-[300px] w-full">
                                     <div className="extended__info">
                                         <div>{contact.full_name}</div>
                                         <span>{contact.position}</span>
                                     </div>
-
-                                    {/* </> */}
-                                    {/* ) : (
-                                        <>
-                                            <input
-                                                className="text-xl border border-gray-300 p-1"
-                                                value={
-                                                    editedContacts[index]
-                                                        ?.full_name || ""
-                                                }
-                                                onChange={(e) => {
-                                                    const newEdited = [
-                                                        ...editedContacts,
-                                                    ];
-                                                    newEdited[index] = {
-                                                        ...newEdited[index],
-                                                        full_name:
-                                                            e.target.value,
-                                                    };
-                                                    setEditedContacts(
-                                                        newEdited
-                                                    );
-                                                }}
-                                            />
-                                            <input
-                                                className="text-xl border border-gray-300 p-1"
-                                                value={
-                                                    editedContacts[index]
-                                                        ?.position || ""
-                                                }
-                                                onChange={(e) => {
-                                                    const newEdited = [
-                                                        ...editedContacts,
-                                                    ];
-                                                    newEdited[index] = {
-                                                        ...newEdited[index],
-                                                        position:
-                                                            e.target.value,
-                                                    };
-                                                    setEditedContacts(
-                                                        newEdited
-                                                    );
-                                                }}
-                                            />
-                                        </>
-                                    )} */}
                                 </td>
                             </tr>
                         ))}
@@ -148,33 +98,37 @@ const ReferenceItemExtended = ({
                 </table>
             </td>
 
-            <td className="align-top" style={{ padding: 0 }}>
-                <table className="w-full">
-                    <tbody className="flex flex-col">
-                        {data.contacts.map((contact, index) => (
-                            <tr
-                                key={index}
-                                ref={(el) => (projectsRefs.current[index] = el)}
-                                className={
-                                    hoveredIndex === index ? "hovered" : ""
-                                }
-                                onMouseEnter={() => setHoveredIndex(index)}
-                                onMouseLeave={() => setHoveredIndex(null)}
-                            >
-                                <td className="min-w-[180px] max-w-[300px]">
-                                    <div className="extended__info">
-                                        {contact.projects_count}
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </td>
+            {bookId !== "suppliers-with-reports" && (
+                <td className="align-top" style={{ padding: 0 }}>
+                    <table className="w-full">
+                        <tbody>
+                            {data.contacts.map((contact, index) => (
+                                <tr
+                                    key={index}
+                                    ref={(el) =>
+                                        (projectsRefs.current[index] = el)
+                                    }
+                                    className={
+                                        hoveredIndex === index ? "hovered" : ""
+                                    }
+                                    onMouseEnter={() => setHoveredIndex(index)}
+                                    onMouseLeave={() => setHoveredIndex(null)}
+                                >
+                                    <td className="min-w-[180px] max-w-[300px]">
+                                        <div className="extended__info">
+                                            {contact.projects_count}
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </td>
+            )}
 
             <td className="align-top" style={{ padding: 0 }}>
                 <table className="w-full">
-                    <tbody className="flex flex-col">
+                    <tbody>
                         {data.contacts.map((contact, index) => (
                             <tr
                                 key={index}
@@ -186,61 +140,10 @@ const ReferenceItemExtended = ({
                                 onMouseLeave={() => setHoveredIndex(null)}
                             >
                                 <td className="min-w-[180px] w-full">
-                                    {/* {mode === "read" ? (
-                                        <> */}
-
                                     <div className="extended__info">
                                         <div>{contact.phone}</div>
                                         <div>{contact.email}</div>
                                     </div>
-
-                                    {/* </>
-                                    ) : (
-                                        <>
-                                            <IMaskInput
-                                                mask={PhoneMask}
-                                                className="text-xl border border-gray-300 p-1"
-                                                name="phone"
-                                                type="tel"
-                                                inputMode="tel"
-                                                value={
-                                                    editedContacts[index]
-                                                        ?.phone || ""
-                                                }
-                                                onAccept={(value) => {
-                                                    const newEdited = [
-                                                        ...editedContacts,
-                                                    ];
-                                                    newEdited[index] = {
-                                                        ...newEdited[index],
-                                                        phone: value,
-                                                    };
-                                                    setEditedContacts(
-                                                        newEdited
-                                                    );
-                                                }}
-                                            />
-                                            <input
-                                                className="text-xl border border-gray-300 p-1"
-                                                value={
-                                                    editedContacts[index]
-                                                        ?.email || ""
-                                                }
-                                                onChange={(e) => {
-                                                    const newEdited = [
-                                                        ...editedContacts,
-                                                    ];
-                                                    newEdited[index] = {
-                                                        ...newEdited[index],
-                                                        email: e.target.value,
-                                                    };
-                                                    setEditedContacts(
-                                                        newEdited
-                                                    );
-                                                }}
-                                            />
-                                        </>
-                                    )} */}
                                 </td>
                             </tr>
                         ))}
@@ -248,57 +151,120 @@ const ReferenceItemExtended = ({
                 </table>
             </td>
 
-            <td className="align-top">
-                <div
-                    className="min-w-[180px] max-w-[300px]"
-                    ref={(el) => (lastChangeRefs.current[0] = el)}
-                >
-                    {format(
-                        parseISO(data.last_updated_at),
-                        "d MMMM yyyy, HH:mm",
-                        {
-                            locale: ru,
-                        }
-                    ) || "-"}
-                </div>
-            </td>
-
-            <td className="align-top">
-                <div
-                    className="min-w-[180px] max-w-[300px]"
-                    ref={(el) => (authorRefs.current[0] = el)}
-                >
-                    {data.updated_by?.name || "-"}
-                </div>
-            </td>
-
-            <td className="align-top">
+            <td className="align-top" style={{ padding: 0 }}>
                 <table className="w-full">
-                    <tbody className="flex flex-col">
+                    <tbody>
+                        {data.contacts.map((contact, index) => (
+                            <tr
+                                key={index}
+                                ref={(el) =>
+                                    (lastChangeRefs.current[index] = el)
+                                }
+                                className={
+                                    hoveredIndex === index ? "hovered" : ""
+                                }
+                                onMouseEnter={() => setHoveredIndex(index)}
+                                onMouseLeave={() => setHoveredIndex(null)}
+                            >
+                                <td className="min-w-[180px] max-w-[300px]">
+                                    <div className="extended__info">
+                                        {format(
+                                            parseISO(contact.last_updated_at),
+                                            "d MMMM yyyy, HH:mm",
+                                            {
+                                                locale: ru,
+                                            }
+                                        ) || "-"}
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </td>
+
+            <td className="align-top" style={{ padding: 0 }}>
+                <table className="w-full">
+                    <tbody>
+                        {data.contacts.map((contact, index) => (
+                            <tr
+                                key={index}
+                                ref={(el) => (authorRefs.current[index] = el)}
+                                className={
+                                    hoveredIndex === index ? "hovered" : ""
+                                }
+                                onMouseEnter={() => setHoveredIndex(index)}
+                                onMouseLeave={() => setHoveredIndex(null)}
+                            >
+                                <td className="min-w-[180px] max-w-[300px]">
+                                    <div className="extended__info">
+                                        {contact.author || "-"}
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </td>
+
+            <td className="align-top" style={{ padding: 0 }}>
+                <table className="w-full">
+                    <tbody>
                         {data.contacts.map((contact, index) => (
                             <tr
                                 key={contact.id}
                                 ref={(el) => (actionsRefs.current[index] = el)}
+                                className={
+                                    hoveredIndex === index ? "hovered" : ""
+                                }
+                                onMouseEnter={() => setHoveredIndex(index)}
+                                onMouseLeave={() => setHoveredIndex(null)}
                             >
-                                <td className="min-w-[40px]">
+                                <td>
                                     {mode === "edit" && (
                                         <div className="registry-table__item-actions registry-table__item-actions_col">
                                             <button
-                                                onClick={() =>
-                                                    editContragentAndCreditorContact(
-                                                        findObjectById(
-                                                            contact.id
-                                                        )
-                                                    )
-                                                }
+                                                onClick={() => {
+                                                    if (
+                                                        bookId !==
+                                                        "suppliers-with-reports"
+                                                    ) {
+                                                        handleOpenEditPopup(
+                                                            findObjectById(
+                                                                contact.id
+                                                            )
+                                                        );
+                                                    } else {
+                                                        let updatedData =
+                                                            contact;
+                                                        updatedData.contactId =
+                                                            data.id;
+
+                                                        handleOpenEditPopup(
+                                                            updatedData
+                                                        );
+                                                    }
+                                                }}
                                                 className="edit-button"
                                                 title="Изменить контакт"
                                             ></button>
 
                                             <button
-                                                onClick={() =>
-                                                    deleteContact(contact.id)
-                                                }
+                                                onClick={() => {
+                                                    if (
+                                                        bookId !==
+                                                        "suppliers-with-reports"
+                                                    ) {
+                                                        handleOpenDeletePopup({
+                                                            id: contact.id,
+                                                        });
+                                                    } else {
+                                                        handleOpenDeletePopup({
+                                                            id: data.id,
+                                                            contact: contact.id,
+                                                        });
+                                                    }
+                                                }}
                                                 className="delete-button extended"
                                                 title="Удалить контакт"
                                             >

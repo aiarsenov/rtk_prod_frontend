@@ -156,6 +156,7 @@ const IndicatorsFilters = ({
 
                             handleFilterChange("report_month", [formatted]);
                         }}
+                        showMonthYear={true}
                         type="months"
                         single={true}
                     />

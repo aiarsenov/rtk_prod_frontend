@@ -89,25 +89,49 @@ const TeammatesSection = ({
                     />
                 )}
 
-                <select
-                    className="form-select"
-                    value={person?.role_id}
-                    onChange={(e) =>
+                <CreatableSelect
+                    options={roles.map((item) => ({
+                        label: item.name,
+                        value: item.id,
+                    }))}
+                    className="form-select-extend"
+                    placeholder={mode === "edit" ? "Выберите роль" : ""}
+                    noOptionsMessage={() => "Совпадений нет"}
+                    isValidNewOption={() => false}
+                    defaultValue={
+                        (roles.length > 0 &&
+                            roles
+                                .map((item) => ({
+                                    value: item.id,
+                                    label: item.name,
+                                }))
+                                .find(
+                                    (item) => item.value === person?.role_id
+                                )) ||
+                        null
+                    }
+                    onChange={(selectedOption) => {
+                        if (mode === "read") return;
+
+                        const newValue = selectedOption?.value || null;
+
                         handleTeammateChange(
                             index,
                             "role_id",
-                            Number(e.target.value)
-                        )
-                    }
-                    disabled={mode === "read" ? true : false}
-                >
-                    <option value="0">Выберите роль</option>
-                    {roles.map((role) => (
-                        <option value={role.id} key={role.id}>
-                            {role.name}
-                        </option>
-                    ))}
-                </select>
+                            Number(newValue)
+                        );
+                    }}
+                    isDisabled={mode === "read"}
+                    styles={{
+                        input: (base) => ({
+                            ...base,
+                            maxWidth: "100%",
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                        }),
+                    }}
+                />
             </div>
         </li>
     );

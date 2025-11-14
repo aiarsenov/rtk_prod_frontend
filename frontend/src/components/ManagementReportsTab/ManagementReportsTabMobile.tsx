@@ -27,7 +27,7 @@ const ManagementReportsTab = ({
 
     return (
         <>
-            <ul className="reports__list">
+            <ul className="reports__list management-reports__list">
                 {managementReports.length > 0 &&
                     managementReports.map((item) => (
                         <ManagementReportListItem

@@ -111,13 +111,13 @@
             }
         }
 
-        th:first-of-type {
-            padding-left: 0;
-        }
+        // th:first-of-type {
+        //     padding-left: 0;
+        // }
 
-        th:last-of-type {
-            padding-right: 0;
-        }
+        // th:last-of-type {
+        //     padding-right: 0;
+        // }
     }
 
     &__tbody {
@@ -134,19 +134,19 @@
         color: var(--color-gray-100);
         border-bottom: 1px solid var(--color-gray-30);
         z-index: 0;
+        transition: background var(--trans);
 
         > td {
             padding: 15px;
-            z-index: 0;
         }
 
-        > td:first-of-type {
-            padding-left: 0;
-        }
+        // > td:first-of-type {
+        //     // padding-left: 0;
+        // }
 
-        > td:last-of-type {
-            padding-right: 0;
-        }
+        // > td:last-of-type {
+        //     // padding-right: 0;
+        // }
 
         strong {
             font-weight: 600;
@@ -155,30 +155,19 @@
         }
 
         &:hover {
+            background: var(--color-gray-20);
+
             .delete-button {
                 @media (min-width: $media-xxl) {
                     opacity: 1;
                 }
             }
 
-            .registry-table__item-actions {
+            .registry-table__item-actions:not(
+                    .registry-table__item-actions_col
+                ) {
                 opacity: 1;
             }
-
-            // @media (min-width: $media-xxl) {
-            //     &::after {
-            //         content: "";
-            //         position: absolute;
-            //         left: 50%;
-            //         top: 50%;
-            //         transform: translate(-50%, -50%);
-            //         height: 100%;
-            //         width: 100vw;
-            //         background: var(--color-gray-20);
-            //         z-index: -1;
-            //         pointer-events: none;
-            //     }
-            // }
         }
 
         &-actions {
@@ -190,6 +179,7 @@
             &_col {
                 flex-direction: column;
                 gap: 5px;
+                padding: 0 15px 0 0;
             }
 
             @media (min-width: $media-xxl) {
@@ -342,12 +332,19 @@
                     color: var(--color-green-70);
                     background-image: url("../assets/icons/success.svg");
                 }
+
+                &.inprogress {
+                    border: 1px solid var(--color-purple-80);
+                    color: var(--color-purple-80);
+                    background-image: url("../assets/icons/in-progress_purpule.svg");
+                }
             }
         }
     }
 
     &__item_extended {
         background: var(--color-gray-20);
+        border-radius: 10px;
 
         & > td:first-of-type {
             padding-left: 15px;
@@ -360,6 +357,10 @@
         .hovered {
             background-color: var(--color-gray-30);
             transition: background-color 0.2s ease;
+
+            .registry-table__item-actions_col {
+                opacity: 1;
+            }
         }
     }
 

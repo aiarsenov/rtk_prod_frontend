@@ -57,20 +57,19 @@ html,
 body {
     height: 100%;
     width: 100%;
-    font-size: 100%;
     line-height: 1;
     font-size: 14px;
+    color: var(--color-gray-100);
     -ms-text-size-adjust: 100%;
     -moz-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
-    color: var(--color-gray-100);
     scrollbar-gutter: stable;
 }
 
 .wrapper {
     position: relative;
     max-width: 100%;
-    min-width: $media-sm;
+    min-width: 320px;
     min-height: 100vh;
     margin: 0 auto;
     overflow: hidden;
@@ -87,7 +86,7 @@ body {
 }
 
 .container {
-    max-width: 1600px;
+    max-width: 1920px;
     margin: 0 auto;
     padding-left: 15px;
     padding-right: 15px;
@@ -112,7 +111,7 @@ body {
         padding-right: 40px;
     }
 
-    @media (min-width: $media-xxxl) {
+    @media (min-width: 2000px) {
         padding-left: 0;
         padding-right: 0;
     }
@@ -435,11 +434,11 @@ body {
 
     @media (min-width: $media-xxl) {
         min-height: auto;
-        flex-grow: none;
+        flex-grow: 0;
         background: var(--color-white);
         border: 1px solid var(--color-gray-30);
         border-radius: 10px;
-        padding: 20px;
+        padding: 0;
         margin-bottom: 10px;
     }
 
@@ -455,7 +454,7 @@ body {
 
     &__footer {
         @media (min-width: $media-xxl) {
-            padding: 20px 0 0;
+            padding: 20px;
         }
     }
 
@@ -479,9 +478,10 @@ body {
 
     &__tabs {
         padding: 0 40px 0 20px;
+        margin-bottom: 0 !important;
 
         @media (min-width: $media-xxl) {
-            padding: 0;
+            padding: 20px 40px 20px 20px;
         }
     }
 
@@ -510,12 +510,17 @@ body {
         gap: 7px;
         cursor: pointer;
         position: relative;
+        padding: 20px 0;
+
+        &:not(:last-of-type) {
+            border-bottom: 1px solid var(--color-gray-30);
+        }
 
         @media (min-width: $media-xxl) {
             align-items: center;
             grid-template-columns: 1fr 1fr 100px 20px;
             gap: 35px;
-            padding: 20px 0;
+            padding: 20px;
         }
 
         &:hover {
@@ -526,8 +531,6 @@ body {
 
         &__status {
             @media (min-width: $media-xxl) {
-                margin-left: auto;
-                margin-right: 20px;
                 font-weight: 500;
                 font-size: 12px;
                 line-height: 150%;

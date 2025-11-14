@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { format, parseISO } from "date-fns";
@@ -8,36 +7,19 @@ import Switch from "../Switch/Switch";
 
 const ReferenceItem = ({
     data,
-    booksItems,
     columns,
     mode = "read",
     bookId,
-    deleteElement,
-    editElement,
-    handleInputChange,
+    handleOpenDeletePopup,
+    handleOpenEditPopup,
     positions,
     setRolesAction,
+    handleSwitchChange,
 }) => {
     const navigate = useNavigate();
 
     const handleRowClick = () => {
         navigate(`/reference-books/${data.alias}`);
-    };
-
-    const [isError, setIsError] = useState(false);
-
-    const hasNameMatch = (input, currentId) => {
-        const result = booksItems.some(
-            (item) =>
-                item.id !== currentId &&
-                item.name.toLowerCase() === input.trim().toLowerCase()
-        );
-
-        if (result) {
-            setIsError(true);
-        } else {
-            editElement(data.id);
-        }
     };
 
     return (
@@ -63,66 +45,10 @@ const ReferenceItem = ({
                                                                 {Object.entries(
                                                                     item
                                                                 ).map(
-                                                                    ([
-                                                                        field,
-                                                                        val,
-                                                                    ]) =>
-                                                                        field !==
-                                                                            "id" &&
-                                                                        field !==
-                                                                            "updated_at" &&
-                                                                        field !==
-                                                                            "last_updated" &&
-                                                                        (field ===
-                                                                            "name" ||
-                                                                            field ===
-                                                                                "full_name" ||
-                                                                            field ===
-                                                                                "phone") &&
-                                                                        mode ===
-                                                                            "edit" ? (
-                                                                            <div
-                                                                                key={
-                                                                                    field
-                                                                                }
-                                                                                className="flex items-center gap-2"
-                                                                            >
-                                                                                <input
-                                                                                    type="text"
-                                                                                    className="w-full"
-                                                                                    value={
-                                                                                        val?.toString() ||
-                                                                                        "—"
-                                                                                    }
-                                                                                    onChange={(
-                                                                                        e
-                                                                                    ) =>
-                                                                                        handleInputChange(
-                                                                                            e,
-                                                                                            field,
-                                                                                            data.id
-                                                                                        )
-                                                                                    }
-                                                                                />
-                                                                            </div>
-                                                                        ) : (
-                                                                            field !==
-                                                                                "id" &&
-                                                                            field !==
-                                                                                "updated_at" &&
-                                                                            field !==
-                                                                                "last_updated" && (
-                                                                                <div
-                                                                                    className="text-sm"
-                                                                                    key={
-                                                                                        field
-                                                                                    }
-                                                                                >
-                                                                                    {val?.toString() ||
-                                                                                        "—"}
-                                                                                </div>
-                                                                            )
-                                                                        )
+                                                                    ([val]) => {
+                                                                        val?.toString() ||
+                                                                            "—";
+                                                                    }
                                                                 )}
                                                             </div>
                                                         )}
@@ -131,7 +57,9 @@ const ReferenceItem = ({
                                         ))
                                     ) : (
                                         <tr>
-                                            <td className="px-4">—</td>
+                                            <td className="min-w-[180px] max-w-[300px]">
+                                                —
+                                            </td>
                                         </tr>
                                     )}
                                 </tbody>
@@ -141,59 +69,8 @@ const ReferenceItem = ({
                 } else {
                     return (
                         <td className="min-w-[180px] max-w-[300px]" key={key}>
-                            {mode === "edit" &&
-                            (key === "name" || key === "phone") ? (
-                                <div className="flex items-center gap-2 relative">
-                                    <input
-                                        type="text"
-                                        className="w-full"
-                                        value={value?.toString() || "—"}
-                                        onChange={(e) => {
-                                            handleInputChange(e, key, data.id);
-
-                                            if (
-                                                key === "name" &&
-                                                bookId == "positions"
-                                            ) {
-                                                setIsError(false);
-                                            }
-                                        }}
-                                    />
-
-                                    {key === "name" &&
-                                        bookId == "positions" &&
-                                        isError && (
-                                            <span className="text-red-400 text-sm absolute left-0 bottom-[-15px]">
-                                                Такая должность уже есть
-                                            </span>
-                                        )}
-                                </div>
-                            ) : key === "full_name" &&
-                              bookId != "report-types" ? (
-                                <div className="flex items-center gap-2">
-                                    <input
-                                        type="text"
-                                        className="w-full"
-                                        value={value?.toString() || "—"}
-                                        onChange={(e) =>
-                                            handleInputChange(e, key, data.id)
-                                        }
-                                    />
-                                </div>
-                            ) : key === "type" || key === "position_id" ? (
-                                <select
-                                    className={`w-full min-h-[30px] ${
-                                        mode == "read"
-                                            ? ""
-                                            : "border border-gray-300"
-                                    }`}
-                                    name={key}
-                                    value={value || ""}
-                                    onChange={(e) =>
-                                        handleInputChange(e, key, data.id)
-                                    }
-                                    disabled={mode == "read"}
-                                >
+                            {key === "type" || key === "position_id" ? (
+                                <select name={key} value={value || ""} disabled>
                                     {bookId === "management-report-types" ? (
                                         <>
                                             <option value=""></option>
@@ -223,16 +100,12 @@ const ReferenceItem = ({
                                   "include_in_payroll",
                                   "show_cost",
                                   "is_project_report_responsible",
+                                  "is_project_leader",
                               ].includes(key) ? (
                                 <Switch
                                     value={value === true || value === "true"}
                                     label={`${key}_${data.id}`}
                                     onChange={(updated) => {
-                                        handleInputChange(
-                                            updated,
-                                            key,
-                                            data.id
-                                        );
                                         if (
                                             key ===
                                             "is_project_report_responsible"
@@ -241,89 +114,96 @@ const ReferenceItem = ({
                                                 action: updated.toString(),
                                                 roleId: data.id,
                                             });
+                                        } else {
+                                            handleSwitchChange(
+                                                updated,
+                                                key,
+                                                data
+                                            );
                                         }
                                     }}
+                                    disabled={
+                                        mode === "read" ||
+                                        (key === "is_project_leader" &&
+                                            data.is_project_report_responsible ===
+                                                false)
+                                    }
                                 />
-                            ) : (key === "updated_at" ||
-                                  key === "last_updated") &&
-                              value ? (
+                            ) : key === "updated_at" && value ? (
                                 format(parseISO(value), "d MMMM yyyy, HH:mm", {
                                     locale: ru,
                                 }) || "—"
                             ) : key === "updated_by" ? (
                                 value?.name || "—"
-                            ) : key === "hours" ? (
-                                <div className="flex items-center gap-2">
-                                    <input
-                                        type="number"
-                                        className={`w-full transition-colors border ${
-                                            mode === "read"
-                                                ? "border-transparent"
-                                                : "border-gray-300"
-                                        }`}
-                                        value={value?.toString() || "—"}
-                                        onChange={(e) =>
-                                            handleInputChange(e, key, data.id)
-                                        }
-                                    />
-                                </div>
                             ) : (
-                                value?.toString() || "—"
+                                <div
+                                    style={
+                                        bookId === "banks"
+                                            ? {}
+                                            : {
+                                                  whiteSpace: "nowrap",
+                                                  overflow: "hidden",
+                                                  textOverflow: "ellipsis",
+                                              }
+                                    }
+                                >
+                                    {value?.toString() || "—"}
+                                </div>
                             )}
                         </td>
                     );
                 }
             })}
 
-            {mode === "edit" && bookId != "working-hours" && (
-                <td>
+            {mode === "edit" && (
+                <td className="max-w-[70px]">
                     <div className="registry-table__item-actions">
                         {mode === "edit" && (
                             <button
-                                onClick={() => {
-                                    if (bookId == "positions") {
-                                        hasNameMatch(data.name, data.id);
-                                    } else {
-                                        editElement(data.id);
-                                    }
-                                }}
+                                onClick={() => handleOpenEditPopup(data)}
                                 className="edit-button"
                                 title="Изменить элемент"
                             ></button>
                         )}
 
-                        {mode === "edit" && bookId !== "report-types" && (
-                            <button
-                                onClick={() => {
-                                    if (data.projects_count) {
-                                        if (data.projects_count < 1) {
-                                            deleteElement(data.id);
+                        {mode === "edit" &&
+                            bookId !== "report-types" &&
+                            bookId != "working-hours" && (
+                                <button
+                                    onClick={() => {
+                                        if (data.projects_count) {
+                                            if (data.projects_count < 1) {
+                                                handleOpenDeletePopup({
+                                                    id: data.id,
+                                                });
+                                            }
+                                        } else {
+                                            handleOpenDeletePopup({
+                                                id: data.id,
+                                            });
                                         }
-                                    } else {
-                                        deleteElement(data.id);
+                                    }}
+                                    className="delete-button extended"
+                                    title="Удалить элемент"
+                                    disabled={
+                                        data.projects_count > 0 ||
+                                        data.employee_count > 0
                                     }
-                                }}
-                                className="delete-button extended"
-                                title="Удалить элемент"
-                                disabled={
-                                    data.projects_count > 0 ||
-                                    data.employee_count > 0
-                                }
-                            >
-                                <svg
-                                    width="20"
-                                    height="21"
-                                    viewBox="0 0 20 21"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
                                 >
-                                    <path
-                                        d="M5.833 8v9.166h8.333V8h1.667v10c0 .46-.373.833-.833.833H5A.833.833 0 014.166 18V8h1.667zm3.333 0v7.5H7.5V8h1.666zM12.5 8v7.5h-1.667V8H12.5zm0-5.833c.358 0 .677.229.79.57l.643 1.929h2.733v1.667H3.333V4.666h2.733l.643-1.93a.833.833 0 01.79-.57h5zm-.601 1.666H8.1l-.278.833h4.354l-.277-.833z"
-                                        fill="currentColor"
-                                    />
-                                </svg>
-                            </button>
-                        )}
+                                    <svg
+                                        width="20"
+                                        height="21"
+                                        viewBox="0 0 20 21"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            d="M5.833 8v9.166h8.333V8h1.667v10c0 .46-.373.833-.833.833H5A.833.833 0 014.166 18V8h1.667zm3.333 0v7.5H7.5V8h1.666zM12.5 8v7.5h-1.667V8H12.5zm0-5.833c.358 0 .677.229.79.57l.643 1.929h2.733v1.667H3.333V4.666h2.733l.643-1.93a.833.833 0 01.79-.57h5zm-.601 1.666H8.1l-.278.833h4.354l-.277-.833z"
+                                            fill="currentColor"
+                                        />
+                                    </svg>
+                                </button>
+                            )}
                     </div>
                 </td>
             )}
