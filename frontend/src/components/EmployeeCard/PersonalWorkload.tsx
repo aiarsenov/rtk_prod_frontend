@@ -211,18 +211,28 @@ const PersonalWorkload = ({ mode, employeeId, getWorkloadSummary }: {}) => {
             </h2>
 
             <div className="employee-card__personal-workload__header">
-                <select
-                    className="form-select"
-                    onChange={(e) => setSelectedPersonalYear(e.target.value)}
-                    value={selectedPersonalYear || ""}
-                >
-                    {availableYears.length > 0 &&
-                        availableYears.map((item) => (
-                            <option value={item} key={item}>
-                                {item}
-                            </option>
-                        ))}
-                </select>
+                <Select
+                    className="form-select-extend"
+                    options={availableYears.map((item) => ({
+                        value: item,
+                        label: item,
+                    }))}
+                    placeholder="Год"
+                    value={
+                        (availableYears.length > 0 &&
+                            availableYears
+                                .map((item) => ({
+                                    value: item,
+                                    label: item,
+                                }))
+                                .find(
+                                    (item) =>
+                                        item.value === selectedPersonalYear
+                                )) ||
+                        ""
+                    }
+                    onChange={(e) => setSelectedPersonalYear(e.value)}
+                />
 
                 <Select
                     className="form-select-extend"
