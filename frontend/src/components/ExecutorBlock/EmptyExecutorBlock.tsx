@@ -5,6 +5,7 @@ import getData from "../../utils/getData";
 import { IMaskInput } from "react-imask";
 import Popup from "../Popup/Popup";
 import SelectList from "../MultiSelect/SelectList";
+import CreatableSelect from "react-select/creatable";
 
 import "./ExecutorBlock.scss";
 
@@ -28,6 +29,8 @@ const validateEmail = (email) => {
     return emailRegex.test(email);
 };
 
+const PhoneMask = "+{7}(000) 000 00 00";
+
 const EmptyExecutorBlock = ({
     removeBlock,
     banks,
@@ -35,19 +38,25 @@ const EmptyExecutorBlock = ({
     sendExecutor,
     projectId,
 }) => {
-    const PhoneMask = "+{7}(000) 000 00 00";
-
     const [errors, setErrors] = useState({});
     const [isReadonly, setIsReadonly] = useState(
         type === "creditor" ? true : false
     );
+
     const [contactsList, setContactsList] = useState([]);
-    const [allContacts, setAllContacts] = useState([]);
+    const [contactsArray, setContactsArray] = useState([]);
+
     const [newContact, setNewContact] = useState(
         type === "creditor" ? CREDITOR_TEMPLATE : CUSTOMER_TEMPLATE
     );
     const [activeTab, setActiveTab] = useState("create");
     const [isFilled, setIsFilled] = useState(false);
+
+    const formattedBanks =
+        banks?.map((item) => ({
+            label: item.name,
+            value: item.id,
+        })) || [];
 
     const handleNewExecutor = (e, name) => {
         setNewContact({
@@ -80,7 +89,19 @@ const EmptyExecutorBlock = ({
             }`
         ).then((response) => {
             if (response.status == 200) {
-                setContactsList(response.data.data);
+                if (response.data.data.length > 0) {
+                    setContactsList(
+                        response.data?.data?.map((person) => ({
+                            value: person.full_name,
+                            label: person.full_name,
+                            email: person.email,
+                            phone: person.phone,
+                            position: person.position,
+                            creditor_id: person.creditor.id,
+                            creditor_name: person.creditor.name,
+                        }))
+                    );
+                }
             }
         });
     };
@@ -93,42 +114,22 @@ const EmptyExecutorBlock = ({
             }responsible-persons/contragent?project_id=${projectId}`
         ).then((response) => {
             if (response.status == 200) {
-                setContactsList(response.data.data);
+                setContactsList(
+                    response.data?.data?.map((person) => ({
+                        value: person.full_name,
+                        label: person.full_name,
+                        email: person.email,
+                        phone: person.phone,
+                        position: person.position,
+                    }))
+                );
             }
         });
     };
 
     useEffect(() => {
         if (type === "creditor") {
-            setAllContacts(
-                contactsList?.map((person) => ({
-                    value: person.full_name,
-                    label: person.full_name,
-                    email: person.email,
-                    phone: person.phone,
-                    position: person.position,
-                    creditor_id: person.creditor.id,
-                }))
-            );
-        } else {
-            setAllContacts(
-                contactsList?.map((person) => ({
-                    value: person.full_name,
-                    label: person.full_name,
-                    email: person.email,
-                    phone: person.phone,
-                    position: person.position,
-                }))
-            );
-        }
-    }, [contactsList]);
-
-    useEffect(() => {
-        if (type === "creditor") {
             getCreditorContacts();
-            if (newContact.creditor_id !== "") {
-                setIsReadonly(false);
-            }
         } else if (type === "customer") {
             getContragentsContacts();
         }
@@ -155,32 +156,40 @@ const EmptyExecutorBlock = ({
                 {type === "creditor" && activeTab === "create" && (
                     <div className="mt-[10px]">
                         <div className="form-label">Банк</div>
-                        <select
-                            className={`form-field w-full ${
-                                errors.creditor_id ? "form-field_error" : ""
-                            }`}
-                            onChange={(e) =>
+
+                        <CreatableSelect
+                            options={formattedBanks}
+                            placeholder={"Банк"}
+                            className="form-select-extend"
+                            noOptionsMessage={() => "Совпадений нет"}
+                            isValidNewOption={() => false}
+                            value={
+                                (formattedBanks.length > 0 &&
+                                    formattedBanks.find(
+                                        (option) =>
+                                            option.value ===
+                                            newContact.creditor_id
+                                    )) ||
+                                null
+                            }
+                            onChange={(selectedOption) => {
+                                const newValue = +selectedOption?.value || null;
+
                                 setNewContact({
                                     ...newContact,
-                                    creditor_id: e.target.value,
-                                })
-                            }
-                            value={newContact.creditor_id}
-                            // disabled={isReadonly}
-                        >
-                            <option value="">Выберите банк</option>
-                            {banks?.map((bank) => (
-                                <option value={bank.id} key={bank.id}>
-                                    {bank.name}
-                                </option>
-                            ))}
-                        </select>
-
-                        {errors.creditor_id && (
-                            <p className="message message-error">
-                                Выберите банк
-                            </p>
-                        )}
+                                    creditor_id: newValue,
+                                });
+                            }}
+                            styles={{
+                                input: (base) => ({
+                                    ...base,
+                                    maxWidth: "100%",
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                }),
+                            }}
+                        />
                     </div>
                 )}
 
@@ -304,45 +313,11 @@ const EmptyExecutorBlock = ({
                     </div>
                 ) : (
                     <SelectList
-                        options={allContacts}
+                        options={contactsList}
                         selectedContact={newContact}
-                        onChange={(selected) => {
-                            if (selected) {
-                                {
-                                    type === "creditor"
-                                        ? setNewContact({
-                                              ...newContact,
-                                              full_name: selected.value,
-                                              phone: selected.phone || "",
-                                              email: selected.email || "",
-                                              position: selected.position || "",
-                                              creditor_id:
-                                                  type === "creditor"
-                                                      ? selected?.creditor_id
-                                                      : "",
-                                          })
-                                        : setNewContact({
-                                              ...newContact,
-                                              full_name: selected.value,
-                                              phone: selected.phone || "",
-                                              email: selected.email || "",
-                                              position: selected.position || "",
-                                          });
-                                }
-
-                                setIsReadonly(true);
-                                setActiveTab("create");
-                            } else {
-                                setNewContact({
-                                    ...newContact,
-                                    full_name: "",
-                                    phone: "",
-                                    email: "",
-                                    position: "",
-                                });
-                                setIsReadonly(false);
-                                setActiveTab("create");
-                            }
+                        multi={true}
+                        onChange={(items) => {
+                            setContactsArray(items);
                         }}
                     />
                 )}
