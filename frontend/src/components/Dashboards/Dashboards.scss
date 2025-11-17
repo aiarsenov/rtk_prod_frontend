@@ -382,6 +382,7 @@
             margin-bottom: 20px;
 
             @media (min-width: $media-xxl) {
+                flex-grow: 1;
                 margin-bottom: 0;
             }
 
@@ -390,6 +391,14 @@
 
                 @media (min-width: 560px) {
                     flex: 0 0 200px;
+                }
+
+                @media (min-width: $media-xxl) {
+                    flex: 1 0 200px;
+                }
+
+                 @media (min-width: $media-xxxl) {
+                    flex: 0 0 400px;
                 }
             }
         }
