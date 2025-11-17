@@ -5,6 +5,7 @@ import getData from "../../utils/getData";
 import { IMaskInput } from "react-imask";
 import Popup from "../Popup/Popup";
 import SelectList from "../MultiSelect/SelectList";
+import CreatableSelect from "react-select/creatable";
 
 import "./ExecutorBlock.scss";
 
@@ -28,26 +29,49 @@ const validateEmail = (email) => {
     return emailRegex.test(email);
 };
 
+const prepareContactsForSubmit = (contacts) => {
+    return contacts.map(({ value, label, ...rest }) => ({
+        full_name: value,
+        ...rest,
+    }));
+};
+
+const PhoneMask = "+{7}(000) 000 00 00";
+
 const EmptyExecutorBlock = ({
     removeBlock,
     banks,
     type,
     sendExecutor,
     projectId,
+    projectData,
 }) => {
-    const PhoneMask = "+{7}(000) 000 00 00";
-
     const [errors, setErrors] = useState({});
-    const [isReadonly, setIsReadonly] = useState(
-        type === "creditor" ? true : false
-    );
+
     const [contactsList, setContactsList] = useState([]);
-    const [allContacts, setAllContacts] = useState([]);
+    const [contactsArray, setContactsArray] = useState([]);
+
     const [newContact, setNewContact] = useState(
         type === "creditor" ? CREDITOR_TEMPLATE : CUSTOMER_TEMPLATE
     );
+
+    const isCreditorLocked = type === "creditor" && !newContact.creditor_id;
+
     const [activeTab, setActiveTab] = useState("create");
     const [isFilled, setIsFilled] = useState(false);
+
+    const formattedBanks =
+        banks?.map((item) => ({
+            label: item.name,
+            value: item.id,
+        })) || [];
+
+    const addContragentId = (contacts, contragentId) => {
+        return contacts.map((item) => ({
+            ...item,
+            contragent_id: contragentId,
+        }));
+    };
 
     const handleNewExecutor = (e, name) => {
         setNewContact({
@@ -57,17 +81,36 @@ const EmptyExecutorBlock = ({
     };
 
     const handleSave = () => {
-        const newErrors = {
-            full_name: !newContact.full_name,
-            phone: !newContact.phone,
-            position: !newContact.position,
-            email: !newContact.email || !validateEmail(newContact.email),
-            creditor_id: type === "creditor" ? !newContact.creditor_id : false,
-        };
+        if (activeTab == "create") {
+            const newErrors = {
+                full_name: !newContact.full_name,
+                phone: !newContact.phone,
+                position: !newContact.position,
+                email: !newContact.email || !validateEmail(newContact.email),
+                creditor_id:
+                    type === "creditor" ? !newContact.creditor_id : false,
+            };
 
-        setErrors(newErrors);
-        if (Object.values(newErrors).some((err) => err)) return;
-        sendExecutor(type, newContact);
+            setErrors(newErrors);
+            if (Object.values(newErrors).some((err) => err)) return;
+
+            sendExecutor(
+                type,
+                type === "creditor"
+                    ? [newContact]
+                    : addContragentId([newContact], projectData?.contragent_id)
+            );
+        } else {
+            sendExecutor(
+                type,
+                type === "creditor"
+                    ? prepareContactsForSubmit(contactsArray)
+                    : addContragentId(
+                          prepareContactsForSubmit(contactsArray),
+                          projectData?.contragent_id
+                      )
+            );
+        }
     };
 
     // Получение доступных для добавления контактных лиц кредитора
@@ -80,7 +123,19 @@ const EmptyExecutorBlock = ({
             }`
         ).then((response) => {
             if (response.status == 200) {
-                setContactsList(response.data.data);
+                if (response.data.data.length > 0) {
+                    setContactsList(
+                        response.data?.data?.map((person) => ({
+                            value: person.full_name,
+                            label: person.full_name,
+                            email: person.email,
+                            phone: person.phone,
+                            position: person.position,
+                            creditor_id: person.creditor.id,
+                            creditor_name: person.creditor.name,
+                        }))
+                    );
+                }
             }
         });
     };
@@ -93,42 +148,36 @@ const EmptyExecutorBlock = ({
             }responsible-persons/contragent?project_id=${projectId}`
         ).then((response) => {
             if (response.status == 200) {
-                setContactsList(response.data.data);
+                setContactsList(
+                    response.data?.data?.map((person) => ({
+                        value: person.full_name,
+                        label: person.full_name,
+                        email: person.email,
+                        phone: person.phone,
+                        position: person.position,
+                    }))
+                );
             }
         });
     };
 
     useEffect(() => {
+        setIsFilled(false);
+        setContactsArray([]);
+
         if (type === "creditor") {
-            setAllContacts(
-                contactsList?.map((person) => ({
-                    value: person.full_name,
-                    label: person.full_name,
-                    email: person.email,
-                    phone: person.phone,
-                    position: person.position,
-                    creditor_id: person.creditor.id,
-                }))
-            );
+            setNewContact((prev) => ({
+                ...CREDITOR_TEMPLATE,
+                creditor_id: prev.creditor_id ?? null,
+            }));
         } else {
-            setAllContacts(
-                contactsList?.map((person) => ({
-                    value: person.full_name,
-                    label: person.full_name,
-                    email: person.email,
-                    phone: person.phone,
-                    position: person.position,
-                }))
-            );
+            setNewContact(CUSTOMER_TEMPLATE);
         }
-    }, [contactsList]);
+    }, [activeTab]);
 
     useEffect(() => {
         if (type === "creditor") {
             getCreditorContacts();
-            if (newContact.creditor_id !== "") {
-                setIsReadonly(false);
-            }
         } else if (type === "customer") {
             getContragentsContacts();
         }
@@ -145,230 +194,229 @@ const EmptyExecutorBlock = ({
         );
     }, [newContact]);
 
+    useEffect(() => {
+        setIsFilled(contactsArray.length > 0);
+    }, [contactsArray]);
+
     return (
         <Popup
             className={`executor-block-wrapper_${type}`}
             onClick={removeBlock}
             title="Добавить ключевое лицо"
         >
-            <div className="action-form__body executor-block">
-                {type === "creditor" && activeTab === "create" && (
-                    <div className="mt-[10px]">
-                        <div className="form-label">Банк</div>
-                        <select
-                            className={`form-field w-full ${
-                                errors.creditor_id ? "form-field_error" : ""
-                            }`}
-                            onChange={(e) =>
-                                setNewContact({
-                                    ...newContact,
-                                    creditor_id: e.target.value,
-                                })
-                            }
-                            value={newContact.creditor_id}
-                            // disabled={isReadonly}
-                        >
-                            <option value="">Выберите банк</option>
-                            {banks?.map((bank) => (
-                                <option value={bank.id} key={bank.id}>
-                                    {bank.name}
-                                </option>
-                            ))}
-                        </select>
-
-                        {errors.creditor_id && (
-                            <p className="message message-error">
-                                Выберите банк
-                            </p>
-                        )}
-                    </div>
-                )}
-
-                <div className="executor-block__header">
+            <form>
+                <div className="action-form__body executor-block">
                     {type === "creditor" && activeTab === "create" && (
-                        <strong>Контактное лицо</strong>
+                        <div className="mt-[10px]">
+                            <div className="form-label">Банк</div>
+
+                            <CreatableSelect
+                                options={formattedBanks}
+                                placeholder={"Банк"}
+                                className="form-select-extend"
+                                noOptionsMessage={() => "Совпадений нет"}
+                                isValidNewOption={() => false}
+                                value={
+                                    (formattedBanks.length > 0 &&
+                                        formattedBanks.find(
+                                            (option) =>
+                                                option.value ===
+                                                newContact.creditor_id
+                                        )) ||
+                                    null
+                                }
+                                onChange={(selectedOption) => {
+                                    const newValue =
+                                        +selectedOption?.value || null;
+
+                                    setNewContact({
+                                        ...newContact,
+                                        creditor_id: newValue,
+                                    });
+                                }}
+                                styles={{
+                                    input: (base) => ({
+                                        ...base,
+                                        maxWidth: "100%",
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                    }),
+                                }}
+                            />
+                        </div>
                     )}
 
-                    <ul className="card__tabs executor-block__tabs">
-                        <li className="card__tabs-item radio-field_tab">
-                            <input
-                                id="create_executor"
-                                type="radio"
-                                name="create_executor"
-                                checked={activeTab === "create"}
-                                onChange={() => setActiveTab("create")}
-                            />
-                            <label htmlFor="create_executor">Создать</label>
-                        </li>
-                        <li className="card__tabs-item radio-field_tab">
-                            <input
-                                id="select_executor"
-                                type="radio"
-                                name="select_executor"
-                                checked={activeTab === "select"}
-                                onChange={() => setActiveTab("select")}
-                            />
-                            <label htmlFor="select_executor">
-                                Выбрать из списка
-                            </label>
-                        </li>
-                    </ul>
-                </div>
+                    <div className="executor-block__header">
+                        {type === "creditor" && activeTab === "create" && (
+                            <strong>Контактное лицо</strong>
+                        )}
 
-                {activeTab === "create" ? (
-                    <div className="executor-block__form">
-                        <div className="relative">
-                            <input
-                                type="text"
-                                className={`form-field w-full ${
-                                    errors.full_name ? "form-field_error" : ""
-                                }`}
-                                placeholder="ФИО*"
-                                value={newContact.full_name}
-                                onChange={(evt) =>
-                                    setNewContact((prev) => ({
-                                        ...prev,
-                                        full_name: evt.target.value,
-                                    }))
-                                }
-                                disabled={isReadonly}
-                            />
-
-                            {errors.full_name && (
-                                <p className="message message-error">
-                                    Заполните ФИО
-                                </p>
-                            )}
-                        </div>
-
-                        <div className="relative">
-                            <input
-                                className={`form-field w-full ${
-                                    errors.position ? "form-field_error" : ""
-                                }`}
-                                type="text"
-                                placeholder="Должность"
-                                value={newContact.position}
-                                onChange={(e) =>
-                                    handleNewExecutor(e, "position")
-                                }
-                                disabled={isReadonly}
-                            />
-                            {errors.position && (
-                                <p className="message message-error">
-                                    Заполните должность
-                                </p>
-                            )}
-                        </div>
-
-                        <div className="relative">
-                            <input
-                                className={`form-field w-full ${
-                                    errors.email ? "form-field_error" : ""
-                                }`}
-                                type="email"
-                                placeholder="E-mail"
-                                value={newContact.email}
-                                onChange={(e) => handleNewExecutor(e, "email")}
-                                disabled={isReadonly}
-                            />
-                            {errors.email && (
-                                <p className="message message-error">
-                                    Некорректный email
-                                </p>
-                            )}
-                        </div>
-
-                        <div className="relative">
-                            <IMaskInput
-                                mask={PhoneMask}
-                                className={`form-field w-full ${
-                                    errors.phone ? "form-field_error" : ""
-                                }`}
-                                name="phone"
-                                type="tel"
-                                inputMode="tel"
-                                onAccept={(value) =>
-                                    handleNewExecutor(value || "", "phone")
-                                }
-                                value={newContact.phone || ""}
-                                placeholder="Телефон"
-                                disabled={isReadonly}
-                            />
-                            {errors.phone && (
-                                <p className="message message-error">
-                                    Заполните телефон
-                                </p>
-                            )}
-                        </div>
+                        <ul className="card__tabs executor-block__tabs">
+                            <li className="card__tabs-item radio-field_tab">
+                                <input
+                                    id="create_executor"
+                                    type="radio"
+                                    name="create_executor"
+                                    checked={activeTab === "create"}
+                                    onChange={() =>
+                                        !isCreditorLocked &&
+                                        setActiveTab("create")
+                                    }
+                                    disabled={isCreditorLocked}
+                                />
+                                <label htmlFor="create_executor">Создать</label>
+                            </li>
+                            <li className="card__tabs-item radio-field_tab">
+                                <input
+                                    id="select_executor"
+                                    type="radio"
+                                    name="select_executor"
+                                    checked={activeTab === "select"}
+                                    onChange={() =>
+                                        !isCreditorLocked &&
+                                        setActiveTab("select")
+                                    }
+                                    disabled={isCreditorLocked}
+                                />
+                                <label htmlFor="select_executor">
+                                    Выбрать из списка
+                                </label>
+                            </li>
+                        </ul>
                     </div>
-                ) : (
-                    <SelectList
-                        options={allContacts}
-                        selectedContact={newContact}
-                        onChange={(selected) => {
-                            if (selected) {
-                                {
-                                    type === "creditor"
-                                        ? setNewContact({
-                                              ...newContact,
-                                              full_name: selected.value,
-                                              phone: selected.phone || "",
-                                              email: selected.email || "",
-                                              position: selected.position || "",
-                                              creditor_id:
-                                                  type === "creditor"
-                                                      ? selected?.creditor_id
-                                                      : "",
-                                          })
-                                        : setNewContact({
-                                              ...newContact,
-                                              full_name: selected.value,
-                                              phone: selected.phone || "",
-                                              email: selected.email || "",
-                                              position: selected.position || "",
-                                          });
-                                }
 
-                                setIsReadonly(true);
-                                setActiveTab("create");
-                            } else {
-                                setNewContact({
-                                    ...newContact,
-                                    full_name: "",
-                                    phone: "",
-                                    email: "",
-                                    position: "",
-                                });
-                                setIsReadonly(false);
-                                setActiveTab("create");
-                            }
-                        }}
-                    />
-                )}
-            </div>
+                    {activeTab === "create" ? (
+                        <div className="executor-block__form">
+                            <div className="relative">
+                                <input
+                                    type="text"
+                                    className={`form-field w-full ${
+                                        errors.full_name
+                                            ? "form-field_error"
+                                            : ""
+                                    }`}
+                                    placeholder="ФИО*"
+                                    value={newContact.full_name}
+                                    onChange={(evt) =>
+                                        setNewContact((prev) => ({
+                                            ...prev,
+                                            full_name: evt.target.value,
+                                        }))
+                                    }
+                                    disabled={isCreditorLocked}
+                                />
 
-            <div className="action-form__footer">
-                <div className="max-w-[280px]">
-                    <button
-                        type="button"
-                        onClick={removeBlock}
-                        className="cancel-button flex-[1_0_auto]"
-                    >
-                        Отменить
-                    </button>
+                                {errors.full_name && (
+                                    <p className="message message-error">
+                                        Заполните ФИО
+                                    </p>
+                                )}
+                            </div>
 
-                    <button
-                        type="button"
-                        className="action-button flex-[1_0_auto]"
-                        onClick={handleSave}
-                        disabled={!isFilled}
-                        title="Добавить исполнителя"
-                    >
-                        Добавить
-                    </button>
+                            <div className="relative">
+                                <input
+                                    className={`form-field w-full ${
+                                        errors.position
+                                            ? "form-field_error"
+                                            : ""
+                                    }`}
+                                    type="text"
+                                    placeholder="Должность"
+                                    value={newContact.position}
+                                    onChange={(e) =>
+                                        handleNewExecutor(e, "position")
+                                    }
+                                    disabled={isCreditorLocked}
+                                />
+                                {errors.position && (
+                                    <p className="message message-error">
+                                        Заполните должность
+                                    </p>
+                                )}
+                            </div>
+
+                            <div className="relative">
+                                <input
+                                    className={`form-field w-full ${
+                                        errors.email ? "form-field_error" : ""
+                                    }`}
+                                    type="email"
+                                    placeholder="E-mail"
+                                    value={newContact.email}
+                                    onChange={(e) =>
+                                        handleNewExecutor(e, "email")
+                                    }
+                                    disabled={isCreditorLocked}
+                                />
+                                {errors.email && (
+                                    <p className="message message-error">
+                                        Некорректный email
+                                    </p>
+                                )}
+                            </div>
+
+                            <div className="relative">
+                                <IMaskInput
+                                    mask={PhoneMask}
+                                    className={`form-field w-full ${
+                                        errors.phone ? "form-field_error" : ""
+                                    }`}
+                                    name="phone"
+                                    type="tel"
+                                    inputMode="tel"
+                                    onAccept={(value) =>
+                                        handleNewExecutor(value || "", "phone")
+                                    }
+                                    value={newContact.phone || ""}
+                                    placeholder="Телефон"
+                                    disabled={isCreditorLocked}
+                                />
+                                {errors.phone && (
+                                    <p className="message message-error">
+                                        Заполните телефон
+                                    </p>
+                                )}
+                            </div>
+                        </div>
+                    ) : (
+                        <SelectList
+                            options={contactsList}
+                            selectedContact={newContact}
+                            multi={true}
+                            onChange={(items) => {
+                                setContactsArray(items);
+                            }}
+                        />
+                    )}
                 </div>
-            </div>
+
+                <div className="action-form__footer">
+                    <div className="max-w-[280px]">
+                        <button
+                            type="button"
+                            onClick={removeBlock}
+                            className="cancel-button flex-[1_0_auto]"
+                        >
+                            Отменить
+                        </button>
+
+                        <button
+                            type="button"
+                            className="action-button flex-[1_0_auto]"
+                            onClick={() => {
+                                if (isFilled) {
+                                    handleSave();
+                                }
+                            }}
+                            disabled={!isFilled}
+                            title="Добавить исполнителя"
+                        >
+                            Добавить
+                        </button>
+                    </div>
+                </div>
+            </form>
         </Popup>
     );
 };

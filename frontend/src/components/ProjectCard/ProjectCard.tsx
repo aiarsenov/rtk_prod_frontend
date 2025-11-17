@@ -333,23 +333,40 @@ const ProjectCard = () => {
             position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
         });
 
-        data.project_id = projectId;
+        let updatedData = {};
 
         if (type === "creditor") {
+            updatedData = { project_id: +projectId, contacts: data };
+
             postData(
                 "POST",
                 `${import.meta.env.VITE_API_URL}responsible-persons/creditor`,
-                data
+                updatedData
             )
                 .then((response) => {
                     if (response?.ok) {
-                        getCard();
                         setAddCreditor(false);
+
+                        setCreditors((prevCreditor) => [
+                            ...prevCreditor,
+                            ...response.created.map((item) => ({
+                                ...item.creditor_contact,
+                                id: item.id,
+                            })),
+                        ]);
+
+                        setFilteredCreditors((prevCreditor) => [
+                            ...prevCreditor,
+                            ...response.created.map((item) => ({
+                                ...item.creditor_contact,
+                                id: item.id,
+                            })),
+                        ]);
 
                         toast.update(query, {
                             render:
                                 response.message ||
-                                "Ошибка прикрепления исполнителя",
+                                "Контакты успешно добавлены к проекту!",
                             type: "success",
                             containerId: "toastContainer",
                             isLoading: false,
@@ -384,34 +401,35 @@ const ProjectCard = () => {
                 });
         } else if (type === "customer") {
             if (projectData?.contragent_id) {
-                data.contragent_id = projectData?.contragent_id;
+                updatedData = {
+                    project_id: +projectId,
+                    contragent_id: projectData?.contragent_id,
+                    contacts: data,
+                };
 
                 postData(
                     "POST",
                     `${
                         import.meta.env.VITE_API_URL
                     }responsible-persons/contragent`,
-                    data
+                    updatedData
                 )
                     .then((response) => {
                         if (response?.ok) {
                             setAddCustomer(false);
 
-                            if (response?.responsible_person) {
-                                setCustomers((prevCustomer) => [
-                                    ...prevCustomer,
-                                    {
-                                        ...response.responsible_person
-                                            ?.contragent_contact,
-                                        id: response.responsible_person?.id,
-                                    },
-                                ]);
-                            }
+                            setCustomers((prevCustomer) => [
+                                ...prevCustomer,
+                                ...response.created.map((item) => ({
+                                    ...item.contragent_contact,
+                                    id: item.id,
+                                })),
+                            ]);
 
                             toast.update(query, {
                                 render:
                                     response.message ||
-                                    "Ошибка прикрепления исполнителя",
+                                    "Контакты успешно добавлены к проекту!",
                                 type: "success",
                                 containerId: "toastContainer",
                                 isLoading: false,
@@ -775,7 +793,7 @@ const ProjectCard = () => {
         }
     }, [projectData?.contragent_id]);
 
-    useBodyScrollLock(activeWindow); // Блокируем экран при открытии попапа или редактора отчета
+    useBodyScrollLock(activeWindow || addCustomer || addCreditor); // Блокируем экран при открытии попапа или редактора отчета
 
     const width = useWindowWidth(); // Снимаем блокировку на десктопе
 
@@ -1250,6 +1268,7 @@ const ProjectCard = () => {
                                 {addCustomer && (
                                     <EmptyExecutorBlock
                                         type={"customer"}
+                                        projectData={projectData}
                                         projectId={projectId}
                                         removeBlock={() =>
                                             setAddCustomer(false)

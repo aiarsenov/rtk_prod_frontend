@@ -684,8 +684,8 @@ body {
 
 .message {
     font-weight: 400;
-    font-size: 12px;
-    line-height: 140%;
+    font-size: 12px !important;
+    line-height: 140% !important;
     padding: 8px 0;
 
     &-error {

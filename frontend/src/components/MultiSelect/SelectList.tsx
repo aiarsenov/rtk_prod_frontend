@@ -1,17 +1,45 @@
 import { useState } from "react";
 
-const SelectList = ({ options = [], onChange, selectedContact }) => {
+const SelectList = ({
+    options = [],
+    onChange,
+    selectedContact,
+    multi = false,
+}) => {
     const [selected, setSelected] = useState(
-        selectedContact?.full_name || null
+        multi ? [] : selectedContact?.full_name || null
     );
 
     const handleChange = (value) => {
-        const newValue = selected === value ? null : value;
-        setSelected(newValue);
+        if (multi) {
+            let newSelected;
 
-        const selectedOption =
-            options.find((item) => item.value === newValue) || null;
-        onChange?.(selectedOption);
+            if (selected.includes(value)) {
+                newSelected = selected.filter((item) => item !== value);
+            } else {
+                newSelected = [...selected, value];
+            }
+
+            setSelected(newSelected);
+
+            const selectedOptions = options.filter((item) =>
+                newSelected.includes(item.value)
+            );
+
+            onChange?.(selectedOptions);
+        } else {
+            const newValue = selected === value ? null : value;
+            setSelected(newValue);
+
+            const selectedOption =
+                options.find((item) => item.value === newValue) || null;
+
+            onChange?.(selectedOption);
+        }
+    };
+
+    const isChecked = (value) => {
+        return multi ? selected.includes(value) : selected === value;
     };
 
     return (
@@ -19,17 +47,18 @@ const SelectList = ({ options = [], onChange, selectedContact }) => {
             {options.map((item, index) => (
                 <li
                     key={`${item.value}_${index}`}
-                    className={`${selected === item.value ? "active" : ""}`}
+                    className={isChecked(item.value) ? "active" : ""}
                 >
                     <label htmlFor={item.value}>
                         <input
                             id={item.value}
                             type="checkbox"
                             value={item.value}
-                            checked={selected === item.value}
+                            checked={isChecked(item.value)}
                             onChange={() => handleChange(item.value)}
                         />
-                        <span>{item.label}</span>
+                        <div>{item.label}</div>
+                        <span className="text-[#667085]">{item.position}</span>
                     </label>
                 </li>
             ))}
