@@ -288,21 +288,24 @@ const IndicatorsFilters = ({
                     />
                 </div>
 
-                <button
-                    type="button"
-                    className="dashboards__filters-clear-btn"
-                    onClick={() => {
-                        setMainFilters((prev) => {
-                            const { project_id, contragent_id, ...rest } = prev;
-                            return rest;
-                        });
-                        setFilteredProjects(projects);
-                        setFilteredContragents(contragents);
-                    }}
-                >
-                    Очистить фильтры
-                    <span></span>
-                </button>
+                {(mainFilters.project_id || mainFilters.contragent_id) && (
+                    <button
+                        type="button"
+                        className="dashboards__filters-clear-btn"
+                        onClick={() => {
+                            setMainFilters((prev) => {
+                                const { project_id, contragent_id, ...rest } =
+                                    prev;
+                                return rest;
+                            });
+                            setFilteredProjects(projects);
+                            setFilteredContragents(contragents);
+                        }}
+                    >
+                        Очистить фильтры
+                        <span></span>
+                    </button>
+                )}
             </div>
         </div>
     );
