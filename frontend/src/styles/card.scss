@@ -244,6 +244,11 @@
                     background: var(--color-blue-70);
                     border: 1px solid var(--color-blue-70);
                 }
+
+                &:disabled ~ label {
+                    opacity: 0.5;
+                    pointer-events: none;
+                }
             }
 
             label {
@@ -253,7 +258,8 @@
                 border: 1px solid var(--color-blue-30);
                 background: var(--color-white);
                 color: var(--color-blue-70);
-                transition: color var(--trans), background var(--trans);
+                transition: color var(--trans), background var(--trans),
+                    opacity var(--trans);
                 font-weight: 500;
                 font-size: 14px;
                 line-height: 100%;

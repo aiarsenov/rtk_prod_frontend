@@ -333,13 +333,15 @@ const ProjectCard = () => {
             position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
         });
 
-        data.project_id = projectId;
+        let updatedData = {};
 
         if (type === "creditor") {
+            updatedData = { project_id: +projectId, contacts: data };
+
             postData(
                 "POST",
                 `${import.meta.env.VITE_API_URL}responsible-persons/creditor`,
-                data
+                updatedData
             )
                 .then((response) => {
                     if (response?.ok) {
@@ -384,14 +386,18 @@ const ProjectCard = () => {
                 });
         } else if (type === "customer") {
             if (projectData?.contragent_id) {
-                data.contragent_id = projectData?.contragent_id;
+                updatedData = {
+                    project_id: +projectId,
+                    contragent_id: projectData?.contragent_id,
+                    contacts: data,
+                };
 
                 postData(
                     "POST",
                     `${
                         import.meta.env.VITE_API_URL
                     }responsible-persons/contragent`,
-                    data
+                    updatedData
                 )
                     .then((response) => {
                         if (response?.ok) {
