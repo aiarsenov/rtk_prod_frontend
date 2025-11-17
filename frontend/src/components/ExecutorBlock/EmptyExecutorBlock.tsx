@@ -44,6 +44,7 @@ const EmptyExecutorBlock = ({
     type,
     sendExecutor,
     projectId,
+    projectData,
 }) => {
     const [errors, setErrors] = useState({});
 
@@ -65,6 +66,13 @@ const EmptyExecutorBlock = ({
             value: item.id,
         })) || [];
 
+    const addContragentId = (contacts, contragentId) => {
+        return contacts.map((item) => ({
+            ...item,
+            contragent_id: contragentId,
+        }));
+    };
+
     const handleNewExecutor = (e, name) => {
         setNewContact({
             ...newContact,
@@ -85,9 +93,23 @@ const EmptyExecutorBlock = ({
 
             setErrors(newErrors);
             if (Object.values(newErrors).some((err) => err)) return;
-            sendExecutor(type, [newContact]);
+
+            sendExecutor(
+                type,
+                type === "creditor"
+                    ? [newContact]
+                    : addContragentId([newContact], projectData?.contragent_id)
+            );
         } else {
-            sendExecutor(type, prepareContactsForSubmit(contactsArray));
+            sendExecutor(
+                type,
+                type === "creditor"
+                    ? prepareContactsForSubmit(contactsArray)
+                    : addContragentId(
+                          prepareContactsForSubmit(contactsArray),
+                          projectData?.contragent_id
+                      )
+            );
         }
     };
 

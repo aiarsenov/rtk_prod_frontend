@@ -345,13 +345,28 @@ const ProjectCard = () => {
             )
                 .then((response) => {
                     if (response?.ok) {
-                        getCard();
                         setAddCreditor(false);
+
+                        setCreditors((prevCreditor) => [
+                            ...prevCreditor,
+                            ...response.created.map((item) => ({
+                                ...item.creditor_contact,
+                                id: item.id,
+                            })),
+                        ]);
+
+                        setFilteredCreditors((prevCreditor) => [
+                            ...prevCreditor,
+                            ...response.created.map((item) => ({
+                                ...item.creditor_contact,
+                                id: item.id,
+                            })),
+                        ]);
 
                         toast.update(query, {
                             render:
                                 response.message ||
-                                "Ошибка прикрепления исполнителя",
+                                "Контакты успешно добавлены к проекту!",
                             type: "success",
                             containerId: "toastContainer",
                             isLoading: false,
@@ -403,21 +418,18 @@ const ProjectCard = () => {
                         if (response?.ok) {
                             setAddCustomer(false);
 
-                            if (response?.responsible_person) {
-                                setCustomers((prevCustomer) => [
-                                    ...prevCustomer,
-                                    {
-                                        ...response.responsible_person
-                                            ?.contragent_contact,
-                                        id: response.responsible_person?.id,
-                                    },
-                                ]);
-                            }
+                            setCustomers((prevCustomer) => [
+                                ...prevCustomer,
+                                ...response.created.map((item) => ({
+                                    ...item.contragent_contact,
+                                    id: item.id,
+                                })),
+                            ]);
 
                             toast.update(query, {
                                 render:
                                     response.message ||
-                                    "Ошибка прикрепления исполнителя",
+                                    "Контакты успешно добавлены к проекту!",
                                 type: "success",
                                 containerId: "toastContainer",
                                 isLoading: false,
@@ -1256,6 +1268,7 @@ const ProjectCard = () => {
                                 {addCustomer && (
                                     <EmptyExecutorBlock
                                         type={"customer"}
+                                        projectData={projectData}
                                         projectId={projectId}
                                         removeBlock={() =>
                                             setAddCustomer(false)
