@@ -383,11 +383,25 @@ const SingleBook = () => {
                 ((bookId === "report-types" || bookId === "banks") &&
                     !data.full_name)
             ) {
-                alert(
+                toast.error(
                     bookId === "report-types" || bookId === "banks"
                         ? "Полное и сокращенное наименования должны быть заполнены."
-                        : "Наименование должно быть заполнено."
+                        : "Наименование должно быть заполнено.",
+                    {
+                        className: "toast-multiline",
+                        isLoading: false,
+                        autoClose: 2000,
+                        pauseOnFocusLoss: false,
+                        pauseOnHover: false,
+                        draggable: true,
+                        position:
+                            window.innerWidth >= 1440
+                                ? "bottom-right"
+                                : "top-right",
+                        containerId: "singleBook",
+                    }
                 );
+
                 return;
             }
         }

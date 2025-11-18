@@ -721,6 +721,10 @@ body {
     }
 }
 
+.toast-multiline {
+    white-space: pre-line;
+}
+
 .Toastify {
     &__progress-bar {
         opacity: 1 !important;

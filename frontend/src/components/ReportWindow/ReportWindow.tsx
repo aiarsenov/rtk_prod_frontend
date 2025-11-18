@@ -5,6 +5,7 @@ import formatMoney from "../../utils/formatMoney";
 import parseDate from "../../utils/parseDate";
 import buildQueryParams from "../../utils/buildQueryParams";
 import { useBodyScrollLock } from "../../hooks/useBodyScrollLock.js";
+import { ToastContainer, toast } from "react-toastify";
 
 import CreatableSelect from "react-select/creatable";
 import TeammatesSection from "../TeammatesSection";
@@ -234,10 +235,17 @@ const ReportWindow = ({
                 resetState();
             }
         } else {
-            alert(
-                "Исправьте ошибки перед сохранением:\n" +
-                    Object.values(newErrors).join("\n")
-            );
+            toast.error(Object.values(newErrors).join("\n"), {
+                className: "toast-multiline",
+                isLoading: false,
+                autoClose: false,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+                position:
+                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+                containerId: "reportToastContainer",
+            });
         }
     };
 
@@ -752,6 +760,8 @@ const ReportWindow = ({
                     <div className="bottom-sheet__icon"></div>
 
                     <form className="bottom-sheet__body">
+                        <ToastContainer containerId="reportToastContainer" />
+
                         {reportWindowsState && (
                             <div
                                 className={`report-window form ${

@@ -160,7 +160,17 @@ const ProjectCard = () => {
                 }
             });
         } else {
-            alert("Необходимо назначить заказчика");
+            toast.error("Необходимо назначить заказчика", {
+                className: "toast-multiline",
+                isLoading: false,
+                autoClose: 2000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+                position:
+                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+                containerId: "toastContainer",
+            });
         }
     };
 
@@ -459,7 +469,19 @@ const ProjectCard = () => {
                         );
                     });
             } else {
-                alert("Необходимо назначить заказчика");
+                toast.error("Необходимо назначить заказчика", {
+                    className: "toast-multiline",
+                    isLoading: false,
+                    autoClose: 2000,
+                    pauseOnFocusLoss: false,
+                    pauseOnHover: false,
+                    draggable: true,
+                    position:
+                        window.innerWidth >= 1440
+                            ? "bottom-right"
+                            : "top-right",
+                    containerId: "toastContainer",
+                });
             }
         }
     };
@@ -919,8 +941,22 @@ const ProjectCard = () => {
                                         menuIsOpen={contragentMenuOpen}
                                         onMenuOpen={() => {
                                             if (!canChangeContragent) {
-                                                alert(
-                                                    "Перед тем, как изменить заказчика, вы должны удалить всех ключевых лиц заказчика и все созданные отчеты проекта."
+                                                toast.error(
+                                                    "Перед тем, как изменить заказчика, вы должны удалить всех ключевых лиц заказчика и все созданные отчеты проекта.",
+                                                    {
+                                                        containerId:
+                                                            "toastContainer",
+                                                        isLoading: false,
+                                                        autoClose: 2000,
+                                                        pauseOnFocusLoss: false,
+                                                        pauseOnHover: false,
+                                                        draggable: true,
+                                                        position:
+                                                            window.innerWidth >=
+                                                            1440
+                                                                ? "bottom-right"
+                                                                : "top-right",
+                                                    }
                                                 );
                                                 contragentRef.current?.blur();
                                                 setContragentMenuOpen(false);
@@ -1236,8 +1272,24 @@ const ProjectCard = () => {
                                                     setAddCustomer(true);
                                                 }
                                             } else {
-                                                alert(
-                                                    "Необходимо назначить заказчика"
+                                                toast.error(
+                                                    "Необходимо назначить заказчика",
+                                                    {
+                                                        className:
+                                                            "toast-multiline",
+                                                        isLoading: false,
+                                                        autoClose: 2000,
+                                                        pauseOnFocusLoss: false,
+                                                        pauseOnHover: false,
+                                                        draggable: true,
+                                                        position:
+                                                            window.innerWidth >=
+                                                            1440
+                                                                ? "bottom-right"
+                                                                : "top-right",
+                                                        containerId:
+                                                            "toastContainer",
+                                                    }
                                                 );
                                             }
                                         }}
