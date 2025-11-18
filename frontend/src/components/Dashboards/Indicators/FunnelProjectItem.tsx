@@ -25,6 +25,13 @@ const FunnelProjectItem = ({
     service_cost_value,
     service_cost_label,
     current_stage,
+}: {
+    name: string;
+    industry: { name: string };
+    source: string;
+    service_cost_value: string;
+    service_cost_label: string;
+    current_stage: { name: string; stage_date: string };
 }) => {
     return (
         <li className="reports__list-item">

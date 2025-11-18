@@ -14,6 +14,7 @@ const CardManagementReportList = ({
     isDataLoaded: boolean;
 }) => {
     let statusClass;
+    
     const [rateEditorState, setRateEditorState] = useState(false); // Редактор оценки отчёта
     const [reportData, setReportData] = useState({});
 

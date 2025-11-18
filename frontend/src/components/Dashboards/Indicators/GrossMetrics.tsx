@@ -1,7 +1,20 @@
 import CountUp from "react-countup";
 import Hint from "../../Hint/Hint";
 
-const GrossMetrics = ({ financialMetrics }) => {
+interface FinancialMetrics {
+    gross_profit: { value: string | number; change_percent: number };
+    gross_margin: {
+        value: string | number;
+        label: string;
+        change_percent: number;
+    };
+}
+
+const GrossMetrics = ({
+    financialMetrics,
+}: {
+    financialMetrics: FinancialMetrics;
+}) => {
     return (
         <div className="statistics-block__content">
             <div className="statistics-block__item">
@@ -75,7 +88,7 @@ const GrossMetrics = ({ financialMetrics }) => {
                                     separator=" "
                                     decimals={2}
                                     decimal=","
-                                />{" "}
+                                />
                                 {financialMetrics.gross_margin?.label}
                             </strong>
 

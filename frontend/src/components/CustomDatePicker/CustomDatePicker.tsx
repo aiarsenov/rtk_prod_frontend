@@ -30,7 +30,8 @@ const CustomDatePicker = ({
     onChange: () => void;
     fieldkey: string;
     single?: boolean;
-    value;
+    value: string | Date;
+    minDate: string | Date;
 }) => {
     const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
         null,

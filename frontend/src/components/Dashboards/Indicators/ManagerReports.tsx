@@ -20,6 +20,7 @@ const ManagerReports = ({ selectedFilters }) => {
         legal_issues: "",
         misc: "",
     });
+    
     const getManagementReportsDashboard = () => {
         const queryString = buildQueryParams(selectedFilters);
 

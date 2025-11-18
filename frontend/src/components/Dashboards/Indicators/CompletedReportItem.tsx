@@ -1,3 +1,9 @@
+interface Project {
+    name: string;
+    contragent: string;
+    industries: [];
+}
+
 const CompletedReportItem = ({
     project,
     id,
@@ -6,6 +12,18 @@ const CompletedReportItem = ({
     execution_period,
     report_period,
     openReportEditor,
+}: {
+    project: Project;
+    id: number;
+    report_period_code: string;
+    days: string;
+    execution_period: string;
+    report_period: string;
+    openReportEditor: (args: {
+        id: number | string;
+        contragent: string;
+        report_name: string;
+    }) => void;
 }) => {
     return (
         <li

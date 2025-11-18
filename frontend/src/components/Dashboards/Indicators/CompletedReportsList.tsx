@@ -6,7 +6,11 @@ import CompletedReportItem from "./CompletedReportItem";
 import ReportWindow from "../../ReportWindow/ReportWindow";
 import Hint from "../../Hint/Hint";
 
-const CompletedReportsList = ({ completedReports }) => {
+const CompletedReportsList = ({
+    completedReports,
+}: {
+    completedReports: { items: [] };
+}) => {
     const [reportWindowsState, setReportWindowsState] = useState(false);
 
     const [contracts, setContracts] = useState([]);

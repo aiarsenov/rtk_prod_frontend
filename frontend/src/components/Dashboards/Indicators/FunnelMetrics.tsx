@@ -1,7 +1,15 @@
 import CountUp from "react-countup";
 import Hint from "../../Hint/Hint";
 
-const FunnelMetrics = ({ funnelMetrics }) => {
+interface FunnelMetrics {
+    request_received: { label: string; value: number | string };
+    proposal_sent: { label: string; value: number | string };
+    agreement: { label: string; value: number | string };
+    rejected: { label: string; value: number | string };
+    postponed: { label: string; value: number | string };
+}
+
+const FunnelMetrics = ({ funnelMetrics }: { funnelMetrics: FunnelMetrics }) => {
     return (
         <div className="statistics-block__content indicators__funnel-metrics-statistics">
             <div className="statistics-block__item">

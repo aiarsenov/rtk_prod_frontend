@@ -9,10 +9,8 @@ type OptionType = {
 };
 
 interface CustomSelectProps {
-    type: string;
     placeholder: string;
     mode: string;
-    fieldName: string;
     options: OptionType[];
     onChange: () => void;
     selectedValues: number[];
@@ -20,10 +18,8 @@ interface CustomSelectProps {
 }
 
 const CustomSelect = ({
-    type,
     placeholder,
     mode,
-    fieldName,
     options,
     selectedValues,
     onChange,

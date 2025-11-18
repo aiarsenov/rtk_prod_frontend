@@ -44,6 +44,16 @@ const FinancialIndicators = ({
     financialListFilters,
     setFinancialListFilters,
     setFinancialProfitListFilters,
+}: {
+    financialList: { items: [] };
+    financialProfitList: { items: [] };
+    financialListFilters: { type: [] };
+    setFinancialListFilters: React.Dispatch<
+        React.SetStateAction<{ type: string[] }>
+    >;
+    setFinancialProfitListFilters: React.Dispatch<
+        React.SetStateAction<{ type: string[] }>
+    >;
 }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [mergedList, setMergetList] = useState([]);
@@ -416,7 +426,6 @@ const FinancialIndicators = ({
                                     onChange={(evt) => {
                                         setMergetList([]);
                                         setSortedMergetList([]);
-
                                         setIsLoading(true);
 
                                         setFinancialListFilters((prev) => ({

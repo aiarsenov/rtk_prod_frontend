@@ -1,10 +1,20 @@
 import CountUp from "react-countup";
 import Hint from "../../Hint/Hint";
 
+interface Interface {
+    value: number | string;
+    label: string;
+    change_percent: number;
+}
+
 const EmployeeMetrics = ({
     total_active_employees,
     average_salary,
     gross_salary,
+}: {
+    total_active_employees: Interface;
+    average_salary: Interface;
+    gross_salary: Interface;
 }) => {
     return (
         <div className="statistics-block__content indicators__employees-metrics-statistics">
