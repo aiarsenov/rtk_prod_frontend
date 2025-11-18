@@ -17,7 +17,20 @@ const handleStaticStatusClass = (item) => {
     }
 };
 
-const ProjectManagerReports = ({ projectManagerReports }) => {
+interface ProjectManagerReportItem {
+    id: number | string;
+    project: string;
+    industry: string;
+    report_month: string;
+    responsible: string;
+    status: string;
+}
+
+const ProjectManagerReports = ({
+    projectManagerReports,
+}: {
+    projectManagerReports: ProjectManagerReportItem[];
+}) => {
     const [rateEditorState, setRateEditorState] = useState(false);
     const [reportData, setReportData] = useState({});
 

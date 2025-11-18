@@ -36,13 +36,19 @@ const OPTIONS = [
     { value: "average_salary", label: "Средняя зп, тыс. руб." },
 ];
 
+interface EmployeeMetrics {
+    positions_histogram: [];
+    hired_employees: [];
+    dismissed_employees: [];
+}
+
 const EmployeesStats = ({
     employeeMetrics,
     employeeFilters,
     setEmployeeFilters,
 }: {
-    employeeMetrics: object[];
-    employeeFilters: object[];
+    employeeMetrics: EmployeeMetrics;
+    employeeFilters: { metric_type: [] };
     setEmployeeFilters: React.Dispatch<React.SetStateAction<object>>;
 }) => {
     const [activeTab, setActiveTab] = useState("employee_new");

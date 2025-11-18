@@ -1,6 +1,17 @@
+interface WorkloadSummaryItem {
+    project_id: number;
+    project_name: string;
+    industry_names: [];
+    total_hours: number;
+    load_percentage: number;
+}
+
 const EmployeeWorkloadSummary = ({
-    workloadSummaryMaxPercentage,
     workloadSummary,
+    workloadSummaryMaxPercentage,
+}: {
+    workloadSummary: WorkloadSummaryItem[];
+    workloadSummaryMaxPercentage: number;
 }) => {
     return (
         <ul className="employee-card__workload-summary__list">

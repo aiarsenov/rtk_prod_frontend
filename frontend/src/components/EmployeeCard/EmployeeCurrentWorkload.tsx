@@ -1,4 +1,27 @@
-const EmployeeCurrentWorkload = ({ projects }: { projects: object[] }) => {
+interface ProjectInfo {
+    name: string;
+    main_industry: string;
+}
+
+interface ReportInfo {
+    report_period_code: string;
+    report_period: string;
+    execution_period?: string;
+}
+
+interface EmployeeProject {
+    id: number | string;
+    project: ProjectInfo;
+    report?: ReportInfo;
+    role: string;
+    completion_percentage?: number;
+}
+
+const EmployeeCurrentWorkload = ({
+    projects,
+}: {
+    projects: EmployeeProject[];
+}) => {
     return (
         <ul className="card-projects employee-card-projects">
             {projects &&

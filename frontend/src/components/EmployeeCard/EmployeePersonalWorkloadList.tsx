@@ -1,5 +1,10 @@
 import EmployeePersonalWorkloadItem from "./EmployeePersonalWorkloadItem";
 
+interface PersonalWorkload {
+    workload: [];
+    other_workload: number | string;
+}
+
 const EmployeePersonalWorkloadList = ({
     personalWorkload,
     setPersonalWorkload,
@@ -7,7 +12,14 @@ const EmployeePersonalWorkloadList = ({
     setWorkloads,
     updateLoadPercentage,
     mode,
-}: {}) => {
+}: {
+    personalWorkload: PersonalWorkload;
+    setPersonalWorkload: React.Dispatch<React.SetStateAction<object>>;
+    totalWorkload: number | string;
+    setWorkloads: React.Dispatch<React.SetStateAction<[]>>;
+    updateLoadPercentage: () => void;
+    mode: string;
+}) => {
     return (
         <ul className="employee-card__personal-workload__list">
             {personalWorkload?.workload?.length > 0 &&

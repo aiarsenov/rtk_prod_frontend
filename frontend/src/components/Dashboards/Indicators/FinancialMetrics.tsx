@@ -1,7 +1,17 @@
 import CountUp from "react-countup";
 import Hint from "../../Hint/Hint";
 
-const FinancialMetrics = ({ financialMetrics }) => {
+interface FinancialMetrics {
+    revenue: { value: string | number; change_percent: number };
+    receipts: { value: string | number; change_percent: number };
+    debts: { value: string | number; change_percent: number };
+}
+
+const FinancialMetrics = ({
+    financialMetrics,
+}: {
+    financialMetrics: FinancialMetrics;
+}) => {
     return (
         <div className="statistics-block__content">
             <div className="statistics-block__item">

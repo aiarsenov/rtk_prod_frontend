@@ -27,6 +27,10 @@ const CustomDatePickerField = ({
     type: string;
     startDate: string;
     endDate: string;
+    minDate: string | Date;
+    value: string | Date;
+    placeholder: string;
+    onChange: () => void;
     showMonthYear: boolean;
     single: boolean;
     disabled: boolean;

@@ -1,7 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import handleStatus from "../../utils/handleStatus";
 
-const ContragentItem = ({ props, columns }) => {
+interface Props {
+    id: number;
+}
+
+const ContragentItem = ({
+    props,
+    columns,
+}: {
+    props: Props;
+    columns: object[];
+}) => {
     const navigate = useNavigate();
 
     const handleRowClick = () => {

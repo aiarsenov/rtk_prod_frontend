@@ -3,7 +3,17 @@ import isValidDateFormat from "../../utils/isValidDateFormat";
 import { IMaskInput } from "react-imask";
 import IMask from "imask";
 
-const DateFields = ({ mode = "edit", value = "", onChange, className }) => {
+const DateFields = ({
+    mode = "edit",
+    value = "",
+    onChange,
+    className,
+}: {
+    mode: string;
+    value: string;
+    onChange: () => void;
+    className: string;
+}) => {
     const dateFromRef = useRef(null);
     const dateToRef = useRef(null);
 

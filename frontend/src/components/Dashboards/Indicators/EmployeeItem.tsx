@@ -3,7 +3,7 @@ const EmployeeItem = ({
     position,
 }: {
     name: string;
-    position: string;
+    position?: { name: string };
 }) => {
     return (
         <li className="indicators__employees-list__item">

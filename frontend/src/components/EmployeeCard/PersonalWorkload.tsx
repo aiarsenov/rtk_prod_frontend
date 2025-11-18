@@ -16,7 +16,15 @@ const customStyles = {
     }),
 };
 
-const PersonalWorkload = ({ mode, employeeId, getWorkloadSummary }: {}) => {
+const PersonalWorkload = ({
+    mode,
+    employeeId,
+    getWorkloadSummary,
+}: {
+    mode: string;
+    employeeId: number;
+    getWorkloadSummary: () => void;
+}) => {
     let query;
 
     const [personalWorkload, setPersonalWorkload] = useState({

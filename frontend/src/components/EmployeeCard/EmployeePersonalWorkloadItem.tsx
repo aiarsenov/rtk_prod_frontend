@@ -1,9 +1,24 @@
+interface Props {
+    project_name: string;
+    industry_names: [];
+    report_period_code: string;
+    execution_perƒiod_code: string;
+    load_percentage: number;
+}
+
 const EmployeePersonalWorkloadItem = ({
     props,
     mode,
     setWorkloads,
     updateLoadPercentage,
+}: {
+    props: Props;
+    mode: string;
+    setWorkloads: React.Dispatch<React.SetStateAction<[]>>;
+    updateLoadPercentage: () => void;
 }) => {
+    console.log(props);
+
     return (
         <li className="employee-card__personal-workload__list-item">
             <div className="employee-card__personal-workload__list-item__name">
