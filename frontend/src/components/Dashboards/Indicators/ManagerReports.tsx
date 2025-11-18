@@ -6,7 +6,7 @@ import handleStatusString from "../../../utils/handleStatusString";
 
 import ManagementReportEditor from "../../Reports/ManagementReportEditor";
 
-const ManagerReports = ({ selectedFilters }) => {
+const ManagerReports = ({ selectedFilters }: { selectedFilters: object }) => {
     const [reportsList, setReportsList] = useState({});
     const [managementEditorState, setManagementEditorState] = useState(false); // Редактор отчёта менеджмента
     const [managementReportData, setManagementReportData] = useState({
@@ -20,7 +20,7 @@ const ManagerReports = ({ selectedFilters }) => {
         legal_issues: "",
         misc: "",
     });
-    
+
     const getManagementReportsDashboard = () => {
         const queryString = buildQueryParams(selectedFilters);
 
