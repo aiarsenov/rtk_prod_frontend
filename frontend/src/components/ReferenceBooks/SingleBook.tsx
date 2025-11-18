@@ -1238,7 +1238,6 @@ const SingleBook = () => {
                     deleteContact={deleteContact}
                     deleteContactElem={deleteContactElem}
                     deleteElement={deleteElement}
-                    ƒ
                 />
             )}
 
