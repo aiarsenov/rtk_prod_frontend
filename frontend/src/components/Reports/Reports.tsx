@@ -761,7 +761,9 @@ const Reports = () => {
                             />
                             <label htmlFor="project_reports">
                                 Отчёты проектов
-                                <span>{filteredProjectReports.length}</span>
+                                {hasProjectReportsAccess && canAccess(user, "project_reports") && (
+                                    <span>{filteredProjectReports.length}</span>
+                                )}
                             </label>
                         </li>
 
@@ -775,7 +777,9 @@ const Reports = () => {
                             />
                             <label htmlFor="management_reports">
                                 Отчёты сотрудников
-                                <span>{filteredManagementReports.length}</span>
+                                {hasEmployeeReportsAccess && canAccess(user, "employee_reports") && (
+                                    <span>{filteredManagementReports.length}</span>
+                                )}
                             </label>
                         </li>
                     </ul>
@@ -789,48 +793,45 @@ const Reports = () => {
                         />
                     )}
 
-                    <table className="registry-table table-auto w-full border-collapse">
-                        <thead className="registry-table__thead">
-                            <TheadRow
-                                columns={COLUMNS}
-                                activeTab={activeTab}
-                                projectReportsFilters={projectReportsFilters}
-                                managementReportsFilters={
-                                    managementReportsFilters
-                                }
-                                setProjectReportsFilters={
-                                    setProjectReportsFilters
-                                }
-                                setManagementReportsFilters={
-                                    setManagementReportsFilters
-                                }
-                                sortBy={sortBy}
-                                setSortBy={setSortBy}
-                                openFilter={openFilter}
-                                setOpenFilter={setOpenFilter}
-                            />
-                        </thead>
+                    {!checkTabAccess() ? (
+                        <AccessDenied
+                            message={
+                                activeTab === "projects"
+                                    ? "У вас нет прав для просмотра отчетов по проектам"
+                                    : "У вас нет прав для просмотра отчетов сотрудников"
+                            }
+                        />
+                    ) : (
+                        <table className="registry-table table-auto w-full border-collapse">
+                            <thead className="registry-table__thead">
+                                <TheadRow
+                                    columns={COLUMNS}
+                                    activeTab={activeTab}
+                                    projectReportsFilters={projectReportsFilters}
+                                    managementReportsFilters={
+                                        managementReportsFilters
+                                    }
+                                    setProjectReportsFilters={
+                                        setProjectReportsFilters
+                                    }
+                                    setManagementReportsFilters={
+                                        setManagementReportsFilters
+                                    }
+                                    sortBy={sortBy}
+                                    setSortBy={setSortBy}
+                                    openFilter={openFilter}
+                                    setOpenFilter={setOpenFilter}
+                                />
+                            </thead>
 
-                        <tbody className="registry-table__tbody">
-                            {isLoading ? (
-                                <tr>
-                                    <td>
-                                        <Loader />
-                                    </td>
-                                </tr>
-                            ) : !checkTabAccess() ? (
-                                <tr>
-                                    <td colSpan={100} style={{ padding: "40px" }}>
-                                        <AccessDenied
-                                            message={
-                                                activeTab === "projects"
-                                                    ? "У вас нет прав для просмотра отчетов по проектам"
-                                                    : "У вас нет прав для просмотра отчетов сотрудников"
-                                            }
-                                        />
-                                    </td>
-                                </tr>
-                            ) : activeTab === "projects" ? (
+                            <tbody className="registry-table__tbody">
+                                {isLoading ? (
+                                    <tr>
+                                        <td>
+                                            <Loader />
+                                        </td>
+                                    </tr>
+                                ) : activeTab === "projects" ? (
                                 filteredProjectReports.length > 0 &&
                                 filteredProjectReports.map((item) => (
                                     <ReportItem
@@ -858,11 +859,12 @@ const Reports = () => {
                                         }
                                     />
                                 ))
-                            )}
-                        </tbody>
-                    </table>
+                                )}
+                            </tbody>
+                        </table>
+                    )}
 
-                    {activeTab === "projects" && (
+                    {activeTab === "projects" && checkTabAccess() && (
                         <ReportWindow
                             reportWindowsState={reportWindowsState}
                             setReportWindowsState={setReportWindowsState}
@@ -874,7 +876,7 @@ const Reports = () => {
                         />
                     )}
 
-                    {activeTab === "management" && (
+                    {activeTab === "management" && checkTabAccess() && (
                         <>
                             <ReportRateEditor
                                 rateEditorState={rateEditorState}
