@@ -14,7 +14,6 @@ const IndicatorsFilters = ({
     setFinancialListFilters,
     setFinancialProfitListFilters,
     setEmployeeFilters,
-    setHasAccess,
 }) => {
     const [contragents, setContragents] = useState([]);
     const [projects, setProjects] = useState([]);
@@ -71,8 +70,8 @@ const IndicatorsFilters = ({
                 }
             })
             .catch((error) => {
-                if (error.status === 403 && setHasAccess) {
-                    setHasAccess(false);
+                if (error.status === 403) {
+                    console.error("Access denied to", error);
                 }
             });
     };
@@ -87,8 +86,8 @@ const IndicatorsFilters = ({
                 }
             })
             .catch((error) => {
-                if (error.status === 403 && setHasAccess) {
-                    setHasAccess(false);
+                if (error.status === 403) {
+                    console.error("Access denied to", error);
                 }
             });
     };
@@ -140,16 +139,13 @@ const IndicatorsFilters = ({
                 }
             })
             .catch((error) => {
-                if (error.status === 403 && setHasAccess) {
-                    setHasAccess(false);
+                if (error.status === 403) {
+                    console.error("Access denied to", error);
                 }
             });
     };
 
     useEffect(() => {
-        if (setHasAccess) {
-            setHasAccess(true);
-        }
         getFilterOptions();
         getContragents();
         getProjects();

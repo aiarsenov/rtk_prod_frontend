@@ -17,7 +17,6 @@ import FinancialIndicators from "./FinancialIndicators";
 import ProjectManagerReports from "./ProjectManagerReports";
 import ManagerReports from "./ManagerReports";
 import BottomSheet from "../../BottomSheet/BottomSheet";
-import AccessDenied from "../../AccessDenied/AccessDenied";
 
 import "../Dashboards.scss";
 
@@ -50,7 +49,6 @@ import { Bar } from "react-chartjs-2";
 const Indicators = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [isActiveFilters, setIsActiveFilters] = useState(false); // Состояние окна фильтров
-    const [hasAccess, setHasAccess] = useState(true);
 
     const [selectedReportMonth, setSelectedReportMonth] = useState([]); // Отчетный месяц
     const [selectedFilters, setSelectedFilters] = useState({}); // Отчетный месяц, отчетный период
@@ -542,10 +540,6 @@ const Indicators = () => {
         }
     }, [width]);
 
-    if (!hasAccess) {
-        return <AccessDenied message="У вас нет прав для просмотра дашбордов" />;
-    }
-
     return (
         <section className="indicators">
             {isLoading && <Loader bgColor={"rgba(255, 255, 255, 0.6)"} />}
@@ -568,7 +562,6 @@ const Indicators = () => {
                             setFinancialProfitListFilters
                         }
                         setEmployeeFilters={setEmployeeFilters}
-                        setHasAccess={setHasAccess}
                     />
                 </BottomSheet>
 
