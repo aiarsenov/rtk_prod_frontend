@@ -140,6 +140,10 @@ const HeaderNav = ({
             {LINKS.map((link) => {
                 const hasAccess = getLinkAccess(link);
 
+                if (link.requiresAdmin && !hasAccess) {
+                    return null;
+                }
+
                 if (!hasAccess) {
                     return (
                         <span
