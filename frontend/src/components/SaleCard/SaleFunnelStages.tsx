@@ -287,6 +287,88 @@ const SaleFunnelStages = ({
         });
     };
 
+    // Автоматическая установка даты для конечных этапов
+    const setDateForFinalStage = () => {
+        getData(
+            `${
+                import.meta.env.VITE_API_URL
+            }sales-funnel-projects/${saleId}/stages`
+        ).then((response) => {
+            if (response?.status === 200 && response.data?.stages) {
+                const stages = response.data.stages;
+
+                if (stages.length >= 2) {
+                    const newStage = stages[stages.length - 1];
+                    const previousStage = stages[stages.length - 2];
+
+                    const isFinalStage =
+                        newStage.name?.toLowerCase() === "договор заключён" ||
+                        newStage.name?.toLowerCase() === "договор заключен" ||
+                        newStage.name?.toLowerCase() === "отказ от участия" ||
+                        newStage.name?.toLowerCase() === "получен отказ" ||
+                        newStage.name?.toLowerCase() === "проект отложен";
+
+                    if (
+                        isFinalStage &&
+                        !newStage.stage_date &&
+                        previousStage.stage_date
+                    ) {
+
+                        let formattedDate;
+                        if (previousStage.stage_date.includes("-")) {
+                            formattedDate = previousStage.stage_date.split("T")[0];
+                        } else {
+                            const previousDate = new Date(previousStage.stage_date);
+                            formattedDate = `${previousDate.getFullYear()}-${String(
+                                previousDate.getMonth() + 1
+                            ).padStart(2, "0")}-${String(
+                                previousDate.getDate()
+                            ).padStart(2, "0")}`;
+                        }
+
+                        postData(
+                            "PATCH",
+                            `${
+                                import.meta.env.VITE_API_URL
+                            }sales-funnel-projects/${saleId}/stages/${
+                                newStage.id
+                            }/date`,
+                            {
+                                stage_date: formattedDate,
+                                stage_instance_id: newStage.instance_id,
+                            }
+                        )
+                            .then((dateResponse) => {
+                                if (dateResponse.ok) {
+                                    // Обновляем локальное состояние
+                                    setSaleStages((prev) => {
+                                        const updatedStages = prev.stages.map(
+                                            (stage) => {
+                                                if (
+                                                    stage.instance_id ===
+                                                    newStage.instance_id
+                                                ) {
+                                                    return {
+                                                        ...stage,
+                                                        stage_date: formattedDate,
+                                                    };
+                                                }
+                                                return stage;
+                                            }
+                                        );
+
+                                        return { ...prev, stages: updatedStages };
+                                    });
+                                }
+                            })
+                            .catch(() => {
+                            });
+                    }
+                }
+            }
+        });
+    };
+
     // Запрос следующего этапа в воронке продаж
     const requestNextStage = (stage_id, stage_status) => {
         postData(
@@ -314,6 +396,10 @@ const SaleFunnelStages = ({
 
                     getStages();
 
+                    // Устанавливаем дату для конечных этапов
+                    setTimeout(() => {
+                        setDateForFinalStage();
+                    }, 300);
 
                     if (stage_status === "success") {
                         setTimeout(() => {
