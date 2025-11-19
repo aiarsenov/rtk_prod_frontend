@@ -98,7 +98,7 @@ const HeaderNav = ({
                     <NavLink
                         to={link.url}
                         className={({ isActive }) =>
-                            `header__nav-item ${isActive ? "active" : ""} ${
+                            `header__nav-item ${isActive && hasAccess ? "active" : ""} ${
                                 !hasAccess ? "disabled" : ""
                             }`
                         }
