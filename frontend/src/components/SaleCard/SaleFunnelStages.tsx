@@ -210,6 +210,90 @@ const SaleFunnelStages = ({
         }
     };
 
+    // Предзаполнение метрик нового этапа значениями из предыдущего этапа
+    const prefillNextStageMetrics = () => {
+        getData(
+            `${
+                import.meta.env.VITE_API_URL
+            }sales-funnel-projects/${saleId}/stages`
+        ).then((response) => {
+            if (response?.status === 200 && response.data?.stages) {
+                const stages = response.data.stages;
+
+                if (stages.length >= 2) {
+                    const newStage = stages[stages.length - 1]
+                    const previousStage = stages[stages.length - 2]
+                    const requiresValidation =
+                        newStage.name?.toLowerCase() !== "получен запрос" &&
+                        newStage.name?.toLowerCase() !== "проект отложен" &&
+                        newStage.name?.toLowerCase() !== "получен отказ" &&
+                        newStage.name?.toLowerCase() !== "отказ от участия" &&
+                        newStage.name?.toLowerCase() !== "подготовка кп";
+
+                    if (
+                        requiresValidation &&
+                        newStage.dynamic_metrics?.length > 0 &&
+                        previousStage.dynamic_metrics?.length > 0
+                    ) {
+                        const needsPrefill = newStage.dynamic_metrics.every(
+                            (metric) =>
+                                metric.current_value === null ||
+                                metric.current_value === ""
+                        );
+
+                        if (needsPrefill) {
+                            const metricsToPrefill = newStage.dynamic_metrics.map(
+                                (newMetric) => {
+                                    const previousMetric =
+                                        previousStage.dynamic_metrics.find(
+                                            (pm) =>
+                                                pm.report_type_id ===
+                                                newMetric.report_type_id
+                                        );
+
+                                    return {
+                                        ...newMetric,
+                                        current_value:
+                                            previousMetric?.current_value || null,
+                                    };
+                                }
+                            );
+
+                            const stageMetricsData = {
+                                stage_instance_id: newStage.instance_id,
+                                metrics: metricsToPrefill.map((item) => ({
+                                    ...item,
+                                    current_value: parseFormattedMoney(
+                                        item.current_value
+                                    ),
+                                })),
+                                comment: newStage.comment || "",
+                            };
+
+                            postData(
+                                "PATCH",
+                                `${
+                                    import.meta.env.VITE_API_URL
+                                }sales-funnel-projects/${saleId}/stages/${
+                                    newStage.id
+                                }/metrics`,
+                                stageMetricsData
+                            )
+                                .then((response) => {
+                                    if (response.ok) {
+                                        getStages();
+                                    }
+                                })
+                                .catch(() => {
+
+                                });
+                        }
+                    }
+                }
+            }
+        });
+    };
+
     // Запрос следующего этапа в воронке продаж
     const requestNextStage = (stage_id, stage_status) => {
         postData(
@@ -234,7 +318,16 @@ const SaleFunnelStages = ({
                                 ? "bottom-right"
                                 : "top-right",
                     });
+
                     getStages();
+
+
+                    if (stage_status === "success") {
+                        setTimeout(() => {
+                            prefillNextStageMetrics();
+                        }, 500);
+                    }
+
                     fetchServices();
                 }
             })
