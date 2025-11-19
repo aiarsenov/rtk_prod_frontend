@@ -11,7 +11,6 @@ import TheadSortButton from "../TheadSortButton/TheadSortButton";
 import FilterButton from "../FilterButton";
 import OverlayTransparent from "../Overlay/OverlayTransparent";
 import Loader from "../Loader";
-import AccessDenied from "../AccessDenied/AccessDenied";
 
 const Suppliers = () => {
     const [sortBy, setSortBy] = useState({ key: "", action: "" });
@@ -21,7 +20,6 @@ const Suppliers = () => {
 
     const [isLoading, setIsLoading] = useState(true);
     const [isFiltering, setIsFiltering] = useState(false);
-    const [hasAccess, setHasAccess] = useState(true);
 
     const [page, setPage] = useState(1);
     const [meta, setMeta] = useState({
@@ -102,17 +100,11 @@ const Suppliers = () => {
 
     useEffect(() => {
         setIsLoading(true);
-        setHasAccess(true);
         getData(`${URL}&page=${page}`, { Accept: "application/json" })
             .then((response) => {
                 setList((prev) => [...prev, ...response.data.data]);
                 setSortedList((prev) => [...prev, ...response.data.data]);
                 setMeta(response.data.meta);
-            })
-            .catch((error) => {
-                if (error.status === 403) {
-                    setHasAccess(false);
-                }
             })
             .finally(() => setIsLoading(false));
     }, [page]);
@@ -156,10 +148,6 @@ const Suppliers = () => {
             );
         });
     }, [sortedList, filters]);
-
-    if (!hasAccess) {
-        return <AccessDenied message="У вас нет прав для просмотра раздела подрядчиков" />;
-    }
 
     return (
         <main className="page suppliers">
