@@ -17,6 +17,7 @@ const LINKS: NavLinkItem[] = [
         url: "/",
         title: "Показатели компании",
         label: "Главная",
+        section: "main",
     },
     {
         url: "/reports",
@@ -79,7 +80,7 @@ const HeaderNav = ({
 }) => {
     const user = useSelector((state: any) => state.user.data);
 
-    const visibleLinks = LINKS.filter((link) => {
+    const getLinkAccess = (link: NavLinkItem): boolean => {
         if (link.requiresAdmin) {
             return isAdmin(user);
         }
@@ -87,29 +88,36 @@ const HeaderNav = ({
             return canAccess(user, link.section);
         }
         return true;
-    });
+    };
 
     return (
         <nav className={`header__nav ${state ? "active" : ""}`}>
-            {visibleLinks.map((link) => (
-                <NavLink
-                    to={link.url}
-                    className={({ isActive }) =>
-                        isActive
-                            ? "header__nav-item active"
-                            : "header__nav-item"
-                    }
-                    title={link.title}
-                    key={link.url}
-                    onClick={() => {
-                        if (state) {
-                            toggleMenu();
+            {LINKS.map((link) => {
+                const hasAccess = getLinkAccess(link);
+                return (
+                    <NavLink
+                        to={link.url}
+                        className={({ isActive }) =>
+                            `header__nav-item ${isActive ? "active" : ""} ${
+                                !hasAccess ? "disabled" : ""
+                            }`
                         }
-                    }}
-                >
-                    {link.label}
-                </NavLink>
-            ))}
+                        title={link.title}
+                        key={link.url}
+                        onClick={(e) => {
+                            if (!hasAccess) {
+                                e.preventDefault();
+                                return;
+                            }
+                            if (state) {
+                                toggleMenu();
+                            }
+                        }}
+                    >
+                        {link.label}
+                    </NavLink>
+                );
+            })}
         </nav>
     );
 };

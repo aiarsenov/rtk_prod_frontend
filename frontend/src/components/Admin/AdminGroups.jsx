@@ -32,6 +32,7 @@ const AdminGroups = () => {
     const [groups, setGroups] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [showCreateModal, setShowCreateModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
     const [showAddPermissionModal, setShowAddPermissionModal] = useState(false);
     const [showAddUserModal, setShowAddUserModal] = useState(false);
     const [selectedGroup, setSelectedGroup] = useState(null);
@@ -41,6 +42,10 @@ const AdminGroups = () => {
     // Форма создания группы
     const [newGroupName, setNewGroupName] = useState("");
     const [newGroupDescription, setNewGroupDescription] = useState("");
+
+    // Форма редактирования группы
+    const [editGroupName, setEditGroupName] = useState("");
+    const [editGroupDescription, setEditGroupDescription] = useState("");
 
     // Форма добавления права
     const [permissionSection, setPermissionSection] = useState("");
@@ -132,6 +137,60 @@ const AdminGroups = () => {
                 draggable: true,
             });
             setError(err.message || "Ошибка создания группы");
+        }
+    };
+
+    const handleEditGroup = (group) => {
+        setSelectedGroup(group);
+        setEditGroupName(group.name);
+        setEditGroupDescription(group.description || "");
+        setShowEditModal(true);
+    };
+
+    const handleUpdateGroup = async (e) => {
+        e.preventDefault();
+        setError("");
+
+        if (!editGroupName.trim()) {
+            setError("Укажите название группы");
+            return;
+        }
+
+        const toastId = toast.loading("Обновление группы...", {
+            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        });
+
+        try {
+            await postData("PUT", `${API_URL}admin/permission-groups/${selectedGroup.id}`, {
+                name: editGroupName,
+                description: editGroupDescription,
+            });
+
+            toast.update(toastId, {
+                render: "Группа успешно обновлена",
+                type: "success",
+                isLoading: false,
+                autoClose: 2000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
+
+            setShowEditModal(false);
+            setEditGroupName("");
+            setEditGroupDescription("");
+            loadGroups();
+        } catch (err) {
+            toast.update(toastId, {
+                render: err.message || "Ошибка обновления группы",
+                type: "error",
+                isLoading: false,
+                autoClose: 3000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
+            setError(err.message || "Ошибка обновления группы");
         }
     };
 
@@ -366,7 +425,12 @@ const AdminGroups = () => {
     return (
         <div className="admin-groups">
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold">Группы прав</h2>
+                <div>
+                    <h2 className="text-xl font-semibold">Группы прав</h2>
+                    <div className="text-sm text-gray-500 mt-1">
+                        Всего групп: {groups.length}
+                    </div>
+                </div>
                 <button
                     className="admin-btn admin-btn--primary"
                     onClick={() => setShowCreateModal(true)}
@@ -398,12 +462,20 @@ const AdminGroups = () => {
                                     )}
                                 </div>
                                 {!group.is_system && (
-                                    <button
-                                        className="admin-btn admin-btn--danger"
-                                        onClick={() => handleDeleteGroup(group.id)}
-                                    >
-                                        Удалить
-                                    </button>
+                                    <div className="flex gap-2">
+                                        <button
+                                            className="admin-btn admin-btn--secondary"
+                                            onClick={() => handleEditGroup(group)}
+                                        >
+                                            Редактировать
+                                        </button>
+                                        <button
+                                            className="admin-btn admin-btn--danger"
+                                            onClick={() => handleDeleteGroup(group.id)}
+                                        >
+                                            Удалить
+                                        </button>
+                                    </div>
                                 )}
                             </div>
 
@@ -452,7 +524,12 @@ const AdminGroups = () => {
 
                             <div className="admin-group-card__users">
                                 <div className="flex justify-between items-center mb-2">
-                                    <h4>Пользователи</h4>
+                                    <h4>
+                                        Пользователи{" "}
+                                        <span className="text-gray-500 text-sm font-normal">
+                                            ({group.users?.length || 0})
+                                        </span>
+                                    </h4>
                                     {!group.is_system && (
                                         <button
                                             className="admin-btn admin-btn--secondary"
@@ -553,6 +630,78 @@ const AdminGroups = () => {
                                     className="admin-btn admin-btn--primary"
                                 >
                                     Создать
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Модальное окно редактирования группы */}
+            {showEditModal && selectedGroup && (
+                <div className="admin-modal" onClick={() => {
+                    setShowEditModal(false);
+                    setError("");
+                }}>
+                    <div
+                        className="admin-modal__content"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="admin-modal__header">
+                            <h2>Редактировать группу</h2>
+                        </div>
+                        <form onSubmit={handleUpdateGroup}>
+                            <div className="admin-modal__body">
+                                <div className="admin-form">
+                                    <div className="admin-form__group">
+                                        <label className="admin-form__label">
+                                            Название
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="admin-form__input"
+                                            value={editGroupName}
+                                            onChange={(e) =>
+                                                setEditGroupName(e.target.value)
+                                            }
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="admin-form__group">
+                                        <label className="admin-form__label">
+                                            Описание
+                                        </label>
+                                        <textarea
+                                            className="admin-form__textarea"
+                                            value={editGroupDescription}
+                                            onChange={(e) =>
+                                                setEditGroupDescription(e.target.value)
+                                            }
+                                        />
+                                    </div>
+
+                                    {error && (
+                                        <div className="admin-form__error">{error}</div>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="admin-modal__footer">
+                                <button
+                                    type="button"
+                                    className="admin-btn admin-btn--secondary"
+                                    onClick={() => {
+                                        setShowEditModal(false);
+                                        setError("");
+                                    }}
+                                >
+                                    Отмена
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="admin-btn admin-btn--primary"
+                                >
+                                    Сохранить
                                 </button>
                             </div>
                         </form>

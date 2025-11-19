@@ -53,6 +53,23 @@
             }
         }
 
+        &.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+            cursor: not-allowed;
+
+            &:hover {
+                color: var(--color-gray-70);
+            }
+
+            @media (min-width: $media-xl) {
+                &:hover {
+                    color: var(--color-gray-70);
+                    border-bottom: 3px solid transparent;
+                }
+            }
+        }
+
         @media (min-width: $media-xl) {
             font-weight: 600;
             font-size: 14px;
