@@ -83,16 +83,12 @@ const HeaderNav = ({
     const location = useLocation();
     const [, forceUpdate] = useState(0);
 
-    // Отслеживаем изменения location и событий доступа для обновления навигации
     useEffect(() => {
         const handleAccessDeniedChange = () => {
             forceUpdate((prev) => prev + 1);
         };
 
-        // Слушаем кастомное событие об изменении доступа
         window.addEventListener('accessDeniedChanged', handleAccessDeniedChange);
-
-        // Также обновляем при изменении пути
         forceUpdate((prev) => prev + 1);
 
         return () => {
@@ -111,12 +107,10 @@ const HeaderNav = ({
     };
 
     const isLinkActive = (link: NavLinkItem, hasAccess: boolean): boolean => {
-        // Если нет доступа, ссылка не может быть активной
         if (!hasAccess) {
             return false;
         }
 
-        // Проверяем, совпадает ли путь
         const pathMatches = link.url === "/"
             ? location.pathname === "/"
             : location.pathname.startsWith(link.url);
@@ -125,8 +119,13 @@ const HeaderNav = ({
             return false;
         }
 
-        // Проверяем, есть ли информация об ошибке доступа в sessionStorage
-        // Это означает, что API вернул 403 для этого раздела
+        if (link.url === "/projects" && link.section === "project_reports") {
+            const hasProjectReportsAccess = canAccess(user, "project_reports");
+            if (hasProjectReportsAccess) {
+                return false;
+            }
+        }
+
         const accessDeniedKey = `access_denied_${link.url.replace('/', '') || 'home'}`;
         const hasAccessDenied = sessionStorage.getItem(accessDeniedKey);
         if (hasAccessDenied === 'true') {
