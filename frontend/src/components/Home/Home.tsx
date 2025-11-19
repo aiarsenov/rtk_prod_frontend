@@ -1,135 +1,84 @@
-import { useState, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { canAccess } from "../../utils/permissions";
 
 import Indicators from "../Dashboards/Indicators/Indicators";
-import Finance from "../Dashboards/Finance/Finance";
-import Projects from "../Dashboards/Projects/Projects";
-import Sales from "../Dashboards/Sales/Sales";
-import Staff from "../Dashboards/Staff/Staff";
 import AccessDenied from "../AccessDenied/AccessDenied";
+import "../AccessDenied/AccessDenied.scss";
+// Импорты других дашбордов временно закомментированы, так как табы скрыты
+// import Finance from "../Dashboards/Finance/Finance";
+// import Projects from "../Dashboards/Projects/Projects";
+// import Sales from "../Dashboards/Sales/Sales";
+// import Staff from "../Dashboards/Staff/Staff";
 
 import "./Home.scss";
 
-const TABS = [
-    {
-        label: "Ключевые показатели",
-        key: "indicators",
-        section: "main",
-    },
-    { label: "Финансы", key: "finance", section: "main" },
-    { label: "Проекты", key: "projects", section: "project_reports" },
-    { label: "Продажи", key: "sales", section: "sales" },
-    { label: "Персонал", key: "staff", section: "employees" },
-];
+// Табы временно скрыты, оставляем для будущего использования
+// const TABS = [
+//     {
+//         label: "Ключевые показатели",
+//         key: "indicators",
+//     },
+//     { label: "Финансы", key: "finance" },
+//     { label: "Проекты", key: "projects" },
+//     { label: "Продажи", key: "sales" },
+//     { label: "Персонал", key: "staff" },
+// ];
 
-const TAB_CONTENT = {
-    indicators: <Indicators />,
-    finance: <Finance />,
-    projects: <Projects />,
-    sales: <Sales />,
-    staff: <Staff />,
-};
+// const TAB_CONTENT = {
+//     indicators: <Indicators />,
+//     finance: <Finance />,
+//     projects: <Projects />,
+//     sales: <Sales />,
+//     staff: <Staff />,
+// };
 
 const Home = () => {
     const user = useSelector((state: any) => state.user.data);
-
-    const availableTabs = useMemo(() => {
-        return TABS.filter((tab) => canAccess(user, tab.section));
-    }, [user]);
-
-    const tabAccessMap = useMemo(() => {
-        const map: Record<string, boolean> = {};
-        TABS.forEach((tab) => {
-            map[tab.key] = canAccess(user, tab.section);
-        });
-        return map;
-    }, [user]);
-
-    const [activeTab, setActiveTab] = useState<string | null>(null);
-
-    useEffect(() => {
-        if (!user) {
-            return;
-        }
-
-        if (availableTabs.length === 0) {
-            setActiveTab(null);
-            return;
-        }
-
-        // Проверяем, что текущий активный таб все еще доступен
-        if (activeTab && !tabAccessMap[activeTab]) {
-            const firstAvailable = availableTabs[0]?.key;
-            if (firstAvailable) {
-                setActiveTab(firstAvailable);
-            } else {
-                setActiveTab(null);
-            }
-            return;
-        }
-
-        // Если активного таба нет, устанавливаем первый доступный
-        if (!activeTab) {
-            const firstAvailable = availableTabs[0]?.key;
-            if (firstAvailable) {
-                setActiveTab(firstAvailable);
-            }
-        }
-    }, [user, activeTab, tabAccessMap, availableTabs]);
+    // Табы временно скрыты, всегда показываем только Indicators
+    // const [activeTab, setActiveTab] = useState("indicators");
 
     if (!user) {
         return null;
     }
 
-    if (availableTabs.length === 0) {
-        return <AccessDenied message="У вас нет прав для просмотра дашбордов" />;
-    }
-
-    if (!activeTab) {
-        return null;
-    }
-
-    // Дополнительная проверка доступа перед рендерингом
-    const currentTab = TABS.find((tab) => tab.key === activeTab);
-    if (!currentTab || !canAccess(user, currentTab.section)) {
-        return <AccessDenied message="У вас нет прав для просмотра дашбордов" />;
+    // Проверка доступа к главной странице (дашбордам)
+    if (!canAccess(user, "main")) {
+        return (
+            <main className="page">
+                <section className="home">
+                    <section className="dashboards">
+                        <AccessDenied message="У вас нет прав для просмотра дашбордов" />
+                    </section>
+                </section>
+            </main>
+        );
     }
 
     return (
         <main className="page">
             <section className="home">
+                {/* Табы временно скрыты */}
                 {/* <div className="container home__container">
                     <ul className="card__tabs home__tabs">
-                        {TABS.map((tab) => {
-                            const hasAccess = tabAccessMap[tab.key];
-                            return (
-                                <li
-                                    className={`card__tabs-item radio-field_tab ${
-                                        !hasAccess ? "disabled" : ""
-                                    }`}
-                                    key={tab.key}
-                                >
-                                    <input
-                                        type="radio"
-                                        id={tab.key}
-                                        checked={activeTab === tab.key}
-                                        onChange={() => {
-                                            if (hasAccess) {
-                                                setActiveTab(tab.key);
-                                            }
-                                        }}
-                                        disabled={!hasAccess}
-                                    />
-                                    <label htmlFor={tab.key}>{tab.label}</label>
-                                </li>
-                            );
-                        })}
+                        {TABS.map((tab) => (
+                            <li
+                                className="card__tabs-item radio-field_tab"
+                                key={tab.key}
+                            >
+                                <input
+                                    type="radio"
+                                    id={tab.key}
+                                    checked={activeTab === tab.key}
+                                    onChange={() => setActiveTab(tab.key)}
+                                />
+                                <label htmlFor={tab.key}>{tab.label}</label>
+                            </li>
+                        ))}
                     </ul>
                 </div> */}
 
                 <section className="dashboards">
-                    {TAB_CONTENT[activeTab] || null}
+                    <Indicators />
                 </section>
             </section>
         </main>
