@@ -18,6 +18,7 @@ import Reports from "./Reports/Reports";
 import Sales from "./Sales/Sales";
 import SaleCard from "./SaleCard/SaleCard";
 import Admin from "./Admin/Admin";
+import ProtectedRoute from "./ProtectedRoute";
 
 function Router() {
     return (
@@ -29,46 +30,133 @@ function Router() {
                     <Route index element={<Home />} />
                     <Route path="*" element={<NotFound />} />
 
-                    <Route path="projects" element={<Projects />} />
+                    <Route
+                        path="projects"
+                        element={
+                            <ProtectedRoute section="project_reports">
+                                <Projects />
+                            </ProtectedRoute>
+                        }
+                    />
                     <Route
                         path="projects/:projectId"
-                        element={<ProjectCard />}
+                        element={
+                            <ProtectedRoute section="project_reports">
+                                <ProjectCard />
+                            </ProtectedRoute>
+                        }
                     />
-                    <Route path="projects/new" element={<ProjectCard />} />
+                    <Route
+                        path="projects/new"
+                        element={
+                            <ProtectedRoute section="project_reports">
+                                <ProjectCard />
+                            </ProtectedRoute>
+                        }
+                    />
 
-                    <Route path="contragents" element={<Contragents />} />
+                    <Route
+                        path="contragents"
+                        element={
+                            <ProtectedRoute section="customers">
+                                <Contragents />
+                            </ProtectedRoute>
+                        }
+                    />
                     <Route
                         path="contragents/:contragentId"
-                        element={<ContragentCard />}
+                        element={
+                            <ProtectedRoute section="customers">
+                                <ContragentCard />
+                            </ProtectedRoute>
+                        }
                     />
 
-                    <Route path="reports" element={<Reports />} />
+                    <Route
+                        path="reports"
+                        element={
+                            <ProtectedRoute section="project_reports">
+                                <Reports />
+                            </ProtectedRoute>
+                        }
+                    />
 
-                    <Route path="employees" element={<Employees />} />
+                    <Route
+                        path="employees"
+                        element={
+                            <ProtectedRoute section="employees">
+                                <Employees />
+                            </ProtectedRoute>
+                        }
+                    />
                     <Route
                         path="employees/:employeeId"
-                        element={<EmployeeCard />}
+                        element={
+                            <ProtectedRoute section="employees">
+                                <EmployeeCard />
+                            </ProtectedRoute>
+                        }
                     />
 
-                    <Route path="suppliers" element={<Suppliers />} />
+                    <Route
+                        path="suppliers"
+                        element={
+                            <ProtectedRoute section="contractors">
+                                <Suppliers />
+                            </ProtectedRoute>
+                        }
+                    />
                     <Route
                         path="suppliers/:supplierId"
-                        element={<SupplierCard />}
+                        element={
+                            <ProtectedRoute section="contractors">
+                                <SupplierCard />
+                            </ProtectedRoute>
+                        }
                     />
 
                     <Route
                         path="reference-books"
-                        element={<ReferenceBooks />}
+                        element={
+                            <ProtectedRoute section="dictionaries">
+                                <ReferenceBooks />
+                            </ProtectedRoute>
+                        }
                     />
                     <Route
                         path="reference-books/:bookId"
-                        element={<SingleBook />}
+                        element={
+                            <ProtectedRoute section="dictionaries">
+                                <SingleBook />
+                            </ProtectedRoute>
+                        }
                     />
 
-                    <Route path="sales" element={<Sales />} />
-                    <Route path="sales/:saleId" element={<SaleCard />} />
+                    <Route
+                        path="sales"
+                        element={
+                            <ProtectedRoute section="sales">
+                                <Sales />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="sales/:saleId"
+                        element={
+                            <ProtectedRoute section="sales">
+                                <SaleCard />
+                            </ProtectedRoute>
+                        }
+                    />
 
-                    <Route path="admin" element={<Admin />} />
+                    <Route
+                        path="admin"
+                        element={
+                            <ProtectedRoute section="main">
+                                <Admin />
+                            </ProtectedRoute>
+                        }
+                    />
                 </Route>
             </Routes>
         </BrowserRouter>

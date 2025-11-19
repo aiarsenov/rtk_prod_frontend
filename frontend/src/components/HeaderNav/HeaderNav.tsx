@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { isAdmin } from "../../utils/permissions";
+import { isAdmin, canAccess } from "../../utils/permissions";
 
 import "./HeaderNav.scss";
 
@@ -9,6 +9,7 @@ type NavLinkItem = {
     title: string;
     label: string;
     requiresAdmin?: boolean;
+    section?: string;
 };
 
 const LINKS: NavLinkItem[] = [
@@ -21,43 +22,51 @@ const LINKS: NavLinkItem[] = [
         url: "/reports",
         title: "Перейти в реестр отчетов",
         label: "Отчеты",
+        section: "project_reports",
     },
     {
         url: "/projects",
         title: "Перейти в реестр проектов",
         label: "Проекты",
+        section: "project_reports",
     },
     {
         url: "/sales",
         title: "Перейти в реестр продаж",
         label: "Продажи",
+        section: "sales",
     },
     {
         url: "/contragents",
         title: "Перейти в реестр заказчиков",
         label: "Заказчики",
+        section: "customers",
     },
 
     {
         url: "/employees",
         title: "Перейти в реестр сотрудников",
         label: "Сотрудники",
+        section: "employees",
     },
     {
         url: "/suppliers",
         title: "Перейти в реестр подрядчиков",
         label: "Подрядчики",
+        section: "contractors",
     },
     {
         url: "/reference-books",
         title: "Перейти в справочники",
         label: "Справочники",
+        section: "dictionaries",
     },
     {
         url: "/admin",
         title: "Перейти в панель администрирования",
         label: "Администрирование",
         requiresAdmin: true,
+        section: "main",
     },
 ];
 
@@ -73,6 +82,9 @@ const HeaderNav = ({
     const visibleLinks = LINKS.filter((link) => {
         if (link.requiresAdmin) {
             return isAdmin(user);
+        }
+        if (link.section) {
+            return canAccess(user, link.section);
         }
         return true;
     });
