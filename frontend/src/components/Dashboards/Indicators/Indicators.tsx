@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
+import { canAccess } from "../../../utils/permissions";
 
 import getData from "../../../utils/getData";
 import buildQueryParams from "../../../utils/buildQueryParams";
@@ -17,6 +19,7 @@ import FinancialIndicators from "./FinancialIndicators";
 import ProjectManagerReports from "./ProjectManagerReports";
 import ManagerReports from "./ManagerReports";
 import BottomSheet from "../../BottomSheet/BottomSheet";
+import AccessDenied from "../../AccessDenied/AccessDenied";
 
 import "../Dashboards.scss";
 
@@ -47,6 +50,7 @@ ChartJS.register(
 import { Bar } from "react-chartjs-2";
 
 const Indicators = () => {
+    const user = useSelector((state: any) => state.user.data);
     const [isLoading, setIsLoading] = useState(true);
     const [isActiveFilters, setIsActiveFilters] = useState(false); // Состояние окна фильтров
 
@@ -539,6 +543,10 @@ const Indicators = () => {
             setIsActiveFilters(false);
         }
     }, [width]);
+
+    if (!canAccess(user, "main")) {
+        return <AccessDenied message="У вас нет прав для просмотра дашборда ключевых показателей" />;
+    }
 
     return (
         <section className="indicators">
