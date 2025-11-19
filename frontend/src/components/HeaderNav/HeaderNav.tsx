@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { isAdmin, canAccess } from "../../utils/permissions";
 
@@ -79,6 +79,7 @@ const HeaderNav = ({
     toggleMenu: () => void;
 }) => {
     const user = useSelector((state: any) => state.user.data);
+    const location = useLocation();
 
     const getLinkAccess = (link: NavLinkItem): boolean => {
         if (link.requiresAdmin) {
@@ -90,10 +91,18 @@ const HeaderNav = ({
         return true;
     };
 
+    const isLinkActive = (link: NavLinkItem): boolean => {
+        if (link.url === "/") {
+            return location.pathname === "/";
+        }
+        return location.pathname.startsWith(link.url);
+    };
+
     return (
         <nav className={`header__nav ${state ? "active" : ""}`}>
             {LINKS.map((link) => {
                 const hasAccess = getLinkAccess(link);
+                const isActive = isLinkActive(link) && hasAccess;
 
                 if (!hasAccess) {
                     return (
@@ -110,9 +119,7 @@ const HeaderNav = ({
                 return (
                     <NavLink
                         to={link.url}
-                        className={({ isActive }) =>
-                            `header__nav-item ${isActive ? "active" : ""}`
-                        }
+                        className={`header__nav-item ${isActive ? "active" : ""}`}
                         title={link.title}
                         key={link.url}
                         onClick={() => {
