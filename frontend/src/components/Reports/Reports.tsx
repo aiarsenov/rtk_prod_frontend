@@ -1,4 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
+import { useSelector } from "react-redux";
+import { canAccess } from "../../utils/permissions";
 
 import getData from "../../utils/getData";
 import postData from "../../utils/postData";
@@ -14,6 +16,7 @@ import ReportRateEditor from "../ReportRateEditor/ReportRateEditor";
 import ReportWindow from "../ReportWindow/ReportWindow";
 import Loader from "../Loader";
 import AccessDenied from "../AccessDenied/AccessDenied";
+import "../AccessDenied/AccessDenied.scss";
 
 import OverlayTransparent from "../Overlay/OverlayTransparent";
 
@@ -24,6 +27,7 @@ import "./Reports.scss";
 const Reports = () => {
     let query;
 
+    const user = useSelector((state: any) => state.user.data);
     const REPORTS_URL = `${import.meta.env.VITE_API_URL}reports`;
     const MANAGEMENT_URL = `${import.meta.env.VITE_API_URL}management-reports`;
 
@@ -34,6 +38,8 @@ const Reports = () => {
 
     const [isLoading, setIsLoading] = useState(true);
     const [hasAccess, setHasAccess] = useState(true);
+    const [hasProjectReportsAccess, setHasProjectReportsAccess] = useState(true);
+    const [hasEmployeeReportsAccess, setHasEmployeeReportsAccess] = useState(true);
 
     const [sortBy, setSortBy] = useState({ key: "", action: "" });
 
@@ -72,6 +78,7 @@ const Reports = () => {
     const getReports = () => {
         setIsLoading(true);
         setHasAccess(true);
+        setHasProjectReportsAccess(true);
 
         if (Object.keys(reportExecutionPeriodQuery).length > 0) {
             reportExecutionPeriodQuery.date_from =
@@ -95,6 +102,7 @@ const Reports = () => {
             .catch((error) => {
                 if (error.status === 403) {
                     setHasAccess(false);
+                    setHasProjectReportsAccess(false);
                 }
             })
             .finally(() => setIsLoading(false));
@@ -103,12 +111,18 @@ const Reports = () => {
     // Получение списка доступных фильтров
     const getManagementReports = () => {
         setIsLoading(true);
+        setHasEmployeeReportsAccess(true);
 
         getData(`${MANAGEMENT_URL}?${buildQueryParams(reportMonthQuery)}`)
             .then((response) => {
                 if (response.status === 200) {
                     setManagementList(response.data);
                     setSortedManagementList(response.data);
+                }
+            })
+            .catch((error) => {
+                if (error.status === 403) {
+                    setHasEmployeeReportsAccess(false);
                 }
             })
             .finally(() => setIsLoading(false));
@@ -702,9 +716,31 @@ const Reports = () => {
         localStorage.setItem("reportsActiveTab", activeTab);
     }, [activeTab]);
 
+    useEffect(() => {
+        if (user) {
+            const hasProjectAccess = canAccess(user, "project_reports");
+            const hasEmployeeAccess = canAccess(user, "employee_reports");
+
+            if (!hasProjectAccess && !hasEmployeeAccess) {
+                setHasAccess(false);
+            } else {
+                setHasAccess(true);
+            }
+        }
+    }, [user]);
+
     if (!hasAccess) {
         return <AccessDenied message="У вас нет прав для просмотра раздела отчетов" />;
     }
+
+    const checkTabAccess = () => {
+        if (activeTab === "projects") {
+            return hasProjectReportsAccess && canAccess(user, "project_reports");
+        } else if (activeTab === "management") {
+            return hasEmployeeReportsAccess && canAccess(user, "employee_reports");
+        }
+        return true;
+    };
 
     return (
         <main className="page reports-registry">
@@ -780,6 +816,18 @@ const Reports = () => {
                                 <tr>
                                     <td>
                                         <Loader />
+                                    </td>
+                                </tr>
+                            ) : !checkTabAccess() ? (
+                                <tr>
+                                    <td colSpan={100} style={{ padding: "40px" }}>
+                                        <AccessDenied
+                                            message={
+                                                activeTab === "projects"
+                                                    ? "У вас нет прав для просмотра отчетов по проектам"
+                                                    : "У вас нет прав для просмотра отчетов сотрудников"
+                                            }
+                                        />
                                     </td>
                                 </tr>
                             ) : activeTab === "projects" ? (
