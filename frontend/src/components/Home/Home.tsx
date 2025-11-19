@@ -67,7 +67,7 @@ const Home = () => {
     return (
         <main className="page">
             <section className="home">
-                <div className="container home__container">
+                {/* <div className="container home__container">
                     <ul className="card__tabs home__tabs">
                         {TABS.map((tab) => {
                             const hasAccess = tabAccessMap[tab.key];
@@ -94,7 +94,7 @@ const Home = () => {
                             );
                         })}
                     </ul>
-                </div>
+                </div> */}
 
                 <section className="dashboards">
                     {TAB_CONTENT[activeTab] || null}
