@@ -49,18 +49,34 @@ const Home = () => {
     const [activeTab, setActiveTab] = useState<string | null>(null);
 
     useEffect(() => {
+        if (!user) {
+            return;
+        }
+
         if (availableTabs.length === 0) {
             setActiveTab(null);
             return;
         }
 
-        if (!activeTab || !tabAccessMap[activeTab]) {
+        // Проверяем, что текущий активный таб все еще доступен
+        if (activeTab && !tabAccessMap[activeTab]) {
+            const firstAvailable = availableTabs[0]?.key;
+            if (firstAvailable) {
+                setActiveTab(firstAvailable);
+            } else {
+                setActiveTab(null);
+            }
+            return;
+        }
+
+        // Если активного таба нет, устанавливаем первый доступный
+        if (!activeTab) {
             const firstAvailable = availableTabs[0]?.key;
             if (firstAvailable) {
                 setActiveTab(firstAvailable);
             }
         }
-    }, [activeTab, tabAccessMap, availableTabs]);
+    }, [user, activeTab, tabAccessMap, availableTabs]);
 
     if (!user) {
         return null;
@@ -72,6 +88,12 @@ const Home = () => {
 
     if (!activeTab) {
         return null;
+    }
+
+    // Дополнительная проверка доступа перед рендерингом
+    const currentTab = TABS.find((tab) => tab.key === activeTab);
+    if (!currentTab || !canAccess(user, currentTab.section)) {
+        return <AccessDenied message="У вас нет прав для просмотра дашбордов" />;
     }
 
     return (
