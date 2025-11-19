@@ -94,21 +94,28 @@ const HeaderNav = ({
         <nav className={`header__nav ${state ? "active" : ""}`}>
             {LINKS.map((link) => {
                 const hasAccess = getLinkAccess(link);
+
+                if (!hasAccess) {
+                    return (
+                        <span
+                            className="header__nav-item disabled"
+                            title={link.title}
+                            key={link.url}
+                        >
+                            {link.label}
+                        </span>
+                    );
+                }
+
                 return (
                     <NavLink
                         to={link.url}
                         className={({ isActive }) =>
-                            `header__nav-item ${isActive && hasAccess ? "active" : ""} ${
-                                !hasAccess ? "disabled" : ""
-                            }`
+                            `header__nav-item ${isActive ? "active" : ""}`
                         }
                         title={link.title}
                         key={link.url}
-                        onClick={(e) => {
-                            if (!hasAccess) {
-                                e.preventDefault();
-                                return;
-                            }
+                        onClick={() => {
                             if (state) {
                                 toggleMenu();
                             }
