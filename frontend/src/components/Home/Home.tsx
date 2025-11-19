@@ -46,13 +46,15 @@ const Home = () => {
         return map;
     }, [user]);
 
-    const [activeTab, setActiveTab] = useState(() => {
-        const firstAvailable = availableTabs[0]?.key || "indicators";
-        return firstAvailable;
-    });
+    const [activeTab, setActiveTab] = useState<string | null>(null);
 
     useEffect(() => {
-        if (!tabAccessMap[activeTab]) {
+        if (availableTabs.length === 0) {
+            setActiveTab(null);
+            return;
+        }
+
+        if (!activeTab || !tabAccessMap[activeTab]) {
             const firstAvailable = availableTabs[0]?.key;
             if (firstAvailable) {
                 setActiveTab(firstAvailable);
@@ -60,8 +62,16 @@ const Home = () => {
         }
     }, [activeTab, tabAccessMap, availableTabs]);
 
+    if (!user) {
+        return null;
+    }
+
     if (availableTabs.length === 0) {
         return <AccessDenied message="У вас нет прав для просмотра дашбордов" />;
+    }
+
+    if (!activeTab) {
+        return null;
     }
 
     return (

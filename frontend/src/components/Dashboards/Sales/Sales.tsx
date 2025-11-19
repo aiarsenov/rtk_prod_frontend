@@ -5,6 +5,10 @@ import AccessDenied from "../../AccessDenied/AccessDenied";
 const Sales = () => {
     const user = useSelector((state: any) => state.user.data);
 
+    if (!user) {
+        return null;
+    }
+
     if (!canAccess(user, "sales")) {
         return <AccessDenied message="У вас нет прав для просмотра дашборда продаж" />;
     }

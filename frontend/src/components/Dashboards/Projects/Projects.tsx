@@ -5,6 +5,10 @@ import AccessDenied from "../../AccessDenied/AccessDenied";
 const Projects = () => {
     const user = useSelector((state: any) => state.user.data);
 
+    if (!user) {
+        return null;
+    }
+
     if (!canAccess(user, "project_reports")) {
         return <AccessDenied message="У вас нет прав для просмотра дашборда проектов" />;
     }
