@@ -1,5 +1,6 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useState, useEffect } from "react";
 import { isAdmin, canAccess } from "../../utils/permissions";
 
 import "./HeaderNav.scss";
@@ -80,6 +81,24 @@ const HeaderNav = ({
 }) => {
     const user = useSelector((state: any) => state.user.data);
     const location = useLocation();
+    const [, forceUpdate] = useState(0);
+
+    // Отслеживаем изменения location и событий доступа для обновления навигации
+    useEffect(() => {
+        const handleAccessDeniedChange = () => {
+            forceUpdate((prev) => prev + 1);
+        };
+
+        // Слушаем кастомное событие об изменении доступа
+        window.addEventListener('accessDeniedChanged', handleAccessDeniedChange);
+
+        // Также обновляем при изменении пути
+        forceUpdate((prev) => prev + 1);
+
+        return () => {
+            window.removeEventListener('accessDeniedChanged', handleAccessDeniedChange);
+        };
+    }, [location.pathname]);
 
     const getLinkAccess = (link: NavLinkItem): boolean => {
         if (link.requiresAdmin) {
@@ -97,10 +116,24 @@ const HeaderNav = ({
             return false;
         }
 
-        if (link.url === "/") {
-            return location.pathname === "/";
+        // Проверяем, совпадает ли путь
+        const pathMatches = link.url === "/"
+            ? location.pathname === "/"
+            : location.pathname.startsWith(link.url);
+
+        if (!pathMatches) {
+            return false;
         }
-        return location.pathname.startsWith(link.url);
+
+        // Проверяем, есть ли информация об ошибке доступа в sessionStorage
+        // Это означает, что API вернул 403 для этого раздела
+        const accessDeniedKey = `access_denied_${link.url.replace('/', '') || 'home'}`;
+        const hasAccessDenied = sessionStorage.getItem(accessDeniedKey);
+        if (hasAccessDenied === 'true') {
+            return false;
+        }
+
+        return true;
     };
 
     return (
