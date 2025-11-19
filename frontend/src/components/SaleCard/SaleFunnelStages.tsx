@@ -211,6 +211,7 @@ const SaleFunnelStages = ({
     };
 
     // Предзаполнение метрик нового этапа значениями из предыдущего этапа
+    // Обновляет только локальное состояние, не сохраняет на сервере
     const prefillNextStageMetrics = () => {
         getData(
             `${
@@ -242,6 +243,7 @@ const SaleFunnelStages = ({
                         );
 
                         if (needsPrefill) {
+                            // Предзаполняем метрики значениями из предыдущего этапа
                             const metricsToPrefill = newStage.dynamic_metrics.map(
                                 (newMetric) => {
                                     const previousMetric =
@@ -259,34 +261,25 @@ const SaleFunnelStages = ({
                                 }
                             );
 
-                            const stageMetricsData = {
-                                stage_instance_id: newStage.instance_id,
-                                metrics: metricsToPrefill.map((item) => ({
-                                    ...item,
-                                    current_value: parseFormattedMoney(
-                                        item.current_value
-                                    ),
-                                })),
-                                comment: newStage.comment || "",
-                            };
-
-                            postData(
-                                "PATCH",
-                                `${
-                                    import.meta.env.VITE_API_URL
-                                }sales-funnel-projects/${saleId}/stages/${
-                                    newStage.id
-                                }/metrics`,
-                                stageMetricsData
-                            )
-                                .then((response) => {
-                                    if (response.ok) {
-                                        getStages();
+                            // Обновляем локальное состояние без сохранения на сервере
+                            setSaleStages((prev) => {
+                                const updatedStages = prev.stages.map((stage) => {
+                                    if (stage.instance_id === newStage.instance_id) {
+                                        const updatedStage = {
+                                            ...stage,
+                                            dynamic_metrics: metricsToPrefill,
+                                        };
+                                        // Обновляем детализацию этапа для отображения предзаполненных значений
+                                        setTimeout(() => {
+                                            setStageMetrics(updatedStage);
+                                        }, 0);
+                                        return updatedStage;
                                     }
-                                })
-                                .catch(() => {
-
+                                    return stage;
                                 });
+
+                                return { ...prev, stages: updatedStages };
+                            });
                         }
                     }
                 }
@@ -357,15 +350,25 @@ const SaleFunnelStages = ({
             stage.name.toLowerCase() !== "отказ от участия" &&
             stage.name.toLowerCase() !== "подготовка кп"
         ) {
-            if (
-                stage.dynamic_metrics?.length > 0 &&
-                stage.dynamic_metrics?.every(
+            // Получаем актуальное состояние этапа из локального состояния (может содержать предзаполненные значения)
+            const localStage = saleStages.stages?.find(
+                (s) => s.instance_id === stage.instance_id
+            ) || stage;
+
+            // Проверяем, есть ли заполненные значения (включая предзаполненные)
+            const hasValues =
+                localStage.dynamic_metrics?.length > 0 &&
+                localStage.dynamic_metrics?.every(
                     (item) =>
-                        item.current_value !== null && item.current_value !== ""
-                )
-            ) {
-                updateStageDetails(stage, next_stage, stage_status);
+                        item.current_value !== null &&
+                        item.current_value !== ""
+                );
+
+            if (hasValues) {
+                // Если есть значения (включая предзаполненные), сохраняем их и переходим дальше
+                updateStageDetails(localStage, next_stage, stage_status);
             } else {
+                // Если значений нет, показываем ошибку валидации
                 toast.error("Заполните все поля стоимости предложения", {
                     containerId: "toastContainerStages",
                     isLoading: false,
@@ -379,6 +382,7 @@ const SaleFunnelStages = ({
                 });
             }
         } else {
+            // Для этапов без валидации просто переходим дальше
             updateStageDetails(stage, next_stage, stage_status);
         }
     };

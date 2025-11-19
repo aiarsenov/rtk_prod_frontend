@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import getColorBySign from "../../utils/getColorBySign";
 import formatMoney from "../../utils/formatMoney";
@@ -8,6 +8,13 @@ import Hint from "../Hint/Hint";
 
 const SaleStageDetails = ({ stage, mode, updateStageDetails }) => {
     const [stageData, setStageData] = useState(stage || {});
+
+    // Синхронизируем локальное состояние с пропсом stage при его изменении
+    useEffect(() => {
+        if (stage) {
+            setStageData(stage);
+        }
+    }, [stage]);
 
     return (
         <div className="sale-stage-datails">
