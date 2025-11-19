@@ -91,7 +91,12 @@ const HeaderNav = ({
         return true;
     };
 
-    const isLinkActive = (link: NavLinkItem): boolean => {
+    const isLinkActive = (link: NavLinkItem, hasAccess: boolean): boolean => {
+        // Если нет доступа, ссылка не может быть активной
+        if (!hasAccess) {
+            return false;
+        }
+
         if (link.url === "/") {
             return location.pathname === "/";
         }
@@ -102,7 +107,6 @@ const HeaderNav = ({
         <nav className={`header__nav ${state ? "active" : ""}`}>
             {LINKS.map((link) => {
                 const hasAccess = getLinkAccess(link);
-                const isActive = isLinkActive(link) && hasAccess;
 
                 if (!hasAccess) {
                     return (
@@ -119,7 +123,10 @@ const HeaderNav = ({
                 return (
                     <NavLink
                         to={link.url}
-                        className={`header__nav-item ${isActive ? "active" : ""}`}
+                        className={({ isActive }) =>
+                            `header__nav-item ${isActive ? "active" : ""}`
+                        }
+                        isActive={() => isLinkActive(link, hasAccess)}
                         title={link.title}
                         key={link.url}
                         onClick={() => {
