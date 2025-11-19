@@ -14,6 +14,7 @@ const IndicatorsFilters = ({
     setFinancialListFilters,
     setFinancialProfitListFilters,
     setEmployeeFilters,
+    setHasAccess,
 }) => {
     const [contragents, setContragents] = useState([]);
     const [projects, setProjects] = useState([]);
@@ -62,28 +63,40 @@ const IndicatorsFilters = ({
             `${
                 import.meta.env.VITE_API_URL
             }contragents?all=true&has_projects=true&scope=both`
-        ).then((response) => {
-            if (response?.status == 200) {
-                setContragents(response.data);
-                setFilteredContragents(response.data);
-            }
-        });
+        )
+            .then((response) => {
+                if (response?.status == 200) {
+                    setContragents(response.data);
+                    setFilteredContragents(response.data);
+                }
+            })
+            .catch((error) => {
+                if (error.status === 403 && setHasAccess) {
+                    setHasAccess(false);
+                }
+            });
     };
 
     // Получение проектов
     const getProjects = () => {
-        getData(`${import.meta.env.VITE_API_URL}projects`).then((response) => {
-            if (response?.status == 200) {
-                setProjects(response.data);
-                setFilteredProjects(response.data);
-            }
-        });
+        getData(`${import.meta.env.VITE_API_URL}projects`)
+            .then((response) => {
+                if (response?.status == 200) {
+                    setProjects(response.data);
+                    setFilteredProjects(response.data);
+                }
+            })
+            .catch((error) => {
+                if (error.status === 403 && setHasAccess) {
+                    setHasAccess(false);
+                }
+            });
     };
 
     // Получаем доступные фильтры
     const getFilterOptions = () => {
-        getData(`${import.meta.env.VITE_API_URL}company/filter-options`).then(
-            (response) => {
+        getData(`${import.meta.env.VITE_API_URL}company/filter-options`)
+            .then((response) => {
                 if (response?.status == 200) {
                     setFilterOptions(response.data);
 
@@ -125,11 +138,18 @@ const IndicatorsFilters = ({
                         report_month: [reportMonthValue],
                     }));
                 }
-            }
-        );
+            })
+            .catch((error) => {
+                if (error.status === 403 && setHasAccess) {
+                    setHasAccess(false);
+                }
+            });
     };
 
     useEffect(() => {
+        if (setHasAccess) {
+            setHasAccess(true);
+        }
         getFilterOptions();
         getContragents();
         getProjects();
