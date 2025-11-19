@@ -3,15 +3,18 @@ import getData from "../../utils/getData";
 
 import ReferenceBooksMainGridItem from "./ReferenceBooksMainGridItem";
 import Loader from "../Loader";
+import AccessDenied from "../AccessDenied/AccessDenied";
 
 import "./ReferenceBooks.scss";
 
 const ReferenceBooks = () => {
     const [booksItems, setBooksItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [hasAccess, setHasAccess] = useState(true);
 
     useEffect(() => {
         setIsLoading(true);
+        setHasAccess(true);
 
         getData(`${import.meta.env.VITE_API_URL}dictionaries`, {
             Accept: "application/json",
@@ -21,8 +24,17 @@ const ReferenceBooks = () => {
                     setBooksItems(response.data.dictionaries);
                 }
             })
+            .catch((error) => {
+                if (error.status === 403) {
+                    setHasAccess(false);
+                }
+            })
             .finally(() => setIsLoading(false));
     }, []);
+
+    if (!hasAccess) {
+        return <AccessDenied message="У вас нет прав для просмотра раздела справочников" />;
+    }
 
     return (
         <main className="page">

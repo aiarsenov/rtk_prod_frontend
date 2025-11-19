@@ -10,6 +10,7 @@ import MultiSelectWithSearch from "../MultiSelect/MultiSelectWithSearch";
 import FilterButton from "../FilterButton";
 import OverlayTransparent from "../Overlay/OverlayTransparent";
 import Loader from "../Loader";
+import AccessDenied from "../AccessDenied/AccessDenied";
 
 const types = [
     { label: "штатный", value: true },
@@ -28,6 +29,7 @@ const Employees = () => {
     const [sortedList, setSortedList] = useState([]);
 
     const [isLoading, setIsLoading] = useState(true);
+    const [hasAccess, setHasAccess] = useState(true);
 
     const [departments, setDepartments] = useState([]);
 
@@ -53,11 +55,17 @@ const Employees = () => {
     // Получени списка сотрудников
     const getList = () => {
         setIsLoading(true);
+        setHasAccess(true);
         getData(`${import.meta.env.VITE_API_URL}physical-persons`)
             .then((response) => {
                 if (response.status == 200) {
                     setList(response.data);
                     setSortedList(response.data);
+                }
+            })
+            .catch((error) => {
+                if (error.status === 403) {
+                    setHasAccess(false);
                 }
             })
             .finally(() => setIsLoading(false));
@@ -161,6 +169,10 @@ const Employees = () => {
             );
         });
     }, [sortedList, filters]);
+
+    if (!hasAccess) {
+        return <AccessDenied message="У вас нет прав для просмотра раздела сотрудников" />;
+    }
 
     return (
         <main className="page suppliers">

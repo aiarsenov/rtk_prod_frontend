@@ -13,6 +13,7 @@ import ManagementReportEditor from "./ManagementReportEditor";
 import ReportRateEditor from "../ReportRateEditor/ReportRateEditor";
 import ReportWindow from "../ReportWindow/ReportWindow";
 import Loader from "../Loader";
+import AccessDenied from "../AccessDenied/AccessDenied";
 
 import OverlayTransparent from "../Overlay/OverlayTransparent";
 
@@ -32,6 +33,7 @@ const Reports = () => {
     });
 
     const [isLoading, setIsLoading] = useState(true);
+    const [hasAccess, setHasAccess] = useState(true);
 
     const [sortBy, setSortBy] = useState({ key: "", action: "" });
 
@@ -69,6 +71,7 @@ const Reports = () => {
     // Получение списка отчетов
     const getReports = () => {
         setIsLoading(true);
+        setHasAccess(true);
 
         if (Object.keys(reportExecutionPeriodQuery).length > 0) {
             reportExecutionPeriodQuery.date_from =
@@ -87,6 +90,11 @@ const Reports = () => {
             .then((response) => {
                 if (response.status === 200) {
                     setReportsList(response.data);
+                }
+            })
+            .catch((error) => {
+                if (error.status === 403) {
+                    setHasAccess(false);
                 }
             })
             .finally(() => setIsLoading(false));
@@ -693,6 +701,10 @@ const Reports = () => {
     useEffect(() => {
         localStorage.setItem("reportsActiveTab", activeTab);
     }, [activeTab]);
+
+    if (!hasAccess) {
+        return <AccessDenied message="У вас нет прав для просмотра раздела отчетов" />;
+    }
 
     return (
         <main className="page reports-registry">
