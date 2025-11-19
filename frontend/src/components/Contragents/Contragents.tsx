@@ -12,6 +12,7 @@ import TheadSortButton from "../TheadSortButton/TheadSortButton";
 import FilterButton from "../FilterButton";
 import OverlayTransparent from "../Overlay/OverlayTransparent";
 import Loader from "../Loader";
+import AccessDenied from "../AccessDenied/AccessDenied";
 
 const Contragents = () => {
     const [sortBy, setSortBy] = useState({ key: "", action: "" });
@@ -21,6 +22,7 @@ const Contragents = () => {
 
     const [isLoading, setIsLoading] = useState(true);
     const [isFiltering, setIsFiltering] = useState(false);
+    const [hasAccess, setHasAccess] = useState(true);
 
     const [page, setPage] = useState(1);
     const [meta, setMeta] = useState({
@@ -92,6 +94,7 @@ const Contragents = () => {
 
     useEffect(() => {
         setIsLoading(true);
+        setHasAccess(true);
         getData(
             `${URL}?page=${page}&active=true&has_projects=true&scope=registry`,
             {
@@ -102,6 +105,11 @@ const Contragents = () => {
                 setList((prev) => [...prev, ...response.data.data]);
                 setSortedList((prev) => [...prev, ...response.data.data]);
                 setMeta(response.data.meta);
+            })
+            .catch((error) => {
+                if (error.status === 403) {
+                    setHasAccess(false);
+                }
             })
             .finally(() => setIsLoading(false));
     }, [page]);
@@ -140,6 +148,10 @@ const Contragents = () => {
             );
         });
     }, [sortedList, filters]);
+
+    if (!hasAccess) {
+        return <AccessDenied message="У вас нет прав для просмотра раздела заказчиков" />;
+    }
 
     return (
         <main className="page contragents">

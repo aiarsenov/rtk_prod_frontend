@@ -15,6 +15,7 @@ import FilterButton from "../FilterButton";
 import OverlayTransparent from "../Overlay/OverlayTransparent";
 
 import Loader from "../Loader";
+import AccessDenied from "../AccessDenied/AccessDenied";
 
 const Projects = () => {
     const URL = `${import.meta.env.VITE_API_URL}projects`;
@@ -24,6 +25,7 @@ const Projects = () => {
     const [sortBy, setSortBy] = useState({ key: "", action: "" });
 
     const [isLoading, setIsLoading] = useState(true);
+    const [hasAccess, setHasAccess] = useState(true);
     const [popupState, setPopupState] = useState(false);
 
     const [list, setList] = useState([]);
@@ -141,11 +143,17 @@ const Projects = () => {
     // Получение проектов
     const getProjects = () => {
         setIsLoading(true);
+        setHasAccess(true);
 
         getData(URL, { Accept: "application/json" })
             .then((response) => {
                 setList(response.data);
                 setSortedList(response.data);
+            })
+            .catch((error) => {
+                if (error.status === 403) {
+                    setHasAccess(false);
+                }
             })
             .finally(() => setIsLoading(false));
     };
@@ -211,6 +219,10 @@ const Projects = () => {
             );
         });
     }, [sortedList, filters]);
+
+    if (!hasAccess) {
+        return <AccessDenied message="У вас нет прав для просмотра раздела проектов" />;
+    }
 
     return (
         <main className="page projects">
