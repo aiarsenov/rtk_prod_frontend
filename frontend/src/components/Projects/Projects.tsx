@@ -149,10 +149,18 @@ const Projects = () => {
             .then((response) => {
                 setList(response.data);
                 setSortedList(response.data);
+                // Удаляем информацию об ошибке доступа, если запрос успешен
+                sessionStorage.removeItem('access_denied_projects');
+                // Отправляем кастомное событие для обновления навигации
+                window.dispatchEvent(new Event('accessDeniedChanged'));
             })
             .catch((error) => {
                 if (error.status === 403) {
                     setHasAccess(false);
+                    // Сохраняем информацию об ошибке доступа для навигации
+                    sessionStorage.setItem('access_denied_projects', 'true');
+                    // Отправляем кастомное событие для обновления навигации
+                    window.dispatchEvent(new Event('accessDeniedChanged'));
                 }
             })
             .finally(() => setIsLoading(false));
