@@ -4,6 +4,7 @@ import getData from "../../../utils/getData";
 
 import CreatableSelect from "react-select/creatable";
 import CustomDatePickerField from "../../CustomDatePicker/CustomDatePickerField";
+import Hint from "../../Hint/Hint";
 
 const IndicatorsFilters = ({
     mainFilters,
@@ -99,7 +100,7 @@ const IndicatorsFilters = ({
                 if (response?.status == 200) {
                     setFilterOptions(response.data);
 
-                    const periodValue = response.data.periods[1]?.value;
+                    const periodValue = response.data.periods[3]?.value;
                     const reportMonthValue = response.data.months[1]?.value
                         ? response.data.months[1]?.value
                         : response.data.months[0]?.value;
@@ -204,6 +205,8 @@ const IndicatorsFilters = ({
                             ))}
                     </ul>
 
+                    <Hint message="Подсказка" />
+
                     <CreatableSelect
                         options={
                             filteredContragents.length > 0 &&
@@ -259,6 +262,8 @@ const IndicatorsFilters = ({
                         }}
                     />
 
+                    <Hint message="Подсказка" />
+
                     <CreatableSelect
                         options={
                             filteredProjects.length > 0 &&
@@ -302,6 +307,8 @@ const IndicatorsFilters = ({
                             }
                         }}
                     />
+
+                    <Hint message="Подсказка" />
                 </div>
 
                 {(mainFilters.project_id || mainFilters.contragent_id) && (
