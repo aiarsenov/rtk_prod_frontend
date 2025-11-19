@@ -178,7 +178,7 @@ const EmployeesStats = ({
 
     return (
         <section className="indicators__employees">
-            <h2 className="subtitle">Персонал</h2>
+            <h2 className="subtitle indicators__employees-title">Персонал</h2>
 
             <div className="dashboards__block">
                 <div className="indicators__employees-left">

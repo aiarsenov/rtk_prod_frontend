@@ -579,7 +579,7 @@ const Indicators = () => {
 
                 <section className="dashboards__content">
                     <section className="indicators__financial-metrics">
-                        <h2 className="subtitle">
+                        <h2 className="subtitle indicators__financial-metrics-title">
                             Ключевые финансовые показатели
                         </h2>
 

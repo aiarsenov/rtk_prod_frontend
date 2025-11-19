@@ -267,6 +267,16 @@
             grid-template-columns: repeat(3, 1fr);
         }
     }
+
+    &__financial-metrics-title {
+        margin: 0;
+        margin-top: 20px;
+    }
+
+    &__employees-title {
+        margin: 0;
+        margin-top: 20px;
+    }
 }
 
 .dashboards {
