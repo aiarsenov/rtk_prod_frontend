@@ -325,7 +325,7 @@ const FinancialIndicators = ({
                 formatter: (value) => {
                     if (!Number.isFinite(value)) return "";
 
-                    return `${value}%`;
+                    return `${value.toFixed(1).toString().replace(".", ",")}%`;
                 },
             },
             tooltip: {
