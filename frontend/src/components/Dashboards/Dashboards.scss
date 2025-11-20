@@ -107,6 +107,11 @@
                 grid-template-columns: repeat(3, 1fr);
             }
         }
+
+        @media (min-width: $media-xxl) {
+            position: relative;
+            top: 80px;
+        }
     }
 
     &__financial-indicators {
@@ -486,10 +491,10 @@
 
 .filters-bottomsheet {
     @media (min-width: $media-xxl) {
+
         visibility: visible;
         opacity: 1;
-        position: sticky;
-        top: 0;
+        position: fixed;
         inset: auto;
         height: auto;
         width: 100%;
@@ -524,10 +529,20 @@
 
 .filters__wrapper {
     position: relative;
+    width: 100%;
+    @media (min-width: $media-lg) {
+        flex: 0 0 400px;
+    }
+
     .hint {
+        display: none;
         position: absolute;
         top: 0;
         left: 100%;
+
+        @media (min-width: $media-lg) {
+            display: block;
+        }
     }
 }
 
