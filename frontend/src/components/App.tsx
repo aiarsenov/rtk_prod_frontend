@@ -21,9 +21,8 @@ function App() {
     }, []);
 
     useEffect(() => {
-        if (import.meta.env.MODE !== "development") {
-            dispatch(fetchUser());
-        }
+        // Загружаем пользователя в любом режиме
+        dispatch(fetchUser());
     }, [dispatch]);
 
     useEffect(() => {

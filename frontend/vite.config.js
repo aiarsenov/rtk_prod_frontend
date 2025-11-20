@@ -10,6 +10,32 @@ export default defineConfig(() => {
     return {
         base,
         plugins: [react(), tailwindcss()],
+        server: {
+            proxy: {
+                // Прокси для локальной разработки - проксируем запросы к /api на бэкенд
+                "/api": {
+                    target: "http://158.160.109.174",
+                    changeOrigin: true,
+                    secure: false,
+                    configure: (proxy, _options) => {
+                        proxy.on("error", (err, _req, _res) => {
+                            console.log("proxy error", err);
+                        });
+                        proxy.on("proxyReq", (proxyReq, req, _res) => {
+                            // Передаем оригинальный Origin от браузера через специальный заголовок
+                            if (req.headers.origin) {
+                                proxyReq.setHeader("X-Original-Origin", req.headers.origin);
+                                proxyReq.setHeader("Origin", req.headers.origin);
+                            }
+                            // Сохраняем Referer
+                            if (req.headers.referer) {
+                                proxyReq.setHeader("Referer", req.headers.referer);
+                            }
+                        });
+                    },
+                },
+            },
+        },
         build: {
             rollupOptions: {
                 output: {
