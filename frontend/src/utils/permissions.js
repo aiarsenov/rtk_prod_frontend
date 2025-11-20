@@ -11,6 +11,11 @@
  * @returns {boolean}
  */
 export const hasPermission = (user, section, permissionType = 'view', requiredScope = 'limited') => {
+    // В режиме разработки разрешаем все доступы
+    if (import.meta.env.MODE === "development") {
+        return true;
+    }
+
     if (!user?.permissions) return false;
 
     const actualScope = user.permissions[section]?.[permissionType];
