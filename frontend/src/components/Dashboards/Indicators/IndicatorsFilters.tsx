@@ -206,7 +206,9 @@ const IndicatorsFilters = ({
                             ))}
                     </ul>
 
-                    <Hint message="Подсказка" />
+                    <Hint
+                        message="Подсказка"
+                        position="bottom" />
                     </div>
                     <div className="filters__wrapper">
                     <CreatableSelect
@@ -264,7 +266,8 @@ const IndicatorsFilters = ({
                         }}
                     />
 
-                    <Hint message="Подсказка" />
+                    <Hint message="Подсказка"
+                    position="bottom" />
                     </div>
                     <div className="filters__wrapper">
                     <CreatableSelect
@@ -311,7 +314,8 @@ const IndicatorsFilters = ({
                         }}
                     />
 
-                    <Hint message="Подсказка" />
+                    <Hint message="Подсказка"
+                    position="bottom" />
                 </div>
                 </div>
 

@@ -51,6 +51,20 @@
         }
     }
 
+    &--bottom {
+        &:before {
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid var(--color-gray-90);
+            top: calc(100% + -2px);
+            bottom: auto;
+        }
+
+        .hint__message {
+            top: calc(100% + 10px);
+            bottom: auto;
+        }
+    }
+
     &__icon {
         color: var(--color-gray-40);
         transition: color var(--trans);
