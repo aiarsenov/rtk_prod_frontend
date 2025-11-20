@@ -53,13 +53,24 @@ const EmployeesStats = ({
 }) => {
     const [activeTab, setActiveTab] = useState("employee_new");
 
+    // Функция для преобразования строки с запятой в число
+    const parseValue = (value: string | number | null | undefined): number => {
+        if (value === null || value === undefined) return 0;
+        if (typeof value === "number") return value;
+        if (typeof value === "string") {
+            // Заменяем запятую на точку и парсим в число
+            return parseFloat(value.replace(",", ".")) || 0;
+        }
+        return 0;
+    };
+
     const EmployeeMetricsData = {
         labels: employeeMetrics.positions_histogram?.map((item) => item.name),
         datasets: [
             {
                 label: "",
-                data: employeeMetrics.positions_histogram?.map(
-                    (item) => item.previous_value
+                data: employeeMetrics.positions_histogram?.map((item) =>
+                    parseValue(item.previous_value)
                 ),
                 backgroundColor: "#F4F3FF",
                 hoverBackgroundColor: "#E0E0FF",
@@ -77,8 +88,8 @@ const EmployeesStats = ({
             },
             {
                 label: "",
-                data: employeeMetrics.positions_histogram?.map(
-                    (item) => item.value
+                data: employeeMetrics.positions_histogram?.map((item) =>
+                    parseValue(item.value)
                 ),
                 backgroundColor: "#BDB4FE",
                 borderRadius: 5,
@@ -109,7 +120,11 @@ const EmployeesStats = ({
                 offset: 8,
                 color: "#002033",
                 clip: false,
-                formatter: (value) => value,
+                formatter: (value) => {
+                    if (!Number.isFinite(value)) return "";
+                    // Форматируем с запятой вместо точки, 2 знака после запятой
+                    return value.toFixed(2).toString().replace(".", ",");
+                },
             },
             tooltip: {
                 displayColors: false,
