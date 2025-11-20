@@ -178,6 +178,7 @@ const IndicatorsFilters = ({
                         single={true}
                     />
 
+                    <div className="filters__wrapper">
                     <ul className="filters__period">
                         {filtertOptions?.periods?.length > 0 &&
                             filtertOptions?.periods?.map((period) => (
@@ -206,7 +207,8 @@ const IndicatorsFilters = ({
                     </ul>
 
                     <Hint message="Подсказка" />
-
+                    </div>
+                    <div className="filters__wrapper">
                     <CreatableSelect
                         options={
                             filteredContragents.length > 0 &&
@@ -263,7 +265,8 @@ const IndicatorsFilters = ({
                     />
 
                     <Hint message="Подсказка" />
-
+                    </div>
+                    <div className="filters__wrapper">
                     <CreatableSelect
                         options={
                             filteredProjects.length > 0 &&
@@ -309,6 +312,7 @@ const IndicatorsFilters = ({
                     />
 
                     <Hint message="Подсказка" />
+                </div>
                 </div>
 
                 {(mainFilters.project_id || mainFilters.contragent_id) && (
