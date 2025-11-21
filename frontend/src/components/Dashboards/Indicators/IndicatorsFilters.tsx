@@ -154,7 +154,7 @@ const IndicatorsFilters = ({
 
     return (
         <div className="dashboards__filters">
-            <div className="dashboards__filters-wrapper">
+            <div className="dashboards__filters-wrapper container">
                 <div className="dashboards__filters-nav">
                     <CustomDatePickerField
                         className="calendar"
