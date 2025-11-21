@@ -302,7 +302,7 @@
         @media (min-width: $media-xxl) {
             height: auto;
             min-height: auto;
-            padding: 20px;
+            padding: 20px 40px;
             overflow: visible;
             background: var(--color-white);
             border: 1px solid var(--color-gray-30);
@@ -392,7 +392,7 @@
 
         &-nav {
             display: flex;
-            flex-wrap: wrap;
+            // flex-wrap: wrap;
             align-items: center;
             gap: 40px;
             margin-bottom: 20px;
@@ -529,9 +529,9 @@
 .filters__wrapper {
     position: relative;
     width: 100%;
-    @media (min-width: $media-lg) {
-        flex: 0 0 400px;
-    }
+    // @media (min-width: $media-lg) {
+    //     flex: 0 0 400px;
+    // }
 
     .hint {
         display: none;

@@ -556,7 +556,7 @@ const Indicators = () => {
         <section className="indicators">
             {isLoading && <Loader bgColor={"rgba(255, 255, 255, 0.6)"} />}
 
-            <div className="container dashboards__container">
+            <div className=" dashboards__container">
                 <BottomSheet
                     onClick={() => setIsActiveFilters(false)}
                     className={`bottom-sheet_desk filters-bottomsheet ${
@@ -577,7 +577,7 @@ const Indicators = () => {
                     />
                 </BottomSheet>
 
-                <section className="dashboards__content">
+                <section className="dashboards__content container">
                     <section className="indicators__financial-metrics">
                         <h2 className="subtitle indicators__financial-metrics-title">
                             Ключевые финансовые показатели
