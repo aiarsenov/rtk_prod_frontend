@@ -12,6 +12,7 @@ const CompletedReportItem = ({
     execution_period,
     report_period,
     openReportEditor,
+    activeReportId,
 }: {
     project: Project;
     id: number;
@@ -24,6 +25,7 @@ const CompletedReportItem = ({
         contragent: string;
         report_name: string;
     }) => void;
+    activeReportId?: number | null;
 }) => {
     return (
         <li
@@ -37,7 +39,11 @@ const CompletedReportItem = ({
             }}
             title={`Открыть отчёт ${report_period_code}`}
         >
-            <div className="reports__list-item__col">
+            <div
+                className={`reports__list-item__col ${
+                    activeReportId === id ? "active" : ""
+                }`}
+            >
                 <div>{project.name}</div>
                 <span>{project.industries[0]}</span>
             </div>

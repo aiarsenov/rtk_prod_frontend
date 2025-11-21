@@ -31,6 +31,7 @@ const ProjectManagerReports = ({
 }: {
     projectManagerReports: ProjectManagerReportItem[];
 }) => {
+    const [activeReportId, setActiveReportId] = useState<number | string | null>(null);
     const [rateEditorState, setRateEditorState] = useState(false);
     const [reportData, setReportData] = useState({});
 
@@ -41,12 +42,14 @@ const ProjectManagerReports = ({
         newData.physical_person = { name: data.responsible };
 
         setReportData(newData);
+        setActiveReportId(data.id);
         setRateEditorState(true);
     };
 
     // Закрытие окно редактора отчета менеджмента
     const closeRateReportEditor = () => {
         setReportData({});
+        setActiveReportId(null);
         setRateEditorState(false);
     };
 
@@ -79,7 +82,11 @@ const ProjectManagerReports = ({
                                 openRateReportEditor(item);
                             }}
                         >
-                            <div className="reports__list-item__col">
+                            <div
+                                className={`reports__list-item__col ${
+                                    activeReportId === item.id ? "active" : ""
+                                }`}
+                            >
                                 <div>{item.project}</div>
                                 <span>{item.industry}</span>
                             </div>

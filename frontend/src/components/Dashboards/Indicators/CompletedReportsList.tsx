@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import getData from "../../../utils/getData";
 
@@ -11,6 +11,7 @@ const CompletedReportsList = ({
 }: {
     completedReports: { items: [] };
 }) => {
+    const [activeReportId, setActiveReportId] = useState<number | null>(null);
     const [reportWindowsState, setReportWindowsState] = useState(false);
 
     const [contracts, setContracts] = useState([]);
@@ -35,11 +36,19 @@ const CompletedReportsList = ({
         getContracts(reportData.contragent?.id);
         setReportId(reportData.id);
         setReportName(reportData.report_name);
+        setActiveReportId(reportData.id);
 
         if (reportData.id && reportName != "") {
             setReportWindowsState(true);
         }
     };
+
+    // Сброс активного отчета при закрытии панели
+    useEffect(() => {
+        if (!reportWindowsState) {
+            setActiveReportId(null);
+        }
+    }, [reportWindowsState]);
 
     return (
         <div className="dashboards__block indicators__completed-reports">
@@ -62,6 +71,7 @@ const CompletedReportsList = ({
                             key={report.id}
                             {...report}
                             openReportEditor={openReportEditor}
+                            activeReportId={activeReportId}
                         />
                     ))}
             </ul>

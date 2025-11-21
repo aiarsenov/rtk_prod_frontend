@@ -8,6 +8,7 @@ import ManagementReportEditor from "../../Reports/ManagementReportEditor";
 
 const ManagerReports = ({ selectedFilters }: { selectedFilters: object }) => {
     const [reportsList, setReportsList] = useState({});
+    const [activeReportId, setActiveReportId] = useState<number | null>(null); // ID активного отчета
     const [managementEditorState, setManagementEditorState] = useState(false); // Редактор отчёта менеджмента
     const [managementReportData, setManagementReportData] = useState({
         name: "",
@@ -38,12 +39,14 @@ const ManagerReports = ({ selectedFilters }: { selectedFilters: object }) => {
     // Открытие окна редактора отчета менеджмента
     const openManagementReportEditor = (props) => {
         setManagementReportData(props);
+        setActiveReportId(props.id);
         setManagementEditorState(true);
     };
 
     // Закрытие окно редактора отчета менеджмента
     const closeManagementReportEditor = () => {
         setManagementReportData({});
+        setActiveReportId(null);
         setManagementEditorState(false);
     };
 
@@ -78,7 +81,9 @@ const ManagerReports = ({ selectedFilters }: { selectedFilters: object }) => {
                             }}
                         >
                             <div
-                                className="reports__list-item__col overflow-hidden text-ellipsis"
+                                className={`reports__list-item__col overflow-hidden text-ellipsis ${
+                                    activeReportId === item.id ? "active" : ""
+                                }`}
                                 style={{
                                     WebkitLineClamp: 2,
                                     WebkitBoxOrient: "vertical",
