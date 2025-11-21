@@ -333,7 +333,7 @@ const IndicatorsFilters = ({
                             setFilteredContragents(contragents);
                         }}
                     >
-                        Очистить фильтры
+                        Очистить
                         <span></span>
                     </button>
                 )}
