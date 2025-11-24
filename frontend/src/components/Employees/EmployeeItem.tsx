@@ -16,12 +16,12 @@ const EmployeeItem = ({ props, columns }) => {
                 let value = props[key];
 
                 if (key === "is_staff") {
-                    value = value ? "штатный" : "внештатный";
+                    value = value ? "Штатный" : "Внештатный";
                 }
 
                 if (key === "status") {
                     const isActive = props.is_active;
-                    value = isActive ? "работает" : "не работает";
+                    value = isActive ? "Работает" : "Не работает";
                 }
 
 
