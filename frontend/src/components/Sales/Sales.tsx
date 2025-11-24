@@ -13,6 +13,7 @@ import MultiSelectWithSearch from "../MultiSelect/MultiSelectWithSearch";
 import FilterButton from "../FilterButton";
 import OverlayTransparent from "../Overlay/OverlayTransparent";
 import CustomDatePicker from "../CustomDatePicker/CustomDatePicker";
+import TheadSortButton from "../TheadSortButton/TheadSortButton";
 
 const Sales = () => {
     const URL = `${import.meta.env.VITE_API_URL}sales-funnel-projects`;
@@ -30,6 +31,7 @@ const Sales = () => {
 
     const [newProjectName, setNewProjectName] = useState("");
     const [openFilter, setOpenFilter] = useState("");
+    const [sortBy, setSortBy] = useState({ key: "", action: "" });
 
     // Заполняем селектор проектов
     const nameOptions = useMemo(() => {
@@ -119,8 +121,9 @@ const Sales = () => {
             options: serviceOptions,
         },
         {
-            label: "Стоим. млн руб.",
+            label: "Стоимость <br> млн руб.",
             key: "costs",
+            is_sortable: true,
         },
         {
             label: "Дата запроса",
@@ -210,7 +213,7 @@ const Sales = () => {
     });
 
     const filteredProjects = useMemo(() => {
-        return list.filter((project) => {
+        let filtered = list.filter((project) => {
             const projectDateStr = project.status_date;
 
             const hasDateFilter =
@@ -256,7 +259,33 @@ const Sales = () => {
                 isInDateRange
             );
         });
-    }, [list, filters, statusDate]);
+
+        // Применяем сортировку
+        if (sortBy.key === "costs" && sortBy.action) {
+            filtered = [...filtered].sort((a, b) => {
+                // Парсим costs из строки формата "4,50" в число
+                const parseCost = (cost) => {
+                    if (!cost || cost === "—" || cost === null) return 0;
+                    // Заменяем запятую на точку и парсим
+                    const numStr = cost.toString().replace(",", ".");
+                    const num = parseFloat(numStr);
+                    return isNaN(num) ? 0 : num;
+                };
+
+                const valueA = parseCost(a.costs);
+                const valueB = parseCost(b.costs);
+
+                if (sortBy.action === "ascending") {
+                    return valueA - valueB;
+                } else if (sortBy.action === "descending") {
+                    return valueB - valueA;
+                }
+                return 0;
+            });
+        }
+
+        return filtered;
+    }, [list, filters, statusDate, sortBy]);
 
     return (
         <main className="page projects">
@@ -319,6 +348,7 @@ const Sales = () => {
                                         dateValue,
                                         options,
                                         setFunc,
+                                        is_sortable,
                                     }) => {
                                         return (
                                             <th
@@ -590,9 +620,19 @@ const Sales = () => {
                                                         }
 
                                                         return (
-                                                            <div className="registry-table__thead-label">
-                                                                {label}
-                                                            </div>
+                                                            <>
+                                                                <div
+                                                                    className="registry-table__thead-label"
+                                                                    dangerouslySetInnerHTML={{ __html: label }}
+                                                                />
+                                                                {is_sortable && (
+                                                                    <TheadSortButton
+                                                                        value={key as any}
+                                                                        sortBy={sortBy as any}
+                                                                        setSortBy={setSortBy as any}
+                                                                    />
+                                                                )}
+                                                            </>
                                                         );
                                                     })()}
                                                 </div>
