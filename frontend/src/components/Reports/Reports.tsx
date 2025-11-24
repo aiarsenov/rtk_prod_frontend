@@ -543,7 +543,7 @@ const Reports = () => {
                 options: industryOptions,
             },
             {
-                label: "Заказкчик",
+                label: "Заказчик",
                 key: "contragent",
                 filter: "selectedContragents",
                 options: contragentOptions,
