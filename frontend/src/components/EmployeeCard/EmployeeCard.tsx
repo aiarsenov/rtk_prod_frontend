@@ -21,13 +21,13 @@ import Loader from "../Loader.js";
 import "./EmployeeCard.scss";
 
 const TYPES = [
-    { value: "true", label: "штатный" },
-    { value: "false", label: "внештатный" },
+    { value: "true", label: "Штатный" },
+    { value: "false", label: "Внештатный" },
 ];
 
 const STATUSES = [
-    { value: "true", label: "работает" },
-    { value: "false", label: "        не работает" },
+    { value: "true", label: "Работает" },
+    { value: "false", label: "        Не работает" },
 ];
 
 const EmployeeCard = () => {
