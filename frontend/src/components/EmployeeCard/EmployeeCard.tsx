@@ -27,7 +27,7 @@ const TYPES = [
 
 const STATUSES = [
     { value: "true", label: "Работает" },
-    { value: "false", label: "        Не работает" },
+    { value: "false", label: "Не работает" },
 ];
 
 const EmployeeCard = () => {
