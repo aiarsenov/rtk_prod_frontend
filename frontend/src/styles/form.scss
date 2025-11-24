@@ -407,5 +407,11 @@
         &::placeholder {
             color: var(--color-gray-60);
         }
+
+        &_single-line {
+            min-height: 40px;
+            overflow: hidden;
+            resize: none;
+        }
     }
 }

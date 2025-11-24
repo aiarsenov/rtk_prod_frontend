@@ -974,7 +974,7 @@ const SaleCard = () => {
                                     </div>
 
                                     <AutoResizeTextarea
-                                        className="form-textarea"
+                                        className="form-textarea form-textarea_single-line"
                                         placeholder={
                                             mode === "edit"
                                                 ? "Страна, город, область..."
@@ -1003,6 +1003,7 @@ const SaleCard = () => {
                                         disabled={
                                             mode == "read" || !availableToChange
                                         }
+                                        minHeight={40}
                                     />
                                 </div>
 
@@ -1013,7 +1014,7 @@ const SaleCard = () => {
                                     </div>
 
                                     <AutoResizeTextarea
-                                        className="form-textarea"
+                                        className="form-textarea form-textarea_single-line"
                                         placeholder={
                                             mode === "edit"
                                                 ? "Заполните ТЭП"
@@ -1041,6 +1042,7 @@ const SaleCard = () => {
                                         disabled={
                                             mode == "read" || !availableToChange
                                         }
+                                        minHeight={40}
                                     />
                                 </div>
                             </section>
