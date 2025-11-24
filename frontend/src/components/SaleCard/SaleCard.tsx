@@ -535,40 +535,7 @@ const SaleCard = () => {
                                 )}
                             </div>
 
-                            <div className="project-card__services">
-                                <h2 className="card__subtitle">Услуги</h2>
 
-                                <SaleServicesList
-                                    services={services}
-                                    deleteService={deleteService}
-                                    mode={mode}
-                                />
-
-                                {mode == "edit" && availableToChange && (
-                                    <button
-                                        type="button"
-                                        className="button-add"
-                                        onClick={() => setAddServices(true)}
-                                        title="Добавить услугу"
-                                    >
-                                        Добавить
-                                        <span>
-                                            <svg
-                                                width="10"
-                                                height="9"
-                                                viewBox="0 0 10 9"
-                                                fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path
-                                                    d="M5.75 3.75H9.5v1.5H5.75V9h-1.5V5.25H.5v-1.5h3.75V0h1.5v3.75z"
-                                                    fill="currentColor"
-                                                />
-                                            </svg>
-                                        </span>
-                                    </button>
-                                )}
-                            </div>
 
                             <div className="project-card__services">
                                 <h2 className="card__subtitle">Заказчик</h2>
@@ -621,6 +588,41 @@ const SaleCard = () => {
                                         ) : (
                                             "Изменить"
                                         )}
+                                    </button>
+                                )}
+                            </div>
+
+                            <div className="project-card__services">
+                                <h2 className="card__subtitle">Услуги</h2>
+
+                                <SaleServicesList
+                                    services={services}
+                                    deleteService={deleteService}
+                                    mode={mode}
+                                />
+
+                                {mode == "edit" && availableToChange && (
+                                    <button
+                                        type="button"
+                                        className="button-add"
+                                        onClick={() => setAddServices(true)}
+                                        title="Добавить услугу"
+                                    >
+                                        Добавить
+                                        <span>
+                                            <svg
+                                                width="10"
+                                                height="9"
+                                                viewBox="0 0 10 9"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    d="M5.75 3.75H9.5v1.5H5.75V9h-1.5V5.25H.5v-1.5h3.75V0h1.5v3.75z"
+                                                    fill="currentColor"
+                                                />
+                                            </svg>
+                                        </span>
                                     </button>
                                 )}
                             </div>
