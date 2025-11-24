@@ -159,12 +159,12 @@
             }
 
             &-header {
-                grid-template-columns: 1fr 1fr 1fr 27%;
+                grid-template-columns: 1fr 100px 1fr 100px
             }
 
             &-item {
                 display: grid;
-                grid-template-columns: 1fr 1fr 1fr 27%;
+                grid-template-columns: 1fr 100px 1fr 100px;
 
                 .reports__list-item__col.active {
                     font-weight: 600;
