@@ -100,13 +100,11 @@ const SaleFunnelItem = ({
                                 onClick={(evt) => {
                                     evt.stopPropagation();
 
-                                    if (confirm("Вы уверены?")) {
-                                        handleStage(
-                                            stage,
-                                            stage.next_possible_stages[1],
-                                            "rejected"
-                                        );
-                                    }
+                                    handleStage(
+                                        stage,
+                                        stage.next_possible_stages[1],
+                                        "rejected"
+                                    );
                                 }}
                             ></button>
 
