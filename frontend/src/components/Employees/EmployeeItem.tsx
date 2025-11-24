@@ -19,6 +19,13 @@ const EmployeeItem = ({ props, columns }) => {
                     value = value ? "штатный" : "внештатный";
                 }
 
+                if (key === "status") {
+                    const isActive = props.is_active;
+                    value = isActive ? "работает" : "не работает";
+                }
+
+
+
                 if (Array.isArray(value) && value.length > 0) {
                     return (
                         <td
@@ -97,6 +104,28 @@ const EmployeeItem = ({ props, columns }) => {
                         return (
                             <td className="w-[210px]" key={key}>
                                 {value?.name || "—"}
+                            </td>
+                        );
+                    } else if (key === "status") {
+                        let statusClass;
+                        const isActive = props.is_active;
+
+                        if (isActive === true) {
+                            statusClass = "registry-table__item-status_active";
+                        } else if (isActive === false) {
+                            statusClass = "registry-table__item-status_canceled";
+                        }
+
+                        return (
+                            <td
+                                className="px-4 py-7 min-w-[180px] max-w-[200px]"
+                                key={key}
+                            >
+                                <div
+                                    className={`registry-table__item-status ${statusClass || ""}`}
+                                >
+                                    {value?.toString() || "—"}
+                                </div>
                             </td>
                         );
                     } else {
