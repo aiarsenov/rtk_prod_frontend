@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import DatePicker, { registerLocale } from "react-datepicker";
 import { ru } from "date-fns/locale";
@@ -14,6 +14,15 @@ const formatDate = (date: Date, type) => {
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     return type === "months" ? `${year}-${month}` : `${year}-${month}-${day}`;
+};
+
+const areDatesEqual = (date1: Date | null, date2: Date | null): boolean => {
+    if (!date1 || !date2) return false;
+    return (
+        date1.getFullYear() === date2.getFullYear() &&
+        date1.getMonth() === date2.getMonth() &&
+        date1.getDate() === date2.getDate()
+    );
 };
 
 const CustomDatePicker = ({
@@ -43,8 +52,15 @@ const CustomDatePicker = ({
     ]);
 
     const [singleDate, setSingleDate] = useState<Date | null>(
-        value ? new Date(value) : new Date()
+        value ? new Date(value) : null
     );
+
+    // Инициализируем singleDate при открытии календаря
+    useEffect(() => {
+        if (single) {
+            setSingleDate(value ? new Date(value) : null);
+        }
+    }, [value, single]);
 
     const handleApply = () => {
         setDateRange(tempRange);
@@ -69,7 +85,8 @@ const CustomDatePicker = ({
         if (!single && Object.keys(filters).length > 0) {
             onChange(filters);
         } else if (single) {
-            onChange(singleDate);
+            // Если дата была снята (null), очищаем поле
+            onChange(singleDate || null);
         }
 
         closePicker("");
@@ -81,7 +98,13 @@ const CustomDatePicker = ({
                 minDate={minDate}
                 onChange={(update) => {
                     if (single) {
-                        setSingleDate(update as Date);
+                        const clickedDate = update as Date;
+                        // Если кликнули на уже выбранную дату, снимаем выбор
+                        if (singleDate && areDatesEqual(clickedDate, singleDate)) {
+                            setSingleDate(null);
+                        } else {
+                            setSingleDate(clickedDate);
+                        }
                     } else {
                         setTempRange(update as [Date | null, Date | null]);
                     }
@@ -89,16 +112,12 @@ const CustomDatePicker = ({
                 startDate={
                     !single
                         ? tempRange[0]
-                        : value
-                        ? new Date(value)
-                        : new Date()
+                        : singleDate
                 }
                 selected={
                     !single
                         ? tempRange[0]
-                        : value
-                        ? new Date(value)
-                        : new Date()
+                        : singleDate
                 }
                 endDate={!single ? tempRange[1] : undefined}
                 selectsRange={!single}

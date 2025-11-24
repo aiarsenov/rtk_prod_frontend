@@ -39,6 +39,49 @@ const SaleFunnelStages = ({
 
     // Закрепляем дату за этапом
     const setDate = (date, instance_id) => {
+        if (!date) {
+            postData(
+                "PATCH",
+                `${
+                    import.meta.env.VITE_API_URL
+                }sales-funnel-projects/${saleId}/stages/${
+                    stageMetrics.stage_id
+                }/date`,
+                { stage_date: null, stage_instance_id: instance_id }
+            )
+            .then((response) => {
+                if (response.ok) {
+                    toast.success(
+                        response.message || "Дата этапа успешно очищена",
+                        {
+                            containerId: "toastContainerStages",
+                            isLoading: false,
+                            autoClose: 1200,
+                            pauseOnFocusLoss: false,
+                            pauseOnHover: false,
+                            position:
+                                window.innerWidth >= 1440
+                                    ? "bottom-right"
+                                    : "top-right",
+                        }
+                    );
+                } else {
+                    toast.error(response.error || "Ошибка запроса", {
+                        containerId: "toastContainerStages",
+                        isLoading: false,
+                        autoClose: 1200,
+                        pauseOnFocusLoss: false,
+                        pauseOnHover: false,
+                        position:
+                            window.innerWidth >= 1440
+                                ? "bottom-right"
+                                : "top-right",
+                    });
+                }
+            });
+            return;
+        }
+
         const newDate = new Date(date).toLocaleDateString("ru-RU");
 
         const [day, month, year] = newDate.split(".");
@@ -105,7 +148,7 @@ const SaleFunnelStages = ({
                 if (stage.instance_id === instance_id) {
                     return {
                         ...stage,
-                        stage_date: date,
+                        stage_date: date || null,
                     };
                 }
                 return stage;
