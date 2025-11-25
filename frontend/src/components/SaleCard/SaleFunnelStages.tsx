@@ -9,6 +9,7 @@ import Popup from "../Popup/Popup";
 import ResumableStages from "./ResumableStages";
 
 import { ToastContainer, toast } from "react-toastify";
+import Hint from "../Hint/Hint";
 
 const SaleFunnelStages = ({
     saleId,
@@ -637,6 +638,22 @@ const SaleFunnelStages = ({
         <div className="sale-funnel-stages">
             <h2 className="card__subtitle">Воронка продажи</h2>
 
+            {saleStages.stages?.length > 0 && (
+                <div className="sale-funnel-stages__head flex items-center gap-2">
+                    <div className="sale-funnel-stages__head-item flex items-center gap-2">
+                        <span>Этап</span>
+                        <Hint message="Этап" />
+                    </div>
+                    <div className="sale-funnel-stages__head-item">
+                        <span>Дата</span>
+                        <Hint message="Дата" />
+                    </div>
+                    <div className="sale-funnel-stages__head-item">
+                        <span>Статус</span>
+                        <Hint message="Статус" />
+                    </div>
+                </div>
+            )}
             <ul className="sale-funnel-stages__list">
                 <ToastContainer containerId="toastContainerStages" />
 

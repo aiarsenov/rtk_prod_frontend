@@ -267,3 +267,22 @@
         }
     }
 }
+
+.sale-funnel-stages__head {
+    display: grid;
+    color: var(--color-gray-70);
+    font-weight: 500;
+
+
+    @media (min-width: $media-xxl) {
+        grid-template-columns: 55% 17% 19%;
+    }
+
+    @media (min-width: 1900px) {
+        grid-template-columns: 60% 16% 19%;
+    }
+
+    & > div {
+        padding-left: 22px;
+    }
+}
