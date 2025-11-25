@@ -21,19 +21,19 @@ const SaleServicesList = ({
 
                             <div className="services__list-item-row">
                                 <div className="services__list-item-cost">
-                                    <div
-                                        className={`services__list-item-percent ${
-                                            item.cost_change_percent
-                                                ? getColorBySign(
-                                                      item.cost_change_percent,
-                                                      "text-[#039855] bg-[#d1fadf]",
-                                                      "text-[#E84D42] bg-[#fee4e2]"
-                                                  )
-                                                : ""
-                                        }`}
-                                    >
-                                        {item.cost_change_percent}
-                                    </div>
+                                    {item.cost_change_percent &&
+                                        item.cost_change_percent !== "0" &&
+                                        item.cost_change_percent !== 0 && (
+                                            <div
+                                                className={`services__list-item-percent ${getColorBySign(
+                                                    item.cost_change_percent,
+                                                    "text-[#039855] bg-[#d1fadf]",
+                                                    "text-[#E84D42] bg-[#fee4e2]"
+                                                )}`}
+                                            >
+                                                {item.cost_change_percent}
+                                            </div>
+                                        )}
 
                                     {item.cost}
                                 </div>
