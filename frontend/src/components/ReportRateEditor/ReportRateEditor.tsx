@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 import { useBodyScrollLock } from "../../hooks/useBodyScrollLock.js";
 
@@ -44,11 +44,13 @@ const ReportRateEditor = ({
         }
     };
 
-    const resetState = () => {
+    const resetState = useCallback(() => {
         setSaveBeforeClose(false);
         setIsChanged(false);
         closeEditor();
-    };
+    }, [closeEditor]);
+
+    const formRef = useRef<HTMLFormElement>(null);
 
     useEffect(() => {
         if (reportData) {
@@ -57,6 +59,33 @@ const ReportRateEditor = ({
     }, [reportData]);
 
     useBodyScrollLock(rateEditorState);
+
+    // Обработчик ESC для закрытия панели детализации отчета
+    useEffect(() => {
+        const handleEscKey = (event: KeyboardEvent) => {
+            if (
+                (event.key === "Escape" || event.keyCode === 27) &&
+                rateEditorState &&
+                !saveBeforeClose
+            ) {
+                event.preventDefault();
+                event.stopPropagation();
+                resetState();
+            }
+        };
+
+        if (rateEditorState) {
+            window.addEventListener("keydown", handleEscKey, true);
+            // Устанавливаем фокус на форму для обработки событий клавиатуры
+            setTimeout(() => {
+                formRef.current?.focus();
+            }, 100);
+        }
+
+        return () => {
+            window.removeEventListener("keydown", handleEscKey, true);
+        };
+    }, [rateEditorState, saveBeforeClose, resetState]);
 
     return !saveBeforeClose ? (
         <div
@@ -71,7 +100,22 @@ const ReportRateEditor = ({
             >
                 <div className="bottom-sheet__icon"></div>
 
-                <form className="bottom-sheet__body">
+                <form
+                        ref={formRef}
+                        className="bottom-sheet__body"
+                        tabIndex={-1}
+                        onKeyDown={(e) => {
+                            if (
+                                (e.key === "Escape" || e.keyCode === 27) &&
+                                rateEditorState &&
+                                !saveBeforeClose
+                            ) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                resetState();
+                            }
+                        }}
+                    >
                     <div
                         className={`report-window report-rate-editor ${
                             mode === "read" && "report-rate-editor_read-mode"
@@ -225,8 +269,13 @@ const ReportRateEditor = ({
                                                     updateReportDetails(
                                                         reportRateData,
                                                         "save"
-                                                    );
-                                                    resetState();
+                                                    )
+                                                        .then(() => {
+                                                            resetState();
+                                                        })
+                                                        .catch(() => {
+                                                            // Ошибка уже обработана в updateReportDetails
+                                                        });
                                                 }}
                                                 title="Сохранить без утверждения"
                                             >
@@ -240,8 +289,13 @@ const ReportRateEditor = ({
                                                     updateReportDetails(
                                                         reportRateData,
                                                         "approve"
-                                                    );
-                                                    resetState();
+                                                    )
+                                                        .then(() => {
+                                                            resetState();
+                                                        })
+                                                        .catch(() => {
+                                                            // Ошибка уже обработана в updateReportDetails
+                                                        });
                                                 }}
                                                 title="Сохранить и утвердить"
                                             >
@@ -289,8 +343,13 @@ const ReportRateEditor = ({
                         type="button"
                         className="action-button"
                         onClick={() => {
-                            updateReportDetails(reportRateData, "approve");
-                            resetState();
+                            updateReportDetails(reportRateData, "approve")
+                                .then(() => {
+                                    resetState();
+                                })
+                                .catch(() => {
+                                    // Ошибка уже обработана в updateReportDetails
+                                });
                         }}
                         title="Сохранить изменения"
                     >

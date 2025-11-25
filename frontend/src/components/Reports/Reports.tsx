@@ -33,10 +33,16 @@ const Reports = () => {
 
     const [activeTab, setActiveTab] = useState(() => {
         const saved = localStorage.getItem("reportsActiveTab");
-        return saved || "projects";
+        // Проверяем, что сохраненное значение валидно
+        if (saved === "projects" || saved === "management") {
+            return saved;
+        }
+        return "projects";
     });
 
     const [isLoading, setIsLoading] = useState(true);
+    const [isProjectsLoading, setIsProjectsLoading] = useState(true);
+    const [isManagementLoading, setIsManagementLoading] = useState(true);
     const [hasAccess, setHasAccess] = useState(true);
     const [hasProjectReportsAccess, setHasProjectReportsAccess] = useState(true);
     const [hasEmployeeReportsAccess, setHasEmployeeReportsAccess] = useState(true);
@@ -77,6 +83,7 @@ const Reports = () => {
     // Получение списка отчетов
     const getReports = () => {
         setIsLoading(true);
+        setIsProjectsLoading(true);
         setHasAccess(true);
         setHasProjectReportsAccess(true);
 
@@ -97,6 +104,7 @@ const Reports = () => {
             .then((response) => {
                 if (response.status === 200) {
                     setReportsList(response.data);
+                    setIsProjectsLoading(false);
                 }
             })
             .catch((error) => {
@@ -105,12 +113,15 @@ const Reports = () => {
                     setHasProjectReportsAccess(false);
                 }
             })
-            .finally(() => setIsLoading(false));
+            .finally(() => {
+                setIsLoading(false);
+            });
     };
 
     // Получение списка доступных фильтров
     const getManagementReports = () => {
         setIsLoading(true);
+        setIsManagementLoading(true);
         setHasEmployeeReportsAccess(true);
 
         getData(`${MANAGEMENT_URL}?${buildQueryParams(reportMonthQuery)}`)
@@ -118,6 +129,7 @@ const Reports = () => {
                 if (response.status === 200) {
                     setManagementList(response.data);
                     setSortedManagementList(response.data);
+                    setIsManagementLoading(false);
                 }
             })
             .catch((error) => {
@@ -125,7 +137,9 @@ const Reports = () => {
                     setHasEmployeeReportsAccess(false);
                 }
             })
-            .finally(() => setIsLoading(false));
+            .finally(() => {
+                setIsLoading(false);
+            });
     };
 
     // Открытие окна отчёта проекта
@@ -222,7 +236,7 @@ const Reports = () => {
 
         extendReportData.action = action;
 
-        postData(
+        return postData(
             "PATCH",
             `${import.meta.env.VITE_API_URL}management-reports/${
                 extendReportData.real_id
@@ -247,7 +261,9 @@ const Reports = () => {
                     });
 
                     getManagementReports();
+                    // Закрываем модальное окно только после успешного сохранения
                     setManagementEditorState(false);
+                    return response;
                 } else {
                     toast.dismiss(query);
                     toast.error("Ошибка обновления данных", {
@@ -262,6 +278,7 @@ const Reports = () => {
                                 ? "bottom-right"
                                 : "top-right",
                     });
+                    throw new Error("Ошибка обновления данных");
                 }
             })
             .catch((error) => {
@@ -278,6 +295,7 @@ const Reports = () => {
                             ? "bottom-right"
                             : "top-right",
                 });
+                throw error;
             });
     };
 
@@ -291,7 +309,7 @@ const Reports = () => {
 
         report.action = action;
 
-        postData(
+        return postData(
             "PATCH",
             `${
                 import.meta.env.VITE_API_URL
@@ -300,6 +318,21 @@ const Reports = () => {
         )
             .then((response) => {
                 if (response?.ok) {
+                    const updatedReport = response;
+                    setManagementList((prevList) => {
+                        const updatedList = prevList.map((item) => {
+                            if (
+                                item.real_id === updatedReport.real_id ||
+                                item.id === updatedReport.id
+                            ) {
+                                return updatedReport;
+                            }
+                            return item;
+                        });
+                        setSortedManagementList(updatedList);
+                        return updatedList;
+                    });
+
                     toast.update(query, {
                         render: "Данные обновлены",
                         type: "success",
@@ -314,8 +347,9 @@ const Reports = () => {
                                 ? "bottom-right"
                                 : "top-right",
                     });
+                    // Закрываем модальное окно только после успешного сохранения
                     closeRateReportEditor();
-                    getManagementReports();
+                    return response;
                 } else {
                     toast.dismiss(query);
                     toast.error("Ошибка обновления данных", {
@@ -330,6 +364,7 @@ const Reports = () => {
                                 ? "bottom-right"
                                 : "top-right",
                     });
+                    throw new Error("Ошибка обновления данных");
                 }
             })
             .catch((error) => {
@@ -346,6 +381,7 @@ const Reports = () => {
                             ? "bottom-right"
                             : "top-right",
                 });
+                throw error;
             });
     };
 
@@ -712,8 +748,13 @@ const Reports = () => {
         );
     }, [sortBy, filteredManagementReports]);
 
+    // Сохраняем активную вкладку в localStorage при изменении
     useEffect(() => {
-        localStorage.setItem("reportsActiveTab", activeTab);
+        try {
+            localStorage.setItem("reportsActiveTab", activeTab);
+        } catch (error) {
+            console.error("Ошибка при сохранении активной вкладки:", error);
+        }
     }, [activeTab]);
 
     useEffect(() => {
@@ -725,8 +766,20 @@ const Reports = () => {
                 setHasAccess(false);
             } else {
                 setHasAccess(true);
+
+                // Проверяем доступ к сохраненной вкладке и переключаем на доступную, если нужно
+                // Делаем это только один раз при загрузке пользователя
+                const savedTab = localStorage.getItem("reportsActiveTab");
+                if (savedTab === "projects" && !hasProjectAccess && hasEmployeeAccess) {
+                    setActiveTab("management");
+                    localStorage.setItem("reportsActiveTab", "management");
+                } else if (savedTab === "management" && !hasEmployeeAccess && hasProjectAccess) {
+                    setActiveTab("projects");
+                    localStorage.setItem("reportsActiveTab", "projects");
+                }
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     if (!hasAccess) {
@@ -761,7 +814,7 @@ const Reports = () => {
                             />
                             <label htmlFor="project_reports">
                                 Отчёты проектов
-                                {hasProjectReportsAccess && canAccess(user, "project_reports") && (
+                                {hasProjectReportsAccess && canAccess(user, "project_reports") && !isProjectsLoading && (
                                     <span>{filteredProjectReports.length}</span>
                                 )}
                             </label>
@@ -777,7 +830,7 @@ const Reports = () => {
                             />
                             <label htmlFor="management_reports">
                                 Отчёты сотрудников
-                                {hasEmployeeReportsAccess && canAccess(user, "employee_reports") && (
+                                {hasEmployeeReportsAccess && canAccess(user, "employee_reports") && !isManagementLoading && (
                                     <span>{filteredManagementReports.length}</span>
                                 )}
                             </label>
