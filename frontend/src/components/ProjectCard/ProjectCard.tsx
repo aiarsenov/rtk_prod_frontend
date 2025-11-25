@@ -795,6 +795,18 @@ const ProjectCard = () => {
         }));
     }, [otherIndustries]);
 
+    // Автоматическая фильтрация по первому банку при загрузке данных
+    useEffect(() => {
+        if (matchedBanks.length > 0 && creditors.length > 0 && filteredCreditors.length === creditors.length) {
+            const firstBankId = matchedBanks[0].id;
+            setFilteredCreditors(
+                creditors.filter(
+                    (lender) => +lender.creditor_id === +firstBankId
+                )
+            );
+        }
+    }, [matchedBanks, creditors]);
+
     useEffect(() => {
         if (projectId) {
             getCard();
@@ -1331,23 +1343,7 @@ const ProjectCard = () => {
 
                                 {matchedBanks.length > 0 && (
                                     <ul className="card__tabs project-card__banks-tabs">
-                                        <li className="card__tabs-item radio-field_tab">
-                                            <input
-                                                type="radio"
-                                                name="active_bank"
-                                                id="bank_all"
-                                                value=""
-                                                defaultChecked
-                                                onChange={(evt) => {
-                                                    handleFilterCreditors(evt);
-                                                }}
-                                            />
-                                            <label htmlFor="bank_all">
-                                                Все банки
-                                            </label>
-                                        </li>
-
-                                        {matchedBanks.map((bank) => (
+                                        {matchedBanks.map((bank, index) => (
                                             <li
                                                 key={bank.id}
                                                 className="card__tabs-item radio-field_tab"
@@ -1357,6 +1353,7 @@ const ProjectCard = () => {
                                                     type="radio"
                                                     name="active_bank"
                                                     value={bank.id}
+                                                    defaultChecked={index === 0}
                                                     onChange={(evt) => {
                                                         handleFilterCreditors(
                                                             evt
