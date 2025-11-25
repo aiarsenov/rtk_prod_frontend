@@ -9,37 +9,35 @@ interface RateSwitchProps {
     mode: string;
 }
 
+const getRateClass = (rateValue: number | undefined): string => {
+    switch (rateValue) {
+        case 0:
+            return "red";
+
+        case 1:
+            return "orange";
+
+        case 2:
+            return "green";
+
+        default:
+            return "";
+    }
+};
+
 const RateSwitch = ({
     name,
     reportRateData,
     rateHandler,
     mode,
 }: RateSwitchProps) => {
-    const [currentRateClass, setCurrentRateClass] = useState("");
-
-    const handleRateClass = () => {
-        switch (reportRateData[name]) {
-            case 0:
-                setCurrentRateClass("red");
-                break;
-
-            case 1:
-                setCurrentRateClass("orange");
-                break;
-
-            case 2:
-                setCurrentRateClass("green");
-                break;
-
-            default:
-                setCurrentRateClass("");
-                break;
-        }
-    };
+    const [currentRateClass, setCurrentRateClass] = useState(() =>
+        getRateClass(reportRateData[name])
+    );
 
     useEffect(() => {
-        handleRateClass();
-    }, [reportRateData[name]]);
+        setCurrentRateClass(getRateClass(reportRateData[name]));
+    }, [reportRateData, name]);
 
     return (
         <nav className={`rate-switch rate-switch_${currentRateClass}`}>
