@@ -230,11 +230,23 @@ const ReportWindow = ({
 
         if (Object.keys(newErrors).length === 0) {
             if (reportId) {
-                updateReport(reportData, reportId);
-                resetState();
+                updateReport(reportData, reportId)
+                    .then(() => {
+                        // Закрываем окно только при успешном сохранении
+                        resetState();
+                    })
+                    .catch(() => {
+                        // Ошибка уже обработана в updateReport, не закрываем окно
+                    });
             } else {
-                sendReport(reportData);
-                resetState();
+                sendReport(reportData)
+                    .then(() => {
+                        // Закрываем окно только при успешном сохранении
+                        resetState();
+                    })
+                    .catch(() => {
+                        // Ошибка уже обработана в sendReport, не закрываем окно
+                    });
             }
         } else {
             toast.error(Object.values(newErrors).join("\n"), {
