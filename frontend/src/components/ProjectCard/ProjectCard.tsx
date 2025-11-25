@@ -596,7 +596,7 @@ const ProjectCard = () => {
             position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
         });
 
-        postData("POST", `${import.meta.env.VITE_API_URL}reports`, data)
+        return postData("POST", `${import.meta.env.VITE_API_URL}reports`, data)
             .then((response) => {
                 if (response?.ok) {
                     toast.update(query, {
@@ -620,6 +620,9 @@ const ProjectCard = () => {
                     ]);
 
                     getCard();
+                    // Закрываем окно только при успешном сохранении
+                    setReportWindowsState(false);
+                    setReportId(null);
                 } else {
                     toast.dismiss(query);
                     toast.error("Ошибка при отправке отчёта", {
@@ -634,10 +637,8 @@ const ProjectCard = () => {
                                 : "top-right",
                         containerId: "toastContainer",
                     });
+                    // Не закрываем окно при ошибке
                 }
-
-                setReportWindowsState(false);
-                setReportId(null);
             })
             .catch((error) => {
                 toast.dismiss(query);
@@ -653,6 +654,7 @@ const ProjectCard = () => {
                             ? "bottom-right"
                             : "top-right",
                 });
+                // Не закрываем окно при ошибке
             });
     };
 
@@ -677,7 +679,7 @@ const ProjectCard = () => {
             position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
         });
 
-        postData(
+        return postData(
             "PATCH",
             `${import.meta.env.VITE_API_URL}reports/${reportId}`,
             data
@@ -700,10 +702,25 @@ const ProjectCard = () => {
                     });
 
                     getCard();
+                    // Закрываем окно только при успешном сохранении
+                    setReportId(null);
+                    setReportWindowsState(false);
+                } else {
+                    toast.dismiss(query);
+                    toast.error("Ошибка обновления отчета", {
+                        containerId: "toastContainer",
+                        isLoading: false,
+                        autoClose: 5000,
+                        pauseOnFocusLoss: false,
+                        pauseOnHover: false,
+                        draggable: true,
+                        position:
+                            window.innerWidth >= 1440
+                                ? "bottom-right"
+                                : "top-right",
+                    });
+                    // Не закрываем окно при ошибке
                 }
-
-                setReportId(null);
-                setReportWindowsState(false);
             })
             .catch((error) => {
                 toast.dismiss(query);
@@ -719,6 +736,7 @@ const ProjectCard = () => {
                             ? "bottom-right"
                             : "top-right",
                 });
+                // Не закрываем окно при ошибке
             });
     };
 
