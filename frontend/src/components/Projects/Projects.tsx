@@ -46,9 +46,9 @@ const Projects = () => {
     // Заполняем селектор заказчиков
     const contragentOptions = useMemo(() => {
         const allNames = list
-            .map((item) => item.contragent)
+            .map((item) => item.contragent?.name)
             .filter(
-                (contragent) => contragent !== null && contragent !== undefined
+                (name) => name !== null && name !== undefined
             );
 
         return Array.from(new Set(allNames));
@@ -81,8 +81,8 @@ const Projects = () => {
     // Заполняем селектор руководителей проекта
     const projectManagerOptions = useMemo(() => {
         const allPM = list
-            .map((item) => item.project_manager)
-            .filter((manager) => manager !== null && manager !== undefined);
+            .map((item) => item.project_manager?.name)
+            .filter((name) => name !== null && name !== undefined);
         return Array.from(new Set(allPM));
     }, [list]);
 
@@ -215,7 +215,7 @@ const Projects = () => {
                         filters.selectedBanks.includes(c.name)
                     )) &&
                 (filters.selectedManagers.length === 0 ||
-                    filters.selectedManagers.includes(project.project_manager)) &&
+                    filters.selectedManagers.includes(project.project_manager?.name)) &&
                 (filters.selectedNames.length === 0 ||
                     filters.selectedNames.includes(project.name)) &&
                 (filters.selectedStatuses.length === 0 ||
@@ -223,7 +223,7 @@ const Projects = () => {
                         handleStatus(project.status)
                     )) &&
                 (filters.selectedContagents.length === 0 ||
-                    filters.selectedContagents.includes(project.contragent))
+                    filters.selectedContagents.includes(project.contragent?.name))
             );
         });
     }, [sortedList, filters]);
