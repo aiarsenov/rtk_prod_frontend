@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 import getData from "../../utils/getData";
 import formatMoney from "../../utils/formatMoney";
@@ -118,6 +118,8 @@ const ReportWindow = ({
     const [autoPrefillPopupState, setAutoPrefillPopupState] = useState(false);
 
     const [errorMessage, setErrorMessage] = useState("");
+
+    const formRef = useRef<HTMLFormElement>(null);
 
     // Валидация полей
     const validateFields = () => {
@@ -250,7 +252,7 @@ const ReportWindow = ({
     };
 
     // Сброс состояния компонента
-    const resetState = () => {
+    const resetState = useCallback(() => {
         setErrorMessage("");
         setReportWindowsState(false);
         setSaveBeforeClose(false);
@@ -280,7 +282,7 @@ const ReportWindow = ({
             contragents: [],
             show_cost: true,
         });
-    };
+    }, [setReportWindowsState, setReportId]);
 
     // Обработка полей
     const handleInputChange = (e, name) => {
@@ -743,6 +745,33 @@ const ReportWindow = ({
 
     useBodyScrollLock(reportWindowsState);
 
+    // Обработчик ESC для закрытия панели детализации отчета
+    useEffect(() => {
+        const handleEscKey = (event: KeyboardEvent) => {
+            if (
+                (event.key === "Escape" || event.keyCode === 27) &&
+                reportWindowsState &&
+                !saveBeforeClose
+            ) {
+                event.preventDefault();
+                event.stopPropagation();
+                resetState();
+            }
+        };
+
+        if (reportWindowsState) {
+            window.addEventListener("keydown", handleEscKey, true);
+            // Устанавливаем фокус на форму для обработки событий клавиатуры
+            setTimeout(() => {
+                formRef.current?.focus();
+            }, 100);
+        }
+
+        return () => {
+            window.removeEventListener("keydown", handleEscKey, true);
+        };
+    }, [reportWindowsState, saveBeforeClose, resetState]);
+
     return !saveBeforeClose ? (
         <>
             <div
@@ -759,7 +788,22 @@ const ReportWindow = ({
                 >
                     <div className="bottom-sheet__icon"></div>
 
-                    <form className="bottom-sheet__body">
+                    <form
+                        ref={formRef}
+                        className="bottom-sheet__body"
+                        tabIndex={-1}
+                        onKeyDown={(e) => {
+                            if (
+                                (e.key === "Escape" || e.keyCode === 27) &&
+                                reportWindowsState &&
+                                !saveBeforeClose
+                            ) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                resetState();
+                            }
+                        }}
+                    >
                         <ToastContainer containerId="reportToastContainer" />
 
                         {reportWindowsState && (

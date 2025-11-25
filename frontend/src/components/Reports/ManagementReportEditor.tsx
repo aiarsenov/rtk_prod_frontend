@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 import handleStatusString from "../../utils/handleStatusString";
 import AutoResizeTextarea from "../AutoResizeTextarea";
@@ -50,13 +50,42 @@ const ManagementReportEditor = ({
         }
     };
 
-    const resetState = () => {
+    const formRef = useRef<HTMLFormElement>(null);
+
+    const resetState = useCallback(() => {
         setSaveBeforeClose(false);
         setIsChanged(false);
         closeEditor();
-    };
+    }, [closeEditor]);
 
     useBodyScrollLock(editorState);
+
+    // Обработчик ESC для закрытия панели детализации отчета
+    useEffect(() => {
+        const handleEscKey = (event: KeyboardEvent) => {
+            if (
+                (event.key === "Escape" || event.keyCode === 27) &&
+                editorState &&
+                !saveBeforeClose
+            ) {
+                event.preventDefault();
+                event.stopPropagation();
+                resetState();
+            }
+        };
+
+        if (editorState) {
+            window.addEventListener("keydown", handleEscKey, true);
+            // Устанавливаем фокус на форму для обработки событий клавиатуры
+            setTimeout(() => {
+                formRef.current?.focus();
+            }, 100);
+        }
+
+        return () => {
+            window.removeEventListener("keydown", handleEscKey, true);
+        };
+    }, [editorState, saveBeforeClose, resetState]);
 
     return !saveBeforeClose ? (
         <div
@@ -71,7 +100,22 @@ const ManagementReportEditor = ({
             >
                 <div className="bottom-sheet__icon"></div>
 
-                <form className="bottom-sheet__body">
+                <form
+                        ref={formRef}
+                        className="bottom-sheet__body"
+                        tabIndex={-1}
+                        onKeyDown={(e) => {
+                            if (
+                                (e.key === "Escape" || e.keyCode === 27) &&
+                                editorState &&
+                                !saveBeforeClose
+                            ) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                resetState();
+                            }
+                        }}
+                    >
                     <div
                         className={`report-window report-rate-editor ${
                             mode === "read" && "report-rate-editor_read-mode"
@@ -190,8 +234,13 @@ const ManagementReportEditor = ({
                                                     updateReport(
                                                         managementReportData,
                                                         "save"
-                                                    );
-                                                    resetState();
+                                                    )
+                                                        .then(() => {
+                                                            resetState();
+                                                        })
+                                                        .catch(() => {
+                                                            // Ошибка уже обработана в updateReport
+                                                        });
                                                 }}
                                                 title="Сохранить без утверждения"
                                             >
@@ -205,8 +254,13 @@ const ManagementReportEditor = ({
                                                     updateReport(
                                                         managementReportData,
                                                         "approve"
-                                                    );
-                                                    resetState();
+                                                    )
+                                                        .then(() => {
+                                                            resetState();
+                                                        })
+                                                        .catch(() => {
+                                                            // Ошибка уже обработана в updateReport
+                                                        });
                                                 }}
                                                 title="Сохранить и утвердить"
                                             >
@@ -254,8 +308,13 @@ const ManagementReportEditor = ({
                         type="button"
                         className="action-button"
                         onClick={() => {
-                            updateReport(managementReportData, "approve");
-                            resetState();
+                            updateReport(managementReportData, "approve")
+                                .then(() => {
+                                    resetState();
+                                })
+                                .catch(() => {
+                                    // Ошибка уже обработана в updateReport
+                                });
                         }}
                         title="Сохранить изменения"
                     >
