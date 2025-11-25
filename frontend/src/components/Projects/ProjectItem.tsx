@@ -49,7 +49,7 @@ const ProjectItem = ({
                     } else if (value === "undefined") {
                         statusClass = "registry-table__item-status_canceled";
                     } else {
-                        return "";
+                        return null;
                     }
                 }
 
@@ -113,7 +113,7 @@ const ProjectItem = ({
                         return (
                             <td
                                 className="w-[130px]"
-                                key={value?.main?.id}
+                                key={key}
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     window.scrollTo(0, 0);
@@ -167,7 +167,7 @@ const ProjectItem = ({
                         );
                     } else if (key === "industries") {
                         return (
-                            <td className="w-[130px]" key={value?.main?.id}>
+                            <td className="w-[130px]" key={key}>
                                 <div className="hidden-group">
                                     <div className="visible-text">
                                         <div>
@@ -184,11 +184,12 @@ const ProjectItem = ({
                         );
                     }
 
-                    return Object.entries(value).map(([subKey, subValue]) => (
-                        <td className="w-[130px]" key={subKey}>
-                            {subValue?.toString() || "—"}
+                    // Если это объект, который не обработан выше, просто показываем его строковое представление
+                    return (
+                        <td className="w-[130px]" key={key}>
+                            {value?.name?.toString() || value?.toString() || "—"}
                         </td>
-                    ));
+                    );
                 } else {
                     if (key === "name") {
                         return (

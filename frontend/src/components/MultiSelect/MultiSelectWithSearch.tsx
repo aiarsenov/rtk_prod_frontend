@@ -18,14 +18,20 @@ const MultiSelectWithSearch = ({
     }, [selectedValues]);
 
     const normalizedOptions = Array.isArray(options)
-        ? options.map((opt) =>
-              typeof opt === "string"
-                  ? { name: opt, value: opt }
-                  : {
-                        name: opt.label ?? opt.name ?? opt.value,
-                        value: opt.value,
-                    }
-          )
+        ? options.map((opt) => {
+              if (typeof opt === "string") {
+                  return { name: opt, value: opt };
+              }
+              const value = opt.value;
+              // Убеждаемся, что value - это строка или число, не объект
+              const normalizedValue = typeof value === "object"
+                  ? String(value?.id ?? value?.name ?? JSON.stringify(value))
+                  : String(value ?? "");
+              return {
+                  name: opt.label ?? opt.name ?? normalizedValue,
+                  value: normalizedValue,
+              };
+          })
         : [];
 
     // Фильтрация по поиску
