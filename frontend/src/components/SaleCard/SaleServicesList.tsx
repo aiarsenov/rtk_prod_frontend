@@ -9,6 +9,23 @@ const SaleServicesList = ({
     mode: string;
     deleteService: () => void;
 }) => {
+    // Функция для проверки, равно ли значение нулю
+    const isZeroPercent = (value: string | number | null | undefined): boolean => {
+        if (!value) return true;
+
+        // Если это число
+        if (typeof value === "number") {
+            return value === 0;
+        }
+
+        // Если это строка, убираем знак процента и пробелы, парсим число
+        const numericValue = parseFloat(
+            String(value).replace(/%/g, "").trim()
+        );
+
+        return !isNaN(numericValue) && numericValue === 0;
+    };
+
     return (
         services && (
             <ul className="services__list">
@@ -22,8 +39,7 @@ const SaleServicesList = ({
                             <div className="services__list-item-row">
                                 <div className="services__list-item-cost">
                                     {item.cost_change_percent &&
-                                        item.cost_change_percent !== "0" &&
-                                        item.cost_change_percent !== 0 && (
+                                        !isZeroPercent(item.cost_change_percent) && (
                                             <div
                                                 className={`services__list-item-percent ${getColorBySign(
                                                     item.cost_change_percent,
