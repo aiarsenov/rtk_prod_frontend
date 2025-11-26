@@ -13,6 +13,7 @@ const SaleFunnelItem = ({
     isLast,
     handleStageDate,
     updateStageDetails,
+    hasNextStage,
     mode,
 }) => {
     const [activeStage, setActiveStage] = useState(isLast || null);
@@ -38,17 +39,26 @@ const SaleFunnelItem = ({
     };
 
     const handleNameClass = () => {
-        if (stage.name.toLowerCase() == "получен запрос") {
-            return "";
-        } else if (
+        // Специальные случаи для отказов и отложенных проектов
+        if (
             stage.name.toLowerCase() == "получен отказ" ||
             stage.name.toLowerCase() == "отказ от участия"
         ) {
             return "status_canceled";
         } else if (stage.name.toLowerCase() == "проект отложен") {
             return "status_completed";
-        } else {
+        }
+
+        // Логика окрашивания в зависимости от даты и перехода на следующий этап
+        if (!stage.stage_date) {
+            // Если дата этапа не введена - серая заливка (по умолчанию)
+            return "";
+        } else if (hasNextStage) {
+            // Если дата введена и есть следующий этап - зелёная заливка
             return "status_active";
+        } else {
+            // Если дата введена, но нет следующего этапа - фиолетовая заливка
+            return "status_inprogress";
         }
     };
 

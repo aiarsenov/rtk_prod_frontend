@@ -677,6 +677,7 @@ const SaleFunnelStages = ({
                         const isLast = index === arr.length - 1; // Последний этап
 
                         const nextStage = arr[index + 1];
+                        const hasNextStage = !!nextStage; // Есть ли следующий этап
 
                         const showStageDots = index < arr.length - 2; // Показываем только индикаторы
                         const showStageActions = index >= arr.length - 2; // Показываем кнопки для последнего и предпоследнего этапов
@@ -719,6 +720,7 @@ const SaleFunnelStages = ({
                                 handleStageDate={handleStageDate}
                                 updateStageDetails={updateStageDetails}
                                 isLast={isLast}
+                                hasNextStage={hasNextStage}
                                 mode={mode}
                             />
                         );
