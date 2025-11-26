@@ -14,7 +14,10 @@
     &__table-section {
         flex-grow: 1;
         overflow-x: auto;
+        overflow-y: auto;
         padding-bottom: 40px;
+        position: relative;
+        max-height: calc(100vh - 200px); // Вычитаем высоту заголовка и других элементов
 
         @media (min-width: $media-xxl) {
             overflow-x: unset;
@@ -29,6 +32,10 @@
         line-height: 150%;
         text-align: left;
         border-bottom: 1px solid var(--color-gray-30);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: var(--color-white);
 
         .custom-datepicker,
         .multi-select {
@@ -89,8 +96,10 @@
 
         th {
             padding: 15px;
+            padding-left: 0;
             position: relative;
             vertical-align: top;
+            background: var(--color-white);
         }
 
         th:first-of-type .registry-table__thead-item {
@@ -131,6 +140,7 @@
 
         > td {
             padding: 15px;
+            padding-left: 0;
         }
 
         strong {
