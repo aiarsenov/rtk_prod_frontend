@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 import handleStatus from "../../utils/handleStatus";
+import getFirstNameAndSurname from "../../utils/getFirstNameAndSurname";
 
 const handleLastReport = (string) => {
     if (!string) return;
@@ -138,6 +139,10 @@ const ProjectItem = ({
                             </td>
                         );
                     } else if (key === "project_manager") {
+                        const displayName = value?.name
+                            ? getFirstNameAndSurname(value.name.toString())
+                            : "—";
+
                         return (
                             <td
                                 className="w-[130px] text-blue"
@@ -155,12 +160,12 @@ const ProjectItem = ({
                                 <div className="hidden-group">
                                     <div className="visible-text">
                                         <div>
-                                            {value?.name?.toString() || "—"}
+                                            {displayName}
                                         </div>
                                     </div>
 
                                     <div className="hidden-text">
-                                        {value?.name?.toString() || "—"}
+                                        {displayName}
                                     </div>
                                 </div>
                             </td>
