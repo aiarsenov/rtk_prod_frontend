@@ -892,6 +892,7 @@ const Reports = () => {
                                         columns={COLUMNS[0]}
                                         props={item}
                                         openReportEditor={openReportEditor}
+                                        activeReportId={reportId}
                                     />
                                 ))
                             ) : (

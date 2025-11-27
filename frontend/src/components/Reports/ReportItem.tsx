@@ -12,10 +12,12 @@ type ReportItemProps = {
     columns: Column[];
     props: object;
     openReportEditor: () => void;
+    activeReportId?: number | null;
 };
 
-const ReportItem = ({ columns, props, openReportEditor }: ReportItemProps) => {
+const ReportItem = ({ columns, props, openReportEditor, activeReportId }: ReportItemProps) => {
     const navigate = useNavigate();
+    const isActive = activeReportId !== null && activeReportId !== undefined && props?.id === activeReportId;
 
     return (
         <tr
@@ -153,7 +155,7 @@ const ReportItem = ({ columns, props, openReportEditor }: ReportItemProps) => {
                             >
                                 <div className="hidden-group">
                                     <div className="visible-text">
-                                        <div>
+                                        <div className={isActive && key === "project" ? "font-bold" : ""}>
                                             {value?.name?.toString() || "—"}
                                         </div>
                                     </div>
@@ -180,7 +182,7 @@ const ReportItem = ({ columns, props, openReportEditor }: ReportItemProps) => {
                                 className="min-w-[120px] max-w-[165px]"
                                 key={key}
                             >
-                                <div>{value?.toString() || "—"}</div>
+                                <div className={isActive ? "font-bold" : ""}>{value?.toString() || "—"}</div>
 
                                 <span className="min-w-[120px] text-[#98A2B3] whitespace-nowrap">
                                     {formatDateShortYear(props?.report_period?.toString() || "") || "—"}
