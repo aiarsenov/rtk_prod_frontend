@@ -561,16 +561,16 @@ const Reports = () => {
     const COLUMNS = [
         [
             {
-                label: "Отчёт",
-                key: "report_period_code",
-                filter: "selectedReports",
-                options: reportOptions,
-            },
-            {
                 label: "Проект",
                 key: "project",
                 filter: "selectedProjects",
                 options: projectOptions,
+            },
+            {
+                label: "Отчёт",
+                key: "report_period_code",
+                filter: "selectedReports",
+                options: reportOptions,
             },
             {
                 label: "Отрасль",

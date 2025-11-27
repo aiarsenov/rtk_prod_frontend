@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import formatDateShortYear from "../../utils/formatDateShortYear";
 
 type Column = {
     label: string;
@@ -136,7 +137,7 @@ const ReportItem = ({ columns, props, openReportEditor }: ReportItemProps) => {
                     if (key === "project" || key === "contragent") {
                         return (
                             <td
-                                className="w-[130px] text-blue"
+                                className={`${key === "project" ? "w-[180px] min-w-[180px]" : "w-[180px] min-w-[180px]"} text-blue`}
                                 key={key}
                                 onClick={(e) => {
                                     e.stopPropagation();
@@ -182,7 +183,7 @@ const ReportItem = ({ columns, props, openReportEditor }: ReportItemProps) => {
                                 <div>{value?.toString() || "—"}</div>
 
                                 <span className="min-w-[120px] text-[#98A2B3] whitespace-nowrap">
-                                    {props?.report_period?.toString()}
+                                    {formatDateShortYear(props?.report_period?.toString() || "") || "—"}
                                 </span>
                             </td>
                         );
@@ -211,10 +212,10 @@ const ReportItem = ({ columns, props, openReportEditor }: ReportItemProps) => {
                     } else if (key === "days") {
                         return (
                             <td className="w-[110px]" key={key}>
-                                {value?.toString() || "—"}
+                                {formatDateShortYear(value?.toString() || "") || "—"}
 
                                 <div className="min-w-[120px] text-[#98A2B3] whitespace-nowrap">
-                                    {props?.execution_period_code}
+                                    {formatDateShortYear(props?.execution_period_code?.toString() || "") || props?.execution_period_code || "—"}
                                 </div>
                             </td>
                         );
