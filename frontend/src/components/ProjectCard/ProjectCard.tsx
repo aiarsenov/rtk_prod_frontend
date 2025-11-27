@@ -77,6 +77,7 @@ const ProjectCard = () => {
 
     const [creditors, setCreditors] = useState([]); // Кредиторы
     const [filteredCreditors, setFilteredCreditors] = useState([]);
+    const autoFilterAppliedRef = useRef(false); // Флаг для отслеживания применения автоматической фильтрации
     const [customers, setCustomers] = useState([]); // Заказчики
 
     const [addCreditor, setAddCreditor] = useState(false); // Добавить кредитора
@@ -815,16 +816,19 @@ const ProjectCard = () => {
         }));
     }, [otherIndustries]);
 
-    // Автоматическая фильтрация по первому банку при загрузке данных
     useEffect(() => {
-        if (matchedBanks.length > 0 && creditors.length > 0 && filteredCreditors.length === creditors.length) {
+        if (!autoFilterAppliedRef.current && matchedBanks.length > 0 && creditors.length > 0 && filteredCreditors.length === creditors.length) {
             const firstBankId = matchedBanks[0].id;
-            setFilteredCreditors(
-                creditors.filter(
-                    (lender) => +lender.creditor_id === +firstBankId
-                )
+            const newFilteredCreditors = creditors.filter(
+                (lender) => +lender.creditor_id === +firstBankId
             );
+            setFilteredCreditors(newFilteredCreditors);
+            autoFilterAppliedRef.current = true;
         }
+        if (creditors.length === 0) {
+            autoFilterAppliedRef.current = false;
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [matchedBanks, creditors]);
 
     useEffect(() => {
