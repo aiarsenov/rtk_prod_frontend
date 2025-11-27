@@ -389,6 +389,7 @@ body {
     color: var(--color-gray-70);
     background: var(--color-gray-30);
     white-space: nowrap;
+    user-select: none;
 
     &.completed {
         color: var(--color-green-80);
@@ -616,6 +617,15 @@ body {
             flex-direction: column;
             gap: 6px;
             overflow: hidden;
+
+            // Замена точки на запятую в числах
+            strong {
+                font-variant-numeric: tabular-nums;
+            }
+
+            strong::after {
+                content: "";
+            }
 
             div {
                 display: flex;

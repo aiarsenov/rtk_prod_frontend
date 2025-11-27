@@ -68,8 +68,8 @@ const SupplierItem = ({ props, columns }) => {
                         );
                     } else {
                         return Object.entries(value).map(
-                            ([subKey, subValue]) => (
-                                <td className="w-[210px]" key={subKey}>
+                            ([subKey, subValue], index) => (
+                                <td className="w-[210px]" key={`${key}_${subKey}_${index}`}>
                                     {subValue?.toString()}
                                 </td>
                             )

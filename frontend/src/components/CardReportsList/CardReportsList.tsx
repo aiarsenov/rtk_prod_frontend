@@ -47,6 +47,7 @@ const CardReportsList = ({
 
                         return (
                             <li
+                                key={item.id || `report-${reports.indexOf(item)}`}
                                 className="card-reports-list__item"
                                 onClick={() => {
                                     openReportEditor(item.id);

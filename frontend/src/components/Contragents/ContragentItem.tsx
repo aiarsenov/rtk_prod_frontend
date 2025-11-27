@@ -64,8 +64,8 @@ const ContragentItem = ({
                         );
                     }
                 } else if (typeof value === "object" && value !== null) {
-                    return Object.entries(value).map(([subKey, subValue]) => (
-                        <td className="w-[210px]" key={subKey}>
+                    return Object.entries(value).map(([subKey, subValue], index) => (
+                        <td className="w-[210px]" key={`${key}_${subKey}_${index}`}>
                             {subValue?.toString()}
                         </td>
                     ));
@@ -84,7 +84,7 @@ const ContragentItem = ({
                         return (
                             <td
                                 className="min-w-[130px] max-w-[280px]"
-                                key={value?.main?.id}
+                                key={`${key}_${value?.main?.id || props.id}`}
                             >
                                 <div className="hidden-group">
                                     <div

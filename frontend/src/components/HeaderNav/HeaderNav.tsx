@@ -160,9 +160,8 @@ const HeaderNav = ({
                     <NavLink
                         to={link.url}
                         className={({ isActive }) =>
-                            `header__nav-item ${isActive ? "active" : ""}`
+                            `header__nav-item ${isActive || isLinkActive(link, hasAccess) ? "active" : ""}`
                         }
-                        isActive={() => isLinkActive(link, hasAccess)}
                         title={link.title}
                         key={link.url}
                         onClick={() => {

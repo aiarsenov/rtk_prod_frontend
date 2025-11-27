@@ -99,11 +99,7 @@ const CardProjects = ({
 
                                 {withLink && (
                                     <a
-                                        href={`${
-                                            new URL(
-                                                import.meta.env.VITE_API_URL
-                                            ).origin
-                                        }/projects/${item.id}`}
+                                        href={`${import.meta.env.VITE_BASE_URL || ""}projects/${item.id}`}
                                         className="card-projects__item-link"
                                         aria-label={`Перейти в карточку проекта ${item.name}`}
                                     >
