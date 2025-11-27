@@ -180,8 +180,8 @@ const ManagementItem = ({
                                     return (
                                         <div className="hidden-group min-w-[250px] max-w-[250px]">
                                             <div
-                                                className="visible-text text-blue"
-                                                style={{ maxWidth: "250px" }}
+                                                className="visible-text"
+                                                style={{ maxWidth: "250px", color: "#000" }}
                                             >
                                                 <div>
                                                     {value?.toString() || "—"}
@@ -200,17 +200,30 @@ const ManagementItem = ({
                                     return (
                                         <div className="flex flex-col gap-[5px]">
                                             <div className="hidden-group min-w-[250px] max-w-[250px]">
-                                                <div
-                                                    className="visible-text text-blue"
+                                                <button
+                                                    type="button"
+                                                    className="text-left visible-text text-blue"
                                                     style={{
                                                         maxWidth: "250px",
+                                                    }}
+                                                    title={`Перейти в карточку проекта ${value?.toString() || "—"}`}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        if (props.project_id) {
+                                                            window.scrollTo(0, 0);
+                                                            navigate(
+                                                                `${
+                                                                    import.meta.env.VITE_BASE_URL
+                                                                }projects/${props.project_id}`
+                                                            );
+                                                        }
                                                     }}
                                                 >
                                                     <div>
                                                         {value?.toString() ||
                                                             "—"}
                                                     </div>
-                                                </div>
+                                                </button>
 
                                                 <div className="hidden-text">
                                                     {value?.toString() || "—"}
