@@ -1,7 +1,14 @@
 import { useEffect } from "react";
 
-import CountUp from "react-countup";
 import Hint from "../Hint/Hint";
+
+// Форматирование числа с запятой вместо точки для отображения
+const formatNumberWithComma = (num) => {
+    if (num === null || num === undefined || isNaN(num)) {
+        return "0,00";
+    }
+    return num.toFixed(2).replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+};
 
 const SupplierStatisticBlock = ({
     revenue,
@@ -70,26 +77,19 @@ const SupplierStatisticBlock = ({
                             revenue.revenue?.label
                         }
                     >
-                        {revenue.revenue?.value !== "0" ? (
-                            <div>
-                                <strong>
-                                    <CountUp
-                                        end={parseFloat(
-                                            revenue.revenue?.value?.replace(
-                                                ",",
-                                                "."
-                                            ) || "0"
-                                        )}
-                                        duration={1}
-                                        separator=" "
-                                        decimals={2}
-                                    />
-                                </strong>
-                                <small>{revenue.revenue?.label}</small>
-                            </div>
-                        ) : (
-                            <b>Нет данных</b>
-                        )}
+                        <div>
+                            <strong>
+                                {formatNumberWithComma(
+                                    parseFloat(
+                                        revenue.revenue?.value?.replace(
+                                            ",",
+                                            "."
+                                        ) || "0"
+                                    )
+                                )}
+                            </strong>
+                            <small>{revenue.revenue?.label}</small>
+                        </div>
                     </div>
                 </div>
 
@@ -106,26 +106,19 @@ const SupplierStatisticBlock = ({
                             revenue.receipts?.label
                         }
                     >
-                        {revenue.receipts?.value !== "0" ? (
-                            <div>
-                                <strong>
-                                    <CountUp
-                                        end={parseFloat(
-                                            revenue.receipts?.value?.replace(
-                                                ",",
-                                                "."
-                                            ) || "0"
-                                        )}
-                                        duration={1}
-                                        separator=" "
-                                        decimals={2}
-                                    />
-                                </strong>
-                                <small>{revenue.receipts?.label}</small>
-                            </div>
-                        ) : (
-                            <b>Нет данных</b>
-                        )}
+                        <div>
+                            <strong>
+                                {formatNumberWithComma(
+                                    parseFloat(
+                                        revenue.receipts?.value?.replace(
+                                            ",",
+                                            "."
+                                        ) || "0"
+                                    )
+                                )}
+                            </strong>
+                            <small>{revenue.receipts?.label}</small>
+                        </div>
                     </div>
                 </div>
 
@@ -140,26 +133,19 @@ const SupplierStatisticBlock = ({
                             revenue.debts?.value + " " + revenue.debts?.label
                         }
                     >
-                        {revenue.debts?.value !== "0" ? (
-                            <div>
-                                <strong>
-                                    <CountUp
-                                        end={parseFloat(
-                                            revenue.debts?.value?.replace(
-                                                ",",
-                                                "."
-                                            ) || "0"
-                                        )}
-                                        duration={1}
-                                        separator=" "
-                                        decimals={2}
-                                    />
-                                </strong>
-                                <small>{revenue.debts?.label}</small>
-                            </div>
-                        ) : (
-                            <b>Нет данных</b>
-                        )}
+                        <div>
+                            <strong>
+                                {formatNumberWithComma(
+                                    parseFloat(
+                                        revenue.debts?.value?.replace(
+                                            ",",
+                                            "."
+                                        ) || "0"
+                                    )
+                                )}
+                            </strong>
+                            <small>{revenue.debts?.label}</small>
+                        </div>
                     </div>
                 </div>
             </div>
