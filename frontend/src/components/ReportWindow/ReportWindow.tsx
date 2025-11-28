@@ -652,7 +652,7 @@ const ReportWindow = ({
             ),
             getData(`${import.meta.env.VITE_API_URL}physical-persons`),
             getData(`${import.meta.env.VITE_API_URL}suppliers`),
-            getData(`${import.meta.env.VITE_API_URL}roles`),
+            getData(`${import.meta.env.VITE_API_URL}roles?minimal=true`),
             getData(`${import.meta.env.VITE_API_URL}report-statuses`),
             getData(
                 `${import.meta.env.VITE_API_URL}reports/regularity-options`
