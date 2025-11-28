@@ -122,9 +122,15 @@
 }
 
 .filter-button {
+    position: relative;
+    z-index: 24;
+    pointer-events: auto;
+    cursor: pointer;
+
     svg {
         color: var(--color-gray-50);
         transition: color var(--trans);
+        pointer-events: none;
     }
 
     &.active,
