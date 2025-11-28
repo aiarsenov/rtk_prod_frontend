@@ -295,6 +295,12 @@ const Suppliers = () => {
                                                                     close={
                                                                         setOpenFilter
                                                                     }
+                                                                    filterNoSearch={
+                                                                        key ===
+                                                                        "roles" ||
+                                                                        key ===
+                                                                        "status"
+                                                                    }
                                                                 />
                                                             )}
                                                         </>
