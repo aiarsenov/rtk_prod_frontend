@@ -27,6 +27,7 @@ const Projects = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [hasAccess, setHasAccess] = useState(true);
     const [popupState, setPopupState] = useState(false);
+    const [deleteProjectId, setDeleteProjectId] = useState(null);
 
     const [list, setList] = useState([]);
     const [sortedList, setSortedList] = useState([]);
@@ -177,13 +178,21 @@ const Projects = () => {
         });
     };
 
-    // Удаление проекта
-    const deleteProject = (projectId) => {
-        postData("DELETE", `${URL}/${projectId}`, {}).then((response) => {
-            if (response.ok) {
-                getProjects();
-            }
-        });
+    // Открытие модального окна подтверждения удаления проекта
+    const openDeleteConfirm = (projectId) => {
+        setDeleteProjectId(projectId);
+    };
+
+    // Подтверждение удаления проекта
+    const confirmDeleteProject = () => {
+        if (deleteProjectId) {
+            postData("DELETE", `${URL}/${deleteProjectId}`, {}).then((response) => {
+                if (response.ok) {
+                    getProjects();
+                    setDeleteProjectId(null);
+                }
+            });
+        }
     };
 
     useEffect(() => {
@@ -440,7 +449,7 @@ const Projects = () => {
                                         props={item}
                                         columns={COLUMNS}
                                         mode={mode}
-                                        deleteProject={deleteProject}
+                                        deleteProject={openDeleteConfirm}
                                     />
                                 ))
                             )}
@@ -485,6 +494,37 @@ const Projects = () => {
                                     disabled={newProjectName.length < 2}
                                 >
                                     Создать проект
+                                </button>
+                            </div>
+                        </div>
+                    </Popup>
+                )}
+
+                {deleteProjectId && (
+                    <Popup
+                        onClick={() => setDeleteProjectId(null)}
+                        title="Удалить проект"
+                    >
+                        <div className="action-form__body">
+                            <p>Данные будут безвозвратно утеряны.</p>
+                        </div>
+
+                        <div className="action-form__footer">
+                            <div className="max-w-[280px]">
+                                <button
+                                    type="button"
+                                    onClick={() => setDeleteProjectId(null)}
+                                    className="cancel-button flex-[1_0_auto]"
+                                >
+                                    Отмена
+                                </button>
+
+                                <button
+                                    type="button"
+                                    className="action-button flex-[1_0_auto]"
+                                    onClick={confirmDeleteProject}
+                                >
+                                    Удалить
                                 </button>
                             </div>
                         </div>
