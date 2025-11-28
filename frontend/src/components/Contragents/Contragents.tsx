@@ -299,6 +299,10 @@ const Contragents = () => {
                                                                     close={
                                                                         setOpenFilter
                                                                     }
+                                                                    filterNoSearch={
+                                                                        key ===
+                                                                        "status"
+                                                                    }
                                                                 />
                                                             )}
                                                         </>
