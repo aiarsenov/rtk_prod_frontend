@@ -34,7 +34,7 @@
         border-bottom: 1px solid var(--color-gray-30);
         position: sticky;
         top: 0;
-        z-index: 10;
+        z-index: 22;
         background: var(--color-white);
 
         .custom-datepicker,
@@ -43,6 +43,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            z-index: 23;
 
             @media (min-width: $media-lg) {
                 position: absolute;
@@ -56,6 +57,8 @@
             white-space: nowrap;
             text-overflow: ellipsis;
             max-width: 130px;
+            position: relative;
+            z-index: 0;
         }
 
         &-label-date {
@@ -87,10 +90,17 @@
             display: flex;
             align-items: flex-start;
             gap: 5px;
+            position: relative;
+            z-index: 23;
 
             > span {
                 flex: 0 0 16px;
                 height: 16px;
+            }
+
+            .filter-button {
+                position: relative;
+                z-index: 24;
             }
         }
 
@@ -100,6 +110,7 @@
             position: relative;
             vertical-align: top;
             background: var(--color-white);
+            z-index: 22;
         }
 
         th:first-of-type .registry-table__thead-item {
