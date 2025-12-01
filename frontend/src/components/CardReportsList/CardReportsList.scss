@@ -36,6 +36,15 @@
         gap: 10px;
         padding: 20px 0;
         cursor: pointer;
+        transition: background var(--trans);
+
+        &:hover {
+            background: var(--color-gray-20);
+        }
+
+        &:last-of-type {
+            border-radius: 0 0 10px 10px;
+        }
 
         .items-end {
             align-items: flex-start;
@@ -116,6 +125,15 @@
         align-items: start;
         gap: 10px;
         cursor: pointer;
+        transition: background var(--trans);
+
+        &:hover {
+            background: var(--color-gray-20);
+        }
+
+        &:last-of-type {
+            border-radius: 0 0 10px 10px;
+        }
 
         @media (min-width: 560px) {
             grid-template-columns: repeat(5, 1fr);
