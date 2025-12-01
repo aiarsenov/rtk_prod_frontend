@@ -33,10 +33,7 @@ const ProjectItem = ({
     };
 
     return (
-        <tr
-            className="registry-table__item transition text-base text-left cursor-pointer"
-            onClick={handleRowClick}
-        >
+        <tr className="registry-table__item transition text-base text-left">
             {columns.map(({ key }) => {
                 const value = props[key];
 
@@ -112,20 +109,19 @@ const ProjectItem = ({
                 } else if (typeof value === "object" && value !== null) {
                     if (key === "contragent") {
                         return (
-                            <td
-                                className="w-[130px]"
-                                key={key}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    window.scrollTo(0, 0);
-                                    navigate(
-                                        `${
-                                            import.meta.env.VITE_BASE_URL
-                                        }contragents/${value?.id}`
-                                    );
-                                }}
-                            >
-                                <div className="hidden-group text-blue">
+                            <td className="w-[130px]" key={key}>
+                                <div
+                                    className="hidden-group text-blue cursor-pointer"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        navigate(
+                                            `${
+                                                import.meta.env.VITE_BASE_URL
+                                            }contragents/${value?.id}`
+                                        );
+                                    }}
+                                    title={`Перейти в карточку заказчика ${value?.name}`}
+                                >
                                     <div className="visible-text">
                                         <div>
                                             {value?.name.toString() || "—"}
@@ -144,24 +140,21 @@ const ProjectItem = ({
                             : "—";
 
                         return (
-                            <td
-                                className="w-[130px] text-blue"
-                                key={key}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    window.scrollTo(0, 0);
-                                    navigate(
-                                        `${
-                                            import.meta.env.VITE_BASE_URL
-                                        }employees/${value?.id}`
-                                    );
-                                }}
-                            >
-                                <div className="hidden-group">
+                            <td className="w-[130px] text-blue cursor-pointer" key={key}>
+                                <div
+                                    className="hidden-group"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        navigate(
+                                            `${
+                                                import.meta.env.VITE_BASE_URL
+                                            }employees/${value?.id}`
+                                        );
+                                    }}
+                                    title={`Перейти в карточку сотрудника ${value?.name}`}
+                                >
                                     <div className="visible-text">
-                                        <div>
-                                            {displayName}
-                                        </div>
+                                        <div>{displayName}</div>
                                     </div>
 
                                     <div className="hidden-text">
@@ -192,14 +185,20 @@ const ProjectItem = ({
                     // Если это объект, который не обработан выше, просто показываем его строковое представление
                     return (
                         <td className="w-[130px]" key={key}>
-                            {value?.name?.toString() || value?.toString() || "—"}
+                            {value?.name?.toString() ||
+                                value?.toString() ||
+                                "—"}
                         </td>
                     );
                 } else {
                     if (key === "name") {
                         return (
                             <td className="w-[130px]" key={key}>
-                                <div className="hidden-group">
+                                <div
+                                    className="hidden-group text-blue cursor-pointer"
+                                    onClick={handleRowClick}
+                                    title={`Перейти в карточку проекта ${value}`}
+                                >
                                     <div className="visible-text">
                                         <div>{value?.toString() || "—"}</div>
                                     </div>

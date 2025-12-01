@@ -9,10 +9,7 @@ const SupplierItem = ({ props, columns }) => {
     };
 
     return (
-        <tr
-            className="registry-table__item transition text-base text-left cursor-pointer"
-            onClick={handleRowClick}
-        >
+        <tr className="registry-table__item transition text-base text-left">
             {columns.map(({ key }) => {
                 const value = props[key];
 
@@ -33,23 +30,28 @@ const SupplierItem = ({ props, columns }) => {
                                 className="min-w-[130px] max-w-[280px]"
                                 key={key}
                             >
-                                <table className="w-full">
-                                    <tbody>
+                                {key === "roles" ? (
+                                    <div className="flex items-center gap-[5px] flex-wrap">
                                         {value?.map((item, index) => (
-                                            <tr key={`${key}_${index}`}>
-                                                <td className="flex items-center gap-[5px] flex-wrap">
-                                                    {key === "roles" ? (
-                                                        <div className="p-[3px_8px] border-[#E4E7EC] border rounded-[99px]">
-                                                            {item?.toString()}
-                                                        </div>
-                                                    ) : (
-                                                        item?.toString()
-                                                    )}
-                                                </td>
-                                            </tr>
+                                            <div
+                                                key={`${key}_${index}`}
+                                                className="p-[3px_8px] border-[#E4E7EC] border rounded-[99px]"
+                                            >
+                                                {item?.toString()}
+                                            </div>
                                         ))}
-                                    </tbody>
-                                </table>
+                                    </div>
+                                ) : (
+                                    <table className="w-full">
+                                        <tbody>
+                                            {value?.map((item, index) => (
+                                                <tr key={`${key}_${index}`}>
+                                                    <td>{item?.toString()}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                )}
                             </td>
                         );
                     } else {
@@ -69,7 +71,10 @@ const SupplierItem = ({ props, columns }) => {
                     } else {
                         return Object.entries(value).map(
                             ([subKey, subValue], index) => (
-                                <td className="w-[210px]" key={`${key}_${subKey}_${index}`}>
+                                <td
+                                    className="w-[210px]"
+                                    key={`${key}_${subKey}_${index}`}
+                                >
                                     {subValue?.toString()}
                                 </td>
                             )
@@ -92,9 +97,13 @@ const SupplierItem = ({ props, columns }) => {
                                 className="min-w-[130px] max-w-[280px]"
                                 key={value?.main?.id}
                             >
-                                <div className="hidden-group">
+                                <div
+                                    className="hidden-group text-blue cursor-pointer"
+                                    onClick={handleRowClick}
+                                    title={`Перейти в карточку подрядчика ${value}`}
+                                >
                                     <div
-                                        className="visible-text text-blue"
+                                        className="visible-text"
                                         style={{ maxWidth: "280px" }}
                                     >
                                         <div className="w-full">

@@ -15,17 +15,20 @@ type ReportItemProps = {
     activeReportId?: number | null;
 };
 
-const ReportItem = ({ columns, props, openReportEditor, activeReportId }: ReportItemProps) => {
+const ReportItem = ({
+    columns,
+    props,
+    openReportEditor,
+    activeReportId,
+}: ReportItemProps) => {
     const navigate = useNavigate();
-    const isActive = activeReportId !== null && activeReportId !== undefined && props?.id === activeReportId;
+    const isActive =
+        activeReportId !== null &&
+        activeReportId !== undefined &&
+        props?.id === activeReportId;
 
     return (
-        <tr
-            className="registry-table__item transition text-base text-left cursor-pointer"
-            onClick={() => {
-                openReportEditor(props);
-            }}
-        >
+        <tr className="registry-table__item transition text-base text-left">
             {columns.map(({ key }) => {
                 const value = props[key];
 
@@ -64,7 +67,7 @@ const ReportItem = ({ columns, props, openReportEditor, activeReportId }: Report
                                             if (key === "project_managers") {
                                                 cellContent = (
                                                     <div
-                                                        className="hidden-group text-blue"
+                                                        className="hidden-group text-blue cursor-pointer"
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             window.scrollTo(
@@ -139,23 +142,35 @@ const ReportItem = ({ columns, props, openReportEditor, activeReportId }: Report
                     if (key === "project" || key === "contragent") {
                         return (
                             <td
-                                className={`${key === "project" ? "w-[180px] min-w-[180px]" : "w-[180px] min-w-[180px]"} text-blue`}
+                                className={`${
+                                    key === "project"
+                                        ? "w-[180px] min-w-[180px]"
+                                        : "w-[180px] min-w-[180px]"
+                                } text-blue`}
                                 key={key}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    window.scrollTo(0, 0);
-                                    navigate(
-                                        `${import.meta.env.VITE_BASE_URL}${
-                                            key === "project"
-                                                ? "projects"
-                                                : "contragents"
-                                        }/${value?.id}`
-                                    );
-                                }}
                             >
-                                <div className="hidden-group">
+                                <div
+                                    className="hidden-group cursor-pointer"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        window.scrollTo(0, 0);
+                                        navigate(
+                                            `${import.meta.env.VITE_BASE_URL}${
+                                                key === "project"
+                                                    ? "projects"
+                                                    : "contragents"
+                                            }/${value?.id}`
+                                        );
+                                    }}
+                                >
                                     <div className="visible-text">
-                                        <div className={isActive && key === "project" ? "font-bold" : ""}>
+                                        <div
+                                            className={
+                                                isActive && key === "project"
+                                                    ? "font-bold"
+                                                    : ""
+                                            }
+                                        >
                                             {value?.name?.toString() || "—"}
                                         </div>
                                     </div>
@@ -182,11 +197,25 @@ const ReportItem = ({ columns, props, openReportEditor, activeReportId }: Report
                                 className="min-w-[120px] max-w-[165px]"
                                 key={key}
                             >
-                                <div className={isActive ? "font-bold" : ""}>{value?.toString() || "—"}</div>
+                                <div
+                                    className="cursor-pointer"
+                                    onClick={() => {
+                                        openReportEditor(props);
+                                    }}
+                                >
+                                    <div
+                                        className={isActive ? "font-bold" : ""}
+                                    >
+                                        {value?.toString() || "—"}
+                                    </div>
 
-                                <span className="min-w-[120px] text-[#98A2B3] whitespace-nowrap">
-                                    {formatDateShortYear(props?.report_period?.toString() || "") || "—"}
-                                </span>
+                                    <span className="min-w-[120px] text-[#98A2B3] whitespace-nowrap">
+                                        {formatDateShortYear(
+                                            props?.report_period?.toString() ||
+                                                ""
+                                        ) || "—"}
+                                    </span>
+                                </div>
                             </td>
                         );
                     } else if (key === "project_budget") {
@@ -214,10 +243,16 @@ const ReportItem = ({ columns, props, openReportEditor, activeReportId }: Report
                     } else if (key === "days") {
                         return (
                             <td className="w-[110px]" key={key}>
-                                {formatDateShortYear(value?.toString() || "") || "—"}
+                                {formatDateShortYear(value?.toString() || "") ||
+                                    "—"}
 
                                 <div className="min-w-[120px] text-[#98A2B3] whitespace-nowrap">
-                                    {formatDateShortYear(props?.execution_period_code?.toString() || "") || props?.execution_period_code || "—"}
+                                    {formatDateShortYear(
+                                        props?.execution_period_code?.toString() ||
+                                            ""
+                                    ) ||
+                                        props?.execution_period_code ||
+                                        "—"}
                                 </div>
                             </td>
                         );

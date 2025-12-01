@@ -17,7 +17,9 @@
         overflow-y: auto;
         padding-bottom: 40px;
         position: relative;
-        max-height: calc(100vh - 200px); // Вычитаем высоту заголовка и других элементов
+        max-height: calc(
+            100vh - 200px
+        ); // Вычитаем высоту заголовка и других элементов
 
         @media (min-width: $media-xxl) {
             overflow-x: unset;
@@ -195,6 +197,7 @@
 
         .hidden-group {
             position: relative;
+            width: fit-content;
 
             &:hover {
                 .hidden-text {

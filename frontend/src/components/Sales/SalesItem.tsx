@@ -17,10 +17,7 @@ const SalesItem = ({ props, columns, deleteProject, mode }) => {
     };
 
     return (
-        <tr
-            className="registry-table__item transition text-base text-left cursor-pointer"
-            onClick={handleRowClick}
-        >
+        <tr className="registry-table__item transition text-base text-left">
             {columns.map(({ key }) => {
                 const value = key.includes(".")
                     ? getNestedValue(props, key)
@@ -89,7 +86,18 @@ const SalesItem = ({ props, columns, deleteProject, mode }) => {
                     if (key === "contragent") {
                         return (
                             <td className="w-[130px]" key={key}>
-                                <div className="hidden-group">
+                                <div
+                                    className="hidden-group text-blue cursor-pointer"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        navigate(
+                                            `${
+                                                import.meta.env.VITE_BASE_URL
+                                            }contragents/${value?.id}`
+                                        );
+                                    }}
+                                    title={`Перейти в карточку заказчика ${value.program_name}`}
+                                >
                                     <div className="visible-text">
                                         <div>
                                             {value?.program_name.toString() ||
@@ -122,7 +130,11 @@ const SalesItem = ({ props, columns, deleteProject, mode }) => {
                     if (key === "name") {
                         return (
                             <td className="w-[130px]" key={key}>
-                                <div className="hidden-group">
+                                <div
+                                    className="hidden-group text-blue cursor-pointer"
+                                    onClick={handleRowClick}
+                                    title={`Перейти в карточку проекта ${value}`}
+                                >
                                     <div className="visible-text">
                                         <div>{value?.toString() || "—"}</div>
                                     </div>

@@ -17,8 +17,6 @@ const EmployeePersonalWorkloadItem = ({
     setWorkloads: React.Dispatch<React.SetStateAction<[]>>;
     updateLoadPercentage: () => void;
 }) => {
-    console.log(props);
-
     return (
         <li className="employee-card__personal-workload__list-item">
             <div className="employee-card__personal-workload__list-item__name">
