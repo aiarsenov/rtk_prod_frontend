@@ -150,15 +150,17 @@
 
     &__manager-reports {
         .reports__list {
-            max-height: 400px;
+            max-height: 500px;
             overflow-x: hidden;
             overflow-y: auto;
+            scrollbar-gutter: stable;
 
             @media (min-width: $media-xxl) {
-                min-height: 400px;
+                min-height: 500px;
             }
 
             &-header {
+                margin-right: 10px;
                 grid-template-columns: 1fr 100px 1fr 100px;
             }
 
@@ -192,18 +194,20 @@
             max-height: 400px;
             overflow-x: hidden;
             overflow-y: auto;
+            scrollbar-gutter: stable;
 
             @media (min-width: $media-xxl) {
                 min-height: 400px;
             }
 
             &-header {
-                grid-template-columns: 1fr 1fr 1fr 27%;
+                margin-right: 10px;
             }
 
+            &-header,
             &-item {
-                display: grid;
-                grid-template-columns: 1fr 1fr 1fr 27%;
+                display: grid !important;
+                grid-template-columns: repeat(4, 1fr);
             }
         }
     }
@@ -213,12 +217,14 @@
             max-height: 400px;
             overflow-x: hidden;
             overflow-y: auto;
+            scrollbar-gutter: stable;
 
             @media (min-width: $media-xxl) {
                 min-height: 400px;
             }
 
             &-header {
+                margin-right: 10px;
                 @media (min-width: $media-md) {
                     grid-template-columns: repeat(5, 1fr);
                 }
@@ -279,7 +285,12 @@
     }
 
     &__completed-reports {
+        .reports__list {
+            scrollbar-gutter: stable;
+        }
+
         .reports__list-header {
+            margin-right: 10px;
             grid-template-columns: repeat(3, 1fr);
         }
 
