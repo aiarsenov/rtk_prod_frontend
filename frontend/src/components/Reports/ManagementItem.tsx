@@ -29,13 +29,6 @@ const ManagementItem = ({
 }: ReportItemProps) => {
     const navigate = useNavigate();
 
-    // Отладочный лог
-    // console.log('ManagementItem рендерится:', {
-    //     is_management: (props as any).is_management,
-    //     name: (props as any).name,
-    //     project_id: (props as any).project_id
-    // });
-
     return (
         <tr
             className={`registry-table__item transition text-base text-left cursor-pointer ${
@@ -43,24 +36,7 @@ const ManagementItem = ({
                     ? "opacity-[50%]"
                     : ""
             }`}
-            onClick={(e) => {
-                // console.log('Клик по tr, target:', e.target);
-                // Игнорируем клики по кнопкам и другим интерактивным элементам
-                const target = e.target as HTMLElement;
-                const clickedButton = target.closest("button");
-                // Проверяем, если клик внутри контейнера с кнопкой проекта
-                const projectNameContainer = target.closest(".hidden-group");
-                if (
-                    clickedButton ||
-                    (projectNameContainer &&
-                        projectNameContainer.querySelector("button"))
-                ) {
-                    console.log(
-                        "Клик по кнопке или области проекта, игнорируем открытие редактора"
-                    );
-                    return;
-                }
-                // console.log('Клик по строке, открываем редактор');
+            onClick={() => {
                 !(props as any).is_management
                     ? openRateReportEditor(props)
                     : openManagementReportEditor(props);
@@ -164,70 +140,38 @@ const ManagementItem = ({
                     const isProjectReport = !(props as any).is_management;
                     const isNameColumn = key === "name";
                     if (isProjectReport && isNameColumn) {
-                        // console.log('Рендерим кнопку для проекта:', value, 'project_id:', (props as any).project_id);
                         return (
                             <td className="w-[110px]" key={key}>
-                                <div
-                                    className="flex flex-col gap-[5px]"
-                                    onClick={(e) => {
-                                        const target = e.target as HTMLElement;
-                                        const button = target.closest("button");
-                                        if (button) {
-                                            e.stopPropagation();
-                                        }
-                                    }}
-                                >
+                                <div className="flex flex-col gap-[5px] min-w-[250px]">
                                     <div
-                                        className="hidden-group min-w-[250px] max-w-[250px]"
+                                        className="hidden-group smax-w-[250px]"
                                         onClick={(e) => {
-                                            // Останавливаем всплытие на уровне контейнера
                                             e.stopPropagation();
-                                            // Если клик не на кнопке, вызываем клик на кнопке
-                                            const target =
-                                                e.target as HTMLElement;
-                                            if (!target.closest("button")) {
-                                                const button =
-                                                    e.currentTarget.querySelector(
-                                                        "button"
-                                                    );
-                                                if (button) {
-                                                    button.click();
-                                                }
+                                            const projectId = (props as any)
+                                                .project_id;
+
+                                            if (projectId) {
+                                                window.scrollTo(0, 0);
+                                                navigate(
+                                                    `${
+                                                        import.meta.env
+                                                            .VITE_BASE_URL
+                                                    }projects/${projectId}`
+                                                );
                                             }
                                         }}
+                                        title={`Перейти в карточку проекта ${
+                                            value?.toString() || "—"
+                                        }`}
                                     >
-                                        <button
-                                            type="button"
+                                        <div
                                             className="text-left visible-text text-blue cursor-pointer"
                                             style={{
                                                 maxWidth: "250px",
                                             }}
-                                            title={`Перейти в карточку проекта ${
-                                                value?.toString() || "—"
-                                            }`}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                const projectId = (props as any)
-                                                    .project_id;
-                                                // console.log('Клик по названию проекта:', projectId, value, props);
-                                                if (projectId) {
-                                                    window.scrollTo(0, 0);
-                                                    navigate(
-                                                        `${
-                                                            import.meta.env
-                                                                .VITE_BASE_URL
-                                                        }projects/${projectId}`
-                                                    );
-                                                } else {
-                                                    console.warn(
-                                                        "project_id не найден в props:",
-                                                        props
-                                                    );
-                                                }
-                                            }}
                                         >
                                             {value?.toString() || "—"}
-                                        </button>
+                                        </div>
 
                                         <div className="hidden-text">
                                             {value?.toString() || "—"}

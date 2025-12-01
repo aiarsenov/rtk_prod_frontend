@@ -19,10 +19,7 @@ const ContragentItem = ({
     };
 
     return (
-        <tr
-            className="registry-table__item transition text-base text-left cursor-pointer"
-            onClick={handleRowClick}
-        >
+        <tr className="registry-table__item transition text-base text-left">
             {columns.map(({ key }) => {
                 const value = props[key];
 
@@ -64,11 +61,16 @@ const ContragentItem = ({
                         );
                     }
                 } else if (typeof value === "object" && value !== null) {
-                    return Object.entries(value).map(([subKey, subValue], index) => (
-                        <td className="w-[210px]" key={`${key}_${subKey}_${index}`}>
-                            {subValue?.toString()}
-                        </td>
-                    ));
+                    return Object.entries(value).map(
+                        ([subKey, subValue], index) => (
+                            <td
+                                className="w-[210px]"
+                                key={`${key}_${subKey}_${index}`}
+                            >
+                                {subValue?.toString()}
+                            </td>
+                        )
+                    );
                 } else {
                     if (key === "status") {
                         return (
@@ -86,9 +88,13 @@ const ContragentItem = ({
                                 className="min-w-[130px] max-w-[280px]"
                                 key={`${key}_${value?.main?.id || props.id}`}
                             >
-                                <div className="hidden-group">
+                                <div
+                                    className="hidden-group text-blue cursor-pointer"
+                                    onClick={handleRowClick}
+                                    title={`Перейти в карточку заказчика ${value}`}
+                                >
                                     <div
-                                        className="visible-text text-blue"
+                                        className="visible-text"
                                         style={{ maxWidth: "280px" }}
                                     >
                                         <div className="w-full">

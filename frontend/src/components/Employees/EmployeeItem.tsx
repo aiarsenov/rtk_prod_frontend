@@ -8,10 +8,7 @@ const EmployeeItem = ({ props, columns }) => {
     };
 
     return (
-        <tr
-            className="registry-table__item transition text-base text-left cursor-pointer"
-            onClick={handleRowClick}
-        >
+        <tr className="registry-table__item transition text-base text-left cursor-pointer">
             {columns.map(({ key }) => {
                 let value = props[key];
 
@@ -23,8 +20,6 @@ const EmployeeItem = ({ props, columns }) => {
                     const isActive = props.is_active;
                     value = isActive ? "Работает" : "Не работает";
                 }
-
-
 
                 if (Array.isArray(value) && value.length > 0) {
                     return (
@@ -83,10 +78,14 @@ const EmployeeItem = ({ props, columns }) => {
                                 {value?.name?.toString() || "—"}
                             </td>
                         );
-                    } else if (key === "name") {
+                    } else if (key === "full_name") {
                         return (
-                            <td className="w-[160px] text-blue" key={key}>
-                                <div className="hidden-group w-[160px]">
+                            <td className="w-[160px]" key={key}>
+                                <div
+                                    className="hidden-group w-[160px] text-blue cursor-pointer"
+                                    onClick={handleRowClick}
+                                    title={`Перейти в карточку сотрудника ${value}`}
+                                >
                                     <div
                                         className="visible-text"
                                         style={{ maxWidth: "160px" }}
@@ -113,7 +112,8 @@ const EmployeeItem = ({ props, columns }) => {
                         if (isActive === true) {
                             statusClass = "registry-table__item-status_active";
                         } else if (isActive === false) {
-                            statusClass = "registry-table__item-status_canceled";
+                            statusClass =
+                                "registry-table__item-status_canceled";
                         }
 
                         return (
@@ -122,7 +122,9 @@ const EmployeeItem = ({ props, columns }) => {
                                 key={key}
                             >
                                 <div
-                                    className={`registry-table__item-status ${statusClass || ""}`}
+                                    className={`registry-table__item-status ${
+                                        statusClass || ""
+                                    }`}
                                 >
                                     {value?.toString() || "—"}
                                 </div>
