@@ -8,7 +8,7 @@ const EmployeeItem = ({ props, columns }) => {
     };
 
     return (
-        <tr className="registry-table__item transition text-base text-left cursor-pointer">
+        <tr className="registry-table__item transition text-base text-left">
             {columns.map(({ key }) => {
                 let value = props[key];
 
