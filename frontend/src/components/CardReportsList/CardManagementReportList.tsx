@@ -42,7 +42,7 @@ const CardManagementReportList = ({
                         <div className="management-card-reports-list__header">
                             <span>Проект</span>
                             <span>Месяц</span>
-                            <span>Рук</span>
+                            <span>Ответственный</span>
                             <span>Статус</span>
                             <span>Оценка</span>
                         </div>

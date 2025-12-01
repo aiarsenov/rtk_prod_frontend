@@ -20,7 +20,9 @@ const CardReportsList = ({
             <div className="card-reports-list__header">
                 <span>Проект</span>
                 <span>Отчёт</span>
-                <span>Период вып.</span>
+                <span>
+                    Период <br /> выполнения
+                </span>
                 <span>Статус</span>
             </div>
 
