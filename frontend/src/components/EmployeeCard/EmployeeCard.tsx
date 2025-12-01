@@ -735,11 +735,18 @@ const EmployeeCard = () => {
                                 </div>
                             </section>
 
-                            <section className="employee-card__current-workload">
+                            <section className="employee-card__current-workload current-workload">
                                 <h2 className="card__subtitle">
                                     Текущая загрузка
                                     <span>{workload.length}</span>
                                 </h2>
+
+                                <div className="current-workload__header">
+                                    <span>Проект</span>
+                                    <span>Отчёт</span>
+                                    <span>Роль</span>
+                                    <span>Период выполнения</span>
+                                </div>
 
                                 <EmployeeCurrentWorkload projects={workload} />
                             </section>

@@ -8,13 +8,13 @@ import Loader from "../Loader.js";
 
 const CardManagementReportList = ({
     managerReports,
-    isDataLoaded
+    isDataLoaded,
 }: {
     managerReports: [];
     isDataLoaded: boolean;
 }) => {
     let statusClass;
-    
+
     const [rateEditorState, setRateEditorState] = useState(false); // Редактор оценки отчёта
     const [reportData, setReportData] = useState({});
 
@@ -86,16 +86,16 @@ const CardManagementReportList = ({
                                             </div>
 
                                             <div className="reports__list-item__col">
-                                                {item.report_month}
+                                                <div> {item.report_month}</div>
                                             </div>
 
                                             <div className="management-reports__item__col">
-                                                <p>
+                                                <div>
                                                     {
                                                         item?.physical_person
                                                             ?.name
                                                     }
-                                                </p>
+                                                </div>
                                                 {item?.physical_person?.roles?.map(
                                                     (item) => (
                                                         <div
