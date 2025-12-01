@@ -533,9 +533,26 @@ const SupplierCard = () => {
                                 </div>
                             </section>
 
+                            <section className="project-card__projects">
+                                <h2 className="card__subtitle">
+                                    Проекты
+                                    <span>{projects.length}</span>
+                                </h2>
+
+                                <div ref={block1Ref}>
+                                    <CardProjects
+                                        projects={projects}
+                                        setActiveProject={setActiveProject}
+                                        activeProject={activeProject}
+                                        getProjectReports={getProjectReports}
+                                        withLink={true}
+                                    />
+                                </div>
+                            </section>
+
                             <section className="project-card__project-executors">
                                 <h2 className="card__subtitle">
-                                    Ключевые лица подрядчика
+                                    Ключевые лица
                                 </h2>
 
                                 <ul className="project-card__executors-list">
@@ -594,23 +611,6 @@ const SupplierCard = () => {
                                         sendExecutor={sendExecutor}
                                     />
                                 )}
-                            </section>
-
-                            <section className="project-card__projects">
-                                <h2 className="card__subtitle">
-                                    Проекты
-                                    <span>{projects.length}</span>
-                                </h2>
-
-                                <div ref={block1Ref}>
-                                    <CardProjects
-                                        projects={projects}
-                                        setActiveProject={setActiveProject}
-                                        activeProject={activeProject}
-                                        getProjectReports={getProjectReports}
-                                        withLink={true}
-                                    />
-                                </div>
                             </section>
                         </section>
 
