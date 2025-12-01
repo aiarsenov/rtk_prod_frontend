@@ -109,8 +109,8 @@
         }
 
         @media (min-width: $media-xxl) {
+            padding-top: 85px;
             position: relative;
-            top: 80px;
         }
     }
 
@@ -159,7 +159,7 @@
             }
 
             &-header {
-                grid-template-columns: 1fr 100px 1fr 100px
+                grid-template-columns: 1fr 100px 1fr 100px;
             }
 
             &-item {
@@ -409,7 +409,8 @@
                 gap: 20px;
             }
 
-            @media (min-width: $media-xxl) {           align-items: center;
+            @media (min-width: $media-xxl) {
+                align-items: center;
             }
         }
 
@@ -436,7 +437,7 @@
                     flex: 1 0 200px;
                 }
 
-                 @media (min-width: $media-xxxl) {
+                @media (min-width: $media-xxxl) {
                     flex: 0 0 400px;
                 }
             }
@@ -513,7 +514,6 @@
 
 .filters-bottomsheet {
     @media (min-width: $media-xxl) {
-
         visibility: visible;
         opacity: 1;
         position: fixed;

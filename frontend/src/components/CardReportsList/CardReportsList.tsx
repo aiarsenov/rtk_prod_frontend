@@ -47,7 +47,9 @@ const CardReportsList = ({
 
                         return (
                             <li
-                                key={item.id || `report-${reports.indexOf(item)}`}
+                                key={
+                                    item.id || `report-${reports.indexOf(item)}`
+                                }
                                 className="card-reports-list__item"
                                 onClick={() => {
                                     openReportEditor(item.id);
@@ -87,7 +89,7 @@ const CardReportsList = ({
                                     </div>
                                 </div>
 
-                                <div className="reports__list-item__col items-end">
+                                <div className="reports__list-item__col">
                                     <div
                                         className={`reports__list-item__status status ${statusClass}`}
                                     >

@@ -6,8 +6,8 @@
     &__header {
         display: none;
         align-items: center;
-        grid-template-columns: 1fr 22% 22% 80px;
-        gap: 10px;
+        grid-template-columns: 30% 20% 20% 1fr;
+        gap: 20px;
         font-weight: 400;
         font-size: 14px;
         line-height: 150%;
@@ -23,14 +23,10 @@
         @media (min-width: $media-xxl) {
             padding: 0 20px 20px;
             margin: 0;
-            grid-template-columns: 155px 22% 22% 80px;
         }
 
         @media (min-width: 1920px) {
-            grid-template-columns: 1fr minmax(20%, 26%) minmax(20%, 28%) minmax(
-                    80px,
-                    90px
-                );
+            grid-template-columns: 30% 22% 22% 1fr;
         }
     }
 
@@ -51,13 +47,12 @@
 
         @media (min-width: 560px) {
             align-items: start;
-            grid-template-columns: 1fr 20% 20% 80px;
+            grid-template-columns: 30% 20% 20% 1fr;
             gap: 20px;
         }
 
         @media (min-width: $media-xxl) {
             padding: 20px;
-            grid-template-columns: 150px 20% 20% 80px;
 
             .items-end {
                 align-items: flex-end;
@@ -65,10 +60,7 @@
         }
 
         @media (min-width: 1920px) {
-            grid-template-columns: 1fr minmax(20%, 25%) minmax(20%, 25%) minmax(
-                    80px,
-                    90px
-                );
+            grid-template-columns: 30% 22% 22% 1fr;
         }
     }
 
@@ -100,7 +92,7 @@
         font-size: 14px;
         line-height: 150%;
         color: var(--color-gray-70);
-        padding: 0 20px;
+        padding: 0 20px 20px;
         margin-bottom: 20px;
 
         &:not(:last-of-type) {
@@ -108,13 +100,13 @@
         }
 
         @media (min-width: 560px) {
+            gap: 20px;
             display: grid;
         }
 
         @media (min-width: $media-xxl) {
-            padding-bottom: 20px;
             margin: 0;
-            grid-template-columns: 95px 85px 1fr 100px 90px;
+            grid-template-columns: 80px 80px 1fr 17% 80px;
         }
     }
 
@@ -132,7 +124,7 @@
 
         @media (min-width: $media-xxl) {
             padding: 20px;
-            grid-template-columns: 85px 80px 1fr 90px 80px;
+            grid-template-columns: 80px 80px 1fr 17% 80px;
         }
 
         .management-reports__item__col {

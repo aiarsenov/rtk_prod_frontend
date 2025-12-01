@@ -549,12 +549,14 @@ const Indicators = () => {
     }
 
     if (!canAccess(user, "main")) {
-        return <AccessDenied message="У вас нет прав для просмотра дашборда ключевых показателей" />;
+        return (
+            <AccessDenied message="У вас нет прав для просмотра дашборда ключевых показателей" />
+        );
     }
 
     return (
         <section className="indicators">
-            {isLoading && <Loader bgColor={"rgba(255, 255, 255, 0.6)"} />}
+            {isLoading && <Loader />}
 
             <div className=" dashboards__container">
                 <BottomSheet
