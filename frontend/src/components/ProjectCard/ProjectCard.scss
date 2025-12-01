@@ -260,7 +260,13 @@
     }
 
     &-reports-list__header {
-        grid-template-columns: 1fr 1fr 165px !important;
+        gap: 7px !important;
+        grid-template-columns: 1fr 1fr 27% 20px !important;
+
+        @media (min-width: $media-xxl) {
+            gap: 35px !important;
+            grid-template-columns: 1fr 1fr 100px 20px !important;
+        }
     }
 
     &__bottom-actions {
