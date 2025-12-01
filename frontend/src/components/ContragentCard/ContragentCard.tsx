@@ -490,20 +490,6 @@ const ContragentCard = () => {
                                 </div>
                             </section>
 
-                            <section className="project-card__project-team">
-                                <h2 className="card__subtitle">
-                                    Ключевые лица Заказчика
-                                </h2>
-
-                                <div className="project-card__team">
-                                    <ContragentResponsiblePersons
-                                        teamData={
-                                            selectedResponsiblePersons?.contacts
-                                        }
-                                    />
-                                </div>
-                            </section>
-
                             <section className="project-card__projects">
                                 <h2 className="card__subtitle">
                                     Проекты
@@ -517,6 +503,20 @@ const ContragentCard = () => {
                                         activeProject={activeProject}
                                         getProjectReports={getProjectReports}
                                         getProjectContact={getProjectContact}
+                                    />
+                                </div>
+                            </section>
+
+                            <section className="project-card__project-team">
+                                <h2 className="card__subtitle">
+                                    Ключевые лица
+                                </h2>
+
+                                <div className="project-card__team">
+                                    <ContragentResponsiblePersons
+                                        teamData={
+                                            selectedResponsiblePersons?.contacts
+                                        }
                                     />
                                 </div>
                             </section>
