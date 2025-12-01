@@ -1342,7 +1342,7 @@ const ReportWindow = ({
                                                     Подрядчики
                                                 </b>
 
-                                                {contractors.length > 0 && (
+                                                {contractors.length > 0 ? (
                                                     <ul className="person__list">
                                                         {contractors.map(
                                                             (person, index) => (
@@ -1371,6 +1371,8 @@ const ReportWindow = ({
                                                             )
                                                         )}
                                                     </ul>
+                                                ) : (
+                                                    <div>Нет</div>
                                                 )}
 
                                                 {mode === "edit" && (

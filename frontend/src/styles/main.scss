@@ -704,9 +704,9 @@ body {
 }
 
 .person__list {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: 10px;
-    margin-bottom: 20px;
 }
 
 .person-block {
