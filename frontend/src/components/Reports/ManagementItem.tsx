@@ -30,11 +30,11 @@ const ManagementItem = ({
     const navigate = useNavigate();
 
     // Отладочный лог
-    console.log('ManagementItem рендерится:', {
-        is_management: (props as any).is_management,
-        name: (props as any).name,
-        project_id: (props as any).project_id
-    });
+    // console.log('ManagementItem рендерится:', {
+    //     is_management: (props as any).is_management,
+    //     name: (props as any).name,
+    //     project_id: (props as any).project_id
+    // });
 
     return (
         <tr
@@ -44,17 +44,23 @@ const ManagementItem = ({
                     : ""
             }`}
             onClick={(e) => {
-                console.log('Клик по tr, target:', e.target);
+                // console.log('Клик по tr, target:', e.target);
                 // Игнорируем клики по кнопкам и другим интерактивным элементам
                 const target = e.target as HTMLElement;
-                const clickedButton = target.closest('button');
+                const clickedButton = target.closest("button");
                 // Проверяем, если клик внутри контейнера с кнопкой проекта
-                const projectNameContainer = target.closest('.hidden-group');
-                if (clickedButton || (projectNameContainer && projectNameContainer.querySelector('button'))) {
-                    console.log('Клик по кнопке или области проекта, игнорируем открытие редактора');
+                const projectNameContainer = target.closest(".hidden-group");
+                if (
+                    clickedButton ||
+                    (projectNameContainer &&
+                        projectNameContainer.querySelector("button"))
+                ) {
+                    console.log(
+                        "Клик по кнопке или области проекта, игнорируем открытие редактора"
+                    );
                     return;
                 }
-                console.log('Клик по строке, открываем редактор');
+                // console.log('Клик по строке, открываем редактор');
                 !(props as any).is_management
                     ? openRateReportEditor(props)
                     : openManagementReportEditor(props);
@@ -158,18 +164,14 @@ const ManagementItem = ({
                     const isProjectReport = !(props as any).is_management;
                     const isNameColumn = key === "name";
                     if (isProjectReport && isNameColumn) {
-                        console.log('Рендерим кнопку для проекта:', value, 'project_id:', (props as any).project_id);
+                        // console.log('Рендерим кнопку для проекта:', value, 'project_id:', (props as any).project_id);
                         return (
-                            <td
-                                className="w-[110px]"
-                                key={key}
-                            >
+                            <td className="w-[110px]" key={key}>
                                 <div
                                     className="flex flex-col gap-[5px]"
                                     onClick={(e) => {
-
                                         const target = e.target as HTMLElement;
-                                        const button = target.closest('button');
+                                        const button = target.closest("button");
                                         if (button) {
                                             e.stopPropagation();
                                         }
@@ -181,9 +183,13 @@ const ManagementItem = ({
                                             // Останавливаем всплытие на уровне контейнера
                                             e.stopPropagation();
                                             // Если клик не на кнопке, вызываем клик на кнопке
-                                            const target = e.target as HTMLElement;
-                                            if (!target.closest('button')) {
-                                                const button = e.currentTarget.querySelector('button');
+                                            const target =
+                                                e.target as HTMLElement;
+                                            if (!target.closest("button")) {
+                                                const button =
+                                                    e.currentTarget.querySelector(
+                                                        "button"
+                                                    );
                                                 if (button) {
                                                     button.click();
                                                 }
@@ -196,20 +202,27 @@ const ManagementItem = ({
                                             style={{
                                                 maxWidth: "250px",
                                             }}
-                                            title={`Перейти в карточку проекта ${value?.toString() || "—"}`}
+                                            title={`Перейти в карточку проекта ${
+                                                value?.toString() || "—"
+                                            }`}
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                const projectId = (props as any).project_id;
-                                                console.log('Клик по названию проекта:', projectId, value, props);
+                                                const projectId = (props as any)
+                                                    .project_id;
+                                                // console.log('Клик по названию проекта:', projectId, value, props);
                                                 if (projectId) {
                                                     window.scrollTo(0, 0);
                                                     navigate(
                                                         `${
-                                                            import.meta.env.VITE_BASE_URL
+                                                            import.meta.env
+                                                                .VITE_BASE_URL
                                                         }projects/${projectId}`
                                                     );
                                                 } else {
-                                                    console.warn('project_id не найден в props:', props);
+                                                    console.warn(
+                                                        "project_id не найден в props:",
+                                                        props
+                                                    );
                                                 }
                                             }}
                                         >
@@ -284,7 +297,10 @@ const ManagementItem = ({
                                         <div className="hidden-group min-w-[250px] max-w-[250px]">
                                             <div
                                                 className="visible-text"
-                                                style={{ maxWidth: "250px", color: "#000" }}
+                                                style={{
+                                                    maxWidth: "250px",
+                                                    color: "#000",
+                                                }}
                                             >
                                                 <div>
                                                     {value?.toString() || "—"}

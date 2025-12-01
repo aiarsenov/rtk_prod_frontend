@@ -330,6 +330,7 @@
         flex-grow: 1;
         overflow-y: auto;
         overflow-x: hidden;
+        align-items: center;
 
         @media (min-width: $media-xxl) {
             height: auto;
@@ -338,6 +339,7 @@
             overflow: visible;
             background: var(--color-white);
             border-radius: 10px;
+            align-items: unset;
         }
 
         @media (min-width: $media-xxxxl) {
@@ -427,12 +429,13 @@
 
         &-nav {
             display: flex;
-            // flex-wrap: wrap;
+            flex-wrap: wrap;
             align-items: center;
             gap: 40px;
             margin-bottom: 20px;
 
             @media (min-width: $media-xxl) {
+                flex-wrap: nowrap;
                 flex-grow: 1;
                 margin-bottom: 0;
             }
