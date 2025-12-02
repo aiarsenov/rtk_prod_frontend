@@ -55,7 +55,10 @@ const ContragentItem = ({
                         );
                     } else {
                         return (
-                            <td className="min-w-[130px] max-w-[130px]" key={key}>
+                            <td
+                                className="min-w-[130px] max-w-[130px]"
+                                key={key}
+                            >
                                 —
                             </td>
                         );
@@ -85,7 +88,7 @@ const ContragentItem = ({
                     } else if (key === "program_name") {
                         return (
                             <td
-                                className="min-w-[130px] max-w-[280px]"
+                                className="min-w-[130px] max-w-[300px]"
                                 key={`${key}_${value?.main?.id || props.id}`}
                             >
                                 <div
@@ -93,10 +96,7 @@ const ContragentItem = ({
                                     onClick={handleRowClick}
                                     title={`Перейти в карточку заказчика ${value}`}
                                 >
-                                    <div
-                                        className="visible-text"
-                                        style={{ maxWidth: "280px" }}
-                                    >
+                                    <div className="visible-text">
                                         <div className="w-full">
                                             {value?.toString() || "—"}
                                         </div>
@@ -110,7 +110,7 @@ const ContragentItem = ({
                         );
                     } else {
                         return (
-                            <td className="min-w-[130px]" key={key}>
+                            <td className="min-w-[100px]" key={key}>
                                 {value?.toString() || "—"}
                             </td>
                         );

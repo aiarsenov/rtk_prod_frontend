@@ -140,11 +140,7 @@ const ReportItem = ({
                     if (key === "project" || key === "contragent") {
                         return (
                             <td
-                                className={`${
-                                    key === "project"
-                                        ? "w-[180px] min-w-[180px]"
-                                        : "w-[180px] min-w-[180px]"
-                                } text-blue`}
+                                className="min-w-[160px] max-w-[280px] text-blue"
                                 key={key}
                             >
                                 <div
@@ -192,7 +188,7 @@ const ReportItem = ({
                     if (key === "report_period_code") {
                         return (
                             <td
-                                className="min-w-[120px] max-w-[165px]"
+                                className="min-w-[120px] max-w-[150px]"
                                 key={key}
                             >
                                 <div
@@ -290,10 +286,7 @@ const ReportItem = ({
                         );
                     } else {
                         return (
-                            <td
-                                className="min-w-[110px] max-w-[120px]"
-                                key={key}
-                            >
+                            <td className="min-w-[110px]" key={key}>
                                 {value?.toString() || "—"}
                             </td>
                         );

@@ -44,7 +44,7 @@ const SalesItem = ({ props, columns, deleteProject, mode }) => {
                 if (Array.isArray(value) && value !== null) {
                     if (value?.length > 0) {
                         return (
-                            <td className="w-[130px] max-w-[130px]" key={key}>
+                            <td className="min-w-[130px]" key={key}>
                                 <table className="w-full">
                                     <tbody>
                                         {key === "services"
@@ -77,7 +77,7 @@ const SalesItem = ({ props, columns, deleteProject, mode }) => {
                         );
                     } else {
                         return (
-                            <td className="w-[130px] max-w-[130px]" key={key}>
+                            <td className="min-w-[110px]" key={key}>
                                 —
                             </td>
                         );
@@ -85,7 +85,7 @@ const SalesItem = ({ props, columns, deleteProject, mode }) => {
                 } else if (typeof value === "object" && value !== null) {
                     if (key === "contragent") {
                         return (
-                            <td className="w-[130px]" key={key}>
+                            <td className="w-[300px]" key={key}>
                                 <div
                                     className="hidden-group text-blue cursor-pointer"
                                     onClick={(e) => {
@@ -99,10 +99,7 @@ const SalesItem = ({ props, columns, deleteProject, mode }) => {
                                     title={`Перейти в карточку заказчика ${value.program_name}`}
                                 >
                                     <div className="visible-text">
-                                        {/* <div> */}
-                                            {value?.program_name.toString() ||
-                                                "—"}
-                                        {/* </div> */}
+                                        {value?.program_name.toString() || "—"}
                                     </div>
 
                                     <div className="hidden-text">
@@ -129,16 +126,17 @@ const SalesItem = ({ props, columns, deleteProject, mode }) => {
                 } else {
                     if (key === "name") {
                         return (
-                            <td className="w-[130px]" key={key}>
+                            <td
+                                className="min-w-[120px] max-w-[240px]"
+                                key={key}
+                            >
                                 <div
                                     className="hidden-group text-blue cursor-pointer"
                                     onClick={handleRowClick}
                                     title={`Перейти в карточку проекта ${value}`}
                                 >
                                     <div className="visible-text">
-                                        {/* <div> */}
-                                            {value?.toString() || "—"}
-                                        {/* </div> */}
+                                        {value?.toString() || "—"}
                                     </div>
 
                                     <div className="hidden-text">
@@ -179,7 +177,7 @@ const SalesItem = ({ props, columns, deleteProject, mode }) => {
                         );
                     } else {
                         return (
-                            <td className="w-[130px]" key={key}>
+                            <td className="min-w-[130px]" key={key}>
                                 {value?.toString() || "—"}
                             </td>
                         );

@@ -80,16 +80,13 @@ const EmployeeItem = ({ props, columns }) => {
                         );
                     } else if (key === "full_name") {
                         return (
-                            <td className="w-[160px]" key={key}>
+                            <td className="min-w-[160px]" key={key}>
                                 <div
-                                    className="hidden-group w-[160px] text-blue cursor-pointer"
+                                    className="hidden-group min-w-[160px] text-blue cursor-pointer"
                                     onClick={handleRowClick}
                                     title={`Перейти в карточку сотрудника ${value}`}
                                 >
-                                    <div
-                                        className="visible-text"
-                                        style={{ maxWidth: "160px" }}
-                                    >
+                                    <div className="visible-text">
                                         <div>{value?.toString() || "—"}</div>
                                     </div>
 
@@ -132,10 +129,7 @@ const EmployeeItem = ({ props, columns }) => {
                         );
                     } else {
                         return (
-                            <td
-                                className="px-4 py-7 min-w-[180px] max-w-[200px]"
-                                key={key}
-                            >
+                            <td className="px-4 py-7 min-w-[100px]" key={key}>
                                 {value?.toString() || "—"}
                             </td>
                         );

@@ -27,7 +27,7 @@ const SupplierItem = ({ props, columns }) => {
                     if (value?.length > 0) {
                         return (
                             <td
-                                className="min-w-[130px] max-w-[280px]"
+                                className="min-w-[130px] max-w-[300px]"
                                 key={key}
                             >
                                 {key === "roles" ? (
@@ -83,7 +83,7 @@ const SupplierItem = ({ props, columns }) => {
                 } else {
                     if (key === "status") {
                         return (
-                            <td className="w-[110px]" key={key}>
+                            <td className="w-[115px]" key={key}>
                                 <div
                                     className={`registry-table__item-status ${statusClass}`}
                                 >
@@ -94,7 +94,7 @@ const SupplierItem = ({ props, columns }) => {
                     } else if (key === "program_name") {
                         return (
                             <td
-                                className="min-w-[130px] max-w-[280px]"
+                                className="min-w-[130px] max-w-[300px]"
                                 key={value?.main?.id}
                             >
                                 <div
@@ -102,10 +102,7 @@ const SupplierItem = ({ props, columns }) => {
                                     onClick={handleRowClick}
                                     title={`Перейти в карточку подрядчика ${value}`}
                                 >
-                                    <div
-                                        className="visible-text"
-                                        style={{ maxWidth: "280px" }}
-                                    >
+                                    <div className="visible-text">
                                         <div className="w-full">
                                             {value?.toString() || "—"}
                                         </div>
@@ -119,7 +116,7 @@ const SupplierItem = ({ props, columns }) => {
                         );
                     } else {
                         return (
-                            <td className="w-[130px]" key={key}>
+                            <td className="min-w-[130px]" key={key}>
                                 {value?.toString() || "—"}
                             </td>
                         );
