@@ -99,10 +99,10 @@ const SalesItem = ({ props, columns, deleteProject, mode }) => {
                                     title={`Перейти в карточку заказчика ${value.program_name}`}
                                 >
                                     <div className="visible-text">
-                                        <div>
+                                        {/* <div> */}
                                             {value?.program_name.toString() ||
                                                 "—"}
-                                        </div>
+                                        {/* </div> */}
                                     </div>
 
                                     <div className="hidden-text">
@@ -136,7 +136,9 @@ const SalesItem = ({ props, columns, deleteProject, mode }) => {
                                     title={`Перейти в карточку проекта ${value}`}
                                 >
                                     <div className="visible-text">
-                                        <div>{value?.toString() || "—"}</div>
+                                        {/* <div> */}
+                                            {value?.toString() || "—"}
+                                        {/* </div> */}
                                     </div>
 
                                     <div className="hidden-text">

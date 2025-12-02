@@ -86,10 +86,8 @@ const ReportItem = ({
                                                         }}
                                                     >
                                                         <div className="visible-text">
-                                                            <div>
-                                                                {item.name.toString() ||
-                                                                    "—"}
-                                                            </div>
+                                                            {item.name.toString() ||
+                                                                "—"}
                                                         </div>
 
                                                         <div className="hidden-text">

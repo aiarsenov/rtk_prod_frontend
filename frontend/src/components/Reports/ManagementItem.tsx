@@ -102,12 +102,8 @@ const ManagementItem = ({
                     if (key === "physical_person") {
                         return (
                             <td className="w-[250px]" key={key}>
-                                <button
-                                    type="button"
-                                    className="text-left"
-                                    title={`Перейти в карточку сотрудника ${
-                                        value?.name?.toString() || "—"
-                                    }`}
+                                <div
+                                    className="hidden-group text-blue cursor-pointer"
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         window.scrollTo(0, 0);
@@ -117,9 +113,16 @@ const ManagementItem = ({
                                             }employees/${value?.id}`
                                         );
                                     }}
+                                    title={`Перейти в карточку сотрудника ${
+                                        value?.name?.toString() || "—"
+                                    }`}
                                 >
-                                    <div className="text-blue">
-                                        {value?.name?.toString() || "—"}
+                                    <div className="visible-text">
+                                        {value.name.toString() || "—"}
+                                    </div>
+
+                                    <div className="hidden-text">
+                                        {value.name.toString() || "—"}
                                     </div>
 
                                     {props?.physical_person?.roles?.map(
@@ -132,7 +135,7 @@ const ManagementItem = ({
                                             </div>
                                         )
                                     )}
-                                </button>
+                                </div>
                             </td>
                         );
                     }
