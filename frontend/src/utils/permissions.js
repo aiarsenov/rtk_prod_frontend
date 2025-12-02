@@ -37,11 +37,12 @@ export const hasPermission = (user, section, permissionType = 'view', requiredSc
 
 /**
  * Проверяет, является ли пользователь администратором
+ * Администратор - это пользователь с правами на просмотр раздела admin
  * @param {Object} user - объект пользователя из Redux store
  * @returns {boolean}
  */
 export const isAdmin = (user) => {
-    return hasPermission(user, 'main', 'view');
+    return hasPermission(user, 'admin', 'view');
 };
 
 /**
@@ -71,6 +72,8 @@ export const getAccessLevel = (user, section, permissionType = 'view') => {
  */
 export const SECTIONS = {
     MAIN: 'main',
+    ADMIN: 'admin',
+    PROJECTS: 'projects',
     PROJECT_REPORTS: 'project_reports',
     EMPLOYEE_REPORTS: 'employee_reports',
     SALES: 'sales',

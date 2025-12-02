@@ -162,7 +162,7 @@ function Router() {
                     <Route
                         path="admin"
                         element={
-                            <ProtectedRoute section="main">
+                            <ProtectedRoute section="admin">
                                 <Admin />
                             </ProtectedRoute>
                         }

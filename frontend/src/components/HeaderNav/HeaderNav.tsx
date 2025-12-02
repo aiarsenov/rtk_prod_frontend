@@ -30,7 +30,7 @@ const LINKS: NavLinkItem[] = [
         url: "/projects",
         title: "Перейти в реестр проектов",
         label: "Проекты",
-        section: "project_reports",
+        section: "projects",
     },
     {
         url: "/sales",
@@ -68,7 +68,7 @@ const LINKS: NavLinkItem[] = [
         title: "Перейти в панель администрирования",
         label: "Администрирование",
         requiresAdmin: true,
-        section: "main",
+        section: "admin",
     },
 ];
 
@@ -119,13 +119,6 @@ const HeaderNav = ({
             return false;
         }
 
-        if (link.url === "/projects" && link.section === "project_reports") {
-            const hasProjectReportsAccess = canAccess(user, "project_reports");
-            if (hasProjectReportsAccess) {
-                return false;
-            }
-        }
-
         const accessDeniedKey = `access_denied_${link.url.replace('/', '') || 'home'}`;
         const hasAccessDenied = sessionStorage.getItem(accessDeniedKey);
         if (hasAccessDenied === 'true') {
@@ -140,20 +133,9 @@ const HeaderNav = ({
             {LINKS.map((link) => {
                 const hasAccess = getLinkAccess(link);
 
-                if (link.requiresAdmin && !hasAccess) {
-                    return null;
-                }
-
+                // Скрываем пункты меню, к которым нет доступа
                 if (!hasAccess) {
-                    return (
-                        <span
-                            className="header__nav-item disabled"
-                            title={link.title}
-                            key={link.url}
-                        >
-                            {link.label}
-                        </span>
-                    );
+                    return null;
                 }
 
                 return (
