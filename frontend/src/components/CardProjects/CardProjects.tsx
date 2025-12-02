@@ -8,14 +8,12 @@ const CardProjects = ({
     activeProject,
     getProjectReports,
     getProjectContact,
-    withLink = false,
 }: {
     projects: object[];
     setActiveProject: React.Dispatch<React.SetStateAction<number>>;
     activeProject: number;
     getProjectReports: () => void;
     getProjectContact: () => void;
-    withLink: boolean;
 }) => {
     return (
         <ul className="card-projects">
@@ -71,13 +69,21 @@ const CardProjects = ({
                                                 <div
                                                     className="card-projects__item-progress-line"
                                                     style={{
-                                                        width: `${item.implementation_period}%`,
+                                                        width: `${
+                                                            item.implementation_period >
+                                                            100
+                                                                ? "100"
+                                                                : item.implementation_period
+                                                        }%`,
                                                     }}
                                                 ></div>
                                             </div>
 
                                             <div className="card-projects__item-progress-percent">
-                                                {item.implementation_period}%
+                                                {item.implementation_period
+                                                    .toString()
+                                                    .replace(".", ",")}
+                                                %
                                             </div>
                                         </div>
 
@@ -97,28 +103,28 @@ const CardProjects = ({
                                     {handleStatus(item.status)}
                                 </div>
 
-                                {withLink && (
-                                    <a
-                                        href={`${import.meta.env.VITE_BASE_URL || ""}projects/${item.id}`}
-                                        className="card-projects__item-link"
-                                        aria-label={`Перейти в карточку проекта ${item.name}`}
+                                <a
+                                    href={`${
+                                        import.meta.env.VITE_BASE_URL || ""
+                                    }projects/${item.id}`}
+                                    className="card-projects__item-link"
+                                    aria-label={`Перейти в карточку проекта ${item.name}`}
+                                >
+                                    <svg
+                                        width="12"
+                                        height="12"
+                                        viewBox="0 0 12 12"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
                                     >
-                                        <svg
-                                            width="12"
-                                            height="12"
-                                            viewBox="0 0 12 12"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                fill-rule="evenodd"
-                                                clip-rule="evenodd"
-                                                d="M8.23 3H3.937V2h5.5a.5.5 0 01.5.5V8h-1V3.707L2.791 9.854l-.707-.708L8.23 3z"
-                                                fill="#0BA5EC"
-                                            />
-                                        </svg>
-                                    </a>
-                                )}
+                                        <path
+                                            fill-rule="evenodd"
+                                            clip-rule="evenodd"
+                                            d="M8.23 3H3.937V2h5.5a.5.5 0 01.5.5V8h-1V3.707L2.791 9.854l-.707-.708L8.23 3z"
+                                            fill="#0BA5EC"
+                                        />
+                                    </svg>
+                                </a>
                             </div>
                         </li>
                     );

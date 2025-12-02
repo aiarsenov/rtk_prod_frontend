@@ -545,7 +545,6 @@ const SupplierCard = () => {
                                         setActiveProject={setActiveProject}
                                         activeProject={activeProject}
                                         getProjectReports={getProjectReports}
-                                        withLink={true}
                                     />
                                 </div>
                             </section>
