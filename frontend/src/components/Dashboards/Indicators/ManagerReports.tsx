@@ -108,12 +108,14 @@ const ManagerReports = ({ selectedFilters }: { selectedFilters: object }) => {
                                 {item.physical_person}
                             </div>
 
-                            <div
-                                className={`reports__list-item__col status ${handleStatusString(
-                                    item.status
-                                )}`}
-                            >
-                                {item.status}
+                            <div className="pr-[10px]">
+                                <div
+                                    className={`reports__list-item__col status ${handleStatusString(
+                                        item.status
+                                    )}`}
+                                >
+                                    {item.status}
+                                </div>
                             </div>
                         </li>
                     ))}

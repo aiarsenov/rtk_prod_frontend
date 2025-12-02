@@ -178,148 +178,146 @@ const IndicatorsFilters = ({
                         single={true}
                     />
 
-                    <div className="filters__wrapper">
-                    <ul className="filters__period">
-                        {filtertOptions?.periods?.length > 0 &&
-                            filtertOptions?.periods?.map((period) => (
-                                <li
-                                    className="filters__period-item"
-                                    key={period.value}
-                                >
-                                    <input
-                                        type="radio"
-                                        id={period.value}
-                                        checked={
-                                            selectedFilters?.period?.[0] ===
-                                            period.value
-                                        }
-                                        onChange={() =>
-                                            handleFilterChange("period", [
-                                                period.value,
-                                            ])
-                                        }
-                                    />
-                                    <label htmlFor={period.value}>
-                                        {period.label}
-                                    </label>
-                                </li>
-                            ))}
-                    </ul>
+                    <div className="filters__period-wrapper">
+                        <ul className="filters__period">
+                            {filtertOptions?.periods?.length > 0 &&
+                                filtertOptions?.periods?.map((period) => (
+                                    <li
+                                        className="filters__period-item"
+                                        key={period.value}
+                                    >
+                                        <input
+                                            type="radio"
+                                            id={period.value}
+                                            checked={
+                                                selectedFilters?.period?.[0] ===
+                                                period.value
+                                            }
+                                            onChange={() =>
+                                                handleFilterChange("period", [
+                                                    period.value,
+                                                ])
+                                            }
+                                        />
+                                        <label htmlFor={period.value}>
+                                            {period.label}
+                                        </label>
+                                    </li>
+                                ))}
+                        </ul>
 
-                    <Hint
-                        message="Подсказка"
-                        position="bottom" />
+                        <Hint message="Подсказка" position="bottom" />
                     </div>
-                    <div className="filters__wrapper">
-                    <CreatableSelect
-                        options={
-                            filteredContragents.length > 0 &&
-                            filteredContragents.map((item) => ({
-                                value: item.id,
-                                label: item.program_name,
-                            }))
-                        }
-                        className="form-select-extend"
-                        placeholder="Заказчик"
-                        noOptionsMessage={() => "Совпадений нет"}
-                        isValidNewOption={() => false}
-                        value={
-                            contragents
-                                .map((item) => ({
+
+                    <div className="filters__wrapper flex">
+                        <CreatableSelect
+                            options={
+                                filteredContragents.length > 0 &&
+                                filteredContragents.map((item) => ({
                                     value: item.id,
                                     label: item.program_name,
                                 }))
-                                .find(
-                                    (opt) =>
-                                        opt.value ===
-                                        mainFilters.contragent_id?.[0]
-                                ) || null
-                        }
-                        onChange={(selectedOption) => {
-                            const newValue = selectedOption?.value || "";
+                            }
+                            className="form-select-extend"
+                            placeholder="Заказчик"
+                            noOptionsMessage={() => "Совпадений нет"}
+                            isValidNewOption={() => false}
+                            value={
+                                contragents
+                                    .map((item) => ({
+                                        value: item.id,
+                                        label: item.program_name,
+                                    }))
+                                    .find(
+                                        (opt) =>
+                                            opt.value ===
+                                            mainFilters.contragent_id?.[0]
+                                    ) || null
+                            }
+                            onChange={(selectedOption) => {
+                                const newValue = selectedOption?.value || "";
 
-                            setMainFilters((prev) => ({
-                                ...prev,
-                                contragent_id: [newValue],
-                            }));
+                                setMainFilters((prev) => ({
+                                    ...prev,
+                                    contragent_id: [newValue],
+                                }));
 
-                            if (newValue != "") {
-                                const selectedContragentProjects =
-                                    contragents.find(
-                                        (item) => item.id === +newValue
-                                    ).project_ids;
+                                if (newValue != "") {
+                                    const selectedContragentProjects =
+                                        contragents.find(
+                                            (item) => item.id === +newValue
+                                        ).project_ids;
 
-                                if (selectedContragentProjects.length > 0) {
-                                    setFilteredProjects(
-                                        projects.filter((item) =>
-                                            selectedContragentProjects.includes(
-                                                item.id
+                                    if (selectedContragentProjects.length > 0) {
+                                        setFilteredProjects(
+                                            projects.filter((item) =>
+                                                selectedContragentProjects.includes(
+                                                    item.id
+                                                )
                                             )
-                                        )
-                                    );
+                                        );
+                                    } else {
+                                        setFilteredProjects(projects);
+                                    }
                                 } else {
                                     setFilteredProjects(projects);
                                 }
-                            } else {
-                                setFilteredProjects(projects);
-                            }
-                        }}
-                    />
+                            }}
+                        />
 
-                    <Hint message="Подсказка"
-                    position="bottom" />
+                        <Hint message="Подсказка" position="bottom" />
                     </div>
-                    <div className="filters__wrapper">
-                    <CreatableSelect
-                        options={
-                            filteredProjects.length > 0 &&
-                            filteredProjects.map((item) => ({
-                                value: item.id,
-                                label: item.name,
-                            }))
-                        }
-                        className="form-select-extend"
-                        placeholder="Проект"
-                        noOptionsMessage={() => "Совпадений нет"}
-                        isValidNewOption={() => false}
-                        value={
-                            filteredProjects
-                                .map((item) => ({
+
+                    <div className="filters__wrapper flex">
+                        <CreatableSelect
+                            options={
+                                filteredProjects.length > 0 &&
+                                filteredProjects.map((item) => ({
                                     value: item.id,
                                     label: item.name,
                                 }))
-                                .find(
-                                    (opt) =>
-                                        opt.value ===
-                                        mainFilters.project_id?.[0]
-                                ) || null
-                        }
-                        onChange={(selectedOption) => {
-                            const newValue = selectedOption?.value || "";
-
-                            setMainFilters((prev) => ({
-                                ...prev,
-                                project_id: [newValue],
-                            }));
-
-                            if (newValue != "") {
-                                setFilteredContragents(
-                                    contragents.filter((item) =>
-                                        item.project_ids.includes(newValue)
-                                    )
-                                );
-                            } else {
-                                setFilteredContragents(contragents);
                             }
-                        }}
-                    />
+                            className="form-select-extend"
+                            placeholder="Проект"
+                            noOptionsMessage={() => "Совпадений нет"}
+                            isValidNewOption={() => false}
+                            value={
+                                filteredProjects
+                                    .map((item) => ({
+                                        value: item.id,
+                                        label: item.name,
+                                    }))
+                                    .find(
+                                        (opt) =>
+                                            opt.value ===
+                                            mainFilters.project_id?.[0]
+                                    ) || null
+                            }
+                            onChange={(selectedOption) => {
+                                const newValue = selectedOption?.value || "";
 
-                    <Hint message="Подсказка"
-                    position="bottom" />
-                </div>
+                                setMainFilters((prev) => ({
+                                    ...prev,
+                                    project_id: [newValue],
+                                }));
+
+                                if (newValue != "") {
+                                    setFilteredContragents(
+                                        contragents.filter((item) =>
+                                            item.project_ids.includes(newValue)
+                                        )
+                                    );
+                                } else {
+                                    setFilteredContragents(contragents);
+                                }
+                            }}
+                        />
+
+                        <Hint message="Подсказка" position="bottom" />
+                    </div>
                 </div>
 
-                {(mainFilters.project_id || mainFilters.contragent_id) && (
+                {mainFilters.project_id || mainFilters.contragent_id ? (
                     <button
                         type="button"
                         className="dashboards__filters-clear-btn"
@@ -336,6 +334,8 @@ const IndicatorsFilters = ({
                         Очистить
                         <span></span>
                     </button>
+                ) : (
+                    <div className="w-[84px] flex-[0_0_84px]"></div>
                 )}
             </div>
         </div>
