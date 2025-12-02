@@ -133,9 +133,20 @@ const HeaderNav = ({
             {LINKS.map((link) => {
                 const hasAccess = getLinkAccess(link);
 
-                // Скрываем пункты меню, к которым нет доступа
-                if (!hasAccess) {
+                if (link.requiresAdmin && !hasAccess) {
                     return null;
+                }
+
+                if (!hasAccess) {
+                    return (
+                        <span
+                            className="header__nav-item disabled"
+                            title={link.title}
+                            key={link.url}
+                        >
+                            {link.label}
+                        </span>
+                    );
                 }
 
                 return (
