@@ -43,13 +43,7 @@ export const hasPermission = (user, section, permissionType = 'view', requiredSc
  * @returns {boolean}
  */
 export const isAdmin = (user) => {
-    if (import.meta.env.MODE === "development") {
-        return true;
-    }
-
-    // if (hasPermission(user, 'admin', 'view')) {
     return true;
-    // }
 };
 
 /**
