@@ -58,7 +58,8 @@ const ContragentCard = () => {
     const [responsiblePersons, setResponsiblePersons] = useState([]); // Ключевые лица Заказчика
     const [selectedResponsiblePersons, setSelectedResponsiblePersons] =
         useState([]); // Ключевые лица Заказчика выбранного проекта
-    const [reportWindowsState, setReportWindowsState] = useState(false); // Конструктор отчёта
+    const [reportWindowsState, setReportWindowsState] = useState(false); // Редактор отчёта
+    const [reportName, setReportName] = useState(""); // Название отчета
     const [reportId, setReportId] = useState(null);
     const [contracts, setContracts] = useState([]);
 
@@ -144,6 +145,7 @@ const ContragentCard = () => {
     // Получение отчетов по выбранному проекту
     const getProjectReports = (id) => {
         setReportWindowsState(false);
+        setReportName("");
 
         const targetReports = reports.filter(
             (report) => report.project_id === id
@@ -256,7 +258,12 @@ const ContragentCard = () => {
     // Открытие редактора отчёта
     const openReportEditor = (id) => {
         setReportId(id);
+        const targetReport = reports.find((item) => item.id === id);
+
         if (id) {
+            setReportName(
+                `${targetReport.project_name} / ${targetReport.report_period_code}`
+            );
             setActiveWindow("");
             setReportWindowsState(true);
         }
@@ -634,6 +641,7 @@ const ContragentCard = () => {
                         contracts={contracts}
                         reportId={reportId}
                         setReportId={setReportId}
+                        reportName={reportName}
                         mode={"read"}
                     />
                 </div>
