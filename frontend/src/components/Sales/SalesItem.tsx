@@ -110,7 +110,7 @@ const SalesItem = ({ props, columns, deleteProject, mode }) => {
                         );
                     } else if (key === "request_source") {
                         return (
-                            <td className="w-[130px]" key={key}>
+                            <td className="min-w-[130px]" key={key}>
                                 {value?.name?.toString() || "—"}
                             </td>
                         );
@@ -127,7 +127,7 @@ const SalesItem = ({ props, columns, deleteProject, mode }) => {
                     if (key === "name") {
                         return (
                             <td
-                                className="min-w-[120px] max-w-[240px]"
+                                className="min-w-[120px] max-w-[300px]"
                                 key={key}
                             >
                                 <div
@@ -151,9 +151,9 @@ const SalesItem = ({ props, columns, deleteProject, mode }) => {
                         );
                     } else if (key === "last_service_last_stage") {
                         return (
-                            <td className="w-[110px]" key={key}>
+                            <td className="min-w-[110px]" key={key}>
                                 <div
-                                    className={`max-w-[125px] registry-table__item-status ${statusClass}`}
+                                    className={`registry-table__item-status ${statusClass}`}
                                     style={{
                                         textOverflow: "ellipsis",
                                         overflow: "hidden",
