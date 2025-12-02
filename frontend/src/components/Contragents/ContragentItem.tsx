@@ -55,7 +55,7 @@ const ContragentItem = ({
                         );
                     } else {
                         return (
-                            <td className="w-[130px] max-w-[130px]" key={key}>
+                            <td className="min-w-[130px] max-w-[130px]" key={key}>
                                 —
                             </td>
                         );
@@ -64,7 +64,7 @@ const ContragentItem = ({
                     return Object.entries(value).map(
                         ([subKey, subValue], index) => (
                             <td
-                                className="w-[210px]"
+                                className="w-min-[210px]"
                                 key={`${key}_${subKey}_${index}`}
                             >
                                 {subValue?.toString()}
@@ -74,7 +74,7 @@ const ContragentItem = ({
                 } else {
                     if (key === "status") {
                         return (
-                            <td className="w-[110px]" key={key}>
+                            <td className="min-w-[110px]" key={key}>
                                 <div
                                     className={`registry-table__item-status ${statusClass}`}
                                 >
@@ -110,7 +110,7 @@ const ContragentItem = ({
                         );
                     } else {
                         return (
-                            <td className="w-[130px]" key={key}>
+                            <td className="min-w-[130px]" key={key}>
                                 {value?.toString() || "—"}
                             </td>
                         );
