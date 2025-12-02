@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import getData from "../../utils/getData";
 import postData from "../../utils/postData";
 import buildQueryParams from "../../utils/buildQueryParams";
+import { sortList } from "../../utils/sortList";
 
 import SalesItem from "./SalesItem";
 import Popup from "../Popup/Popup";
@@ -260,29 +261,7 @@ const Sales = () => {
             );
         });
 
-        // Применяем сортировку
-        if (sortBy.key === "costs" && sortBy.action) {
-            filtered = [...filtered].sort((a, b) => {
-                // Парсим costs из строки формата "4,50" в число
-                const parseCost = (cost) => {
-                    if (!cost || cost === "—" || cost === null) return 0;
-                    // Заменяем запятую на точку и парсим
-                    const numStr = cost.toString().replace(",", ".");
-                    const num = parseFloat(numStr);
-                    return isNaN(num) ? 0 : num;
-                };
-
-                const valueA = parseCost(a.costs);
-                const valueB = parseCost(b.costs);
-
-                if (sortBy.action === "ascending") {
-                    return valueA - valueB;
-                } else if (sortBy.action === "descending") {
-                    return valueB - valueA;
-                }
-                return 0;
-            });
-        }
+        filtered = sortList(filtered, sortBy);
 
         return filtered;
     }, [list, filters, statusDate, sortBy]);
@@ -623,13 +602,21 @@ const Sales = () => {
                                                             <>
                                                                 <div
                                                                     className="registry-table__thead-label"
-                                                                    dangerouslySetInnerHTML={{ __html: label }}
+                                                                    dangerouslySetInnerHTML={{
+                                                                        __html: label,
+                                                                    }}
                                                                 />
                                                                 {is_sortable && (
                                                                     <TheadSortButton
-                                                                        value={key as any}
-                                                                        sortBy={sortBy as any}
-                                                                        setSortBy={setSortBy as any}
+                                                                        value={
+                                                                            key as any
+                                                                        }
+                                                                        sortBy={
+                                                                            sortBy as any
+                                                                        }
+                                                                        setSortBy={
+                                                                            setSortBy as any
+                                                                        }
                                                                     />
                                                                 )}
                                                             </>

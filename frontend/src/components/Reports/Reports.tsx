@@ -711,8 +711,6 @@ const Reports = () => {
 
     // ОТЧЕТЫ СОТРУДНИКОВ //
     const filteredManagementReports = useMemo(() => {
-        console.log(managementReportsFilters.selectedRates);
-
         return managementList.filter((report) => {
             return (
                 (managementReportsFilters.selectedManagementReports.length ===
