@@ -565,6 +565,10 @@ const ProjectCard = () => {
         setDeleteExecutor({
             id: id,
             title: type == "creditor" ? "кредитора" : "ключевое лицо заказчика",
+            message:
+                type == "creditor"
+                    ? "Данные будут безвозвратно утеряны."
+                    : "После удаления данного ключевого лица вы сможете снова добавить его из Справочника ключевых лиц заказчиков.",
             type: type,
         });
     };
@@ -817,7 +821,12 @@ const ProjectCard = () => {
     }, [otherIndustries]);
 
     useEffect(() => {
-        if (!autoFilterAppliedRef.current && matchedBanks.length > 0 && creditors.length > 0 && filteredCreditors.length === creditors.length) {
+        if (
+            !autoFilterAppliedRef.current &&
+            matchedBanks.length > 0 &&
+            creditors.length > 0 &&
+            filteredCreditors.length === creditors.length
+        ) {
             const firstBankId = matchedBanks[0].id;
             const newFilteredCreditors = creditors.filter(
                 (lender) => +lender.creditor_id === +firstBankId
@@ -1707,11 +1716,11 @@ const ProjectCard = () => {
             {/* Удаление контакта */}
             {Object.keys(deleteExecutor).length > 0 && (
                 <Popup
-                    onClick={() => setDeleteExecutor(null)}
+                    onClick={() => setDeleteExecutor({})}
                     title={`Удалить ${deleteExecutor.title}`}
                 >
                     <div className="action-form__body">
-                        <p>Данные будут безвозвратно утеряны.</p>
+                        <p>{deleteExecutor.message}</p>
                     </div>
 
                     <div className="action-form__footer">

@@ -20,11 +20,13 @@ const ProjectItem = ({
     columns,
     mode,
     deleteProject,
+    openReportEditor,
 }: {
     props: object;
     columns: object[];
     mode: string;
     deleteProject: () => void;
+    openReportEditor: () => void;
 }) => {
     const navigate = useNavigate();
 
@@ -66,8 +68,14 @@ const ProjectItem = ({
                                                                 className={`${handleLastReport(
                                                                     item.status
                                                                         .name
-                                                                )}`}
+                                                                )} cursor-pointer`}
                                                                 key={index}
+                                                                onClick={() =>
+                                                                    openReportEditor(
+                                                                        item
+                                                                    )
+                                                                }
+                                                                title={`Открыть отчёт ${item.report_period_code}`}
                                                             >
                                                                 {
                                                                     item.report_period_code
@@ -140,7 +148,10 @@ const ProjectItem = ({
                             : "—";
 
                         return (
-                            <td className="w-[130px] text-blue cursor-pointer" key={key}>
+                            <td
+                                className="w-[130px] text-blue cursor-pointer"
+                                key={key}
+                            >
                                 <div
                                     className="hidden-group"
                                     onClick={(e) => {
