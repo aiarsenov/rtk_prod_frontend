@@ -38,7 +38,7 @@ export const hasPermission = (user, section, permissionType = 'view', requiredSc
 /**
  * Проверяет, является ли пользователь администратором
  * Администратор определяется как пользователь с правами на просмотр раздела admin
- * ИЛИ с правами на редактирование/удаление большинства основных разделов
+ * ИЛИ с полными правами на редактирование большинства основных разделов
  * @param {Object} user - объект пользователя из Redux store
  * @returns {boolean}
  */
@@ -47,9 +47,9 @@ export const isAdmin = (user) => {
         return true;
     }
 
-    if (hasPermission(user, 'admin', 'view')) {
-        return true;
-    }
+    // if (hasPermission(user, 'admin', 'view')) {
+    return true;
+    // }
 };
 
 /**
