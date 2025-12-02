@@ -44,8 +44,10 @@ const Reports = () => {
     const [isProjectsLoading, setIsProjectsLoading] = useState(true);
     const [isManagementLoading, setIsManagementLoading] = useState(true);
     const [hasAccess, setHasAccess] = useState(true);
-    const [hasProjectReportsAccess, setHasProjectReportsAccess] = useState(true);
-    const [hasEmployeeReportsAccess, setHasEmployeeReportsAccess] = useState(true);
+    const [hasProjectReportsAccess, setHasProjectReportsAccess] =
+        useState(true);
+    const [hasEmployeeReportsAccess, setHasEmployeeReportsAccess] =
+        useState(true);
 
     const [sortBy, setSortBy] = useState({ key: "", action: "" });
 
@@ -709,6 +711,8 @@ const Reports = () => {
 
     // ОТЧЕТЫ СОТРУДНИКОВ //
     const filteredManagementReports = useMemo(() => {
+        console.log(managementReportsFilters.selectedRates);
+
         return managementList.filter((report) => {
             return (
                 (managementReportsFilters.selectedManagementReports.length ===
@@ -723,7 +727,7 @@ const Reports = () => {
                     )) &&
                 (managementReportsFilters.selectedRates.length === 0 ||
                     managementReportsFilters.selectedRates.includes(
-                        report?.general_assessment
+                        report?.general_assessment?.toString()
                     )) &&
                 (managementReportsFilters.selectedManagementStatus.length ===
                     0 ||
@@ -753,7 +757,7 @@ const Reports = () => {
         try {
             localStorage.setItem("reportsActiveTab", activeTab);
         } catch (error) {
-            console.error("Ошибка при сохранении активной вкладки:", error);
+            // console.error("Ошибка при сохранении активной вкладки:", error);
         }
     }, [activeTab]);
 
@@ -770,10 +774,18 @@ const Reports = () => {
                 // Проверяем доступ к сохраненной вкладке и переключаем на доступную, если нужно
                 // Делаем это только один раз при загрузке пользователя
                 const savedTab = localStorage.getItem("reportsActiveTab");
-                if (savedTab === "projects" && !hasProjectAccess && hasEmployeeAccess) {
+                if (
+                    savedTab === "projects" &&
+                    !hasProjectAccess &&
+                    hasEmployeeAccess
+                ) {
                     setActiveTab("management");
                     localStorage.setItem("reportsActiveTab", "management");
-                } else if (savedTab === "management" && !hasEmployeeAccess && hasProjectAccess) {
+                } else if (
+                    savedTab === "management" &&
+                    !hasEmployeeAccess &&
+                    hasProjectAccess
+                ) {
                     setActiveTab("projects");
                     localStorage.setItem("reportsActiveTab", "projects");
                 }
@@ -783,14 +795,20 @@ const Reports = () => {
     }, [user]);
 
     if (!hasAccess) {
-        return <AccessDenied message="У вас нет прав для просмотра раздела отчетов" />;
+        return (
+            <AccessDenied message="У вас нет прав для просмотра раздела отчетов" />
+        );
     }
 
     const checkTabAccess = () => {
         if (activeTab === "projects") {
-            return hasProjectReportsAccess && canAccess(user, "project_reports");
+            return (
+                hasProjectReportsAccess && canAccess(user, "project_reports")
+            );
         } else if (activeTab === "management") {
-            return hasEmployeeReportsAccess && canAccess(user, "employee_reports");
+            return (
+                hasEmployeeReportsAccess && canAccess(user, "employee_reports")
+            );
         }
         return true;
     };
@@ -814,9 +832,13 @@ const Reports = () => {
                             />
                             <label htmlFor="project_reports">
                                 Отчёты проектов
-                                {hasProjectReportsAccess && canAccess(user, "project_reports") && !isProjectsLoading && (
-                                    <span>{filteredProjectReports.length}</span>
-                                )}
+                                {hasProjectReportsAccess &&
+                                    canAccess(user, "project_reports") &&
+                                    !isProjectsLoading && (
+                                        <span>
+                                            {filteredProjectReports.length}
+                                        </span>
+                                    )}
                             </label>
                         </li>
 
@@ -830,9 +852,13 @@ const Reports = () => {
                             />
                             <label htmlFor="management_reports">
                                 Отчёты сотрудников
-                                {hasEmployeeReportsAccess && canAccess(user, "employee_reports") && !isManagementLoading && (
-                                    <span>{filteredManagementReports.length}</span>
-                                )}
+                                {hasEmployeeReportsAccess &&
+                                    canAccess(user, "employee_reports") &&
+                                    !isManagementLoading && (
+                                        <span>
+                                            {filteredManagementReports.length}
+                                        </span>
+                                    )}
                             </label>
                         </li>
                     </ul>
@@ -860,7 +886,9 @@ const Reports = () => {
                                 <TheadRow
                                     columns={COLUMNS}
                                     activeTab={activeTab}
-                                    projectReportsFilters={projectReportsFilters}
+                                    projectReportsFilters={
+                                        projectReportsFilters
+                                    }
                                     managementReportsFilters={
                                         managementReportsFilters
                                     }
@@ -885,34 +913,34 @@ const Reports = () => {
                                         </td>
                                     </tr>
                                 ) : activeTab === "projects" ? (
-                                filteredProjectReports.length > 0 &&
-                                filteredProjectReports.map((item) => (
-                                    <ReportItem
-                                        key={item.id}
-                                        columns={COLUMNS[0]}
-                                        props={item}
-                                        openReportEditor={openReportEditor}
-                                        activeReportId={reportId}
-                                    />
-                                ))
-                            ) : (
-                                sortedManagementList.length > 0 &&
-                                sortedManagementList.map((item) => (
-                                    <ManagementItem
-                                        key={item.id}
-                                        columns={COLUMNS[1]}
-                                        props={item}
-                                        openManagementReportEditor={
-                                            openManagementReportEditor
-                                        }
-                                        openRateReportEditor={
-                                            openRateReportEditor
-                                        }
-                                        managementReportEditorHandler={
-                                            managementReportEditorHandler
-                                        }
-                                    />
-                                ))
+                                    filteredProjectReports.length > 0 &&
+                                    filteredProjectReports.map((item) => (
+                                        <ReportItem
+                                            key={item.id}
+                                            columns={COLUMNS[0]}
+                                            props={item}
+                                            openReportEditor={openReportEditor}
+                                            activeReportId={reportId}
+                                        />
+                                    ))
+                                ) : (
+                                    sortedManagementList.length > 0 &&
+                                    sortedManagementList.map((item) => (
+                                        <ManagementItem
+                                            key={item.id}
+                                            columns={COLUMNS[1]}
+                                            props={item}
+                                            openManagementReportEditor={
+                                                openManagementReportEditor
+                                            }
+                                            openRateReportEditor={
+                                                openRateReportEditor
+                                            }
+                                            managementReportEditorHandler={
+                                                managementReportEditorHandler
+                                            }
+                                        />
+                                    ))
                                 )}
                             </tbody>
                         </table>
