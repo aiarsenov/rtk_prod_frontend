@@ -10,6 +10,7 @@ const SupplierItem = ({ props, columns }) => {
 
     return (
         <tr className="registry-table__item transition text-base text-left">
+        <tr className="registry-table__item transition text-base text-left">
             {columns.map(({ key }) => {
                 const value = props[key];
 
@@ -52,6 +53,25 @@ const SupplierItem = ({ props, columns }) => {
                                         </tbody>
                                     </table>
                                 )}
+                                            <div
+                                                key={`${key}_${index}`}
+                                                className="p-[3px_8px] border-[#E4E7EC] border rounded-[99px]"
+                                            >
+                                                {item?.toString()}
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <table className="w-full">
+                                        <tbody>
+                                            {value?.map((item, index) => (
+                                                <tr key={`${key}_${index}`}>
+                                                    <td>{item?.toString()}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                )}
                             </td>
                         );
                     } else {
@@ -70,6 +90,11 @@ const SupplierItem = ({ props, columns }) => {
                         );
                     } else {
                         return Object.entries(value).map(
+                            ([subKey, subValue], index) => (
+                                <td
+                                    className="w-[210px]"
+                                    key={`${key}_${subKey}_${index}`}
+                                >
                             ([subKey, subValue], index) => (
                                 <td
                                     className="w-[210px]"

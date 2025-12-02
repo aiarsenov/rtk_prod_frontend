@@ -9,10 +9,17 @@ const EmployeeItem = ({ props, columns }) => {
 
     return (
         <tr className="registry-table__item transition text-base text-left">
+        <tr className="registry-table__item transition text-base text-left">
             {columns.map(({ key }) => {
                 let value = props[key];
 
                 if (key === "is_staff") {
+                    value = value ? "Штатный" : "Внештатный";
+                }
+
+                if (key === "status") {
+                    const isActive = props.is_active;
+                    value = isActive ? "Работает" : "Не работает";
                     value = value ? "Штатный" : "Внештатный";
                 }
 
@@ -78,6 +85,7 @@ const EmployeeItem = ({ props, columns }) => {
                                 {value?.name?.toString() || "—"}
                             </td>
                         );
+                    } else if (key === "full_name") {
                     } else if (key === "full_name") {
                         return (
                             <td className="min-w-[160px]" key={key}>

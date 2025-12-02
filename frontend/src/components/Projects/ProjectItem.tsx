@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 
 import handleStatus from "../../utils/handleStatus";
 import getFirstNameAndSurname from "../../utils/getFirstNameAndSurname";
+import getFirstNameAndSurname from "../../utils/getFirstNameAndSurname";
 
 const handleLastReport = (string) => {
     if (!string) return;
@@ -21,11 +22,13 @@ const ProjectItem = ({
     mode,
     deleteProject,
     openReportEditor,
+    openReportEditor,
 }: {
     props: object;
     columns: object[];
     mode: string;
     deleteProject: () => void;
+    openReportEditor: () => void;
     openReportEditor: () => void;
 }) => {
     const navigate = useNavigate();
@@ -35,6 +38,7 @@ const ProjectItem = ({
     };
 
     return (
+        <tr className="registry-table__item transition text-base text-left">
         <tr className="registry-table__item transition text-base text-left">
             {columns.map(({ key }) => {
                 const value = props[key];
@@ -69,7 +73,14 @@ const ProjectItem = ({
                                                                     item.status
                                                                         .name
                                                                 )} cursor-pointer`}
+                                                                )} cursor-pointer`}
                                                                 key={index}
+                                                                onClick={() =>
+                                                                    openReportEditor(
+                                                                        item
+                                                                    )
+                                                                }
+                                                                title={`Открыть отчёт ${item.report_period_code}`}
                                                                 onClick={() =>
                                                                     openReportEditor(
                                                                         item
@@ -150,6 +161,10 @@ const ProjectItem = ({
                             ? getFirstNameAndSurname(value.name.toString())
                             : "—";
 
+                        const displayName = value?.name
+                            ? getFirstNameAndSurname(value.name.toString())
+                            : "—";
+
                         return (
                             <td
                                 className="min-w-[130px] max-w-[240px]"
@@ -169,9 +184,11 @@ const ProjectItem = ({
                                 >
                                     <div className="visible-text">
                                         <div>{displayName}</div>
+                                        <div>{displayName}</div>
                                     </div>
 
                                     <div className="hidden-text">
+                                        {displayName}
                                         {displayName}
                                     </div>
                                 </div>
@@ -203,6 +220,7 @@ const ProjectItem = ({
                                 value?.toString() ||
                                 "—"}
                         </td>
+                    );
                     );
                 } else {
                     if (key === "name") {
