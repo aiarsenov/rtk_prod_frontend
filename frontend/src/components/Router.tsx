@@ -43,7 +43,7 @@ function Router() {
                     <Route
                         path="projects"
                         element={
-                            <ProtectedRoute section="project_reports">
+                            <ProtectedRoute section="projects">
                                 <Projects />
                             </ProtectedRoute>
                         }
@@ -51,7 +51,7 @@ function Router() {
                     <Route
                         path="projects/:projectId"
                         element={
-                            <ProtectedRoute section="project_reports">
+                            <ProtectedRoute section="projects">
                                 <ProjectCard />
                             </ProtectedRoute>
                         }
@@ -59,7 +59,7 @@ function Router() {
                     <Route
                         path="projects/new"
                         element={
-                            <ProtectedRoute section="project_reports">
+                            <ProtectedRoute section="projects">
                                 <ProjectCard />
                             </ProtectedRoute>
                         }
