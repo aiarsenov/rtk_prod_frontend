@@ -23,14 +23,12 @@ function App() {
     }, []);
 
     useEffect(() => {
-        // Загружаем пользователя только если это НЕ страница приглашения
         if (!isInvitePage) {
             dispatch(fetchUser());
         }
     }, [dispatch, isInvitePage]);
 
     useEffect(() => {
-        // Редирект на логин только если это НЕ страница приглашения
         if (
             !isInvitePage &&
             import.meta.env.MODE !== "development" &&
@@ -43,7 +41,6 @@ function App() {
         }
     }, [error, isInvitePage]);
 
-    // Если это страница приглашения, пропускаем проверку авторизации
     if (isInvitePage) {
         return <Router />;
     }
