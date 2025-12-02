@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 
 import handleStatus from "../../utils/handleStatus";
 import getFirstNameAndSurname from "../../utils/getFirstNameAndSurname";
-import getFirstNameAndSurname from "../../utils/getFirstNameAndSurname";
 
 const handleLastReport = (string) => {
     if (!string) return;
@@ -22,13 +21,11 @@ const ProjectItem = ({
     mode,
     deleteProject,
     openReportEditor,
-    openReportEditor,
 }: {
     props: object;
     columns: object[];
     mode: string;
     deleteProject: () => void;
-    openReportEditor: () => void;
     openReportEditor: () => void;
 }) => {
     const navigate = useNavigate();
@@ -38,7 +35,6 @@ const ProjectItem = ({
     };
 
     return (
-        <tr className="registry-table__item transition text-base text-left">
         <tr className="registry-table__item transition text-base text-left">
             {columns.map(({ key }) => {
                 const value = props[key];
@@ -60,7 +56,7 @@ const ProjectItem = ({
                 if (Array.isArray(value) && value !== null) {
                     if (value?.length > 0) {
                         return (
-                            <td className="w-[130px] max-w-[150px]" key={key}>
+                            <td className="w-[130px] max-w-[130px]" key={key}>
                                 <table className="w-full">
                                     <tbody>
                                         {key === "latest_reports" ? (
@@ -73,14 +69,7 @@ const ProjectItem = ({
                                                                     item.status
                                                                         .name
                                                                 )} cursor-pointer`}
-                                                                )} cursor-pointer`}
                                                                 key={index}
-                                                                onClick={() =>
-                                                                    openReportEditor(
-                                                                        item
-                                                                    )
-                                                                }
-                                                                title={`Открыть отчёт ${item.report_period_code}`}
                                                                 onClick={() =>
                                                                     openReportEditor(
                                                                         item
@@ -120,7 +109,7 @@ const ProjectItem = ({
                         );
                     } else {
                         return (
-                            <td className="w-[130px] max-w-[150px]" key={key}>
+                            <td className="w-[130px] max-w-[130px]" key={key}>
                                 —
                             </td>
                         );
@@ -128,10 +117,7 @@ const ProjectItem = ({
                 } else if (typeof value === "object" && value !== null) {
                     if (key === "contragent") {
                         return (
-                            <td
-                                className="min-w-[130px] max-w-[240px]"
-                                key={key}
-                            >
+                            <td className="w-[130px]" key={key}>
                                 <div
                                     className="hidden-group text-blue cursor-pointer"
                                     onClick={(e) => {
@@ -161,17 +147,13 @@ const ProjectItem = ({
                             ? getFirstNameAndSurname(value.name.toString())
                             : "—";
 
-                        const displayName = value?.name
-                            ? getFirstNameAndSurname(value.name.toString())
-                            : "—";
-
                         return (
                             <td
-                                className="min-w-[130px] max-w-[240px]"
+                                className="w-[130px] text-blue cursor-pointer"
                                 key={key}
                             >
                                 <div
-                                    className="hidden-group text-blue cursor-pointer"
+                                    className="hidden-group"
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         navigate(
@@ -184,11 +166,9 @@ const ProjectItem = ({
                                 >
                                     <div className="visible-text">
                                         <div>{displayName}</div>
-                                        <div>{displayName}</div>
                                     </div>
 
                                     <div className="hidden-text">
-                                        {displayName}
                                         {displayName}
                                     </div>
                                 </div>
@@ -196,7 +176,7 @@ const ProjectItem = ({
                         );
                     } else if (key === "industries") {
                         return (
-                            <td className="min-w-[130px]" key={key}>
+                            <td className="w-[130px]" key={key}>
                                 <div className="hidden-group">
                                     <div className="visible-text">
                                         <div>
@@ -215,20 +195,16 @@ const ProjectItem = ({
 
                     // Если это объект, который не обработан выше, просто показываем его строковое представление
                     return (
-                        <td className="min-w-[130px]" key={key}>
+                        <td className="w-[130px]" key={key}>
                             {value?.name?.toString() ||
                                 value?.toString() ||
                                 "—"}
                         </td>
                     );
-                    );
                 } else {
                     if (key === "name") {
                         return (
-                            <td
-                                className="min-w-[130px] max-w-[240px]"
-                                key={key}
-                            >
+                            <td className="w-[130px]" key={key}>
                                 <div
                                     className="hidden-group text-blue cursor-pointer"
                                     onClick={handleRowClick}
@@ -269,7 +245,7 @@ const ProjectItem = ({
                     } else if (key === "implementation_period") {
                         return (
                             <td
-                                className="min-w-[127px] max-w-[150px] registry-table__item-period"
+                                className="w-[127px] registry-table__item-period"
                                 key={key}
                             >
                                 {value?.toString() ? (

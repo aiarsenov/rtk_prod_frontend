@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import formatDateShortYear from "../../utils/formatDateShortYear";
-import formatDateShortYear from "../../utils/formatDateShortYear";
 
 type Column = {
     label: string;
@@ -23,24 +22,13 @@ const ReportItem = ({
     openReportEditor,
     activeReportId,
 }: ReportItemProps) => {
-const ReportItem = ({
-    columns,
-    props,
-    openReportEditor,
-    activeReportId,
-}: ReportItemProps) => {
     const navigate = useNavigate();
-    const isActive =
-        activeReportId !== null &&
-        activeReportId !== undefined &&
-        props?.id === activeReportId;
     const isActive =
         activeReportId !== null &&
         activeReportId !== undefined &&
         props?.id === activeReportId;
 
     return (
-        <tr className="registry-table__item transition text-base text-left">
         <tr className="registry-table__item transition text-base text-left">
             {columns.map(({ key }) => {
                 const value = props[key];

@@ -127,7 +127,7 @@ const SalesItem = ({ props, columns, deleteProject, mode }) => {
                     if (key === "name") {
                         return (
                             <td
-                                className="min-w-[120px] max-w-[300px]"
+                                className="min-w-[150px] max-w-[300px]"
                                 key={key}
                             >
                                 <div
@@ -151,7 +151,7 @@ const SalesItem = ({ props, columns, deleteProject, mode }) => {
                         );
                     } else if (key === "last_service_last_stage") {
                         return (
-                            <td className="min-w-[110px]" key={key}>
+                            <td className="min-w-[110px] max-w-[150px]" key={key}>
                                 <div
                                     className={`registry-table__item-status ${statusClass}`}
                                     style={{
