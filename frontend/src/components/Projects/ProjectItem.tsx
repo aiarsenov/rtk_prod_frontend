@@ -56,7 +56,7 @@ const ProjectItem = ({
                 if (Array.isArray(value) && value !== null) {
                     if (value?.length > 0) {
                         return (
-                            <td className="w-[130px] max-w-[130px]" key={key}>
+                            <td className="w-[130px] max-w-[150px]" key={key}>
                                 <table className="w-full">
                                     <tbody>
                                         {key === "latest_reports" ? (
@@ -109,7 +109,7 @@ const ProjectItem = ({
                         );
                     } else {
                         return (
-                            <td className="w-[130px] max-w-[130px]" key={key}>
+                            <td className="w-[130px] max-w-[150px]" key={key}>
                                 —
                             </td>
                         );
@@ -117,7 +117,10 @@ const ProjectItem = ({
                 } else if (typeof value === "object" && value !== null) {
                     if (key === "contragent") {
                         return (
-                            <td className="w-[130px]" key={key}>
+                            <td
+                                className="min-w-[130px] max-w-[240px]"
+                                key={key}
+                            >
                                 <div
                                     className="hidden-group text-blue cursor-pointer"
                                     onClick={(e) => {
@@ -149,11 +152,11 @@ const ProjectItem = ({
 
                         return (
                             <td
-                                className="w-[130px] text-blue cursor-pointer"
+                                className="min-w-[130px] max-w-[240px]"
                                 key={key}
                             >
                                 <div
-                                    className="hidden-group"
+                                    className="hidden-group text-blue cursor-pointer"
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         navigate(
@@ -176,7 +179,7 @@ const ProjectItem = ({
                         );
                     } else if (key === "industries") {
                         return (
-                            <td className="w-[130px]" key={key}>
+                            <td className="min-w-[130px]" key={key}>
                                 <div className="hidden-group">
                                     <div className="visible-text">
                                         <div>
@@ -195,7 +198,7 @@ const ProjectItem = ({
 
                     // Если это объект, который не обработан выше, просто показываем его строковое представление
                     return (
-                        <td className="w-[130px]" key={key}>
+                        <td className="min-w-[130px]" key={key}>
                             {value?.name?.toString() ||
                                 value?.toString() ||
                                 "—"}
@@ -204,7 +207,10 @@ const ProjectItem = ({
                 } else {
                     if (key === "name") {
                         return (
-                            <td className="w-[130px]" key={key}>
+                            <td
+                                className="min-w-[130px] max-w-[240px]"
+                                key={key}
+                            >
                                 <div
                                     className="hidden-group text-blue cursor-pointer"
                                     onClick={handleRowClick}
@@ -245,7 +251,7 @@ const ProjectItem = ({
                     } else if (key === "implementation_period") {
                         return (
                             <td
-                                className="w-[127px] registry-table__item-period"
+                                className="min-w-[127px] max-w-[150px] registry-table__item-period"
                                 key={key}
                             >
                                 {value?.toString() ? (
