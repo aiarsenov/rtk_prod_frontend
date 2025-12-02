@@ -5,6 +5,7 @@ import getData from "../../utils/getData";
 import postData from "../../utils/postData";
 import handleStatus from "../../utils/handleStatus";
 import { sortList } from "../../utils/sortList";
+import getFirstNameAndSurname from "../../utils/getFirstNameAndSurname";
 
 import ProjectItem from "./ProjectItem";
 import Popup from "../Popup/Popup";
@@ -13,6 +14,8 @@ import TheadSortButton from "../TheadSortButton/TheadSortButton";
 import MultiSelectWithSearch from "../MultiSelect/MultiSelectWithSearch";
 import FilterButton from "../FilterButton";
 import OverlayTransparent from "../Overlay/OverlayTransparent";
+
+import ReportWindow from "../ReportWindow/ReportWindow";
 
 import Loader from "../Loader";
 import AccessDenied from "../AccessDenied/AccessDenied";
@@ -23,6 +26,11 @@ const Projects = () => {
 
     const [mode, setMode] = useState("edit");
     const [sortBy, setSortBy] = useState({ key: "", action: "" });
+
+    const [reportWindowsState, setReportWindowsState] = useState(false); // Редактор отчёта
+    const [contracts, setContracts] = useState([]);
+    const [reportId, setReportId] = useState(null);
+    const [reportName, setReportName] = useState("");
 
     const [isLoading, setIsLoading] = useState(true);
     const [hasAccess, setHasAccess] = useState(true);
@@ -48,9 +56,7 @@ const Projects = () => {
     const contragentOptions = useMemo(() => {
         const allNames = list
             .map((item) => item.contragent?.name)
-            .filter(
-                (name) => name !== null && name !== undefined
-            );
+            .filter((name) => name !== null && name !== undefined);
 
         return Array.from(new Set(allNames));
     }, [list]);
@@ -82,7 +88,7 @@ const Projects = () => {
     // Заполняем селектор руководителей проекта
     const projectManagerOptions = useMemo(() => {
         const allPM = list
-            .map((item) => item.project_manager?.name)
+            .map((item) => getFirstNameAndSurname(item.project_manager?.name))
             .filter((name) => name !== null && name !== undefined);
         return Array.from(new Set(allPM));
     }, [list]);
@@ -151,20 +157,43 @@ const Projects = () => {
                 setList(response.data);
                 setSortedList(response.data);
                 // Удаляем информацию об ошибке доступа, если запрос успешен
-                sessionStorage.removeItem('access_denied_projects');
+                sessionStorage.removeItem("access_denied_projects");
                 // Отправляем кастомное событие для обновления навигации
-                window.dispatchEvent(new Event('accessDeniedChanged'));
+                window.dispatchEvent(new Event("accessDeniedChanged"));
             })
             .catch((error) => {
                 if (error.status === 403) {
                     setHasAccess(false);
                     // Сохраняем информацию об ошибке доступа для навигации
-                    sessionStorage.setItem('access_denied_projects', 'true');
+                    sessionStorage.setItem("access_denied_projects", "true");
                     // Отправляем кастомное событие для обновления навигации
-                    window.dispatchEvent(new Event('accessDeniedChanged'));
+                    window.dispatchEvent(new Event("accessDeniedChanged"));
                 }
             })
             .finally(() => setIsLoading(false));
+    };
+
+    // Получение договоров для детального отчёта
+    const getContracts = (id) => {
+        getData(
+            `${import.meta.env.VITE_API_URL}contragents/${id}/contracts`
+        ).then((response) => {
+            if (response?.status == 200) {
+                setContracts(response.data);
+            }
+        });
+    };
+
+    // Открытие окна отчёта проекта
+    const openReportEditor = (reportData) => {
+        getContracts(reportData?.contragent_id);
+        setReportId(reportData.id);
+
+        setReportName(reportData?.report_period_code);
+
+        if (reportData.id && reportData?.report_period_code != "") {
+            setReportWindowsState(true);
+        }
     };
 
     // Создание проекта
@@ -186,12 +215,14 @@ const Projects = () => {
     // Подтверждение удаления проекта
     const confirmDeleteProject = () => {
         if (deleteProjectId) {
-            postData("DELETE", `${URL}/${deleteProjectId}`, {}).then((response) => {
-                if (response.ok) {
-                    getProjects();
-                    setDeleteProjectId(null);
+            postData("DELETE", `${URL}/${deleteProjectId}`, {}).then(
+                (response) => {
+                    if (response.ok) {
+                        getProjects();
+                        setDeleteProjectId(null);
+                    }
                 }
-            });
+            );
         }
     };
 
@@ -224,7 +255,9 @@ const Projects = () => {
                         filters.selectedBanks.includes(c.name)
                     )) &&
                 (filters.selectedManagers.length === 0 ||
-                    filters.selectedManagers.includes(project.project_manager?.name)) &&
+                    filters.selectedManagers.includes(
+                        getFirstNameAndSurname(project.project_manager?.name)
+                    )) &&
                 (filters.selectedNames.length === 0 ||
                     filters.selectedNames.includes(project.name)) &&
                 (filters.selectedStatuses.length === 0 ||
@@ -232,13 +265,17 @@ const Projects = () => {
                         handleStatus(project.status)
                     )) &&
                 (filters.selectedContagents.length === 0 ||
-                    filters.selectedContagents.includes(project.contragent?.name))
+                    filters.selectedContagents.includes(
+                        project.contragent?.name
+                    ))
             );
         });
     }, [sortedList, filters]);
 
     if (!hasAccess) {
-        return <AccessDenied message="У вас нет прав для просмотра раздела проектов" />;
+        return (
+            <AccessDenied message="У вас нет прав для просмотра раздела проектов" />
+        );
     }
 
     return (
@@ -450,12 +487,23 @@ const Projects = () => {
                                         columns={COLUMNS}
                                         mode={mode}
                                         deleteProject={openDeleteConfirm}
+                                        openReportEditor={openReportEditor}
                                     />
                                 ))
                             )}
                         </tbody>
                     </table>
                 </section>
+
+                <ReportWindow
+                    reportWindowsState={reportWindowsState}
+                    setReportWindowsState={setReportWindowsState}
+                    contracts={contracts}
+                    reportId={reportId}
+                    setReportId={setReportId}
+                    reportName={reportName}
+                    mode={"read"}
+                />
 
                 {popupState && (
                     <Popup onClick={closePopup} title="Создание проекта">
