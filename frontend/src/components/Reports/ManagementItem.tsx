@@ -241,22 +241,8 @@ const ManagementItem = ({
                                     key === "name"
                                 ) {
                                     return (
-                                        <div className="hidden-group min-w-[250px] max-w-[250px]">
-                                            <div
-                                                className="visible-text"
-                                                style={{
-                                                    maxWidth: "250px",
-                                                    color: "#000",
-                                                }}
-                                            >
-                                                <div>
-                                                    {value?.toString() || "—"}
-                                                </div>
-                                            </div>
-
-                                            <div className="hidden-text">
-                                                {value?.toString() || "—"}
-                                            </div>
+                                        <div className="min-w-[250px] max-w-[250px]">
+                                            {value?.toString() || "—"}
                                         </div>
                                     );
                                 } else {
