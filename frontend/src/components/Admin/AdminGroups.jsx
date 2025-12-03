@@ -30,6 +30,61 @@ const SCOPES = {
     limited: "Ограниченный",
 };
 
+// Матрица прав: какие типы прав доступны для каждого раздела
+// 0 = недоступно, 1 = доступно
+const PERMISSION_MATRIX = {
+    main: {
+        view: 1,
+        edit: 0,
+        delete: 0,
+    },
+    project_reports: {
+        view: 1,
+        edit: 1,
+        delete: 0,
+    },
+    employee_reports: {
+        view: 1,
+        edit: 1,
+        delete: 0,
+    },
+    projects: {
+        view: 1,
+        edit: 1,
+        delete: 1,
+    },
+    sales: {
+        view: 1,
+        edit: 1,
+        delete: 1,
+    },
+    customers: {
+        view: 1,
+        edit: 1,
+        delete: 0,
+    },
+    contractors: {
+        view: 1,
+        edit: 1,
+        delete: 0,
+    },
+    employees: {
+        view: 1,
+        edit: 1,
+        delete: 0,
+    },
+    dictionaries: {
+        view: 1,
+        edit: 1,
+        delete: 1,
+    },
+    admin: {
+        view: 1,
+        edit: 1,
+        delete: 1,
+    },
+};
+
 const AdminGroups = () => {
     const [groups, setGroups] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -49,10 +104,10 @@ const AdminGroups = () => {
     const [editGroupName, setEditGroupName] = useState("");
     const [editGroupDescription, setEditGroupDescription] = useState("");
 
-    // Форма добавления права
-    const [permissionSection, setPermissionSection] = useState("");
-    const [permissionType, setPermissionType] = useState("");
-    const [permissionScope, setPermissionScope] = useState("");
+    // Форма добавления прав - теперь массив выбранных прав с областями
+    const [selectedPermissions, setSelectedPermissions] = useState({});
+    // Формат: { 'section_permissionType': 'scope' }
+    // Например: { 'main_view': 'full', 'projects_edit': 'limited' }
 
     // Форма добавления пользователя
     const [selectedUsers, setSelectedUsers] = useState([]);
@@ -64,6 +119,7 @@ const AdminGroups = () => {
     useEffect(() => {
         loadGroups();
         loadAllUsers();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const loadGroups = async () => {
@@ -234,28 +290,38 @@ const AdminGroups = () => {
         e.preventDefault();
         setError("");
 
-        if (!permissionSection || !permissionType || !permissionScope) {
-            setError("Заполните все поля");
+        // Преобразуем selectedPermissions в массив прав для отправки
+        const permissions = [];
+        Object.entries(selectedPermissions).forEach(([key, scope]) => {
+            const [section, permissionType] = key.split('_');
+            permissions.push({
+                section,
+                permission_type: permissionType,
+                scope,
+            });
+        });
+
+        if (permissions.length === 0) {
+            setError("Выберите хотя бы одно право");
             return;
         }
 
-        const toastId = toast.loading("Добавление права...", {
+        const toastId = toast.loading("Добавление прав...", {
             position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
         });
 
         try {
-            await postData(
-                "POST",
-                `${API_URL}admin/permission-groups/${selectedGroup.id}/permissions`,
-                {
-                    section: permissionSection,
-                    permission_type: permissionType,
-                    scope: permissionScope,
-                }
-            );
+            // Отправляем каждое право отдельно
+            for (const permission of permissions) {
+                await postData(
+                    "POST",
+                    `${API_URL}admin/permission-groups/${selectedGroup.id}/permissions`,
+                    permission
+                );
+            }
 
             toast.update(toastId, {
-                render: "Право успешно добавлено",
+                render: `Успешно добавлено прав: ${permissions.length}`,
                 type: "success",
                 isLoading: false,
                 autoClose: 2000,
@@ -265,13 +331,11 @@ const AdminGroups = () => {
             });
 
             setShowAddPermissionModal(false);
-            setPermissionSection("");
-            setPermissionType("");
-            setPermissionScope("");
+            setSelectedPermissions({});
             loadGroups();
         } catch (err) {
             toast.update(toastId, {
-                render: err.message || "Ошибка добавления права",
+                render: err.message || "Ошибка добавления прав",
                 type: "error",
                 isLoading: false,
                 autoClose: 3000,
@@ -279,8 +343,33 @@ const AdminGroups = () => {
                 pauseOnHover: false,
                 draggable: true,
             });
-            setError(err.message || "Ошибка добавления права");
+            setError(err.message || "Ошибка добавления прав");
         }
+    };
+
+    // Обработчик изменения чекбокса
+    const handlePermissionCheckboxChange = (section, permissionType) => {
+        const key = `${section}_${permissionType}`;
+        setSelectedPermissions((prev) => {
+            const newPermissions = { ...prev };
+            if (newPermissions[key]) {
+                // Если уже выбрано - убираем
+                delete newPermissions[key];
+            } else {
+                // Если не выбрано - добавляем с дефолтным scope
+                newPermissions[key] = 'full';
+            }
+            return newPermissions;
+        });
+    };
+
+    // Обработчик изменения scope для конкретного права
+    const handleScopeChange = (section, permissionType, scope) => {
+        const key = `${section}_${permissionType}`;
+        setSelectedPermissions((prev) => ({
+            ...prev,
+            [key]: scope,
+        }));
     };
 
     const handleDeletePermission = async (groupId, permissionId) => {
@@ -711,93 +800,106 @@ const AdminGroups = () => {
                 </div>
             )}
 
-            {/* Модальное окно добавления права */}
+            {/* Модальное окно добавления прав */}
             {showAddPermissionModal && selectedGroup && (
                 <div
                     className="admin-modal"
-                    onClick={() => setShowAddPermissionModal(false)}
+                    onClick={() => {
+                        setShowAddPermissionModal(false);
+                        setSelectedPermissions({});
+                        setError("");
+                    }}
                 >
                     <div
-                        className="admin-modal__content"
+                        className="admin-modal__content admin-modal__content--wide"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="admin-modal__header">
-                            <h2>Добавить право</h2>
+                            <h2>Настройка прав доступа</h2>
                         </div>
                         <form onSubmit={handleAddPermission}>
                             <div className="admin-modal__body">
-                                <div className="admin-form">
-                                    <div className="admin-form__group">
-                                        <label className="admin-form__label">Раздел</label>
-                                        <select
-                                            className="admin-form__select"
-                                            value={permissionSection}
-                                            onChange={(e) =>
-                                                setPermissionSection(e.target.value)
-                                            }
-                                            required
-                                        >
-                                            <option value="">Выберите раздел</option>
-                                            {Object.entries(SECTIONS).map(([key, label]) => (
-                                                <option key={key} value={key}>
-                                                    {label}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
+                                <div className="permissions-table-wrapper">
+                                    <table className="permissions-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Раздел</th>
+                                                <th>Просмотр</th>
+                                                <th>Редактирование</th>
+                                                <th>Удаление</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {Object.entries(SECTIONS).map(([sectionKey, sectionLabel]) => {
+                                                const matrix = PERMISSION_MATRIX[sectionKey] || {};
+                                                return (
+                                                    <tr key={sectionKey}>
+                                                        <td className="section-name">{sectionLabel}</td>
+                                                        {['view', 'edit', 'delete'].map((permType) => {
+                                                            const isAllowed = matrix[permType] === 1;
+                                                            const key = `${sectionKey}_${permType}`;
+                                                            const isChecked = !!selectedPermissions[key];
+                                                            const currentScope = selectedPermissions[key] || 'full';
 
-                                    <div className="admin-form__group">
-                                        <label className="admin-form__label">
-                                            Тип права
-                                        </label>
-                                        <select
-                                            className="admin-form__select"
-                                            value={permissionType}
-                                            onChange={(e) =>
-                                                setPermissionType(e.target.value)
-                                            }
-                                            required
-                                        >
-                                            <option value="">Выберите тип</option>
-                                            {Object.entries(PERMISSION_TYPES).map(
-                                                ([key, label]) => (
-                                                    <option key={key} value={key}>
-                                                        {label}
-                                                    </option>
-                                                )
-                                            )}
-                                        </select>
-                                    </div>
-
-                                    <div className="admin-form__group">
-                                        <label className="admin-form__label">Область</label>
-                                        <select
-                                            className="admin-form__select"
-                                            value={permissionScope}
-                                            onChange={(e) =>
-                                                setPermissionScope(e.target.value)
-                                            }
-                                            required
-                                        >
-                                            <option value="">Выберите область</option>
-                                            {Object.entries(SCOPES).map(([key, label]) => (
-                                                <option key={key} value={key}>
-                                                    {label}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-
-                                    {error && (
-                                        <div className="admin-form__error">{error}</div>
-                                    )}
+                                                            return (
+                                                                <td key={permType} className="permission-cell">
+                                                                    {isAllowed ? (
+                                                                        <div className="permission-control">
+                                                                            <input
+                                                                                type="checkbox"
+                                                                                checked={isChecked}
+                                                                                onChange={() =>
+                                                                                    handlePermissionCheckboxChange(
+                                                                                        sectionKey,
+                                                                                        permType
+                                                                                    )
+                                                                                }
+                                                                                className="permission-checkbox"
+                                                                            />
+                                                                            {isChecked && (
+                                                                                <select
+                                                                                    value={currentScope}
+                                                                                    onChange={(e) =>
+                                                                                        handleScopeChange(
+                                                                                            sectionKey,
+                                                                                            permType,
+                                                                                            e.target.value
+                                                                                        )
+                                                                                    }
+                                                                                    className="permission-scope-select"
+                                                                                    onClick={(e) => e.stopPropagation()}
+                                                                                >
+                                                                                    <option value="full">Полная</option>
+                                                                                    <option value="limited">Ограниченная</option>
+                                                                                </select>
+                                                                            )}
+                                                                        </div>
+                                                                    ) : (
+                                                                        <span className="permission-disabled">—</span>
+                                                                    )}
+                                                                </td>
+                                                            );
+                                                        })}
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
                                 </div>
+
+                                {error && (
+                                    <div className="admin-form__error">{error}</div>
+                                )}
                             </div>
                             <div className="admin-modal__footer">
                                 <button
                                     type="button"
                                     className="admin-btn admin-btn--secondary"
-                                    onClick={() => setShowAddPermissionModal(false)}
+                                    onClick={() => {
+                                        setShowAddPermissionModal(false);
+                                        setSelectedPermissions({});
+                                        setError("");
+                                    }}
                                 >
                                     Отмена
                                 </button>
