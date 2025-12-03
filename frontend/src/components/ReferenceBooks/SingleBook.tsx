@@ -973,28 +973,26 @@ const SingleBook = () => {
                 if (response.status == 200) {
                     setBooksItems(response.data.data);
                     setRefBooksItems(response.data.data);
-
-                    setListLength(
-                        bookId !== "creditor" && bookId !== "contragent"
-                            ? response.data.data?.length
-                            : response.data.data.reduce((sum, creditor) => {
-                                  const projectsContacts =
-                                      creditor.projects.reduce(
-                                          (projectSum, project) => {
-                                              return (
-                                                  projectSum +
-                                                  project.contacts?.length
-                                              );
-                                          },
-                                          0
-                                      );
-                                  return sum + projectsContacts;
-                              }, 0)
-                    );
                 }
             })
             .finally(() => setIsLoading(false));
     };
+
+    useEffect(() => {
+        setListLength(
+            bookId !== "creditor" && bookId !== "contragent"
+                ? booksItems?.length
+                : booksItems.reduce((sum, creditor) => {
+                      const projectsContacts = creditor.projects.reduce(
+                          (projectSum, project) => {
+                              return projectSum + project.contacts?.length;
+                          },
+                          0
+                      );
+                      return sum + projectsContacts;
+                  }, 0)
+        );
+    }, [booksItems]);
 
     useEffect(() => {
         if (bookId !== "working-hours") {
