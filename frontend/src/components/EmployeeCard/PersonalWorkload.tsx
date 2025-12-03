@@ -103,20 +103,22 @@ const PersonalWorkload = ({
                 )
                     .then((response) => {
                         if (response?.ok) {
-                            toast.update(query, {
-                                render: "Успешно обновлено!",
-                                type: "success",
-                                containerId: "toastContainer_1",
-                                isLoading: false,
-                                autoClose: 1200,
-                                pauseOnFocusLoss: false,
-                                pauseOnHover: false,
-                                draggable: true,
-                                position:
-                                    window.innerWidth >= 1440
-                                        ? "bottom-right"
-                                        : "top-right",
-                            });
+                            toast.dismiss(query);
+
+                            // toast.update(query, {
+                            //     render: "Успешно обновлено!",
+                            //     type: "success",
+                            //     containerId: "toastContainer_1",
+                            //     isLoading: false,
+                            //     autoClose: 1200,
+                            //     pauseOnFocusLoss: false,
+                            //     pauseOnHover: false,
+                            //     draggable: true,
+                            //     position:
+                            //         window.innerWidth >= 1440
+                            //             ? "bottom-right"
+                            //             : "top-right",
+                            // });
 
                             personalWorkloadFilter();
                             getWorkloadSummary();

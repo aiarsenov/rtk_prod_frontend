@@ -124,28 +124,32 @@ const EmployeeCard = () => {
                         ...prev,
                         ...response.data,
                     }));
+
                     setCardDataCustom((prev) => ({
                         ...prev,
                         ...response.data,
                     }));
 
-                    if (showMessage) {
-                        toast.update(query, {
-                            render: "Данные обновлены",
-                            type: "success",
-                            containerId: "toastContainer",
-                            isLoading: false,
-                            autoClose: 1000,
-                            pauseOnFocusLoss: false,
-                            pauseOnHover: false,
-                            draggable: true,
-                            position:
-                                window.innerWidth >= 1440
-                                    ? "bottom-right"
-                                    : "top-right",
-                        });
-                    }
+                    toast.dismiss(query);
+
+                    // if (showMessage) {
+                    //     toast.update(query, {
+                    //         render: "Данные обновлены",
+                    //         type: "success",
+                    //         containerId: "toastContainer",
+                    //         isLoading: false,
+                    //         autoClose: 1000,
+                    //         pauseOnFocusLoss: false,
+                    //         pauseOnHover: false,
+                    //         draggable: true,
+                    //         position:
+                    //             window.innerWidth >= 1440
+                    //                 ? "bottom-right"
+                    //                 : "top-right",
+                    //     });
+                    // }
                 } else {
+                    toast.dismiss(query);
                     toast.error("Ошибка обновления", {
                         isLoading: false,
                         autoClose: 1500,

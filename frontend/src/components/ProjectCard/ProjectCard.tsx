@@ -289,22 +289,23 @@ const ProjectCard = () => {
                             ...response,
                         }));
 
-                        if (showMessage) {
-                            toast.update(query, {
-                                render: "Проект успешно обновлен",
-                                type: "success",
-                                containerId: "toastContainer",
-                                isLoading: false,
-                                autoClose: 1000,
-                                pauseOnFocusLoss: false,
-                                pauseOnHover: false,
-                                draggable: true,
-                                position:
-                                    window.innerWidth >= 1440
-                                        ? "bottom-right"
-                                        : "top-right",
-                            });
-                        }
+                        // if (showMessage) {
+                        //     toast.update(query, {
+                        //         render: "Проект успешно обновлен",
+                        //         type: "success",
+                        //         containerId: "toastContainer",
+                        //         isLoading: false,
+                        //         autoClose: 1000,
+                        //         pauseOnFocusLoss: false,
+                        //         pauseOnHover: false,
+                        //         draggable: true,
+                        //         position:
+                        //             window.innerWidth >= 1440
+                        //                 ? "bottom-right"
+                        //                 : "top-right",
+                        //     });
+                        // }
+                        toast.dismiss(query);
                     }
                 })
                 .catch((error) => {
@@ -373,22 +374,24 @@ const ProjectCard = () => {
                             })),
                         ]);
 
-                        toast.update(query, {
-                            render:
-                                response.message ||
-                                "Контакты успешно добавлены к проекту!",
-                            type: "success",
-                            containerId: "toastContainer",
-                            isLoading: false,
-                            autoClose: 1200,
-                            pauseOnFocusLoss: false,
-                            pauseOnHover: false,
-                            draggable: true,
-                            position:
-                                window.innerWidth >= 1440
-                                    ? "bottom-right"
-                                    : "top-right",
-                        });
+                        toast.dismiss(query);
+
+                        // toast.update(query, {
+                        //     render:
+                        //         response.message ||
+                        //         "Контакты успешно добавлены к проекту!",
+                        //     type: "success",
+                        //     containerId: "toastContainer",
+                        //     isLoading: false,
+                        //     autoClose: 1200,
+                        //     pauseOnFocusLoss: false,
+                        //     pauseOnHover: false,
+                        //     draggable: true,
+                        //     position:
+                        //         window.innerWidth >= 1440
+                        //             ? "bottom-right"
+                        //             : "top-right",
+                        // });
                     }
                 })
                 .catch((error) => {
@@ -433,22 +436,24 @@ const ProjectCard = () => {
                                 })),
                             ]);
 
-                            toast.update(query, {
-                                render:
-                                    response.message ||
-                                    "Контакты успешно добавлены к проекту!",
-                                type: "success",
-                                containerId: "toastContainer",
-                                isLoading: false,
-                                autoClose: 1200,
-                                pauseOnFocusLoss: false,
-                                pauseOnHover: false,
-                                draggable: true,
-                                position:
-                                    window.innerWidth >= 1440
-                                        ? "bottom-right"
-                                        : "top-right",
-                            });
+                            toast.dismiss(query);
+
+                            // toast.update(query, {
+                            //     render:
+                            //         response.message ||
+                            //         "Контакты успешно добавлены к проекту!",
+                            //     type: "success",
+                            //     containerId: "toastContainer",
+                            //     isLoading: false,
+                            //     autoClose: 1200,
+                            //     pauseOnFocusLoss: false,
+                            //     pauseOnHover: false,
+                            //     draggable: true,
+                            //     position:
+                            //         window.innerWidth >= 1440
+                            //             ? "bottom-right"
+                            //             : "top-right",
+                            // });
                         }
                     })
                     .catch((error) => {
@@ -504,20 +509,22 @@ const ProjectCard = () => {
         )
             .then((response) => {
                 if (response?.ok) {
-                    toast.update(query, {
-                        render: response.message,
-                        type: "success",
-                        containerId: "toastContainer",
-                        isLoading: false,
-                        autoClose: 1200,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
+                    toast.dismiss(query);
+
+                    // toast.update(query, {
+                    //     render: response.message,
+                    //     type: "success",
+                    //     containerId: "toastContainer",
+                    //     isLoading: false,
+                    //     autoClose: 1200,
+                    //     pauseOnFocusLoss: false,
+                    //     pauseOnHover: false,
+                    //     draggable: true,
+                    //     position:
+                    //         window.innerWidth >= 1440
+                    //             ? "bottom-right"
+                    //             : "top-right",
+                    // });
 
                     if (deleteExecutor.type == "creditor") {
                         setCreditors(
@@ -604,20 +611,22 @@ const ProjectCard = () => {
         return postData("POST", `${import.meta.env.VITE_API_URL}reports`, data)
             .then((response) => {
                 if (response?.ok) {
-                    toast.update(query, {
-                        render: response.message,
-                        type: "success",
-                        containerId: "toastContainer",
-                        isLoading: false,
-                        autoClose: 1200,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
+                    toast.dismiss(query);
+
+                    // toast.update(query, {
+                    //     render: response.message,
+                    //     type: "success",
+                    //     containerId: "toastContainer",
+                    //     isLoading: false,
+                    //     autoClose: 1200,
+                    //     pauseOnFocusLoss: false,
+                    //     pauseOnHover: false,
+                    //     draggable: true,
+                    //     position:
+                    //         window.innerWidth >= 1440
+                    //             ? "bottom-right"
+                    //             : "top-right",
+                    // });
 
                     setReports((prevReports) => [
                         ...prevReports,
@@ -692,20 +701,22 @@ const ProjectCard = () => {
         )
             .then((response) => {
                 if (response?.ok) {
-                    toast.update(query, {
-                        render: response.message,
-                        type: "success",
-                        containerId: "toastContainer",
-                        isLoading: false,
-                        autoClose: 1200,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
+                    toast.dismiss(query);
+
+                    // toast.update(query, {
+                    //     render: response.message,
+                    //     type: "success",
+                    //     containerId: "toastContainer",
+                    //     isLoading: false,
+                    //     autoClose: 1200,
+                    //     pauseOnFocusLoss: false,
+                    //     pauseOnHover: false,
+                    //     draggable: true,
+                    //     position:
+                    //         window.innerWidth >= 1440
+                    //             ? "bottom-right"
+                    //             : "top-right",
+                    // });
 
                     getCard();
                     // Закрываем окно только при успешном сохранении

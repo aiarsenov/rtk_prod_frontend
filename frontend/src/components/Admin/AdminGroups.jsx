@@ -114,15 +114,17 @@ const AdminGroups = () => {
                 description: newGroupDescription,
             });
 
-            toast.update(toastId, {
-                render: "Группа успешно создана",
-                type: "success",
-                isLoading: false,
-                autoClose: 2000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                draggable: true,
-            });
+         toast.dismiss(toastId);
+
+            // toast.update(toastId, {
+            //     render: "Группа успешно создана",
+            //     type: "success",
+            //     isLoading: false,
+            //     autoClose: 2000,
+            //     pauseOnFocusLoss: false,
+            //     pauseOnHover: false,
+            //     draggable: true,
+            // });
 
             setShowCreateModal(false);
             setNewGroupName("");
@@ -163,20 +165,26 @@ const AdminGroups = () => {
         });
 
         try {
-            await postData("PUT", `${API_URL}admin/permission-groups/${selectedGroup.id}`, {
-                name: editGroupName,
-                description: editGroupDescription,
-            });
+            await postData(
+                "PUT",
+                `${API_URL}admin/permission-groups/${selectedGroup.id}`,
+                {
+                    name: editGroupName,
+                    description: editGroupDescription,
+                }
+            );
 
-            toast.update(toastId, {
-                render: "Группа успешно обновлена",
-                type: "success",
-                isLoading: false,
-                autoClose: 2000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                draggable: true,
-            });
+            toast.dismiss(toastId);
+
+            // toast.update(toastId, {
+            //     render: "Группа успешно обновлена",
+            //     type: "success",
+            //     isLoading: false,
+            //     autoClose: 2000,
+            //     pauseOnFocusLoss: false,
+            //     pauseOnHover: false,
+            //     draggable: true,
+            // });
 
             setShowEditModal(false);
             setEditGroupName("");
@@ -206,16 +214,22 @@ const AdminGroups = () => {
         });
 
         try {
-            await postData("DELETE", `${API_URL}admin/permission-groups/${groupId}`);
-            toast.update(toastId, {
-                render: "Группа успешно удалена",
-                type: "success",
-                isLoading: false,
-                autoClose: 2000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                draggable: true,
-            });
+            await postData(
+                "DELETE",
+                `${API_URL}admin/permission-groups/${groupId}`
+            );
+         toast.dismiss(toastId);
+
+            // toast.update(toastId, {
+            //     render: "Группа успешно удалена",
+            //     type: "success",
+            //     isLoading: false,
+            //     autoClose: 2000,
+            //     pauseOnFocusLoss: false,
+            //     pauseOnHover: false,
+            //     draggable: true,
+            // });
+
             loadGroups();
         } catch (err) {
             toast.update(toastId, {
@@ -254,15 +268,17 @@ const AdminGroups = () => {
                 }
             );
 
-            toast.update(toastId, {
-                render: "Право успешно добавлено",
-                type: "success",
-                isLoading: false,
-                autoClose: 2000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                draggable: true,
-            });
+         toast.dismiss(toastId);
+
+            // toast.update(toastId, {
+            //     render: "Право успешно добавлено",
+            //     type: "success",
+            //     isLoading: false,
+            //     autoClose: 2000,
+            //     pauseOnFocusLoss: false,
+            //     pauseOnHover: false,
+            //     draggable: true,
+            // });
 
             setShowAddPermissionModal(false);
             setPermissionSection("");
@@ -297,15 +313,17 @@ const AdminGroups = () => {
                 "DELETE",
                 `${API_URL}admin/permission-groups/${groupId}/permissions/${permissionId}`
             );
-            toast.update(toastId, {
-                render: "Право успешно удалено",
-                type: "success",
-                isLoading: false,
-                autoClose: 2000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                draggable: true,
-            });
+         toast.dismiss(toastId);
+
+            // toast.update(toastId, {
+            //     render: "Право успешно удалено",
+            //     type: "success",
+            //     isLoading: false,
+            //     autoClose: 2000,
+            //     pauseOnFocusLoss: false,
+            //     pauseOnHover: false,
+            //     draggable: true,
+            // });
             loadGroups();
         } catch (err) {
             toast.update(toastId, {
@@ -342,15 +360,17 @@ const AdminGroups = () => {
                 }
             );
 
-            toast.update(toastId, {
-                render: "Пользователи успешно добавлены",
-                type: "success",
-                isLoading: false,
-                autoClose: 2000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                draggable: true,
-            });
+         toast.dismiss(toastId);
+
+            // toast.update(toastId, {
+            //     render: "Пользователи успешно добавлены",
+            //     type: "success",
+            //     isLoading: false,
+            //     autoClose: 2000,
+            //     pauseOnFocusLoss: false,
+            //     pauseOnHover: false,
+            //     draggable: true,
+            // });
 
             setShowAddUserModal(false);
             setSelectedUsers([]);
@@ -383,15 +403,17 @@ const AdminGroups = () => {
                 "DELETE",
                 `${API_URL}admin/permission-groups/${groupId}/users/${userId}`
             );
-            toast.update(toastId, {
-                render: "Пользователь успешно удален из группы",
-                type: "success",
-                isLoading: false,
-                autoClose: 2000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                draggable: true,
-            });
+
+         toast.dismiss(toastId);
+            // toast.update(toastId, {
+            //     render: "Пользователь успешно удален из группы",
+            //     type: "success",
+            //     isLoading: false,
+            //     autoClose: 2000,
+            //     pauseOnFocusLoss: false,
+            //     pauseOnHover: false,
+            //     draggable: true,
+            // });
             loadGroups();
         } catch (err) {
             toast.update(toastId, {
@@ -467,13 +489,17 @@ const AdminGroups = () => {
                                     <div className="flex gap-2">
                                         <button
                                             className="admin-btn admin-btn--secondary"
-                                            onClick={() => handleEditGroup(group)}
+                                            onClick={() =>
+                                                handleEditGroup(group)
+                                            }
                                         >
                                             Редактировать
                                         </button>
                                         <button
                                             className="admin-btn admin-btn--danger"
-                                            onClick={() => handleDeleteGroup(group.id)}
+                                            onClick={() =>
+                                                handleDeleteGroup(group.id)
+                                            }
                                         >
                                             Удалить
                                         </button>
@@ -496,14 +522,24 @@ const AdminGroups = () => {
                                         </button>
                                     )}
                                 </div>
-                                {group.permissions && group.permissions.length > 0 ? (
+                                {group.permissions &&
+                                group.permissions.length > 0 ? (
                                     <div className="permission-list">
                                         {group.permissions.map((perm) => (
-                                            <div key={perm.id} className="permission-tag">
-                                                {SECTIONS[perm.section] || perm.section} →{" "}
-                                                {PERMISSION_TYPES[perm.permission_type] ||
-                                                    perm.permission_type}{" "}
-                                                ({SCOPES[perm.scope] || perm.scope})
+                                            <div
+                                                key={perm.id}
+                                                className="permission-tag"
+                                            >
+                                                {SECTIONS[perm.section] ||
+                                                    perm.section}{" "}
+                                                →{" "}
+                                                {PERMISSION_TYPES[
+                                                    perm.permission_type
+                                                ] || perm.permission_type}{" "}
+                                                (
+                                                {SCOPES[perm.scope] ||
+                                                    perm.scope}
+                                                )
                                                 {!group.is_system && (
                                                     <button
                                                         onClick={() =>
@@ -520,7 +556,9 @@ const AdminGroups = () => {
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="text-gray-500 text-sm">Нет прав</div>
+                                    <div className="text-gray-500 text-sm">
+                                        Нет прав
+                                    </div>
                                 )}
                             </div>
 
@@ -548,12 +586,18 @@ const AdminGroups = () => {
                                 {group.users && group.users.length > 0 ? (
                                     <div className="user-list">
                                         {group.users.map((user) => (
-                                            <div key={user.id} className="user-tag">
+                                            <div
+                                                key={user.id}
+                                                className="user-tag"
+                                            >
                                                 {user.name || user.email}
                                                 {!group.is_system && (
                                                     <button
                                                         onClick={() =>
-                                                            handleRemoveUser(group.id, user.id)
+                                                            handleRemoveUser(
+                                                                group.id,
+                                                                user.id
+                                                            )
                                                         }
                                                     >
                                                         ×
@@ -575,7 +619,10 @@ const AdminGroups = () => {
 
             {/* Модальное окно создания группы */}
             {showCreateModal && (
-                <div className="admin-modal" onClick={() => setShowCreateModal(false)}>
+                <div
+                    className="admin-modal"
+                    onClick={() => setShowCreateModal(false)}
+                >
                     <div
                         className="admin-modal__content"
                         onClick={(e) => e.stopPropagation()}
@@ -609,13 +656,17 @@ const AdminGroups = () => {
                                             className="admin-form__textarea"
                                             value={newGroupDescription}
                                             onChange={(e) =>
-                                                setNewGroupDescription(e.target.value)
+                                                setNewGroupDescription(
+                                                    e.target.value
+                                                )
                                             }
                                         />
                                     </div>
 
                                     {error && (
-                                        <div className="admin-form__error">{error}</div>
+                                        <div className="admin-form__error">
+                                            {error}
+                                        </div>
                                     )}
                                 </div>
                             </div>
@@ -641,10 +692,13 @@ const AdminGroups = () => {
 
             {/* Модальное окно редактирования группы */}
             {showEditModal && selectedGroup && (
-                <div className="admin-modal" onClick={() => {
-                    setShowEditModal(false);
-                    setError("");
-                }}>
+                <div
+                    className="admin-modal"
+                    onClick={() => {
+                        setShowEditModal(false);
+                        setError("");
+                    }}
+                >
                     <div
                         className="admin-modal__content"
                         onClick={(e) => e.stopPropagation()}
@@ -678,13 +732,17 @@ const AdminGroups = () => {
                                             className="admin-form__textarea"
                                             value={editGroupDescription}
                                             onChange={(e) =>
-                                                setEditGroupDescription(e.target.value)
+                                                setEditGroupDescription(
+                                                    e.target.value
+                                                )
                                             }
                                         />
                                     </div>
 
                                     {error && (
-                                        <div className="admin-form__error">{error}</div>
+                                        <div className="admin-form__error">
+                                            {error}
+                                        </div>
                                     )}
                                 </div>
                             </div>
@@ -728,21 +786,32 @@ const AdminGroups = () => {
                             <div className="admin-modal__body">
                                 <div className="admin-form">
                                     <div className="admin-form__group">
-                                        <label className="admin-form__label">Раздел</label>
+                                        <label className="admin-form__label">
+                                            Раздел
+                                        </label>
                                         <select
                                             className="admin-form__select"
                                             value={permissionSection}
                                             onChange={(e) =>
-                                                setPermissionSection(e.target.value)
+                                                setPermissionSection(
+                                                    e.target.value
+                                                )
                                             }
                                             required
                                         >
-                                            <option value="">Выберите раздел</option>
-                                            {Object.entries(SECTIONS).map(([key, label]) => (
-                                                <option key={key} value={key}>
-                                                    {label}
-                                                </option>
-                                            ))}
+                                            <option value="">
+                                                Выберите раздел
+                                            </option>
+                                            {Object.entries(SECTIONS).map(
+                                                ([key, label]) => (
+                                                    <option
+                                                        key={key}
+                                                        value={key}
+                                                    >
+                                                        {label}
+                                                    </option>
+                                                )
+                                            )}
                                         </select>
                                     </div>
 
@@ -754,33 +823,18 @@ const AdminGroups = () => {
                                             className="admin-form__select"
                                             value={permissionType}
                                             onChange={(e) =>
-                                                setPermissionType(e.target.value)
-                                            }
-                                            required
-                                        >
-                                            <option value="">Выберите тип</option>
-                                            {Object.entries(PERMISSION_TYPES).map(
-                                                ([key, label]) => (
-                                                    <option key={key} value={key}>
-                                                        {label}
-                                                    </option>
+                                                setPermissionType(
+                                                    e.target.value
                                                 )
-                                            )}
-                                        </select>
-                                    </div>
-
-                                    <div className="admin-form__group">
-                                        <label className="admin-form__label">Область</label>
-                                        <select
-                                            className="admin-form__select"
-                                            value={permissionScope}
-                                            onChange={(e) =>
-                                                setPermissionScope(e.target.value)
                                             }
                                             required
                                         >
-                                            <option value="">Выберите область</option>
-                                            {Object.entries(SCOPES).map(([key, label]) => (
+                                            <option value="">
+                                                Выберите тип
+                                            </option>
+                                            {Object.entries(
+                                                PERMISSION_TYPES
+                                            ).map(([key, label]) => (
                                                 <option key={key} value={key}>
                                                     {label}
                                                 </option>
@@ -788,8 +842,40 @@ const AdminGroups = () => {
                                         </select>
                                     </div>
 
+                                    <div className="admin-form__group">
+                                        <label className="admin-form__label">
+                                            Область
+                                        </label>
+                                        <select
+                                            className="admin-form__select"
+                                            value={permissionScope}
+                                            onChange={(e) =>
+                                                setPermissionScope(
+                                                    e.target.value
+                                                )
+                                            }
+                                            required
+                                        >
+                                            <option value="">
+                                                Выберите область
+                                            </option>
+                                            {Object.entries(SCOPES).map(
+                                                ([key, label]) => (
+                                                    <option
+                                                        key={key}
+                                                        value={key}
+                                                    >
+                                                        {label}
+                                                    </option>
+                                                )
+                                            )}
+                                        </select>
+                                    </div>
+
                                     {error && (
-                                        <div className="admin-form__error">{error}</div>
+                                        <div className="admin-form__error">
+                                            {error}
+                                        </div>
                                     )}
                                 </div>
                             </div>
@@ -797,7 +883,9 @@ const AdminGroups = () => {
                                 <button
                                     type="button"
                                     className="admin-btn admin-btn--secondary"
-                                    onClick={() => setShowAddPermissionModal(false)}
+                                    onClick={() =>
+                                        setShowAddPermissionModal(false)
+                                    }
                                 >
                                     Отмена
                                 </button>
@@ -815,7 +903,10 @@ const AdminGroups = () => {
 
             {/* Модальное окно добавления пользователей */}
             {showAddUserModal && selectedGroup && (
-                <div className="admin-modal" onClick={() => setShowAddUserModal(false)}>
+                <div
+                    className="admin-modal"
+                    onClick={() => setShowAddUserModal(false)}
+                >
                     <div
                         className="admin-modal__content"
                         onClick={(e) => e.stopPropagation()}
@@ -843,7 +934,8 @@ const AdminGroups = () => {
                                                 .filter(
                                                     (user) =>
                                                         !selectedGroup.users?.some(
-                                                            (u) => u.id === user.id
+                                                            (u) =>
+                                                                u.id === user.id
                                                         )
                                                 )
                                                 .map((user) => (
@@ -857,7 +949,8 @@ const AdminGroups = () => {
                                                         <label
                                                             style={{
                                                                 display: "flex",
-                                                                alignItems: "center",
+                                                                alignItems:
+                                                                    "center",
                                                                 gap: "8px",
                                                                 cursor: "pointer",
                                                             }}
@@ -873,7 +966,8 @@ const AdminGroups = () => {
                                                                     )
                                                                 }
                                                             />
-                                                            {user.name || user.email}
+                                                            {user.name ||
+                                                                user.email}
                                                         </label>
                                                     </div>
                                                 ))}
@@ -881,7 +975,9 @@ const AdminGroups = () => {
                                     </div>
 
                                     {error && (
-                                        <div className="admin-form__error">{error}</div>
+                                        <div className="admin-form__error">
+                                            {error}
+                                        </div>
                                     )}
                                 </div>
                             </div>

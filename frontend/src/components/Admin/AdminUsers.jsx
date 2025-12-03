@@ -75,15 +75,17 @@ const AdminUsers = () => {
                 email: inviteEmail,
             });
 
-            toast.update(toastId, {
-                render: "Приглашение успешно отправлено",
-                type: "success",
-                isLoading: false,
-                autoClose: 2000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                draggable: true,
-            });
+            toast.dismiss(toastId);
+
+            // toast.update(toastId, {
+            //     render: "Приглашение успешно отправлено",
+            //     type: "success",
+            //     isLoading: false,
+            //     autoClose: 2000,
+            //     pauseOnFocusLoss: false,
+            //     pauseOnHover: false,
+            //     draggable: true,
+            // });
 
             setShowInviteModal(false);
             setSelectedEmployee(null);
@@ -113,16 +115,21 @@ const AdminUsers = () => {
         });
 
         try {
-            const response = await postData("PATCH", `${API_URL}admin/users/${userId}/activate`);
-            toast.update(toastId, {
-                render: response.message || "Пользователь успешно активирован",
-                type: "success",
-                isLoading: false,
-                autoClose: 2000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                draggable: true,
-            });
+            const response = await postData(
+                "PATCH",
+                `${API_URL}admin/users/${userId}/activate`
+            );
+            toast.dismiss(toastId);
+
+            // toast.update(toastId, {
+            //     render: response.message || "Пользователь успешно активирован",
+            //     type: "success",
+            //     isLoading: false,
+            //     autoClose: 2000,
+            //     pauseOnFocusLoss: false,
+            //     pauseOnHover: false,
+            //     draggable: true,
+            // });
             loadUsers();
         } catch (err) {
             toast.update(toastId, {
@@ -147,22 +154,29 @@ const AdminUsers = () => {
         });
 
         try {
-            const response = await postData("PATCH", `${API_URL}admin/users/${userId}/deactivate`);
-            toast.update(toastId, {
-                render: response.message || "Пользователь успешно деактивирован",
-                type: "success",
-                isLoading: false,
-                autoClose: 2000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                draggable: true,
-            });
+            const response = await postData(
+                "PATCH",
+                `${API_URL}admin/users/${userId}/deactivate`
+            );
+            toast.dismiss(toastId);
+
+            // toast.update(toastId, {
+            //     render:
+            //         response.message || "Пользователь успешно деактивирован",
+            //     type: "success",
+            //     isLoading: false,
+            //     autoClose: 2000,
+            //     pauseOnFocusLoss: false,
+            //     pauseOnHover: false,
+            //     draggable: true,
+            // });
             loadUsers();
         } catch (err) {
             toast.update(toastId, {
-                render: err.status === 403
-                    ? "Нельзя деактивировать собственную учетную запись"
-                    : err.message || "Ошибка деактивации пользователя",
+                render:
+                    err.status === 403
+                        ? "Нельзя деактивировать собственную учетную запись"
+                        : err.message || "Ошибка деактивации пользователя",
                 type: "error",
                 isLoading: false,
                 autoClose: 3000,
@@ -177,7 +191,9 @@ const AdminUsers = () => {
         const employeeId = parseInt(e.target.value);
         setSelectedEmployee(employeeId);
 
-        const employee = availableEmployees.find((emp) => emp.id === employeeId);
+        const employee = availableEmployees.find(
+            (emp) => emp.id === employeeId
+        );
         if (employee) {
             setInviteEmail(employee.email || "");
         }
@@ -252,7 +268,9 @@ const AdminUsers = () => {
                                                 <button
                                                     className="admin-btn admin-btn--danger admin-btn--sm"
                                                     onClick={() =>
-                                                        handleDeactivate(user.id)
+                                                        handleDeactivate(
+                                                            user.id
+                                                        )
                                                     }
                                                     title="Деактивировать пользователя"
                                                 >
@@ -279,7 +297,10 @@ const AdminUsers = () => {
             )}
 
             {showInviteModal && (
-                <div className="admin-modal" onClick={() => setShowInviteModal(false)}>
+                <div
+                    className="admin-modal"
+                    onClick={() => setShowInviteModal(false)}
+                >
                     <div
                         className="admin-modal__content"
                         onClick={(e) => e.stopPropagation()}
@@ -300,9 +321,14 @@ const AdminUsers = () => {
                                             onChange={handleEmployeeSelect}
                                             required
                                         >
-                                            <option value="">Выберите сотрудника</option>
+                                            <option value="">
+                                                Выберите сотрудника
+                                            </option>
                                             {availableEmployees.map((emp) => (
-                                                <option key={emp.id} value={emp.id}>
+                                                <option
+                                                    key={emp.id}
+                                                    value={emp.id}
+                                                >
                                                     {emp.name} ({emp.email})
                                                 </option>
                                             ))}

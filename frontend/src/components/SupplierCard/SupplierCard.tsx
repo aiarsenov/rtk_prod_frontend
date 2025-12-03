@@ -167,21 +167,22 @@ const SupplierCard = () => {
         postData("PATCH", `${URL}/${supplierId}`, cardDataCustom)
             .then((response) => {
                 if (response?.ok && showMessage) {
-                    toast.update(query, {
-                        render: "Данные обновлены",
-                        type: "success",
-                        containerId: "toastContainer",
-                        isLoading: false,
-                        autoClose: 1200,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
+                    // toast.update(query, {
+                    //     render: "Данные обновлены",
+                    //     type: "success",
+                    //     containerId: "toastContainer",
+                    //     isLoading: false,
+                    //     autoClose: 1200,
+                    //     pauseOnFocusLoss: false,
+                    //     pauseOnHover: false,
+                    //     draggable: true,
+                    //     position:
+                    //         window.innerWidth >= 1440
+                    //             ? "bottom-right"
+                    //             : "top-right",
+                    // });
 
+                    toast.dismiss(query);
                     setCardData((prev) => ({
                         ...prev,
                         ...response,
@@ -250,20 +251,22 @@ const SupplierCard = () => {
 
                     setAddRespPerson(false);
 
-                    toast.update(query, {
-                        render: response.message || "Ключевое лицо добавлено",
-                        type: "success",
-                        containerId: "toastContainer",
-                        isLoading: false,
-                        autoClose: 1200,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
+                    toast.dismiss(query);
+
+                    // toast.update(query, {
+                    //     render: response.message || "Ключевое лицо добавлено",
+                    //     type: "success",
+                    //     containerId: "toastContainer",
+                    //     isLoading: false,
+                    //     autoClose: 1200,
+                    //     pauseOnFocusLoss: false,
+                    //     pauseOnHover: false,
+                    //     draggable: true,
+                    //     position:
+                    //         window.innerWidth >= 1440
+                    //             ? "bottom-right"
+                    //             : "top-right",
+                    // });
                 }
             })
             .catch((error) => {
@@ -297,17 +300,17 @@ const SupplierCard = () => {
                     responsiblePersons.filter((item) => item.id !== id)
                 );
 
-                toast.success("Ключевое лицо удалено", {
-                    containerId: "toastContainer",
-                    isLoading: false,
-                    autoClose: 1500,
-                    pauseOnFocusLoss: false,
-                    pauseOnHover: false,
-                    position:
-                        window.innerWidth >= 1440
-                            ? "bottom-right"
-                            : "top-right",
-                });
+                // toast.success("Ключевое лицо удалено", {
+                //     containerId: "toastContainer",
+                //     isLoading: false,
+                //     autoClose: 1500,
+                //     pauseOnFocusLoss: false,
+                //     pauseOnHover: false,
+                //     position:
+                //         window.innerWidth >= 1440
+                //             ? "bottom-right"
+                //             : "top-right",
+                // });
             }
         });
     };

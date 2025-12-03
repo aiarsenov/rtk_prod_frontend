@@ -23,7 +23,8 @@ const InviteAccept = () => {
     useEffect(() => {
         if (!token) {
             toast.error("Токен приглашения не найден", {
-                position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+                position:
+                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
             });
             navigate("/");
             return;
@@ -48,7 +49,8 @@ const InviteAccept = () => {
                 err.message ||
                 "Ошибка загрузки приглашения";
             toast.error(errorMessage, {
-                position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+                position:
+                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
             });
 
             if (err.status === 404 || err.status === 400) {
@@ -101,15 +103,17 @@ const InviteAccept = () => {
                 password_confirmation: passwordConfirmation,
             });
 
-            toast.update(toastId, {
-                render: "Пароль успешно установлен! Вы будете перенаправлены на страницу входа.",
-                type: "success",
-                isLoading: false,
-                autoClose: 3000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                draggable: true,
-            });
+            toast.dismiss(query);
+
+            // toast.update(toastId, {
+            //     render: "Пароль успешно установлен! Вы будете перенаправлены на страницу входа.",
+            //     type: "success",
+            //     isLoading: false,
+            //     autoClose: 3000,
+            //     pauseOnFocusLoss: false,
+            //     pauseOnHover: false,
+            //     draggable: true,
+            // });
 
             setTimeout(() => {
                 window.location.href = `${API_URL}auth/login`;
@@ -152,9 +156,7 @@ const InviteAccept = () => {
         <div className="invite-accept">
             <div className="invite-accept__container">
                 <div className="invite-accept__card">
-                    <h1 className="invite-accept__title">
-                        Установка пароля
-                    </h1>
+                    <h1 className="invite-accept__title">Установка пароля</h1>
                     <p className="invite-accept__subtitle">
                         Для завершения регистрации установите пароль для вашей
                         учетной записи
@@ -169,7 +171,10 @@ const InviteAccept = () => {
                         </span>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="invite-accept__form">
+                    <form
+                        onSubmit={handleSubmit}
+                        className="invite-accept__form"
+                    >
                         <div className="invite-accept__field">
                             <label className="form-label" htmlFor="password">
                                 Пароль

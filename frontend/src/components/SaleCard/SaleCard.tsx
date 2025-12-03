@@ -210,20 +210,21 @@ const SaleCard = () => {
         )
             .then((response) => {
                 if (response?.ok) {
-                    toast.update(query, {
-                        render: response.message,
-                        type: "success",
-                        containerId: "toastContainer",
-                        isLoading: false,
-                        autoClose: 1200,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
+                    toast.dismiss(query);
+                    // toast.update(query, {
+                    //     render: response.message,
+                    //     type: "success",
+                    //     containerId: "toastContainer",
+                    //     isLoading: false,
+                    //     autoClose: 1200,
+                    //     pauseOnFocusLoss: false,
+                    //     pauseOnHover: false,
+                    //     draggable: true,
+                    //     position:
+                    //         window.innerWidth >= 1440
+                    //             ? "bottom-right"
+                    //             : "top-right",
+                    // });
                     setAddServices(false);
                     fetchServices();
                 }
@@ -265,20 +266,21 @@ const SaleCard = () => {
             {}
         ).then((response) => {
             if (response?.ok) {
-                toast.update(query, {
-                    render: response.message,
-                    type: "success",
-                    containerId: "toastContainer",
-                    isLoading: false,
-                    autoClose: 1200,
-                    pauseOnFocusLoss: false,
-                    pauseOnHover: false,
-                    draggable: true,
-                    position:
-                        window.innerWidth >= 1440
-                            ? "bottom-right"
-                            : "top-right",
-                });
+                toast.dismiss(query);
+                // toast.update(query, {
+                //     render: response.message,
+                //     type: "success",
+                //     containerId: "toastContainer",
+                //     isLoading: false,
+                //     autoClose: 1200,
+                //     pauseOnFocusLoss: false,
+                //     pauseOnHover: false,
+                //     draggable: true,
+                //     position:
+                //         window.innerWidth >= 1440
+                //             ? "bottom-right"
+                //             : "top-right",
+                // });
                 fetchServices();
                 getStages();
             }
@@ -296,22 +298,22 @@ const SaleCard = () => {
         try {
             const response = await postData("PATCH", `${URL}/${saleId}`, data);
             if (response?.ok && showMessage) {
-                toast.update(query, {
-                    render: "Проект успешно обновлен",
-                    type: "success",
-                    containerId: "toastContainer",
-                    isLoading: false,
-                    autoClose: 1200,
-                    pauseOnFocusLoss: false,
-                    pauseOnHover: false,
-                    draggable: true,
-                    position:
-                        window.innerWidth >= 1440
-                            ? "bottom-right"
-                            : "top-right",
-                });
+                // toast.update(query, {
+                //     render: "Проект успешно обновлен",
+                //     type: "success",
+                //     containerId: "toastContainer",
+                //     isLoading: false,
+                //     autoClose: 1200,
+                //     pauseOnFocusLoss: false,
+                //     pauseOnHover: false,
+                //     draggable: true,
+                //     position:
+                //         window.innerWidth >= 1440
+                //             ? "bottom-right"
+                //             : "top-right",
+                // });
             }
-
+            toast.dismiss(query);
             setCardData(response);
             setCardDataCustom(response);
 
@@ -418,23 +420,24 @@ const SaleCard = () => {
                     setCardData(response);
                     setCardDataCustom(response);
                     fetchServices();
+                    toast.dismiss(query);
 
-                    if (showMessage) {
-                        toast.update(query, {
-                            render: "Проект успешно обновлен",
-                            type: "success",
-                            containerId: "toastContainer",
-                            isLoading: false,
-                            autoClose: 1200,
-                            pauseOnFocusLoss: false,
-                            pauseOnHover: false,
-                            draggable: true,
-                            position:
-                                window.innerWidth >= 1440
-                                    ? "bottom-right"
-                                    : "top-right",
-                        });
-                    }
+                    // if (showMessage) {
+                    //     toast.update(query, {
+                    //         render: "Проект успешно обновлен",
+                    //         type: "success",
+                    //         containerId: "toastContainer",
+                    //         isLoading: false,
+                    //         autoClose: 1200,
+                    //         pauseOnFocusLoss: false,
+                    //         pauseOnHover: false,
+                    //         draggable: true,
+                    //         position:
+                    //             window.innerWidth >= 1440
+                    //                 ? "bottom-right"
+                    //                 : "top-right",
+                    //     });
+                    // }
                 }
             })
             .catch((error) => {
@@ -534,8 +537,6 @@ const SaleCard = () => {
                                     </span>
                                 )}
                             </div>
-
-
 
                             <div className="project-card__services">
                                 <h2 className="card__subtitle">Заказчик</h2>

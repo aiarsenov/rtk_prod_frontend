@@ -247,20 +247,21 @@ const Reports = () => {
         )
             .then((response) => {
                 if (response?.ok) {
-                    toast.update(query, {
-                        render: "Данные обновлены",
-                        type: "success",
-                        containerId: "report",
-                        isLoading: false,
-                        autoClose: 1200,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
+                    toast.dismiss(query);
+                    // toast.update(query, {
+                    //     render: "Данные обновлены",
+                    //     type: "success",
+                    //     containerId: "report",
+                    //     isLoading: false,
+                    //     autoClose: 1200,
+                    //     pauseOnFocusLoss: false,
+                    //     pauseOnHover: false,
+                    //     draggable: true,
+                    //     position:
+                    //         window.innerWidth >= 1440
+                    //             ? "bottom-right"
+                    //             : "top-right",
+                    // });
 
                     getManagementReports();
                     // Закрываем модальное окно только после успешного сохранения
@@ -335,20 +336,22 @@ const Reports = () => {
                         return updatedList;
                     });
 
-                    toast.update(query, {
-                        render: "Данные обновлены",
-                        type: "success",
-                        containerId: "report",
-                        isLoading: false,
-                        autoClose: 1200,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
+                    toast.dismiss(query);
+
+                    // toast.update(query, {
+                    //     render: "Данные обновлены",
+                    //     type: "success",
+                    //     containerId: "report",
+                    //     isLoading: false,
+                    //     autoClose: 1200,
+                    //     pauseOnFocusLoss: false,
+                    //     pauseOnHover: false,
+                    //     draggable: true,
+                    //     position:
+                    //         window.innerWidth >= 1440
+                    //             ? "bottom-right"
+                    //             : "top-right",
+                    // });
                     // Закрываем модальное окно только после успешного сохранения
                     closeRateReportEditor();
                     return response;

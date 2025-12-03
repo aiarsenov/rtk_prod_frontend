@@ -186,19 +186,21 @@ const SingleBook = () => {
                     setRolesAction({ action: "", roleId: "" });
                     getBooks();
 
-                    toast.update(query, {
-                        render: response.message || "Успех",
-                        type: "success",
-                        containerId: "singleBook",
-                        isLoading: false,
-                        autoClose: 1200,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
+                    toast.dismiss(query);
+
+                    // toast.update(query, {
+                    //     render: response.message || "Успех",
+                    //     type: "success",
+                    //     containerId: "singleBook",
+                    //     isLoading: false,
+                    //     autoClose: 1200,
+                    //     pauseOnFocusLoss: false,
+                    //     pauseOnHover: false,
+                    //     position:
+                    //         window.innerWidth >= 1440
+                    //             ? "bottom-right"
+                    //             : "top-right",
+                    // });
                 } else {
                     toast.dismiss(query);
                     toast.error(response.message || "Ошибка операции", {
@@ -259,20 +261,22 @@ const SingleBook = () => {
         postData("POST", newUrl, updatedData)
             .then((response) => {
                 if (response?.ok) {
-                    toast.update(query, {
-                        render: "Запись добавлена",
-                        type: "success",
-                        containerId: "singleBook",
-                        isLoading: false,
-                        autoClose: 1200,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
+                    toast.dismiss(query);
+
+                    // toast.update(query, {
+                    //     render: "Запись добавлена",
+                    //     type: "success",
+                    //     containerId: "singleBook",
+                    //     isLoading: false,
+                    //     autoClose: 1200,
+                    //     pauseOnFocusLoss: false,
+                    //     pauseOnHover: false,
+                    //     draggable: true,
+                    //     position:
+                    //         window.innerWidth >= 1440
+                    //             ? "bottom-right"
+                    //             : "top-right",
+                    // });
 
                     resetElemPopupState();
                     getBooks();
@@ -316,20 +320,22 @@ const SingleBook = () => {
                     resetElemPopupState();
                     getBooks();
 
-                    toast.update(query, {
-                        render: response.message || "Успешно сохранено",
-                        type: "success",
-                        containerId: "singleBook",
-                        isLoading: false,
-                        autoClose: 1200,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
+                    toast.dismiss(query);
+
+                    // toast.update(query, {
+                    //     render: response.message || "Успешно сохранено",
+                    //     type: "success",
+                    //     containerId: "singleBook",
+                    //     isLoading: false,
+                    //     autoClose: 1200,
+                    //     pauseOnFocusLoss: false,
+                    //     pauseOnHover: false,
+                    //     draggable: true,
+                    //     position:
+                    //         window.innerWidth >= 1440
+                    //             ? "bottom-right"
+                    //             : "top-right",
+                    // });
                 } else {
                     toast.dismiss(query);
                     toast.error("Ошибка сохранения", {
@@ -421,20 +427,22 @@ const SingleBook = () => {
                         getBooks();
                     }
 
-                    toast.update(query, {
-                        render: "Запись обновлена",
-                        type: "success",
-                        containerId: "singleBook",
-                        isLoading: false,
-                        autoClose: 1200,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
+                    toast.dismiss(query);
+
+                    // toast.update(query, {
+                    //     render: "Запись обновлена",
+                    //     type: "success",
+                    //     containerId: "singleBook",
+                    //     isLoading: false,
+                    //     autoClose: 1200,
+                    //     pauseOnFocusLoss: false,
+                    //     pauseOnHover: false,
+                    //     draggable: true,
+                    //     position:
+                    //         window.innerWidth >= 1440
+                    //             ? "bottom-right"
+                    //             : "top-right",
+                    // });
                 } else {
                     if (!reloadList) {
                         getBooks();
@@ -500,20 +508,22 @@ const SingleBook = () => {
                     resetElemPopupState();
                     getBooks();
 
-                    toast.update(query, {
-                        render: "Контакт обновлен",
-                        type: "success",
-                        containerId: "singleBook",
-                        isLoading: false,
-                        autoClose: 1200,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
+                    toast.dismiss(query);
+
+                    // toast.update(query, {
+                    //     render: "Контакт обновлен",
+                    //     type: "success",
+                    //     containerId: "singleBook",
+                    //     isLoading: false,
+                    //     autoClose: 1200,
+                    //     pauseOnFocusLoss: false,
+                    //     pauseOnHover: false,
+                    //     draggable: true,
+                    //     position:
+                    //         window.innerWidth >= 1440
+                    //             ? "bottom-right"
+                    //             : "top-right",
+                    // });
                 } else {
                     toast.dismiss(query);
                     toast.error("Ошибка обновления контакта", {
@@ -568,20 +578,22 @@ const SingleBook = () => {
                 resetElemPopupState();
                 getBooks();
 
-                toast.update(query, {
-                    render: "Запись обновлена",
-                    type: "success",
-                    containerId: "singleBook",
-                    isLoading: false,
-                    autoClose: 1200,
-                    pauseOnFocusLoss: false,
-                    pauseOnHover: false,
-                    draggable: true,
-                    position:
-                        window.innerWidth >= 1440
-                            ? "bottom-right"
-                            : "top-right",
-                });
+                toast.dismiss(query);
+
+                // toast.update(query, {
+                //     render: "Запись обновлена",
+                //     type: "success",
+                //     containerId: "singleBook",
+                //     isLoading: false,
+                //     autoClose: 1200,
+                //     pauseOnFocusLoss: false,
+                //     pauseOnHover: false,
+                //     draggable: true,
+                //     position:
+                //         window.innerWidth >= 1440
+                //             ? "bottom-right"
+                //             : "top-right",
+                // });
             } else {
                 toast.dismiss(query);
                 toast.error("Ошибка обновления записи", {
@@ -633,20 +645,22 @@ const SingleBook = () => {
                 );
                 resetElemPopupState();
 
-                toast.update(query, {
-                    render: "Контакт удален",
-                    type: "success",
-                    containerId: "singleBook",
-                    isLoading: false,
-                    autoClose: 1200,
-                    pauseOnFocusLoss: false,
-                    pauseOnHover: false,
-                    draggable: true,
-                    position:
-                        window.innerWidth >= 1440
-                            ? "bottom-right"
-                            : "top-right",
-                });
+                toast.dismiss(query);
+
+                // toast.update(query, {
+                //     render: "Контакт удален",
+                //     type: "success",
+                //     containerId: "singleBook",
+                //     isLoading: false,
+                //     autoClose: 1200,
+                //     pauseOnFocusLoss: false,
+                //     pauseOnHover: false,
+                //     draggable: true,
+                //     position:
+                //         window.innerWidth >= 1440
+                //             ? "bottom-right"
+                //             : "top-right",
+                // });
             } else {
                 toast.dismiss(query);
                 toast.error("Ошибка удалении контакта", {
@@ -695,20 +709,22 @@ const SingleBook = () => {
                     getBooks();
                     resetElemPopupState();
 
-                    toast.update(query, {
-                        render: "Контакт удалена",
-                        type: "success",
-                        containerId: "singleBook",
-                        isLoading: false,
-                        autoClose: 1200,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
+                    toast.dismiss(query);
+
+                    // toast.update(query, {
+                    //     render: "Контакт удалена",
+                    //     type: "success",
+                    //     containerId: "singleBook",
+                    //     isLoading: false,
+                    //     autoClose: 1200,
+                    //     pauseOnFocusLoss: false,
+                    //     pauseOnHover: false,
+                    //     draggable: true,
+                    //     position:
+                    //         window.innerWidth >= 1440
+                    //             ? "bottom-right"
+                    //             : "top-right",
+                    // });
                 } else {
                     toast.dismiss(query);
                     toast.error("Ошибка удаления контакта", {
@@ -766,20 +782,22 @@ const SingleBook = () => {
 
                     resetElemPopupState();
 
-                    toast.update(query, {
-                        render: "Запись удалена",
-                        type: "success",
-                        containerId: "singleBook",
-                        isLoading: false,
-                        autoClose: 1200,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
+                    toast.dismiss(query);
+
+                    // toast.update(query, {
+                    //     render: "Запись удалена",
+                    //     type: "success",
+                    //     containerId: "singleBook",
+                    //     isLoading: false,
+                    //     autoClose: 1200,
+                    //     pauseOnFocusLoss: false,
+                    //     pauseOnHover: false,
+                    //     draggable: true,
+                    //     position:
+                    //         window.innerWidth >= 1440
+                    //             ? "bottom-right"
+                    //             : "top-right",
+                    // });
                 } else {
                     toast.dismiss(query);
                     toast.error("Ошибка удаления записи", {

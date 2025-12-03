@@ -26,6 +26,8 @@ import ContragentResponsiblePersons from "./ContragentResponsiblePersons";
 
 import Loader from "../Loader.jsx";
 
+import "./ContragentCard.scss";
+
 const ContragentCard = () => {
     const URL = `${import.meta.env.VITE_API_URL}contragents`;
     const { contragentId } = useParams();
@@ -199,20 +201,22 @@ const ContragentCard = () => {
         postData("PATCH", `${URL}/${contragentId}`, data)
             .then((response) => {
                 if (response?.ok && showMessage) {
-                    toast.update(query, {
-                        render: "Данные обновлены",
-                        type: "success",
-                        containerId: "toastContainer",
-                        isLoading: false,
-                        autoClose: 1200,
-                        pauseOnFocusLoss: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        position:
-                            window.innerWidth >= 1440
-                                ? "bottom-right"
-                                : "top-right",
-                    });
+                    toast.dismiss(query);
+
+                    // toast.update(query, {
+                    //     render: "Данные обновлены",
+                    //     type: "success",
+                    //     containerId: "toastContainer",
+                    //     isLoading: false,
+                    //     autoClose: 1200,
+                    //     pauseOnFocusLoss: false,
+                    //     pauseOnHover: false,
+                    //     draggable: true,
+                    //     position:
+                    //         window.innerWidth >= 1440
+                    //             ? "bottom-right"
+                    //             : "top-right",
+                    // });
 
                     setCardData((prev) => ({
                         ...prev,
@@ -413,7 +417,7 @@ const ContragentCard = () => {
                                     />
                                 </div>
 
-                                <div>
+                                <div className="contragent-card__address">
                                     <div className="form-label">
                                         Адрес центрального офиса
                                     </div>
@@ -425,8 +429,7 @@ const ContragentCard = () => {
                                                 ? "Заполните адрес центрального офиса"
                                                 : ""
                                         }
-                                        type="text"
-                                        name="head_office_address"
+                                        minHeight={31}
                                         value={
                                             cardDataCustom?.head_office_address ||
                                             ""
