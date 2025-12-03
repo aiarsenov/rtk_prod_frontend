@@ -30,7 +30,7 @@ const LINKS: NavLinkItem[] = [
         url: "/projects",
         title: "Перейти в реестр проектов",
         label: "Проекты",
-        section: "project_reports",
+        section: "projects",
     },
     {
         url: "/sales",
@@ -68,7 +68,7 @@ const LINKS: NavLinkItem[] = [
         title: "Перейти в панель администрирования",
         label: "Администрирование",
         requiresAdmin: true,
-        section: "main",
+        section: "admin",
     },
 ];
 
@@ -117,13 +117,6 @@ const HeaderNav = ({
 
         if (!pathMatches) {
             return false;
-        }
-
-        if (link.url === "/projects" && link.section === "project_reports") {
-            const hasProjectReportsAccess = canAccess(user, "project_reports");
-            if (hasProjectReportsAccess) {
-                return false;
-            }
         }
 
         const accessDeniedKey = `access_denied_${link.url.replace('/', '') || 'home'}`;

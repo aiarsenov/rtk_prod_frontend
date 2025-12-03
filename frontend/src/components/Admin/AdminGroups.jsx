@@ -8,6 +8,8 @@ import "../AccessDenied/AccessDenied.scss";
 
 const SECTIONS = {
     main: "Главная",
+    admin: "Администрирование",
+    projects: "Проекты",
     project_reports: "Отчеты по проектам",
     employee_reports: "Отчеты по сотрудникам",
     sales: "Продажи",

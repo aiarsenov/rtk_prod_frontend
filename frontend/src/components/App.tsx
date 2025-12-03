@@ -15,18 +15,22 @@ function App() {
     const dispatch = useDispatch();
     const { data: user, loading, error } = useSelector((state) => state.user);
 
+    const isInvitePage = window.location.pathname === "/invite/accept";
+
     // Инициализация CSRF токена при загрузке приложения
     useEffect(() => {
         initCsrfToken(import.meta.env.VITE_API_URL);
     }, []);
 
     useEffect(() => {
-        // Загружаем пользователя в любом режиме
-        dispatch(fetchUser());
-    }, [dispatch]);
+        if (!isInvitePage) {
+            dispatch(fetchUser());
+        }
+    }, [dispatch, isInvitePage]);
 
     useEffect(() => {
         if (
+            !isInvitePage &&
             import.meta.env.MODE !== "development" &&
             error === "unauthorized"
         ) {
@@ -35,7 +39,11 @@ function App() {
                 `${import.meta.env.VITE_API_URL}auth/login`
             );
         }
-    }, [error]);
+    }, [error, isInvitePage]);
+
+    if (isInvitePage) {
+        return <Router />;
+    }
 
     const displayUser =
         import.meta.env.MODE === "development"
