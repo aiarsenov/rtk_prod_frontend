@@ -47,6 +47,14 @@
         { "label": "Автор измнения", "key": "" },
         { "label": "", "key": "" }
     ],
+     "suppliers-with-reports": [
+        { "label": "Наименование", "key": "name", "filter": "selectedNames", "options": "nameOptions" },
+        { "label": "ФИО и должность", "key": "full_name", "filter": "selectedFullNames", "options": "fullNameOptions"},
+        { "label": "Контакты", "key": "" },
+        { "label": "Последнее изменение", "key": "" },
+        { "label": "Автор измнения", "key": "" },
+        { "label": "", "key": "" }
+    ],
     "working-hours": [
         { "label": "Месяц", "key": "month_name" },
         { "label": "Часы", "key": "hours" },
@@ -59,13 +67,6 @@
         { "label": "Кол-во сотрудников", "key": "employees_count" },
         { "label": "Последнее изменение", "key": "updated_at" },
         { "label": "Автор измнения", "key": "updated_by" }
-    ],
-    "suppliers-with-reports": [
-        { "label": "Наименование", "key": "name", "filter": "selectedNames", "options": "nameOptions" },
-        { "label": "ФИО и должность", "key": "" },
-        { "label": "Контакты", "key": "contacts", "filter": "selectedContacts", "options": "contactOptions" },
-        { "label": "Последнее изменение", "key": "" },
-        { "label": "Автор измнения", "key": "" }
     ],
     "management-report-types": [
         { "label": "Наименование", "key": "name" },
