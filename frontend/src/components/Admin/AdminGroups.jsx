@@ -104,10 +104,20 @@ const AdminGroups = () => {
     const [editGroupName, setEditGroupName] = useState("");
     const [editGroupDescription, setEditGroupDescription] = useState("");
 
-    // Форма добавления прав - теперь массив выбранных прав с областями
+    // Форма добавления прав
+    // Чекбоксы выбора прав
     const [selectedPermissions, setSelectedPermissions] = useState({});
-    // Формат: { 'section_permissionType': 'scope' }
-    // Например: { 'main_view': 'full', 'projects_edit': 'limited' }
+    // Формат: { 'section_permissionType': true/false }
+    
+    // Скоупы для каждого типа права
+    const [permissionScopes, setPermissionScopes] = useState({
+        view: 'full',
+        edit: 'full',
+        delete: 'full',
+    });
+    
+    // Выбранные разделы (чекбокс в конце строки)
+    const [selectedSections, setSelectedSections] = useState(new Set());
 
     // Форма добавления пользователя
     const [selectedUsers, setSelectedUsers] = useState([]);
@@ -306,13 +316,16 @@ const AdminGroups = () => {
 
         // Преобразуем selectedPermissions в массив прав для отправки
         const permissions = [];
-        Object.entries(selectedPermissions).forEach(([key, scope]) => {
-            const [section, permissionType] = key.split('_');
-            permissions.push({
-                section,
-                permission_type: permissionType,
-                scope,
-            });
+        Object.entries(selectedPermissions).forEach(([key, isSelected]) => {
+            if (isSelected) {
+                const [section, permissionType] = key.split('_');
+                const scope = permissionScopes[permissionType];
+                permissions.push({
+                    section,
+                    permission_type: permissionType,
+                    scope,
+                });
+            }
         });
 
         if (permissions.length === 0) {
@@ -334,20 +347,12 @@ const AdminGroups = () => {
                 );
             }
 
-         toast.dismiss(toastId);
-
-            // toast.update(toastId, {
-            //     render: "Право успешно добавлено",
-            //     type: "success",
-            //     isLoading: false,
-            //     autoClose: 2000,
-            //     pauseOnFocusLoss: false,
-            //     pauseOnHover: false,
-            //     draggable: true,
-            // });
+            toast.dismiss(toastId);
 
             setShowAddPermissionModal(false);
             setSelectedPermissions({});
+            setPermissionScopes({ view: 'full', edit: 'full', delete: 'full' });
+            setSelectedSections(new Set());
             loadGroups();
         } catch (err) {
             toast.update(toastId, {
@@ -363,29 +368,81 @@ const AdminGroups = () => {
         }
     };
 
-    // Обработчик изменения чекбокса
+    // Обработчик изменения чекбокса права
     const handlePermissionCheckboxChange = (section, permissionType) => {
-        const key = `${section}_${permissionType}`;
-        setSelectedPermissions((prev) => {
-            const newPermissions = { ...prev };
-            if (newPermissions[key]) {
-                // Если уже выбрано - убираем
-                delete newPermissions[key];
-            } else {
-                // Если не выбрано - добавляем с дефолтным scope
-                newPermissions[key] = 'full';
-            }
-            return newPermissions;
-        });
-    };
-
-    // Обработчик изменения scope для конкретного права
-    const handleScopeChange = (section, permissionType, scope) => {
         const key = `${section}_${permissionType}`;
         setSelectedPermissions((prev) => ({
             ...prev,
-            [key]: scope,
+            [key]: !prev[key],
         }));
+    };
+
+    // Обработчик изменения scope для типа права (применяется ко всем)
+    const handleScopeChange = (permissionType, scope) => {
+        setPermissionScopes((prev) => ({
+            ...prev,
+            [permissionType]: scope,
+        }));
+    };
+
+    // Обработчик чекбокса выбора всей строки (раздела)
+    const handleSectionCheckboxChange = (section) => {
+        const matrix = PERMISSION_MATRIX[section] || {};
+        const newSelectedSections = new Set(selectedSections);
+        
+        if (newSelectedSections.has(section)) {
+            // Убираем раздел и все его права
+            newSelectedSections.delete(section);
+            const newPermissions = { ...selectedPermissions };
+            ['view', 'edit', 'delete'].forEach((permType) => {
+                if (matrix[permType] === 1) {
+                    const key = `${section}_${permType}`;
+                    delete newPermissions[key];
+                }
+            });
+            setSelectedPermissions(newPermissions);
+        } else {
+            // Добавляем раздел и все его доступные права
+            newSelectedSections.add(section);
+            const newPermissions = { ...selectedPermissions };
+            ['view', 'edit', 'delete'].forEach((permType) => {
+                if (matrix[permType] === 1) {
+                    const key = `${section}_${permType}`;
+                    newPermissions[key] = true;
+                }
+            });
+            setSelectedPermissions(newPermissions);
+        }
+        
+        setSelectedSections(newSelectedSections);
+    };
+
+    // Обработчик массового чекбокса внизу для типа права
+    const handleMassPermissionCheckboxChange = (permissionType) => {
+        const newPermissions = { ...selectedPermissions };
+        let allChecked = true;
+
+        // Проверяем, все ли чекбоксы данного типа уже выбраны
+        Object.keys(SECTIONS).forEach((section) => {
+            const matrix = PERMISSION_MATRIX[section] || {};
+            if (matrix[permissionType] === 1) {
+                const key = `${section}_${permissionType}`;
+                if (!newPermissions[key]) {
+                    allChecked = false;
+                }
+            }
+        });
+
+        // Если все выбраны - снимаем все, иначе выбираем все
+        Object.keys(SECTIONS).forEach((section) => {
+            const matrix = PERMISSION_MATRIX[section] || {};
+            if (matrix[permissionType] === 1) {
+                const key = `${section}_${permissionType}`;
+                newPermissions[key] = !allChecked;
+            }
+        });
+
+        setSelectedPermissions(newPermissions);
     };
 
     const handleDeletePermission = async (groupId, permissionId) => {
@@ -865,6 +922,8 @@ const AdminGroups = () => {
                     onClick={() => {
                         setShowAddPermissionModal(false);
                         setSelectedPermissions({});
+                        setPermissionScopes({ view: 'full', edit: 'full', delete: 'full' });
+                        setSelectedSections(new Set());
                         setError("");
                     }}
                 >
@@ -873,7 +932,7 @@ const AdminGroups = () => {
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="admin-modal__header">
-                            <h2>Настройка прав доступа</h2>
+                            <h2>Добавление группы</h2>
                         </div>
                         <form onSubmit={handleAddPermission}>
                             <div className="admin-modal__body">
@@ -881,10 +940,18 @@ const AdminGroups = () => {
                                     <table className="permissions-table">
                                         <thead>
                                             <tr>
-                                                <th>Раздел</th>
-                                                <th>Просмотр</th>
-                                                <th>Редактирование</th>
-                                                <th>Удаление</th>
+                                                <th rowSpan="2" className="section-header">Раздел / подраздел</th>
+                                                <th colSpan="3" className="group-header">Выбор прав</th>
+                                                <th colSpan="3" className="group-header">Ширина прав</th>
+                                                <th rowSpan="2" className="checkbox-header"></th>
+                                            </tr>
+                                            <tr>
+                                                <th className="subheader">Просмотр</th>
+                                                <th className="subheader">Редактирование</th>
+                                                <th className="subheader">Удаление</th>
+                                                <th className="subheader">Просмотр</th>
+                                                <th className="subheader">Редактирование</th>
+                                                <th className="subheader">Удаление</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -893,54 +960,97 @@ const AdminGroups = () => {
                                                 return (
                                                     <tr key={sectionKey}>
                                                         <td className="section-name">{sectionLabel}</td>
+                                                        
+                                                        {/* Группа чекбоксов: Выбор прав */}
                                                         {['view', 'edit', 'delete'].map((permType) => {
                                                             const isAllowed = matrix[permType] === 1;
                                                             const key = `${sectionKey}_${permType}`;
                                                             const isChecked = !!selectedPermissions[key];
-                                                            const currentScope = selectedPermissions[key] || 'full';
 
                                                             return (
-                                                                <td key={permType} className="permission-cell">
+                                                                <td key={`check_${permType}`} className="permission-cell">
                                                                     {isAllowed ? (
-                                                                        <div className="permission-control">
-                                                                            <input
-                                                                                type="checkbox"
-                                                                                checked={isChecked}
-                                                                                onChange={() =>
-                                                                                    handlePermissionCheckboxChange(
-                                                                                        sectionKey,
-                                                                                        permType
-                                                                                    )
-                                                                                }
-                                                                                className="permission-checkbox"
-                                                                            />
-                                                                            {isChecked && (
-                                                                                <select
-                                                                                    value={currentScope}
-                                                                                    onChange={(e) =>
-                                                                                        handleScopeChange(
-                                                                                            sectionKey,
-                                                                                            permType,
-                                                                                            e.target.value
-                                                                                        )
-                                                                                    }
-                                                                                    className="permission-scope-select"
-                                                                                    onClick={(e) => e.stopPropagation()}
-                                                                                >
-                                                                                    <option value="full">Полная</option>
-                                                                                    <option value="limited">Ограниченная</option>
-                                                                                </select>
-                                                                            )}
-                                                                        </div>
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            checked={isChecked}
+                                                                            onChange={() =>
+                                                                                handlePermissionCheckboxChange(
+                                                                                    sectionKey,
+                                                                                    permType
+                                                                                )
+                                                                            }
+                                                                            className="permission-checkbox"
+                                                                        />
                                                                     ) : (
                                                                         <span className="permission-disabled">—</span>
                                                                     )}
                                                                 </td>
                                                             );
                                                         })}
+                                                        
+                                                        {/* Группа селектов: Ширина прав */}
+                                                        {['view', 'edit', 'delete'].map((permType) => {
+                                                            const matrix = PERMISSION_MATRIX[sectionKey] || {};
+                                                            const isAllowed = matrix[permType] === 1;
+
+                                                            return (
+                                                                <td key={`scope_${permType}`} className="scope-cell">
+                                                                    {isAllowed ? (
+                                                                        <select
+                                                                            value={permissionScopes[permType]}
+                                                                            onChange={(e) =>
+                                                                                handleScopeChange(
+                                                                                    permType,
+                                                                                    e.target.value
+                                                                                )
+                                                                            }
+                                                                            className="scope-select"
+                                                                            onClick={(e) => e.stopPropagation()}
+                                                                        >
+                                                                            <option value="full">Полная</option>
+                                                                            <option value="limited">Ограниченная</option>
+                                                                        </select>
+                                                                    ) : (
+                                                                        <span className="permission-disabled">—</span>
+                                                                    )}
+                                                                </td>
+                                                            );
+                                                        })}
+                                                        
+                                                        {/* Чекбокс выбора всей строки */}
+                                                        <td className="row-checkbox-cell">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={selectedSections.has(sectionKey)}
+                                                                onChange={() => handleSectionCheckboxChange(sectionKey)}
+                                                                className="row-checkbox"
+                                                            />
+                                                        </td>
                                                     </tr>
                                                 );
                                             })}
+                                            
+                                            {/* Строка с массовыми чекбоксами внизу */}
+                                            <tr className="mass-select-row">
+                                                <td className="mass-select-label"></td>
+                                                
+                                                {/* Массовые чекбоксы для "Выбор прав" */}
+                                                {['view', 'edit', 'delete'].map((permType) => (
+                                                    <td key={`mass_${permType}`} className="mass-checkbox-cell">
+                                                        <input
+                                                            type="checkbox"
+                                                            onChange={() => handleMassPermissionCheckboxChange(permType)}
+                                                            className="mass-checkbox"
+                                                        />
+                                                    </td>
+                                                ))}
+                                                
+                                                {/* Пустые ячейки для "Ширина прав" */}
+                                                <td colSpan="3"></td>
+                                                
+                                                {/* Пустая ячейка для последнего столбца */}
+                                                <td></td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -956,6 +1066,8 @@ const AdminGroups = () => {
                                     onClick={() => {
                                         setShowAddPermissionModal(false);
                                         setSelectedPermissions({});
+                                        setPermissionScopes({ view: 'full', edit: 'full', delete: 'full' });
+                                        setSelectedSections(new Set());
                                         setError("");
                                     }}
                                 >
