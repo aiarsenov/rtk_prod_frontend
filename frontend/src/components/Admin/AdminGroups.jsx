@@ -109,12 +109,9 @@ const AdminGroups = () => {
     const [selectedPermissions, setSelectedPermissions] = useState({});
     // Формат: { 'section_permissionType': true/false }
 
-    // Скоупы для каждого типа права
-    const [permissionScopes, setPermissionScopes] = useState({
-        view: 'full',
-        edit: 'full',
-        delete: 'full',
-    });
+    // Скоупы для каждой конкретной ячейки (раздел + тип права)
+    const [permissionScopes, setPermissionScopes] = useState({});
+    // Формат: { 'section_permissionType': 'full' | 'limited' }
 
     // Выбранные разделы (чекбокс в конце строки)
     const [selectedSections, setSelectedSections] = useState(new Set());
@@ -319,7 +316,7 @@ const AdminGroups = () => {
         Object.entries(selectedPermissions).forEach(([key, isSelected]) => {
             if (isSelected) {
                 const [section, permissionType] = key.split('_');
-                const scope = permissionScopes[permissionType];
+                const scope = permissionScopes[key] || 'full'; // Берем scope для конкретной ячейки
                 permissions.push({
                     section,
                     permission_type: permissionType,
@@ -351,7 +348,7 @@ const AdminGroups = () => {
 
             setShowAddPermissionModal(false);
             setSelectedPermissions({});
-            setPermissionScopes({ view: 'full', edit: 'full', delete: 'full' });
+            setPermissionScopes({});
             setSelectedSections(new Set());
             loadGroups();
         } catch (err) {
@@ -377,11 +374,12 @@ const AdminGroups = () => {
         }));
     };
 
-    // Обработчик изменения scope для типа права (применяется ко всем)
-    const handleScopeChange = (permissionType, scope) => {
+    // Обработчик изменения scope для конкретной ячейки (раздел + тип права)
+    const handleScopeChange = (section, permissionType, scope) => {
+        const key = `${section}_${permissionType}`;
         setPermissionScopes((prev) => ({
             ...prev,
-            [permissionType]: scope,
+            [key]: scope,
         }));
     };
 
@@ -394,24 +392,33 @@ const AdminGroups = () => {
             // Убираем раздел и все его права
             newSelectedSections.delete(section);
             const newPermissions = { ...selectedPermissions };
+            const newScopes = { ...permissionScopes };
             ['view', 'edit', 'delete'].forEach((permType) => {
                 if (matrix[permType] === 1) {
                     const key = `${section}_${permType}`;
                     delete newPermissions[key];
+                    delete newScopes[key];
                 }
             });
             setSelectedPermissions(newPermissions);
+            setPermissionScopes(newScopes);
         } else {
             // Добавляем раздел и все его доступные права
             newSelectedSections.add(section);
             const newPermissions = { ...selectedPermissions };
+            const newScopes = { ...permissionScopes };
             ['view', 'edit', 'delete'].forEach((permType) => {
                 if (matrix[permType] === 1) {
                     const key = `${section}_${permType}`;
                     newPermissions[key] = true;
+                    // Инициализируем scope значением 'full' если еще не установлен
+                    if (!newScopes[key]) {
+                        newScopes[key] = 'full';
+                    }
                 }
             });
             setSelectedPermissions(newPermissions);
+            setPermissionScopes(newScopes);
         }
 
         setSelectedSections(newSelectedSections);
@@ -922,7 +929,7 @@ const AdminGroups = () => {
                     onClick={() => {
                         setShowAddPermissionModal(false);
                         setSelectedPermissions({});
-                        setPermissionScopes({ view: 'full', edit: 'full', delete: 'full' });
+                        setPermissionScopes({});
                         setSelectedSections(new Set());
                         setError("");
                     }}
@@ -1002,14 +1009,17 @@ const AdminGroups = () => {
                                                         {['view', 'edit', 'delete'].map((permType) => {
                                                             const matrix = PERMISSION_MATRIX[sectionKey] || {};
                                                             const isAllowed = matrix[permType] === 1;
+                                                            const scopeKey = `${sectionKey}_${permType}`;
+                                                            const currentScope = permissionScopes[scopeKey] || 'full';
 
                                                             return (
                                                                 <td key={`scope_${permType}`} className="scope-cell">
                                                                     {isAllowed ? (
-                                        <select
-                                                                            value={permissionScopes[permType]}
-                                            onChange={(e) =>
+                                                                        <select
+                                                                            value={currentScope}
+                                                                            onChange={(e) =>
                                                                                 handleScopeChange(
+                                                                                    sectionKey,
                                                                                     permType,
                                                                                     e.target.value
                                                                                 )
@@ -1019,7 +1029,7 @@ const AdminGroups = () => {
                                                                         >
                                                                             <option value="full">Полная</option>
                                                                             <option value="limited">Ограниченная</option>
-                                        </select>
+                                                                        </select>
                                                                     ) : (
                                                                         <span className="permission-disabled">—</span>
                                                                     )}
@@ -1077,7 +1087,7 @@ const AdminGroups = () => {
                                     onClick={() => {
                                         setShowAddPermissionModal(false);
                                         setSelectedPermissions({});
-                                        setPermissionScopes({ view: 'full', edit: 'full', delete: 'full' });
+                                        setPermissionScopes({});
                                         setSelectedSections(new Set());
                                         setError("");
                                     }}
