@@ -1,14 +1,14 @@
 {
     "industries": "Отрасли проектов",
     "report-types": "Типы услуг / отчетов",
+    "management-report-types": "Типы отчётов менеджмента",
     "roles": "Роли в проектах",
-    "banks": "Кредиторы",
-    "contragent": "Контакты заказчика",
-    "creditor": "Контакты кредитора",
-    "working-hours": "Рабочие часы",
     "positions": "Должности сотрудников",
-    "suppliers-with-reports": "Контакты Подрядчиков",
-    "management-report-types": "Типы отчётов Менеджмента",
+    "banks": "Кредиторы",
+    "creditor": "Контакты кредиторов",
+    "contragent": "Контакты заказчиков",
+    "suppliers-with-reports": "Контакты подрядчиков",
     "request-sources": "Источники запросов в воронке продаж",
+    "working-hours": "Рабочие часы",
     "departments": "Подразделения"
 }
