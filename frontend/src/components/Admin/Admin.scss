@@ -401,6 +401,7 @@
 
 .permissions-table {
     width: 100%;
+    min-width: 1000px;
     border-collapse: collapse;
 
     thead {
@@ -528,15 +529,16 @@
 }
 
 .scope-select {
-    padding: 4px 8px;
+    padding: 5px 10px;
     border: 1px solid var(--color-gray-40);
     border-radius: 4px;
-    font-size: 11px;
+    font-size: 12px;
     color: var(--color-gray-100);
     background: white;
     cursor: pointer;
-    min-width: 90px;
-    max-width: 110px;
+    min-width: 100px;
+    width: 100%;
+    max-width: 130px;
 
     &:focus {
         outline: none;
