@@ -92,6 +92,10 @@ const CustomDatePicker = ({
         closePicker("");
     };
 
+    const displayedYear = singleDate
+        ? singleDate.getFullYear()
+        : new Date().getFullYear();
+
     return (
         <div className={`custom-datepicker custom-datepicker_${type}`}>
             <DatePicker
@@ -120,14 +124,6 @@ const CustomDatePicker = ({
                 locale="ru"
                 dateFormat={type === "months" ? "MM.yyyy" : "dd.MM.yyyy"}
                 showMonthYearPicker={type === "months"}
-                // renderDayContents={(day) => (
-                //     <>
-                //         <div className="react-datepicker__day-number">
-                //             {day}
-                //         </div>
-                //         <div className="react-datepicker__day-overlay"></div>
-                //     </>
-                // )}
                 renderDayContents={(day, date) => {
                     const today = new Date();
                     const isToday =
@@ -141,7 +137,6 @@ const CustomDatePicker = ({
 
                     return (
                         <>
-                            {" "}
                             <div
                                 className={`react-datepicker__day-number ${
                                     isToday && !isSelected ? "today" : ""
@@ -156,12 +151,32 @@ const CustomDatePicker = ({
                 renderMonthContent={(monthIndex) => {
                     const monthName = new Date(0, monthIndex).toLocaleString(
                         "ru-RU",
-                        {
-                            month: "long",
-                        }
+                        { month: "long" }
                     );
+                    const capitalized =
+                        monthName.charAt(0).toUpperCase() + monthName.slice(1);
+
+                    const today = new Date();
+
+                    const isCurrentMonth =
+                        monthIndex === today.getMonth() &&
+                        displayedYear === today.getFullYear();
+
+                    const isSelectedMonth =
+                        singleDate &&
+                        singleDate.getMonth() === monthIndex &&
+                        singleDate.getFullYear() === displayedYear;
+
                     return (
-                        monthName.charAt(0).toUpperCase() + monthName.slice(1)
+                        <div
+                            className={`custom-month ${
+                                isCurrentMonth && !isSelectedMonth
+                                    ? "current-month"
+                                    : ""
+                            } ${isSelectedMonth ? "selected-month" : ""}`}
+                        >
+                            {capitalized}
+                        </div>
                     );
                 }}
                 renderCustomHeader={({
