@@ -1068,9 +1068,6 @@ const AdminGroups = () => {
 
                                             {/* Строка с массовыми чекбоксами внизу */}
                                             <tr className="mass-select-row">
-                                                {/* Пустая ячейка для столбца "Раздел / подраздел" */}
-                                                <td className="empty-cell"></td>
-
                                                 {/* Массовые чекбоксы для "Выбор прав" */}
                                                 {['view', 'edit', 'delete'].map((permType) => (
                                                     <td key={`mass_${permType}`} className="mass-checkbox-cell">
@@ -1082,12 +1079,10 @@ const AdminGroups = () => {
                                                     </td>
                                                 ))}
 
-                                                {/* Пустые ячейки для "Ширина прав" - по одной для каждого столбца */}
+                                                {/* Пустые ячейки для "Ширина прав" + последний столбец */}
                                                 <td className="empty-cell"></td>
                                                 <td className="empty-cell"></td>
                                                 <td className="empty-cell"></td>
-
-                                                {/* Пустая ячейка для последнего столбца */}
                                                 <td className="empty-cell"></td>
                                             </tr>
                                         </tbody>
@@ -1116,7 +1111,7 @@ const AdminGroups = () => {
                                     type="submit"
                                     className="admin-btn admin-btn--primary"
                                 >
-                                    Добавить
+                                    Сохранить
                                 </button>
                             </div>
                         </form>
