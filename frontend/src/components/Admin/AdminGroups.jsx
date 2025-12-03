@@ -402,72 +402,55 @@ const AdminGroups = () => {
     };
 
     // Обработчик чекбокса выбора всей строки (раздела)
+    // Теперь ТОЛЬКО отмечает/снимает строку, НЕ трогая чекбоксы прав
     const handleSectionCheckboxChange = (section) => {
-        const matrix = PERMISSION_MATRIX[section] || {};
         const newSelectedSections = new Set(selectedSections);
 
         if (newSelectedSections.has(section)) {
-            // Убираем раздел и все его права
+            // Убираем раздел из выбранных
             newSelectedSections.delete(section);
-            const newPermissions = { ...selectedPermissions };
-            const newScopes = { ...permissionScopes };
-            ['view', 'edit', 'delete'].forEach((permType) => {
-                if (matrix[permType] === 1) {
-                    const key = `${section}_${permType}`;
-                    delete newPermissions[key];
-                    delete newScopes[key];
-                }
-            });
-            setSelectedPermissions(newPermissions);
-            setPermissionScopes(newScopes);
         } else {
-            // Добавляем раздел и все его доступные права
+            // Добавляем раздел в выбранные
             newSelectedSections.add(section);
-            const newPermissions = { ...selectedPermissions };
-            const newScopes = { ...permissionScopes };
-            ['view', 'edit', 'delete'].forEach((permType) => {
-                if (matrix[permType] === 1) {
-                    const key = `${section}_${permType}`;
-                    newPermissions[key] = true;
-                    // Инициализируем scope значением 'full' если еще не установлен
-                    if (!newScopes[key]) {
-                        newScopes[key] = 'full';
-                    }
-                }
-            });
-            setSelectedPermissions(newPermissions);
-            setPermissionScopes(newScopes);
         }
 
         setSelectedSections(newSelectedSections);
     };
 
     // Обработчик массового чекбокса внизу для типа права
+    // Отмечает/снимает чекбоксы только у ОТМЕЧЕННЫХ строк
     const handleMassPermissionCheckboxChange = (permissionType) => {
         const newPermissions = { ...selectedPermissions };
-        let allChecked = true;
+        const newScopes = { ...permissionScopes };
+        let allCheckedInSelectedSections = true;
 
-        // Проверяем, все ли чекбоксы данного типа уже выбраны
-        Object.keys(SECTIONS).forEach((section) => {
+        // Проверяем, все ли чекбоксы данного типа выбраны у отмеченных строк
+        selectedSections.forEach((section) => {
             const matrix = PERMISSION_MATRIX[section] || {};
             if (matrix[permissionType] === 1) {
                 const key = `${section}_${permissionType}`;
                 if (!newPermissions[key]) {
-                    allChecked = false;
+                    allCheckedInSelectedSections = false;
                 }
             }
         });
 
-        // Если все выбраны - снимаем все, иначе выбираем все
-        Object.keys(SECTIONS).forEach((section) => {
+        // Если все выбраны у отмеченных строк - снимаем, иначе отмечаем
+        selectedSections.forEach((section) => {
             const matrix = PERMISSION_MATRIX[section] || {};
             if (matrix[permissionType] === 1) {
                 const key = `${section}_${permissionType}`;
-                newPermissions[key] = !allChecked;
+                newPermissions[key] = !allCheckedInSelectedSections;
+
+                // Устанавливаем scope по умолчанию, если отмечаем
+                if (!allCheckedInSelectedSections && !newScopes[key]) {
+                    newScopes[key] = 'full';
+                }
             }
         });
 
         setSelectedPermissions(newPermissions);
+        setPermissionScopes(newScopes);
     };
 
     const handleDeletePermission = async (groupId, permissionId) => {
@@ -1085,6 +1068,8 @@ const AdminGroups = () => {
 
                                             {/* Строка с массовыми чекбоксами внизу */}
                                             <tr className="mass-select-row">
+                                                {/* Пустая ячейка для столбца "Раздел / подраздел" */}
+                                                <td className="empty-cell"></td>
 
                                                 {/* Массовые чекбоксы для "Выбор прав" */}
                                                 {['view', 'edit', 'delete'].map((permType) => (
