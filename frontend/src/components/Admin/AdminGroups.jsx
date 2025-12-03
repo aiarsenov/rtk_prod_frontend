@@ -235,8 +235,8 @@ const AdminGroups = () => {
                 "PUT",
                 `${API_URL}admin/permission-groups/${selectedGroup.id}`,
                 {
-                    name: editGroupName,
-                    description: editGroupDescription,
+                name: editGroupName,
+                description: editGroupDescription,
                 }
             );
 
@@ -340,9 +340,9 @@ const AdminGroups = () => {
         try {
             // Отправляем каждое право отдельно
             for (const permission of permissions) {
-                await postData(
-                    "POST",
-                    `${API_URL}admin/permission-groups/${selectedGroup.id}/permissions`,
+            await postData(
+                "POST",
+                `${API_URL}admin/permission-groups/${selectedGroup.id}/permissions`,
                     permission
                 );
             }
@@ -841,8 +841,8 @@ const AdminGroups = () => {
                 <div
                     className="admin-modal"
                     onClick={() => {
-                        setShowEditModal(false);
-                        setError("");
+                    setShowEditModal(false);
+                    setError("");
                     }}
                 >
                     <div
@@ -938,6 +938,16 @@ const AdminGroups = () => {
                             <div className="admin-modal__body">
                                 <div className="permissions-table-wrapper">
                                     <table className="permissions-table">
+                                        <colgroup>
+                                            <col style={{ width: '200px' }} />
+                                            <col style={{ width: '90px' }} />
+                                            <col style={{ width: '90px' }} />
+                                            <col style={{ width: '90px' }} />
+                                            <col style={{ width: '90px' }} />
+                                            <col style={{ width: '90px' }} />
+                                            <col style={{ width: '90px' }} />
+                                            <col style={{ width: '60px' }} />
+                                        </colgroup>
                                         <thead>
                                             <tr>
                                                 <th rowSpan="2" className="section-header">Раздел / подраздел</th>
@@ -996,9 +1006,9 @@ const AdminGroups = () => {
                                                             return (
                                                                 <td key={`scope_${permType}`} className="scope-cell">
                                                                     {isAllowed ? (
-                                                                        <select
+                                        <select
                                                                             value={permissionScopes[permType]}
-                                                                            onChange={(e) =>
+                                            onChange={(e) =>
                                                                                 handleScopeChange(
                                                                                     permType,
                                                                                     e.target.value
@@ -1009,7 +1019,7 @@ const AdminGroups = () => {
                                                                         >
                                                                             <option value="full">Полная</option>
                                                                             <option value="limited">Ограниченная</option>
-                                                                        </select>
+                                        </select>
                                                                     ) : (
                                                                         <span className="permission-disabled">—</span>
                                                                     )}
@@ -1055,11 +1065,11 @@ const AdminGroups = () => {
                                             </tr>
                                         </tbody>
                                     </table>
-                                </div>
+                                    </div>
 
-                                {error && (
-                                    <div className="admin-form__error">{error}</div>
-                                )}
+                                    {error && (
+                                        <div className="admin-form__error">{error}</div>
+                                    )}
                             </div>
                             <div className="admin-modal__footer">
                                 <button
