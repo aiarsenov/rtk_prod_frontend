@@ -347,6 +347,7 @@
         }
 
         [class*="-menu"] {
+            z-index: 25;
             overflow: hidden;
             border: 1px solid var(--color-gray-40);
             border-radius: 10px;
