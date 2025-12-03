@@ -315,7 +315,10 @@ const AdminGroups = () => {
         const permissions = [];
         Object.entries(selectedPermissions).forEach(([key, isSelected]) => {
             if (isSelected) {
-                const [section, permissionType] = key.split('_');
+                // Правильно разбираем ключ: последняя часть - это permission_type, все остальное - section
+                const parts = key.split('_');
+                const permissionType = parts[parts.length - 1]; // Последняя часть
+                const section = parts.slice(0, -1).join('_'); // Все остальное
                 const scope = permissionScopes[key] || 'full'; // Берем scope для конкретной ячейки
                 permissions.push({
                     section,
