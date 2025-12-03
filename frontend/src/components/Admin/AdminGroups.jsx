@@ -108,14 +108,14 @@ const AdminGroups = () => {
     // Чекбоксы выбора прав
     const [selectedPermissions, setSelectedPermissions] = useState({});
     // Формат: { 'section_permissionType': true/false }
-    
+
     // Скоупы для каждого типа права
     const [permissionScopes, setPermissionScopes] = useState({
         view: 'full',
         edit: 'full',
         delete: 'full',
     });
-    
+
     // Выбранные разделы (чекбокс в конце строки)
     const [selectedSections, setSelectedSections] = useState(new Set());
 
@@ -389,7 +389,7 @@ const AdminGroups = () => {
     const handleSectionCheckboxChange = (section) => {
         const matrix = PERMISSION_MATRIX[section] || {};
         const newSelectedSections = new Set(selectedSections);
-        
+
         if (newSelectedSections.has(section)) {
             // Убираем раздел и все его права
             newSelectedSections.delete(section);
@@ -413,7 +413,7 @@ const AdminGroups = () => {
             });
             setSelectedPermissions(newPermissions);
         }
-        
+
         setSelectedSections(newSelectedSections);
     };
 
@@ -960,7 +960,7 @@ const AdminGroups = () => {
                                                 return (
                                                     <tr key={sectionKey}>
                                                         <td className="section-name">{sectionLabel}</td>
-                                                        
+
                                                         {/* Группа чекбоксов: Выбор прав */}
                                                         {['view', 'edit', 'delete'].map((permType) => {
                                                             const isAllowed = matrix[permType] === 1;
@@ -987,7 +987,7 @@ const AdminGroups = () => {
                                                                 </td>
                                                             );
                                                         })}
-                                                        
+
                                                         {/* Группа селектов: Ширина прав */}
                                                         {['view', 'edit', 'delete'].map((permType) => {
                                                             const matrix = PERMISSION_MATRIX[sectionKey] || {};
@@ -1016,7 +1016,7 @@ const AdminGroups = () => {
                                                                 </td>
                                                             );
                                                         })}
-                                                        
+
                                                         {/* Чекбокс выбора всей строки */}
                                                         <td className="row-checkbox-cell">
                                                             <input
@@ -1029,11 +1029,11 @@ const AdminGroups = () => {
                                                     </tr>
                                                 );
                                             })}
-                                            
+
                                             {/* Строка с массовыми чекбоксами внизу */}
                                             <tr className="mass-select-row">
                                                 <td className="mass-select-label"></td>
-                                                
+
                                                 {/* Массовые чекбоксы для "Выбор прав" */}
                                                 {['view', 'edit', 'delete'].map((permType) => (
                                                     <td key={`mass_${permType}`} className="mass-checkbox-cell">
@@ -1044,10 +1044,10 @@ const AdminGroups = () => {
                                                         />
                                                     </td>
                                                 ))}
-                                                
+
                                                 {/* Пустые ячейки для "Ширина прав" */}
                                                 <td colSpan="3"></td>
-                                                
+
                                                 {/* Пустая ячейка для последнего столбца */}
                                                 <td></td>
                                             </tr>
