@@ -1042,7 +1042,6 @@ const AdminGroups = () => {
 
                                             {/* Строка с массовыми чекбоксами внизу */}
                                             <tr className="mass-select-row">
-                                                <td className="mass-select-label"></td>
 
                                                 {/* Массовые чекбоксы для "Выбор прав" */}
                                                 {['view', 'edit', 'delete'].map((permType) => (
