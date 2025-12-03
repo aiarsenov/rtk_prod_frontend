@@ -31,19 +31,21 @@
     ],
     "contragent": [
         { "label": "Наименование", "key": "name", "filter": "selectedNames", "options": "nameOptions" },
-        { "label": "ФИО и должность", "key": "" },
+        { "label": "ФИО и должность", "key": "full_name", "filter": "selectedFullNames", "options": "fullNameOptions"},
         { "label": "Кол-во проектов", "key": "" },
-        { "label": "Контакты", "key": "contacts", "filter": "selectedContacts", "options": "contactOptions" },
+        { "label": "Контакты", "key": "" },
         { "label": "Последнее изменение", "key": "" },
-        { "label": "Автор измнения", "key": "" }
+        { "label": "Автор измнения", "key": "" },
+        { "label": "", "key": "" }
     ],
     "creditor": [
         { "label": "Наименование", "key": "name", "filter": "selectedNames", "options": "nameOptions" },
-        { "label": "ФИО и должность", "key": "" },
+        { "label": "ФИО и должность", "key": "full_name", "filter": "selectedFullNames", "options": "fullNameOptions"},
         { "label": "Кол-во проектов", "key": "" },
-        { "label": "Контакты", "key": "contacts", "filter": "selectedContacts", "options": "contactOptions" },
+        { "label": "Контакты", "key": "" },
         { "label": "Последнее изменение", "key": "" },
-        { "label": "Автор измнения", "key": "" }
+        { "label": "Автор измнения", "key": "" },
+        { "label": "", "key": "" }
     ],
     "working-hours": [
         { "label": "Месяц", "key": "month_name" },

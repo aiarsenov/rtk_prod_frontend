@@ -66,6 +66,16 @@ const SingleBook = () => {
             )
         );
 
+        const fullNameOptions = Array.from(
+            new Set(
+                booksItems.flatMap((item) =>
+                    (item.contacts || []).flatMap((contact) =>
+                        [contact.full_name].filter(Boolean)
+                    )
+                )
+            )
+        );
+
         const contactOptions = Array.from(
             new Set(
                 booksItems.flatMap((item) =>
@@ -76,7 +86,7 @@ const SingleBook = () => {
             )
         );
 
-        return { nameOptions, contactOptions };
+        return { nameOptions, fullNameOptions, contactOptions };
     }, [booksItems]);
 
     // Сбрасываем состояние попапа и полей
@@ -1042,6 +1052,7 @@ const SingleBook = () => {
 
     const [filters, setFilters] = useState({
         selectedNames: [],
+        selectedFullNames: [],
         selectedContacts: [],
     });
 
@@ -1053,18 +1064,32 @@ const SingleBook = () => {
         ) {
             return booksItems
                 .map((item) => {
-                    const filteredContacts = (item.contacts || []).filter(
-                        (contact) =>
-                            filters.selectedContacts.length === 0 ||
-                            filters.selectedContacts.includes(contact.email) ||
-                            filters.selectedContacts.includes(contact.phone)
-                    );
-
-                    const matchesName =
+                    const matchesItemName =
                         filters.selectedNames.length === 0 ||
                         filters.selectedNames.includes(item.name);
 
-                    if (matchesName && filteredContacts.length > 0) {
+                    const filteredContacts = (item.contacts || []).filter(
+                        (contact) => {
+                            const matchesFullName =
+                                filters.selectedFullNames.length === 0 ||
+                                filters.selectedFullNames.includes(
+                                    contact.full_name
+                                );
+
+                            const matchesContact =
+                                filters.selectedContacts.length === 0 ||
+                                filters.selectedContacts.includes(
+                                    contact.email
+                                ) ||
+                                filters.selectedContacts.includes(
+                                    contact.phone
+                                );
+
+                            return matchesFullName && matchesContact;
+                        }
+                    );
+
+                    if (matchesItemName && filteredContacts.length > 0) {
                         return { ...item, contacts: filteredContacts };
                     }
 
