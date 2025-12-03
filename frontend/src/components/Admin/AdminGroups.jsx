@@ -330,21 +330,36 @@ const AdminGroups = () => {
             return;
         }
 
-        const toastId = toast.loading("Добавление прав...", {
+        const toastId = toast.loading("Сохранение прав...", {
             position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
         });
 
         try {
-            // Отправляем каждое право отдельно
+            // Удаляем все существующие права группы
+            if (selectedGroup.permissions && selectedGroup.permissions.length > 0) {
+                for (const existingPerm of selectedGroup.permissions) {
+                    await postData(
+                        "DELETE",
+                        `${API_URL}admin/permission-groups/${selectedGroup.id}/permissions/${existingPerm.id}`,
+                        {}
+                    );
+                }
+            }
+
+            // Добавляем новые выбранные права
             for (const permission of permissions) {
-            await postData(
-                "POST",
-                `${API_URL}admin/permission-groups/${selectedGroup.id}/permissions`,
+                await postData(
+                    "POST",
+                    `${API_URL}admin/permission-groups/${selectedGroup.id}/permissions`,
                     permission
                 );
             }
 
             toast.dismiss(toastId);
+            toast.success("Права успешно обновлены", {
+                position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+                autoClose: 2000,
+            });
 
             setShowAddPermissionModal(false);
             setSelectedPermissions({});
@@ -353,7 +368,7 @@ const AdminGroups = () => {
             loadGroups();
         } catch (err) {
             toast.update(toastId, {
-                render: err.message || "Ошибка добавления прав",
+                render: err.message || "Ошибка сохранения прав",
                 type: "error",
                 isLoading: false,
                 autoClose: 3000,
@@ -361,7 +376,7 @@ const AdminGroups = () => {
                 pauseOnHover: false,
                 draggable: true,
             });
-            setError(err.message || "Ошибка добавления прав");
+            setError(err.message || "Ошибка сохранения прав");
         }
     };
 
@@ -668,10 +683,25 @@ const AdminGroups = () => {
                                             className="admin-btn admin-btn--secondary"
                                             onClick={() => {
                                                 setSelectedGroup(group);
+
+                                                // Предзаполняем существующие права группы
+                                                const existingPermissions = {};
+                                                const existingScopes = {};
+
+                                                if (group.permissions && group.permissions.length > 0) {
+                                                    group.permissions.forEach(perm => {
+                                                        const key = `${perm.section}_${perm.permission_type}`;
+                                                        existingPermissions[key] = true;
+                                                        existingScopes[key] = perm.scope || 'full';
+                                                    });
+                                                }
+
+                                                setSelectedPermissions(existingPermissions);
+                                                setPermissionScopes(existingScopes);
                                                 setShowAddPermissionModal(true);
                                             }}
                                         >
-                                            Добавить право
+                                            Редактировать права
                                         </button>
                                     )}
                                 </div>
@@ -939,7 +969,7 @@ const AdminGroups = () => {
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="admin-modal__header">
-                            <h2>Добавление группы</h2>
+                            <h2>Редактирование прав группы: {selectedGroup.name}</h2>
                         </div>
                         <form onSubmit={handleAddPermission}>
                             <div className="admin-modal__body">
