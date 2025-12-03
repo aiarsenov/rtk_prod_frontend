@@ -1045,11 +1045,13 @@ const AdminGroups = () => {
                                                     </td>
                                                 ))}
 
-                                                {/* Пустые ячейки для "Ширина прав" */}
-                                                <td colSpan="3"></td>
+                                                {/* Пустые ячейки для "Ширина прав" - по одной для каждого столбца */}
+                                                <td className="empty-cell"></td>
+                                                <td className="empty-cell"></td>
+                                                <td className="empty-cell"></td>
 
                                                 {/* Пустая ячейка для последнего столбца */}
-                                                <td></td>
+                                                <td className="empty-cell"></td>
                                             </tr>
                                         </tbody>
                                     </table>

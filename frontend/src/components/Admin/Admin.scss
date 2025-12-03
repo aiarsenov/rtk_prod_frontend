@@ -427,6 +427,7 @@
             &.section-header {
                 text-align: left;
                 width: 200px;
+                min-width: 200px;
                 vertical-align: middle;
             }
 
@@ -505,14 +506,24 @@
                 font-weight: 500;
                 color: var(--color-gray-100);
                 text-align: left;
+                width: 200px;
+                min-width: 200px;
             }
 
             &.permission-cell,
-            &.scope-cell,
+            &.scope-cell {
+                text-align: center;
+                vertical-align: middle;
+                min-width: 90px;
+                width: 90px;
+            }
+
             &.mass-checkbox-cell {
                 text-align: center;
                 vertical-align: middle;
                 min-width: 90px;
+                width: 90px;
+                padding: 12px 8px !important;
             }
 
             &.row-checkbox-cell {
@@ -520,6 +531,11 @@
                 vertical-align: middle;
                 min-width: 60px;
                 width: 60px;
+            }
+
+            &.empty-cell {
+                background: var(--color-gray-20);
+                border-top: 2px solid var(--color-gray-40);
             }
 
             // Разделительная линия между группами
@@ -575,6 +591,9 @@
 .mass-select-label {
     font-weight: 600;
     color: var(--color-gray-80);
+    text-align: left;
+    width: 200px;
+    min-width: 200px;
 }
 
 .row-checkbox-cell {
