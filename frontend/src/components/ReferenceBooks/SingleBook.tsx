@@ -978,21 +978,23 @@ const SingleBook = () => {
             .finally(() => setIsLoading(false));
     };
 
+    // Считаем количество записей
     useEffect(() => {
-        setListLength(
-            bookId !== "creditor" && bookId !== "contragent"
-                ? booksItems?.length
-                : booksItems.reduce((sum, creditor) => {
-                      const projectsContacts = creditor.projects.reduce(
-                          (projectSum, project) => {
-                              return projectSum + project.contacts?.length;
-                          },
-                          0
-                      );
-                      return sum + projectsContacts;
-                  }, 0)
-        );
-    }, [booksItems]);
+        if (
+            ["creditor", "contragent", "suppliers-with-reports"].includes(
+                bookId
+            )
+        ) {
+            const uniqueContactIds = new Set(
+                booksItems.flatMap((creditor) =>
+                    (creditor.contacts || []).map((contact) => contact.id)
+                )
+            );
+            setListLength(uniqueContactIds.size);
+        } else {
+            setListLength(booksItems?.length || 0);
+        }
+    }, [booksItems, bookId]);
 
     useEffect(() => {
         if (bookId !== "working-hours") {
@@ -1027,9 +1029,9 @@ const SingleBook = () => {
 
     const filteredList = useMemo(() => {
         if (
-            bookId === "creditor" ||
-            bookId === "contragent" ||
-            bookId === "suppliers-with-reports"
+            ["creditor", "contragent", "suppliers-with-reports"].includes(
+                bookId
+            )
         ) {
             return booksItems
                 .map((item) => {
@@ -1040,21 +1042,21 @@ const SingleBook = () => {
                             filters.selectedContacts.includes(contact.phone)
                     );
 
-                    if (
-                        (filters.selectedNames.length === 0 ||
-                            filters.selectedNames.includes(item.name)) &&
-                        filteredContacts.length > 0
-                    ) {
+                    const matchesName =
+                        filters.selectedNames.length === 0 ||
+                        filters.selectedNames.includes(item.name);
+
+                    if (matchesName && filteredContacts.length > 0) {
                         return { ...item, contacts: filteredContacts };
                     }
 
                     return null;
                 })
                 .filter(Boolean);
-        } else {
-            return booksItems;
         }
-    }, [filters, booksItems]);
+
+        return booksItems;
+    }, [booksItems, bookId, filters]);
 
     return (
         <main className="page reference-books">
