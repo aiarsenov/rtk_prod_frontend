@@ -257,6 +257,15 @@
         border: 1px solid var(--color-blue-70);
     }
 
+    .react-datepicker__day--today.react-datepicker__day--keyboard-selected:not(
+            .react-datepicker__day--selected
+        )
+        .react-datepicker__day-number {
+        background-color: transparent !important;
+        color: var(--color-gray-100) !important;
+        border: 1px solid var(--color-blue-70) !important;
+    }
+
     .react-datepicker__month-text--range-start,
     .react-datepicker__month-text--range-end,
     .react-datepicker__day--selected .react-datepicker__day-number,
@@ -319,7 +328,7 @@
 
     .react-datepicker
         .react-datepicker__day--keyboard-selected
-        .react-datepicker__day-number,
+        .react-datepicker__day-number.selected,
     .react-datepicker__month-text--selecting-range-start,
     .react-datepicker__month-text--selecting-range-end,
     .react-datepicker .react-datepicker__month-text--keyboard-selected,

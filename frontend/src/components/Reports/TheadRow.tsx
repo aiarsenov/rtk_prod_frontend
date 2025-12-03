@@ -262,7 +262,7 @@ const TheadRow = ({
                                                                                 dateValue
                                                                             )[0]
                                                                         ][0];
-                                                                        
+
                                                                     const to =
                                                                         dateValue[
                                                                             Object.keys(

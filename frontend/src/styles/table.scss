@@ -18,7 +18,7 @@
         padding-bottom: 40px;
         position: relative;
         max-height: calc(
-            100vh - 200px
+            100vh - 165px
         ); // Вычитаем высоту заголовка и других элементов
 
         @media (min-width: $media-xxl) {

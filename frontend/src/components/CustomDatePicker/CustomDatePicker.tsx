@@ -100,7 +100,10 @@ const CustomDatePicker = ({
                     if (single) {
                         const clickedDate = update as Date;
                         // Если кликнули на уже выбранную дату, снимаем выбор
-                        if (singleDate && areDatesEqual(clickedDate, singleDate)) {
+                        if (
+                            singleDate &&
+                            areDatesEqual(clickedDate, singleDate)
+                        ) {
                             setSingleDate(null);
                         } else {
                             setSingleDate(clickedDate);
@@ -109,30 +112,47 @@ const CustomDatePicker = ({
                         setTempRange(update as [Date | null, Date | null]);
                     }
                 }}
-                startDate={
-                    !single
-                        ? tempRange[0]
-                        : singleDate
-                }
-                selected={
-                    !single
-                        ? tempRange[0]
-                        : singleDate
-                }
+                startDate={!single ? tempRange[0] ?? null : singleDate ?? null}
+                selected={!single ? tempRange[0] ?? null : singleDate ?? null}
                 endDate={!single ? tempRange[1] : undefined}
                 selectsRange={!single}
                 inline
                 locale="ru"
                 dateFormat={type === "months" ? "MM.yyyy" : "dd.MM.yyyy"}
                 showMonthYearPicker={type === "months"}
-                renderDayContents={(day) => (
-                    <>
-                        <div className="react-datepicker__day-number">
-                            {day}
-                        </div>
-                        <div className="react-datepicker__day-overlay"></div>
-                    </>
-                )}
+                // renderDayContents={(day) => (
+                //     <>
+                //         <div className="react-datepicker__day-number">
+                //             {day}
+                //         </div>
+                //         <div className="react-datepicker__day-overlay"></div>
+                //     </>
+                // )}
+                renderDayContents={(day, date) => {
+                    const today = new Date();
+                    const isToday =
+                        date.getDate() === today.getDate() &&
+                        date.getMonth() === today.getMonth() &&
+                        date.getFullYear() === today.getFullYear();
+
+                    const isSelected = singleDate
+                        ? areDatesEqual(date, singleDate)
+                        : false;
+
+                    return (
+                        <>
+                            {" "}
+                            <div
+                                className={`react-datepicker__day-number ${
+                                    isToday && !isSelected ? "today" : ""
+                                } ${isSelected ? "selected" : ""}`}
+                            >
+                                {day}
+                            </div>
+                            <div className="react-datepicker__day-overlay"></div>
+                        </>
+                    );
+                }}
                 renderMonthContent={(monthIndex) => {
                     const monthName = new Date(0, monthIndex).toLocaleString(
                         "ru-RU",
