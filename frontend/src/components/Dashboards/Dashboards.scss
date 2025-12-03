@@ -516,6 +516,8 @@
         &-item {
             padding: 10px 0;
             border-top: 1px solid var(--color-gray-30);
+            border-bottom: none;
+            
             gap: 20px;
 
             @media (min-width: $media-xxl) {

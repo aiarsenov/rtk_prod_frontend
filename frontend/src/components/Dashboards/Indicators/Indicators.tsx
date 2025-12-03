@@ -212,7 +212,9 @@ const Indicators = () => {
                     display: false,
                 },
                 border: {
-                    display: false,
+                    display: true,
+                    color: "#E4E7EC",
+                    width: 1,
                 },
                 ticks: {
                     color: "#002033",
@@ -285,7 +287,9 @@ const Indicators = () => {
                     display: false,
                 },
                 border: {
-                    display: false,
+                    display: true,
+                    color: "#E4E7EC",
+                    width: 1,
                 },
                 ticks: {
                     color: "#002033",
