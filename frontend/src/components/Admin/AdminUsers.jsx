@@ -360,29 +360,31 @@ const AdminUsers = () => {
                                                         Отозвать
                                                     </button>
                                                 </>
-                                            ) : user.is_active ? (
-                                                <button
-                                                    className="admin-btn admin-btn--danger admin-btn--sm"
-                                                    onClick={() =>
-                                                        handleDeactivate(
-                                                            user.id
-                                                        )
-                                                    }
-                                                    title="Деактивировать пользователя"
-                                                >
-                                                    Деактивировать
-                                                </button>
                                             ) : (
                                                 <>
-                                                    <button
-                                                        className="admin-btn admin-btn--success admin-btn--sm"
-                                                        onClick={() =>
-                                                            handleActivate(user.id)
-                                                        }
-                                                        title="Активировать пользователя"
-                                                    >
-                                                        Активировать
-                                                    </button>
+                                                    {user.is_active ? (
+                                                        <button
+                                                            className="admin-btn admin-btn--danger admin-btn--sm"
+                                                            onClick={() =>
+                                                                handleDeactivate(
+                                                                    user.id
+                                                                )
+                                                            }
+                                                            title="Деактивировать пользователя"
+                                                        >
+                                                            Деактивировать
+                                                        </button>
+                                                    ) : (
+                                                        <button
+                                                            className="admin-btn admin-btn--success admin-btn--sm"
+                                                            onClick={() =>
+                                                                handleActivate(user.id)
+                                                            }
+                                                            title="Активировать пользователя"
+                                                        >
+                                                            Активировать
+                                                        </button>
+                                                    )}
                                                     <button
                                                         className="admin-btn admin-btn--danger admin-btn--sm"
                                                         onClick={() =>
