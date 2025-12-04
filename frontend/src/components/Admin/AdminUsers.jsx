@@ -230,6 +230,28 @@ const AdminUsers = () => {
         }
     };
 
+    const handleDeleteUser = async (userId) => {
+        if (!confirm("Вы уверены, что хотите удалить пользователя? Это действие необратимо!")) {
+            return;
+        }
+
+        try {
+            await postData(
+                "DELETE",
+                `${API_URL}admin/users/${userId}`
+            );
+            loadUsers();
+        } catch (err) {
+            toast.error(err.message || "Ошибка удаления пользователя", {
+                position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+                autoClose: 3000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
+        }
+    };
+
     const handleEmployeeSelect = (e) => {
         const employeeId = parseInt(e.target.value);
         setSelectedEmployee(employeeId);
@@ -351,15 +373,26 @@ const AdminUsers = () => {
                                                     Деактивировать
                                                 </button>
                                             ) : (
-                                                <button
-                                                    className="admin-btn admin-btn--success admin-btn--sm"
-                                                    onClick={() =>
-                                                        handleActivate(user.id)
-                                                    }
-                                                    title="Активировать пользователя"
-                                                >
-                                                    Активировать
-                                                </button>
+                                                <>
+                                                    <button
+                                                        className="admin-btn admin-btn--success admin-btn--sm"
+                                                        onClick={() =>
+                                                            handleActivate(user.id)
+                                                        }
+                                                        title="Активировать пользователя"
+                                                    >
+                                                        Активировать
+                                                    </button>
+                                                    <button
+                                                        className="admin-btn admin-btn--danger admin-btn--sm"
+                                                        onClick={() =>
+                                                            handleDeleteUser(user.id)
+                                                        }
+                                                        title="Удалить пользователя из системы"
+                                                    >
+                                                        Удалить
+                                                    </button>
+                                                </>
                                             )}
                                         </div>
                                     </td>
