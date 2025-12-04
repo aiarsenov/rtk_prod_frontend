@@ -167,9 +167,9 @@ const AdminGroups = () => {
             return;
         }
 
-        const toastId = toast.loading("Создание группы...", {
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // const toastId = toast.loading("Создание группы...", {
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         try {
             await postData("POST", `${API_URL}admin/permission-groups`, {
@@ -177,7 +177,7 @@ const AdminGroups = () => {
                 description: newGroupDescription,
             });
 
-         toast.dismiss(toastId);
+            // toast.dismiss(toastId);
 
             // toast.update(toastId, {
             //     render: "Группа успешно создана",
@@ -194,14 +194,23 @@ const AdminGroups = () => {
             setNewGroupDescription("");
             loadGroups();
         } catch (err) {
-            toast.update(toastId, {
-                render: err.message || "Ошибка создания группы",
-                type: "error",
+            // toast.update(toastId, {
+            //     render: err.message || "Ошибка создания группы",
+            //     type: "error",
+            //     isLoading: false,
+            //     autoClose: 3000,
+            //     pauseOnFocusLoss: false,
+            //     pauseOnHover: false,
+            //     draggable: true,
+            // });
+
+            toast.error(err.message || "Ошибка создания группы", {
                 isLoading: false,
                 autoClose: 3000,
                 pauseOnFocusLoss: false,
                 pauseOnHover: false,
-                draggable: true,
+                position:
+                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
             });
             setError(err.message || "Ошибка создания группы");
         }
@@ -223,21 +232,21 @@ const AdminGroups = () => {
             return;
         }
 
-        const toastId = toast.loading("Обновление группы...", {
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // const toastId = toast.loading("Обновление группы...", {
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         try {
             await postData(
                 "PUT",
                 `${API_URL}admin/permission-groups/${selectedGroup.id}`,
                 {
-                name: editGroupName,
-                description: editGroupDescription,
+                    name: editGroupName,
+                    description: editGroupDescription,
                 }
             );
 
-            toast.dismiss(toastId);
+            // toast.dismiss(toastId);
 
             // toast.update(toastId, {
             //     render: "Группа успешно обновлена",
@@ -254,14 +263,23 @@ const AdminGroups = () => {
             setEditGroupDescription("");
             loadGroups();
         } catch (err) {
-            toast.update(toastId, {
-                render: err.message || "Ошибка обновления группы",
-                type: "error",
+            // toast.update(toastId, {
+            //     render: err.message || "Ошибка обновления группы",
+            //     type: "error",
+            //     isLoading: false,
+            //     autoClose: 3000,
+            //     pauseOnFocusLoss: false,
+            //     pauseOnHover: false,
+            //     draggable: true,
+            // });
+
+            toast.error(err.message || "Ошибка обновления группы", {
                 isLoading: false,
                 autoClose: 3000,
                 pauseOnFocusLoss: false,
                 pauseOnHover: false,
-                draggable: true,
+                position:
+                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
             });
             setError(err.message || "Ошибка обновления группы");
         }
@@ -272,16 +290,16 @@ const AdminGroups = () => {
             return;
         }
 
-        const toastId = toast.loading("Удаление группы...", {
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // const toastId = toast.loading("Удаление группы...", {
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         try {
             await postData(
                 "DELETE",
                 `${API_URL}admin/permission-groups/${groupId}`
             );
-         toast.dismiss(toastId);
+            // toast.dismiss(toastId);
 
             // toast.update(toastId, {
             //     render: "Группа успешно удалена",
@@ -295,15 +313,24 @@ const AdminGroups = () => {
 
             loadGroups();
         } catch (err) {
-            toast.update(toastId, {
-                render: err.message || "Ошибка удаления группы",
-                type: "error",
+            toast.error(err.message || "Ошибка удаления группы", {
                 isLoading: false,
                 autoClose: 3000,
                 pauseOnFocusLoss: false,
                 pauseOnHover: false,
-                draggable: true,
+                position:
+                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
             });
+
+            // toast.update(toastId, {
+            //     render: err.message || "Ошибка удаления группы",
+            //     type: "error",
+            //     isLoading: false,
+            //     autoClose: 3000,
+            //     pauseOnFocusLoss: false,
+            //     pauseOnHover: false,
+            //     draggable: true,
+            // });
         }
     };
 
@@ -316,10 +343,10 @@ const AdminGroups = () => {
         Object.entries(selectedPermissions).forEach(([key, isSelected]) => {
             if (isSelected) {
                 // Правильно разбираем ключ: последняя часть - это permission_type, все остальное - section
-                const parts = key.split('_');
+                const parts = key.split("_");
                 const permissionType = parts[parts.length - 1]; // Последняя часть
-                const section = parts.slice(0, -1).join('_'); // Все остальное
-                const scope = permissionScopes[key] || 'full'; // Берем scope для конкретной ячейки
+                const section = parts.slice(0, -1).join("_"); // Все остальное
+                const scope = permissionScopes[key] || "full"; // Берем scope для конкретной ячейки
                 permissions.push({
                     section,
                     permission_type: permissionType,
@@ -333,13 +360,16 @@ const AdminGroups = () => {
             return;
         }
 
-        const toastId = toast.loading("Сохранение прав...", {
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // const toastId = toast.loading("Сохранение прав...", {
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         try {
             // Удаляем все существующие права группы
-            if (selectedGroup.permissions && selectedGroup.permissions.length > 0) {
+            if (
+                selectedGroup.permissions &&
+                selectedGroup.permissions.length > 0
+            ) {
                 for (const existingPerm of selectedGroup.permissions) {
                     await postData(
                         "DELETE",
@@ -358,9 +388,10 @@ const AdminGroups = () => {
                 );
             }
 
-            toast.dismiss(toastId);
+            // toast.dismiss(toastId);
             toast.success("Права успешно обновлены", {
-                position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+                position:
+                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
                 autoClose: 2000,
             });
 
@@ -370,14 +401,23 @@ const AdminGroups = () => {
             setSelectedSections(new Set());
             loadGroups();
         } catch (err) {
-            toast.update(toastId, {
-                render: err.message || "Ошибка сохранения прав",
-                type: "error",
+            // toast.update(toastId, {
+            //     render: err.message || "Ошибка сохранения прав",
+            //     type: "error",
+            //     isLoading: false,
+            //     autoClose: 3000,
+            //     pauseOnFocusLoss: false,
+            //     pauseOnHover: false,
+            //     draggable: true,
+            // });
+
+            toast.error(err.message || "Ошибка сохранения прав", {
                 isLoading: false,
                 autoClose: 3000,
                 pauseOnFocusLoss: false,
                 pauseOnHover: false,
-                draggable: true,
+                position:
+                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
             });
             setError(err.message || "Ошибка сохранения прав");
         }
@@ -444,7 +484,7 @@ const AdminGroups = () => {
 
                 // Устанавливаем scope по умолчанию, если отмечаем
                 if (!allCheckedInSelectedSections && !newScopes[key]) {
-                    newScopes[key] = 'full';
+                    newScopes[key] = "full";
                 }
             }
         });
@@ -458,16 +498,16 @@ const AdminGroups = () => {
             return;
         }
 
-        const toastId = toast.loading("Удаление права...", {
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // const toastId = toast.loading("Удаление права...", {
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         try {
             await postData(
                 "DELETE",
                 `${API_URL}admin/permission-groups/${groupId}/permissions/${permissionId}`
             );
-         toast.dismiss(toastId);
+            // toast.dismiss(toastId);
 
             // toast.update(toastId, {
             //     render: "Право успешно удалено",
@@ -480,14 +520,23 @@ const AdminGroups = () => {
             // });
             loadGroups();
         } catch (err) {
-            toast.update(toastId, {
-                render: err.message || "Ошибка удаления права",
-                type: "error",
+            // toast.update(toastId, {
+            //     render: err.message || "Ошибка удаления права",
+            //     type: "error",
+            //     isLoading: false,
+            //     autoClose: 3000,
+            //     pauseOnFocusLoss: false,
+            //     pauseOnHover: false,
+            //     draggable: true,
+            // });
+
+            toast.error(err.message || "Ошибка удаления права", {
                 isLoading: false,
                 autoClose: 3000,
                 pauseOnFocusLoss: false,
                 pauseOnHover: false,
-                draggable: true,
+                position:
+                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
             });
         }
     };
@@ -501,9 +550,9 @@ const AdminGroups = () => {
             return;
         }
 
-        const toastId = toast.loading("Добавление пользователей...", {
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // const toastId = toast.loading("Добавление пользователей...", {
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         try {
             await postData(
@@ -514,7 +563,7 @@ const AdminGroups = () => {
                 }
             );
 
-         toast.dismiss(toastId);
+            // toast.dismiss(toastId);
 
             // toast.update(toastId, {
             //     render: "Пользователи успешно добавлены",
@@ -530,27 +579,36 @@ const AdminGroups = () => {
             setSelectedUsers([]);
             loadGroups();
         } catch (err) {
-            toast.update(toastId, {
-                render: err.message || "Ошибка добавления пользователей",
-                type: "error",
+            // toast.update(toastId, {
+            //     render: err.message || "Ошибка добавления пользователей",
+            //     type: "error",
+            //     isLoading: false,
+            //     autoClose: 3000,
+            //     pauseOnFocusLoss: false,
+            //     pauseOnHover: false,
+            //     draggable: true,
+            // });
+
+            toast.error(err.message || "Ошибка добавления пользователей", {
                 isLoading: false,
                 autoClose: 3000,
                 pauseOnFocusLoss: false,
                 pauseOnHover: false,
-                draggable: true,
+                position:
+                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
             });
             setError(err.message || "Ошибка добавления пользователей");
         }
     };
 
-    const handleRemoveUser = async (groupId, userId) => {
+    const handleRemoveUser = async (groupId, userId) => {ƒ
         if (!confirm("Удалить пользователя из группы?")) {
             return;
         }
 
-        const toastId = toast.loading("Удаление пользователя...", {
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // const toastId = toast.loading("Удаление пользователя...", {
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         try {
             await postData(
@@ -558,7 +616,7 @@ const AdminGroups = () => {
                 `${API_URL}admin/permission-groups/${groupId}/users/${userId}`
             );
 
-         toast.dismiss(toastId);
+            // toast.dismiss(toastId);
             // toast.update(toastId, {
             //     render: "Пользователь успешно удален из группы",
             //     type: "success",
@@ -570,15 +628,24 @@ const AdminGroups = () => {
             // });
             loadGroups();
         } catch (err) {
-            toast.update(toastId, {
-                render: err.message || "Ошибка удаления пользователя",
-                type: "error",
+            toast.error(err.message || "Ошибка удаления пользователя", {
                 isLoading: false,
                 autoClose: 3000,
                 pauseOnFocusLoss: false,
                 pauseOnHover: false,
-                draggable: true,
+                position:
+                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
             });
+
+            // toast.update(toastId, {
+            //     render: err.message || "Ошибка удаления пользователя",
+            //     type: "error",
+            //     isLoading: false,
+            //     autoClose: 3000,
+            //     pauseOnFocusLoss: false,
+            //     pauseOnHover: false,
+            //     draggable: true,
+            // });
         }
     };
 
@@ -674,16 +741,31 @@ const AdminGroups = () => {
                                                 const existingPermissions = {};
                                                 const existingScopes = {};
 
-                                                if (group.permissions && group.permissions.length > 0) {
-                                                    group.permissions.forEach(perm => {
-                                                        const key = `${perm.section}_${perm.permission_type}`;
-                                                        existingPermissions[key] = true;
-                                                        existingScopes[key] = perm.scope || 'full';
-                                                    });
+                                                if (
+                                                    group.permissions &&
+                                                    group.permissions.length > 0
+                                                ) {
+                                                    group.permissions.forEach(
+                                                        (perm) => {
+                                                            const key = `${perm.section}_${perm.permission_type}`;
+                                                            existingPermissions[
+                                                                key
+                                                            ] = true;
+                                                            existingScopes[
+                                                                key
+                                                            ] =
+                                                                perm.scope ||
+                                                                "full";
+                                                        }
+                                                    );
                                                 }
 
-                                                setSelectedPermissions(existingPermissions);
-                                                setPermissionScopes(existingScopes);
+                                                setSelectedPermissions(
+                                                    existingPermissions
+                                                );
+                                                setPermissionScopes(
+                                                    existingScopes
+                                                );
                                                 setShowAddPermissionModal(true);
                                             }}
                                         >
@@ -864,8 +946,8 @@ const AdminGroups = () => {
                 <div
                     className="admin-modal"
                     onClick={() => {
-                    setShowEditModal(false);
-                    setError("");
+                        setShowEditModal(false);
+                        setError("");
                     }}
                 >
                     <div
@@ -955,129 +1037,240 @@ const AdminGroups = () => {
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="admin-modal__header">
-                            <h2>Редактирование прав группы: {selectedGroup.name}</h2>
+                            <h2>
+                                Редактирование прав группы: {selectedGroup.name}
+                            </h2>
                         </div>
                         <form onSubmit={handleAddPermission}>
                             <div className="admin-modal__body">
                                 <div className="permissions-table-wrapper">
                                     <table className="permissions-table">
                                         <colgroup>
-                                            <col style={{ width: '200px' }} />
-                                            <col style={{ width: '90px' }} />
-                                            <col style={{ width: '90px' }} />
-                                            <col style={{ width: '90px' }} />
-                                            <col style={{ width: '90px' }} />
-                                            <col style={{ width: '90px' }} />
-                                            <col style={{ width: '90px' }} />
-                                            <col style={{ width: '60px' }} />
+                                            <col style={{ width: "200px" }} />
+                                            <col style={{ width: "90px" }} />
+                                            <col style={{ width: "90px" }} />
+                                            <col style={{ width: "90px" }} />
+                                            <col style={{ width: "90px" }} />
+                                            <col style={{ width: "90px" }} />
+                                            <col style={{ width: "90px" }} />
+                                            <col style={{ width: "60px" }} />
                                         </colgroup>
                                         <thead>
                                             <tr>
-                                                <th rowSpan="2" className="section-header">Раздел / подраздел</th>
-                                                <th colSpan="3" className="group-header">Выбор прав</th>
-                                                <th colSpan="3" className="group-header">Ширина прав</th>
-                                                <th rowSpan="2" className="checkbox-header"></th>
+                                                <th
+                                                    rowSpan="2"
+                                                    className="section-header"
+                                                >
+                                                    Раздел / подраздел
+                                                </th>
+                                                <th
+                                                    colSpan="3"
+                                                    className="group-header"
+                                                >
+                                                    Выбор прав
+                                                </th>
+                                                <th
+                                                    colSpan="3"
+                                                    className="group-header"
+                                                >
+                                                    Ширина прав
+                                                </th>
+                                                <th
+                                                    rowSpan="2"
+                                                    className="checkbox-header"
+                                                ></th>
                                             </tr>
                                             <tr>
-                                                <th className="subheader">Просмотр</th>
-                                                <th className="subheader">Редактирование</th>
-                                                <th className="subheader">Удаление</th>
-                                                <th className="subheader">Просмотр</th>
-                                                <th className="subheader">Редактирование</th>
-                                                <th className="subheader">Удаление</th>
+                                                <th className="subheader">
+                                                    Просмотр
+                                                </th>
+                                                <th className="subheader">
+                                                    Редактирование
+                                                </th>
+                                                <th className="subheader">
+                                                    Удаление
+                                                </th>
+                                                <th className="subheader">
+                                                    Просмотр
+                                                </th>
+                                                <th className="subheader">
+                                                    Редактирование
+                                                </th>
+                                                <th className="subheader">
+                                                    Удаление
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {Object.entries(SECTIONS).map(([sectionKey, sectionLabel]) => {
-                                                const matrix = PERMISSION_MATRIX[sectionKey] || {};
-                                                return (
-                                                    <tr key={sectionKey}>
-                                                        <td className="section-name">{sectionLabel}</td>
+                                            {Object.entries(SECTIONS).map(
+                                                ([
+                                                    sectionKey,
+                                                    sectionLabel,
+                                                ]) => {
+                                                    const matrix =
+                                                        PERMISSION_MATRIX[
+                                                            sectionKey
+                                                        ] || {};
+                                                    return (
+                                                        <tr key={sectionKey}>
+                                                            <td className="section-name">
+                                                                {sectionLabel}
+                                                            </td>
 
-                                                        {/* Группа чекбоксов: Выбор прав */}
-                                                        {['view', 'edit', 'delete'].map((permType) => {
-                                                            const isAllowed = matrix[permType] === 1;
-                                                            const key = `${sectionKey}_${permType}`;
-                                                            const isChecked = !!selectedPermissions[key];
+                                                            {/* Группа чекбоксов: Выбор прав */}
+                                                            {[
+                                                                "view",
+                                                                "edit",
+                                                                "delete",
+                                                            ].map(
+                                                                (permType) => {
+                                                                    const isAllowed =
+                                                                        matrix[
+                                                                            permType
+                                                                        ] === 1;
+                                                                    const key = `${sectionKey}_${permType}`;
+                                                                    const isChecked =
+                                                                        !!selectedPermissions[
+                                                                            key
+                                                                        ];
 
-                                                            return (
-                                                                <td key={`check_${permType}`} className="permission-cell">
-                                                                    {isAllowed ? (
-                                                                        <input
-                                                                            type="checkbox"
-                                                                            checked={isChecked}
-                                                                            onChange={() =>
-                                                                                handlePermissionCheckboxChange(
-                                                                                    sectionKey,
-                                                                                    permType
-                                                                                )
-                                                                            }
-                                                                            className="permission-checkbox"
-                                                                        />
-                                                                    ) : (
-                                                                        <span className="permission-disabled">—</span>
-                                                                    )}
-                                                                </td>
-                                                            );
-                                                        })}
-
-                                                        {/* Группа селектов: Ширина прав */}
-                                                        {['view', 'edit', 'delete'].map((permType) => {
-                                                            const matrix = PERMISSION_MATRIX[sectionKey] || {};
-                                                            const isAllowed = matrix[permType] === 1;
-                                                            const scopeKey = `${sectionKey}_${permType}`;
-                                                            const currentScope = permissionScopes[scopeKey] || 'full';
-
-                                                            return (
-                                                                <td key={`scope_${permType}`} className="scope-cell">
-                                                                    {isAllowed ? (
-                                                                        <select
-                                                                            value={currentScope}
-                                                                            onChange={(e) =>
-                                                                                handleScopeChange(
-                                                                                    sectionKey,
-                                                                                    permType,
-                                                                                    e.target.value
-                                                                                )
-                                                                            }
-                                                                            className="scope-select"
-                                                                            onClick={(e) => e.stopPropagation()}
+                                                                    return (
+                                                                        <td
+                                                                            key={`check_${permType}`}
+                                                                            className="permission-cell"
                                                                         >
-                                                                            <option value="full">Полная</option>
-                                                                            <option value="limited">Ограниченная</option>
-                                                                        </select>
-                                                                    ) : (
-                                                                        <span className="permission-disabled">—</span>
-                                                                    )}
-                                                                </td>
-                                                            );
-                                                        })}
+                                                                            {isAllowed ? (
+                                                                                <input
+                                                                                    type="checkbox"
+                                                                                    checked={
+                                                                                        isChecked
+                                                                                    }
+                                                                                    onChange={() =>
+                                                                                        handlePermissionCheckboxChange(
+                                                                                            sectionKey,
+                                                                                            permType
+                                                                                        )
+                                                                                    }
+                                                                                    className="permission-checkbox"
+                                                                                />
+                                                                            ) : (
+                                                                                <span className="permission-disabled">
+                                                                                    —
+                                                                                </span>
+                                                                            )}
+                                                                        </td>
+                                                                    );
+                                                                }
+                                                            )}
 
-                                                        {/* Чекбокс выбора всей строки */}
-                                                        <td className="row-checkbox-cell">
-                                                            <input
-                                                                type="checkbox"
-                                                                checked={selectedSections.has(sectionKey)}
-                                                                onChange={() => handleSectionCheckboxChange(sectionKey)}
-                                                                className="row-checkbox"
-                                                            />
-                                                        </td>
-                                                    </tr>
-                                                );
-                                            })}
+                                                            {/* Группа селектов: Ширина прав */}
+                                                            {[
+                                                                "view",
+                                                                "edit",
+                                                                "delete",
+                                                            ].map(
+                                                                (permType) => {
+                                                                    const matrix =
+                                                                        PERMISSION_MATRIX[
+                                                                            sectionKey
+                                                                        ] || {};
+                                                                    const isAllowed =
+                                                                        matrix[
+                                                                            permType
+                                                                        ] === 1;
+                                                                    const scopeKey = `${sectionKey}_${permType}`;
+                                                                    const currentScope =
+                                                                        permissionScopes[
+                                                                            scopeKey
+                                                                        ] ||
+                                                                        "full";
+
+                                                                    return (
+                                                                        <td
+                                                                            key={`scope_${permType}`}
+                                                                            className="scope-cell"
+                                                                        >
+                                                                            {isAllowed ? (
+                                                                                <select
+                                                                                    value={
+                                                                                        currentScope
+                                                                                    }
+                                                                                    onChange={(
+                                                                                        e
+                                                                                    ) =>
+                                                                                        handleScopeChange(
+                                                                                            sectionKey,
+                                                                                            permType,
+                                                                                            e
+                                                                                                .target
+                                                                                                .value
+                                                                                        )
+                                                                                    }
+                                                                                    className="scope-select"
+                                                                                    onClick={(
+                                                                                        e
+                                                                                    ) =>
+                                                                                        e.stopPropagation()
+                                                                                    }
+                                                                                >
+                                                                                    <option value="full">
+                                                                                        Полная
+                                                                                    </option>
+                                                                                    <option value="limited">
+                                                                                        Ограниченная
+                                                                                    </option>
+                                                                                </select>
+                                                                            ) : (
+                                                                                <span className="permission-disabled">
+                                                                                    —
+                                                                                </span>
+                                                                            )}
+                                                                        </td>
+                                                                    );
+                                                                }
+                                                            )}
+
+                                                            {/* Чекбокс выбора всей строки */}
+                                                            <td className="row-checkbox-cell">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={selectedSections.has(
+                                                                        sectionKey
+                                                                    )}
+                                                                    onChange={() =>
+                                                                        handleSectionCheckboxChange(
+                                                                            sectionKey
+                                                                        )
+                                                                    }
+                                                                    className="row-checkbox"
+                                                                />
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                }
+                                            )}
 
                                             {/* Строка с массовыми чекбоксами внизу */}
                                             <tr className="mass-select-row">
                                                 {/* Массовые чекбоксы для "Выбор прав" */}
-                                                {['view', 'edit', 'delete'].map((permType) => (
-                                                    <td key={`mass_${permType}`} className="mass-checkbox-cell">
-                                                        <input
-                                                            type="checkbox"
-                                                            onChange={() => handleMassPermissionCheckboxChange(permType)}
-                                                            className="mass-checkbox"
-                                                        />
-                                                    </td>
-                                                ))}
+                                                {["view", "edit", "delete"].map(
+                                                    (permType) => (
+                                                        <td
+                                                            key={`mass_${permType}`}
+                                                            className="mass-checkbox-cell"
+                                                        >
+                                                            <input
+                                                                type="checkbox"
+                                                                onChange={() =>
+                                                                    handleMassPermissionCheckboxChange(
+                                                                        permType
+                                                                    )
+                                                                }
+                                                                className="mass-checkbox"
+                                                            />
+                                                        </td>
+                                                    )
+                                                )}
 
                                                 {/* Пустые ячейки для "Ширина прав" + последний столбец */}
                                                 <td className="empty-cell"></td>
@@ -1087,11 +1280,13 @@ const AdminGroups = () => {
                                             </tr>
                                         </tbody>
                                     </table>
-                                    </div>
+                                </div>
 
-                                    {error && (
-                                        <div className="admin-form__error">{error}</div>
-                                    )}
+                                {error && (
+                                    <div className="admin-form__error">
+                                        {error}
+                                    </div>
+                                )}
                             </div>
                             <div className="admin-modal__footer">
                                 <button

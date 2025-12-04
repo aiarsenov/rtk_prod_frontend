@@ -92,9 +92,9 @@ const InviteAccept = () => {
         setSubmitting(true);
         setErrors({});
 
-        const toastId = toast.loading("Установка пароля...", {
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // const toastId = toast.loading("Установка пароля...", {
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         try {
             await postData("POST", `${API_URL}invite/accept`, {
@@ -103,7 +103,7 @@ const InviteAccept = () => {
                 password_confirmation: passwordConfirmation,
             });
 
-            toast.dismiss(query);
+            // toast.dismiss(query);
 
             // toast.update(toastId, {
             //     render: "Пароль успешно установлен! Вы будете перенаправлены на страницу входа.",
@@ -134,15 +134,24 @@ const InviteAccept = () => {
                 setErrors(validationErrors);
             }
 
-            toast.update(toastId, {
-                render: errorMessage,
-                type: "error",
+            toast.error(errorMessage, {
                 isLoading: false,
                 autoClose: 4000,
                 pauseOnFocusLoss: false,
                 pauseOnHover: false,
-                draggable: true,
+                position:
+                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
             });
+
+            // toast.update(toastId, {
+            //     render: errorMessage,
+            //     type: "error",
+            //     isLoading: false,
+            //     autoClose: 4000,
+            //     pauseOnFocusLoss: false,
+            //     pauseOnHover: false,
+            //     draggable: true,
+            // });
         } finally {
             setSubmitting(false);
         }

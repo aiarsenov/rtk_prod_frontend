@@ -54,7 +54,7 @@ const SingleBook = () => {
     const [availableYears, setAvailableYears] = useState([]); // Доступные года
     const [currentYear, setCurrentYear] = useState(""); // Текущий год
 
-    let query;
+    // let query;
 
     // Заполняем фильтры
     const filterOptions = useMemo(() => {
@@ -167,10 +167,10 @@ const SingleBook = () => {
             return;
         }
 
-        query = toast.loading("Обновление", {
-            containerId: "singleBook",
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // query = toast.loading("Обновление", {
+        //     containerId: "singleBook",
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         action.is_project_report_responsible = rolesAction.action === "true";
 
@@ -186,7 +186,7 @@ const SingleBook = () => {
                     setRolesAction({ action: "", roleId: "" });
                     getBooks();
 
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
 
                     // toast.update(query, {
                     //     render: response.message || "Успех",
@@ -202,7 +202,7 @@ const SingleBook = () => {
                     //             : "top-right",
                     // });
                 } else {
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
                     toast.error(response.message || "Ошибка операции", {
                         isLoading: false,
                         autoClose: 2500,
@@ -217,7 +217,7 @@ const SingleBook = () => {
                 }
             })
             .catch((error) => {
-                toast.dismiss(query);
+                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка операции", {
                     isLoading: false,
                     autoClose: 2500,
@@ -252,16 +252,16 @@ const SingleBook = () => {
                 ? `${URL}/${updatedData.contragent_id}`
                 : URL;
 
-        query = toast.loading("Обновление", {
-            containerId: "singleBook",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // query = toast.loading("Обновление", {
+        //     containerId: "singleBook",
+        //     draggable: true,
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         postData("POST", newUrl, updatedData)
             .then((response) => {
                 if (response?.ok) {
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
 
                     // toast.update(query, {
                     //     render: "Запись добавлена",
@@ -283,7 +283,7 @@ const SingleBook = () => {
                 }
             })
             .catch((error) => {
-                toast.dismiss(query);
+                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка добавления записи", {
                     isLoading: false,
                     autoClose: 2500,
@@ -308,11 +308,11 @@ const SingleBook = () => {
         let updatedData = tempData;
         updatedData.hours = +data.hours;
 
-        query = toast.loading("Сохранение", {
-            containerId: "singleBook",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // query = toast.loading("Сохранение", {
+        //     containerId: "singleBook",
+        //     draggable: true,
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         postData("PATCH", URL, { year: currentYear, hours: [updatedData] })
             .then((response) => {
@@ -320,7 +320,7 @@ const SingleBook = () => {
                     resetElemPopupState();
                     getBooks();
 
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
 
                     // toast.update(query, {
                     //     render: response.message || "Успешно сохранено",
@@ -337,7 +337,7 @@ const SingleBook = () => {
                     //             : "top-right",
                     // });
                 } else {
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
                     toast.error("Ошибка сохранения", {
                         isLoading: false,
                         autoClose: 2500,
@@ -353,7 +353,7 @@ const SingleBook = () => {
                 }
             })
             .catch((error) => {
-                toast.dismiss(query);
+                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка сохранения", {
                     isLoading: false,
                     autoClose: 2500,
@@ -412,11 +412,11 @@ const SingleBook = () => {
             }
         }
 
-        query = toast.loading("Обновление", {
-            containerId: "singleBook",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // query = toast.loading("Обновление", {
+        //     containerId: "singleBook",
+        //     draggable: true,
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         postData("PATCH", `${URL}/${data.id}`, data)
             .then((response) => {
@@ -427,7 +427,7 @@ const SingleBook = () => {
                         getBooks();
                     }
 
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
 
                     // toast.update(query, {
                     //     render: "Запись обновлена",
@@ -448,7 +448,7 @@ const SingleBook = () => {
                         getBooks();
                     }
 
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
                     toast.error("Ошибка обновления записи", {
                         isLoading: false,
                         autoClose: 2500,
@@ -468,7 +468,7 @@ const SingleBook = () => {
                     getBooks();
                 }
 
-                toast.dismiss(query);
+                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка обновления записи", {
                     isLoading: false,
                     autoClose: 2500,
@@ -490,11 +490,11 @@ const SingleBook = () => {
             return;
         }
 
-        query = toast.loading("Обновление", {
-            containerId: "singleBook",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // query = toast.loading("Обновление", {
+        //     containerId: "singleBook",
+        //     draggable: true,
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         postData(
             "PATCH",
@@ -508,7 +508,7 @@ const SingleBook = () => {
                     resetElemPopupState();
                     getBooks();
 
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
 
                     // toast.update(query, {
                     //     render: "Контакт обновлен",
@@ -525,7 +525,7 @@ const SingleBook = () => {
                     //             : "top-right",
                     // });
                 } else {
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
                     toast.error("Ошибка обновления контакта", {
                         isLoading: false,
                         autoClose: 2500,
@@ -541,7 +541,7 @@ const SingleBook = () => {
                 }
             })
             .catch((error) => {
-                toast.dismiss(query);
+                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка обновления контакта", {
                     isLoading: false,
                     autoClose: 2500,
@@ -563,11 +563,11 @@ const SingleBook = () => {
             return;
         }
 
-        query = toast.loading("Обновление", {
-            containerId: "singleBook",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // query = toast.loading("Обновление", {
+        //     containerId: "singleBook",
+        //     draggable: true,
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         postData(
             "PATCH",
@@ -578,7 +578,7 @@ const SingleBook = () => {
                 resetElemPopupState();
                 getBooks();
 
-                toast.dismiss(query);
+                // toast.dismiss(query);
 
                 // toast.update(query, {
                 //     render: "Запись обновлена",
@@ -595,7 +595,7 @@ const SingleBook = () => {
                 //             : "top-right",
                 // });
             } else {
-                toast.dismiss(query);
+                // toast.dismiss(query);
                 toast.error("Ошибка обновления записи", {
                     isLoading: false,
                     autoClose: 2500,
@@ -618,11 +618,11 @@ const SingleBook = () => {
             return;
         }
 
-        query = toast.loading("Удаление", {
-            containerId: "singleBook",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // query = toast.loading("Удаление", {
+        //     containerId: "singleBook",
+        //     draggable: true,
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         postData(
             "DELETE",
@@ -645,7 +645,7 @@ const SingleBook = () => {
                 );
                 resetElemPopupState();
 
-                toast.dismiss(query);
+                // toast.dismiss(query);
 
                 // toast.update(query, {
                 //     render: "Контакт удален",
@@ -662,7 +662,7 @@ const SingleBook = () => {
                 //             : "top-right",
                 // });
             } else {
-                toast.dismiss(query);
+                // toast.dismiss(query);
                 toast.error("Ошибка удалении контакта", {
                     isLoading: false,
                     autoClose: 2500,
@@ -685,11 +685,11 @@ const SingleBook = () => {
             return;
         }
 
-        query = toast.loading("Удаление", {
-            containerId: "singleBook",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // query = toast.loading("Удаление", {
+        //     containerId: "singleBook",
+        //     draggable: true,
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         let url;
 
@@ -709,7 +709,7 @@ const SingleBook = () => {
                     getBooks();
                     resetElemPopupState();
 
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
 
                     // toast.update(query, {
                     //     render: "Контакт удалена",
@@ -726,7 +726,7 @@ const SingleBook = () => {
                     //             : "top-right",
                     // });
                 } else {
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
                     toast.error("Ошибка удаления контакта", {
                         isLoading: false,
                         autoClose: 2500,
@@ -742,7 +742,7 @@ const SingleBook = () => {
                 }
             })
             .catch((error) => {
-                toast.dismiss(query);
+                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка удаления контакта", {
                     isLoading: false,
                     autoClose: 2500,
@@ -764,11 +764,11 @@ const SingleBook = () => {
             return;
         }
 
-        query = toast.loading("Удаление", {
-            containerId: "singleBook",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // query = toast.loading("Удаление", {
+        //     containerId: "singleBook",
+        //     draggable: true,
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         postData("DELETE", `${URL}/${data.id}`, {})
             .then((response) => {
@@ -782,7 +782,7 @@ const SingleBook = () => {
 
                     resetElemPopupState();
 
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
 
                     // toast.update(query, {
                     //     render: "Запись удалена",
@@ -799,7 +799,7 @@ const SingleBook = () => {
                     //             : "top-right",
                     // });
                 } else {
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
                     toast.error("Ошибка удаления записи", {
                         isLoading: false,
                         autoClose: 2500,
@@ -815,7 +815,7 @@ const SingleBook = () => {
                 }
             })
             .catch((error) => {
-                toast.dismiss(query);
+                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка удаления записи", {
                     isLoading: false,
                     autoClose: 2500,

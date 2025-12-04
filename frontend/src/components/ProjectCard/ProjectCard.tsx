@@ -43,7 +43,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { ToastContainer, toast } from "react-toastify";
 
 const ProjectCard = () => {
-    let query;
+    // let query;
 
     const URL = `${import.meta.env.VITE_API_URL}projects`;
     const { projectId } = useParams();
@@ -270,12 +270,12 @@ const ProjectCard = () => {
     // Обновление проекта
     const updateCard = async (showMessage = true, data = projectDataCustom) => {
         if (projectDataCustom?.contragent_id || data?.contragent_id) {
-            query = toast.loading("Обновление", {
-                containerId: "toastContainer",
-                draggable: true,
-                position:
-                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-            });
+            // query = toast.loading("Обновление", {
+            //     containerId: "toastContainer",
+            //     draggable: true,
+            //     position:
+            //         window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+            // });
 
             postData("PATCH", `${URL}/${projectId}`, data)
                 .then((response) => {
@@ -305,11 +305,11 @@ const ProjectCard = () => {
                         //                 : "top-right",
                         //     });
                         // }
-                        toast.dismiss(query);
+                        // toast.dismiss(query);
                     }
                 })
                 .catch((error) => {
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
                     toast.error(error.message || "Ошибка обновления проекта", {
                         containerId: "toastContainer",
                         isLoading: false,
@@ -339,11 +339,11 @@ const ProjectCard = () => {
 
     // Отправляем контакт кредитора или заказчика
     const sendExecutor = (type, data) => {
-        query = toast.loading("Выполняется отправка", {
-            containerId: "toastContainer",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // query = toast.loading("Выполняется отправка", {
+        //     containerId: "toastContainer",
+        //     draggable: true,
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         if (type === "creditor") {
             postData(
@@ -374,7 +374,7 @@ const ProjectCard = () => {
                             })),
                         ]);
 
-                        toast.dismiss(query);
+                        // toast.dismiss(query);
 
                         // toast.update(query, {
                         //     render:
@@ -395,7 +395,7 @@ const ProjectCard = () => {
                     }
                 })
                 .catch((error) => {
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
                     toast.error(
                         error.message || "Ошибка прикрепления исполнителя",
                         {
@@ -494,11 +494,11 @@ const ProjectCard = () => {
 
     // Удаление контакта кредитора и заказчика
     const deleteContact = () => {
-        query = toast.loading("Удаление", {
-            containerId: "toastContainer",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // query = toast.loading("Удаление", {
+        //     containerId: "toastContainer",
+        //     draggable: true,
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         postData(
             "DELETE",
@@ -509,7 +509,7 @@ const ProjectCard = () => {
         )
             .then((response) => {
                 if (response?.ok) {
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
 
                     // toast.update(query, {
                     //     render: response.message,
@@ -551,7 +551,7 @@ const ProjectCard = () => {
                 }
             })
             .catch((error) => {
-                toast.dismiss(query);
+                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка удаления контакта", {
                     containerId: "toastContainer",
                     isLoading: false,
@@ -603,15 +603,15 @@ const ProjectCard = () => {
 
         data.project_id = projectId;
 
-        query = toast.loading("Выполняется отправка", {
-            containerId: "toastContainer",
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // query = toast.loading("Выполняется отправка", {
+        //     containerId: "toastContainer",
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         return postData("POST", `${import.meta.env.VITE_API_URL}reports`, data)
             .then((response) => {
                 if (response?.ok) {
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
 
                     // toast.update(query, {
                     //     render: response.message,
@@ -638,7 +638,7 @@ const ProjectCard = () => {
                     setReportWindowsState(false);
                     setReportId(null);
                 } else {
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
                     toast.error("Ошибка при отправке отчёта", {
                         isLoading: false,
                         autoClose: 1500,
@@ -655,7 +655,7 @@ const ProjectCard = () => {
                 }
             })
             .catch((error) => {
-                toast.dismiss(query);
+                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка при отправке отчёта", {
                     containerId: "toastContainer",
                     isLoading: false,
@@ -688,11 +688,11 @@ const ProjectCard = () => {
         data.action = "presave";
         data.project_id = projectId;
 
-        query = toast.loading("Обновление", {
-            containerId: "toastContainer",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // query = toast.loading("Обновление", {
+        //     containerId: "toastContainer",
+        //     draggable: true,
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         return postData(
             "PATCH",
@@ -701,7 +701,7 @@ const ProjectCard = () => {
         )
             .then((response) => {
                 if (response?.ok) {
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
 
                     // toast.update(query, {
                     //     render: response.message,
@@ -723,7 +723,7 @@ const ProjectCard = () => {
                     setReportId(null);
                     setReportWindowsState(false);
                 } else {
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
                     toast.error("Ошибка обновления отчета", {
                         containerId: "toastContainer",
                         isLoading: false,
@@ -740,7 +740,7 @@ const ProjectCard = () => {
                 }
             })
             .catch((error) => {
-                toast.dismiss(query);
+                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка обновления отчета", {
                     containerId: "toastContainer",
                     isLoading: false,

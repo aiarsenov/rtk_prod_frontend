@@ -25,7 +25,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "./Reports.scss";
 
 const Reports = () => {
-    let query;
+    // let query;
 
     const user = useSelector((state: any) => state.user.data);
     const REPORTS_URL = `${import.meta.env.VITE_API_URL}reports`;
@@ -230,11 +230,11 @@ const Reports = () => {
 
     // Обновляем  отчёт менеджмента
     const updateReport = (extendReportData, action) => {
-        query = toast.loading("Обновление", {
-            containerId: "report",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // query = toast.loading("Обновление", {
+        //     containerId: "report",
+        //     draggable: true,
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         extendReportData.action = action;
 
@@ -247,7 +247,7 @@ const Reports = () => {
         )
             .then((response) => {
                 if (response?.ok) {
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
                     // toast.update(query, {
                     //     render: "Данные обновлены",
                     //     type: "success",
@@ -268,7 +268,7 @@ const Reports = () => {
                     setManagementEditorState(false);
                     return response;
                 } else {
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
                     toast.error("Ошибка обновления данных", {
                         containerId: "report",
                         isLoading: false,
@@ -285,7 +285,7 @@ const Reports = () => {
                 }
             })
             .catch((error) => {
-                toast.dismiss(query);
+                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка при обновлении", {
                     containerId: "report",
                     isLoading: false,
@@ -304,11 +304,11 @@ const Reports = () => {
 
     // Обновляем отчет с оценками
     const updateReportDetails = (report, action) => {
-        query = toast.loading("Обновление", {
-            containerId: "report",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // query = toast.loading("Обновление", {
+        //     containerId: "report",
+        //     draggable: true,
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         report.action = action;
 
@@ -336,7 +336,7 @@ const Reports = () => {
                         return updatedList;
                     });
 
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
 
                     // toast.update(query, {
                     //     render: "Данные обновлены",
@@ -356,7 +356,7 @@ const Reports = () => {
                     closeRateReportEditor();
                     return response;
                 } else {
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
                     toast.error("Ошибка обновления данных", {
                         containerId: "report",
                         isLoading: false,
@@ -373,7 +373,7 @@ const Reports = () => {
                 }
             })
             .catch((error) => {
-                toast.dismiss(query);
+                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка обновления данных", {
                     containerId: "report",
                     isLoading: false,

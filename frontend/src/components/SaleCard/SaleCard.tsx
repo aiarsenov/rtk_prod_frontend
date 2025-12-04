@@ -75,7 +75,7 @@ const SaleCard = () => {
 
     const [newServices, setNewServices] = useState({ report_type_id: [] });
 
-    let query;
+    // let query;
 
     // Получение сотрудников
     const fetchPhysicalpersons = () => {
@@ -195,11 +195,11 @@ const SaleCard = () => {
 
     // Прикрепляем услугу
     const sendService = () => {
-        query = toast.loading("Обновление", {
-            containerId: "toastContainer",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // query = toast.loading("Обновление", {
+        //     containerId: "toastContainer",
+        //     draggable: true,
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         postData(
             "POST",
@@ -210,7 +210,7 @@ const SaleCard = () => {
         )
             .then((response) => {
                 if (response?.ok) {
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
                     // toast.update(query, {
                     //     render: response.message,
                     //     type: "success",
@@ -230,7 +230,7 @@ const SaleCard = () => {
                 }
             })
             .catch((error) => {
-                toast.dismiss(query);
+                // toast.dismiss(query);
                 toast.error(
                     error.message ||
                         "Ошибка добавления. Возможно, такая услуга уже добавлена",
@@ -252,11 +252,11 @@ const SaleCard = () => {
 
     // Удалить услугу
     const deleteService = (id) => {
-        query = toast.loading("Обновление", {
-            containerId: "toastContainer",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // query = toast.loading("Обновление", {
+        //     containerId: "toastContainer",
+        //     draggable: true,
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         postData(
             "DELETE",
@@ -266,7 +266,7 @@ const SaleCard = () => {
             {}
         ).then((response) => {
             if (response?.ok) {
-                toast.dismiss(query);
+                // toast.dismiss(query);
                 // toast.update(query, {
                 //     render: response.message,
                 //     type: "success",
@@ -289,11 +289,11 @@ const SaleCard = () => {
 
     // Обновление заказчика
     const updateContragent = async (showMessage = true, data) => {
-        query = toast.loading("Обновление", {
-            containerId: "toastContainer",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // query = toast.loading("Обновление", {
+        //     containerId: "toastContainer",
+        //     draggable: true,
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         try {
             const response = await postData("PATCH", `${URL}/${saleId}`, data);
@@ -313,13 +313,13 @@ const SaleCard = () => {
                 //             : "top-right",
                 // });
             }
-            toast.dismiss(query);
+            // toast.dismiss(query);
             setCardData(response);
             setCardDataCustom(response);
 
             return response;
         } catch (error) {
-            toast.dismiss(query);
+            // toast.dismiss(query);
             toast.error("Ошибка при обновлении проекта", {
                 containerId: "toastContainer",
                 isLoading: false,
@@ -408,11 +408,11 @@ const SaleCard = () => {
 
     // Обновление карточки
     const updateCard = async (showMessage = true, data = cardDataCustom) => {
-        query = toast.loading("Обновление", {
-            containerId: "toastContainer",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // query = toast.loading("Обновление", {
+        //     containerId: "toastContainer",
+        //     draggable: true,
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         postData("PATCH", `${URL}/${saleId}`, data)
             .then((response) => {
@@ -420,7 +420,7 @@ const SaleCard = () => {
                     setCardData(response);
                     setCardDataCustom(response);
                     fetchServices();
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
 
                     // if (showMessage) {
                     //     toast.update(query, {
@@ -441,7 +441,7 @@ const SaleCard = () => {
                 }
             })
             .catch((error) => {
-                toast.dismiss(query);
+                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка при обновлении проекта", {
                     containerId: "toastContainer",
                     isLoading: false,

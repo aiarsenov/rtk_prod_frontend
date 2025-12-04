@@ -62,7 +62,7 @@ const SupplierCard = () => {
     const [responsiblePersons, setResponsiblePersons] = useState([]);
     const [addRespPerson, setAddRespPerson] = useState(false);
 
-    let query;
+    // let query;
 
     // Получаем отчеты по выбранному проекту
     const getProjectReports = (id) => {
@@ -158,11 +158,11 @@ const SupplierCard = () => {
 
     // Обновление данных карточки
     const updateData = (showMessage = true) => {
-        query = toast.loading("Обновление", {
-            containerId: "toastContainer",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // query = toast.loading("Обновление", {
+        //     containerId: "toastContainer",
+        //     draggable: true,
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         postData("PATCH", `${URL}/${supplierId}`, cardDataCustom)
             .then((response) => {
@@ -182,7 +182,7 @@ const SupplierCard = () => {
                     //             : "top-right",
                     // });
 
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
                     setCardData((prev) => ({
                         ...prev,
                         ...response,
@@ -192,7 +192,7 @@ const SupplierCard = () => {
                         ...response,
                     }));
                 } else {
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
                     toast.error("Ошибка обновления данных", {
                         containerId: "toastContainer",
                         isLoading: false,
@@ -208,7 +208,7 @@ const SupplierCard = () => {
                 }
             })
             .catch((error) => {
-                toast.dismiss(query);
+                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка обновления данных", {
                     containerId: "toastContainer",
                     isLoading: false,
@@ -235,11 +235,11 @@ const SupplierCard = () => {
 
     // Добавление ключевого лица
     const sendExecutor = (data) => {
-        query = toast.loading("Выполняется отправка", {
-            containerId: "toastContainer",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // query = toast.loading("Выполняется отправка", {
+        //     containerId: "toastContainer",
+        //     draggable: true,
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         postData("POST", `${URL}/${supplierId}/contacts`, data)
             .then((response) => {
@@ -251,7 +251,7 @@ const SupplierCard = () => {
 
                     setAddRespPerson(false);
 
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
 
                     // toast.update(query, {
                     //     render: response.message || "Ключевое лицо добавлено",
@@ -270,7 +270,7 @@ const SupplierCard = () => {
                 }
             })
             .catch((error) => {
-                toast.dismiss(query);
+                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка добавления исполнителя", {
                     containerId: "toastContainer",
                     isLoading: false,

@@ -65,7 +65,7 @@ const ContragentCard = () => {
     const [reportId, setReportId] = useState(null);
     const [contracts, setContracts] = useState([]);
 
-    let query;
+    // let query;
 
     // Получение данных заказчика и его проекты
     const fetchData = () => {
@@ -192,16 +192,16 @@ const ContragentCard = () => {
 
     // Обновление контрагента
     const updateData = (showMessage = true, data = cardDataCustom) => {
-        query = toast.loading("Обновление", {
-            containerId: "toastContainer",
-            draggable: true,
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // query = toast.loading("Обновление", {
+        //     containerId: "toastContainer",
+        //     draggable: true,
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         postData("PATCH", `${URL}/${contragentId}`, data)
             .then((response) => {
                 if (response?.ok && showMessage) {
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
 
                     // toast.update(query, {
                     //     render: "Данные обновлены",
@@ -227,7 +227,7 @@ const ContragentCard = () => {
                         ...response,
                     }));
                 } else {
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
                     toast.error("Ошибка обновления данных", {
                         containerId: "toastContainer",
                         isLoading: false,
@@ -243,7 +243,7 @@ const ContragentCard = () => {
                 }
             })
             .catch(() => {
-                toast.dismiss(query);
+                // toast.dismiss(query);
                 toast.error("Ошибка обновления данных", {
                     containerId: "toastContainer",
                     isLoading: false,

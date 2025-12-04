@@ -25,7 +25,7 @@ const PersonalWorkload = ({
     employeeId: number;
     getWorkloadSummary: () => void;
 }) => {
-    let query;
+    // let query;
 
     const [personalWorkload, setPersonalWorkload] = useState({
         other_workload: 0,
@@ -78,14 +78,14 @@ const PersonalWorkload = ({
 
         if (totalPercentage === 100) {
             if ("value" in selectedPersonalMonth) {
-                query = toast.loading("Обновление", {
-                    containerId: "toastContainer_1",
-                    draggable: true,
-                    position:
-                        window.innerWidth >= 1440
-                            ? "bottom-right"
-                            : "top-right",
-                });
+                // query = toast.loading("Обновление", {
+                //     containerId: "toastContainer_1",
+                //     draggable: true,
+                //     position:
+                //         window.innerWidth >= 1440
+                //             ? "bottom-right"
+                //             : "top-right",
+                // });
 
                 const data = {
                     workloads: workloads,
@@ -103,7 +103,7 @@ const PersonalWorkload = ({
                 )
                     .then((response) => {
                         if (response?.ok) {
-                            toast.dismiss(query);
+                            // toast.dismiss(query);
 
                             // toast.update(query, {
                             //     render: "Успешно обновлено!",
@@ -125,7 +125,7 @@ const PersonalWorkload = ({
                         }
                     })
                     .catch((error) => {
-                        toast.dismiss(query);
+                        // toast.dismiss(query);
                         toast.error(error.message || "Ошибка при обновлении", {
                             containerId: "toastContainer_1",
                             isLoading: false,

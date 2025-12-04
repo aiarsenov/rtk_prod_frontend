@@ -55,7 +55,7 @@ const EmployeeCard = () => {
 
     const PhoneMask = "+{7} (000) 000 00 00";
 
-    let query;
+    // let query;
 
     // Текущая загрузка
     const getWorkload = () => {
@@ -108,10 +108,10 @@ const EmployeeCard = () => {
 
     // Обновление данных сотрудника
     const updateData = (showMessage = true, data = cardDataCustom) => {
-        query = toast.loading("Обновление", {
-            containerId: "toastContainer",
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
+        // query = toast.loading("Обновление", {
+        //     containerId: "toastContainer",
+        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+        // });
 
         postData(
             "PATCH",
@@ -130,7 +130,7 @@ const EmployeeCard = () => {
                         ...response.data,
                     }));
 
-                    toast.dismiss(query);
+                    // toast.dismiss(query);
 
                     // if (showMessage) {
                     //     toast.update(query, {
