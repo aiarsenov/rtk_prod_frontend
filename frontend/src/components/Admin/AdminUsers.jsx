@@ -191,22 +191,37 @@ const AdminUsers = () => {
             return;
         }
 
-        const toastId = toast.loading("Повторная отправка приглашения...", {
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
-
         try {
             await postData(
                 "POST",
                 `${API_URL}admin/users/invitations/${invitationId}/resend`
             );
-            toast.dismiss(toastId);
             loadUsers();
         } catch (err) {
-            toast.update(toastId, {
-                render: err.message || "Ошибка повторной отправки приглашения",
-                type: "error",
-                isLoading: false,
+            toast.error(err.message || "Ошибка повторной отправки приглашения", {
+                position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+                autoClose: 3000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
+        }
+    };
+
+    const handleCancelInvitation = async (invitationId) => {
+        if (!confirm("Вы уверены, что хотите отозвать приглашение?")) {
+            return;
+        }
+
+        try {
+            await postData(
+                "DELETE",
+                `${API_URL}admin/users/invitations/${invitationId}`
+            );
+            loadUsers();
+        } catch (err) {
+            toast.error(err.message || "Ошибка отзыва приглашения", {
+                position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
                 autoClose: 3000,
                 pauseOnFocusLoss: false,
                 pauseOnHover: false,
@@ -299,17 +314,30 @@ const AdminUsers = () => {
                                     <td>
                                         <div className="admin-actions">
                                             {user.status === 'invited' ? (
-                                                <button
-                                                    className="admin-btn admin-btn--primary admin-btn--sm"
-                                                    onClick={() =>
-                                                        handleResendInvitation(
-                                                            user.invitation_id
-                                                        )
-                                                    }
-                                                    title="Повторно отправить приглашение"
-                                                >
-                                                    Отправить повторно
-                                                </button>
+                                                <>
+                                                    <button
+                                                        className="admin-btn admin-btn--primary admin-btn--sm"
+                                                        onClick={() =>
+                                                            handleResendInvitation(
+                                                                user.invitation_id
+                                                            )
+                                                        }
+                                                        title="Повторно отправить приглашение"
+                                                    >
+                                                        Отправить повторно
+                                                    </button>
+                                                    <button
+                                                        className="admin-btn admin-btn--danger admin-btn--sm"
+                                                        onClick={() =>
+                                                            handleCancelInvitation(
+                                                                user.invitation_id
+                                                            )
+                                                        }
+                                                        title="Отозвать приглашение"
+                                                    >
+                                                        Отозвать
+                                                    </button>
+                                                </>
                                             ) : user.is_active ? (
                                                 <button
                                                     className="admin-btn admin-btn--danger admin-btn--sm"
