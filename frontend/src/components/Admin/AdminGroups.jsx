@@ -315,7 +315,10 @@ const AdminGroups = () => {
         const permissions = [];
         Object.entries(selectedPermissions).forEach(([key, isSelected]) => {
             if (isSelected) {
-                const [section, permissionType] = key.split('_');
+                // Правильно разбираем ключ: последняя часть - это permission_type, все остальное - section
+                const parts = key.split('_');
+                const permissionType = parts[parts.length - 1]; // Последняя часть
+                const section = parts.slice(0, -1).join('_'); // Все остальное
                 const scope = permissionScopes[key] || 'full'; // Берем scope для конкретной ячейки
                 permissions.push({
                     section,
@@ -330,21 +333,36 @@ const AdminGroups = () => {
             return;
         }
 
-        const toastId = toast.loading("Добавление прав...", {
+        const toastId = toast.loading("Сохранение прав...", {
             position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
         });
 
         try {
-            // Отправляем каждое право отдельно
+            // Удаляем все существующие права группы
+            if (selectedGroup.permissions && selectedGroup.permissions.length > 0) {
+                for (const existingPerm of selectedGroup.permissions) {
+                    await postData(
+                        "DELETE",
+                        `${API_URL}admin/permission-groups/${selectedGroup.id}/permissions/${existingPerm.id}`,
+                        {}
+                    );
+                }
+            }
+
+            // Добавляем новые выбранные права
             for (const permission of permissions) {
-            await postData(
-                "POST",
-                `${API_URL}admin/permission-groups/${selectedGroup.id}/permissions`,
+                await postData(
+                    "POST",
+                    `${API_URL}admin/permission-groups/${selectedGroup.id}/permissions`,
                     permission
                 );
             }
 
             toast.dismiss(toastId);
+            toast.success("Права успешно обновлены", {
+                position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+                autoClose: 2000,
+            });
 
             setShowAddPermissionModal(false);
             setSelectedPermissions({});
@@ -353,7 +371,7 @@ const AdminGroups = () => {
             loadGroups();
         } catch (err) {
             toast.update(toastId, {
-                render: err.message || "Ошибка добавления прав",
+                render: err.message || "Ошибка сохранения прав",
                 type: "error",
                 isLoading: false,
                 autoClose: 3000,
@@ -361,7 +379,7 @@ const AdminGroups = () => {
                 pauseOnHover: false,
                 draggable: true,
             });
-            setError(err.message || "Ошибка добавления прав");
+            setError(err.message || "Ошибка сохранения прав");
         }
     };
 
@@ -384,72 +402,55 @@ const AdminGroups = () => {
     };
 
     // Обработчик чекбокса выбора всей строки (раздела)
+    // Теперь ТОЛЬКО отмечает/снимает строку, НЕ трогая чекбоксы прав
     const handleSectionCheckboxChange = (section) => {
-        const matrix = PERMISSION_MATRIX[section] || {};
         const newSelectedSections = new Set(selectedSections);
 
         if (newSelectedSections.has(section)) {
-            // Убираем раздел и все его права
+            // Убираем раздел из выбранных
             newSelectedSections.delete(section);
-            const newPermissions = { ...selectedPermissions };
-            const newScopes = { ...permissionScopes };
-            ['view', 'edit', 'delete'].forEach((permType) => {
-                if (matrix[permType] === 1) {
-                    const key = `${section}_${permType}`;
-                    delete newPermissions[key];
-                    delete newScopes[key];
-                }
-            });
-            setSelectedPermissions(newPermissions);
-            setPermissionScopes(newScopes);
         } else {
-            // Добавляем раздел и все его доступные права
+            // Добавляем раздел в выбранные
             newSelectedSections.add(section);
-            const newPermissions = { ...selectedPermissions };
-            const newScopes = { ...permissionScopes };
-            ['view', 'edit', 'delete'].forEach((permType) => {
-                if (matrix[permType] === 1) {
-                    const key = `${section}_${permType}`;
-                    newPermissions[key] = true;
-                    // Инициализируем scope значением 'full' если еще не установлен
-                    if (!newScopes[key]) {
-                        newScopes[key] = 'full';
-                    }
-                }
-            });
-            setSelectedPermissions(newPermissions);
-            setPermissionScopes(newScopes);
         }
 
         setSelectedSections(newSelectedSections);
     };
 
     // Обработчик массового чекбокса внизу для типа права
+    // Отмечает/снимает чекбоксы только у ОТМЕЧЕННЫХ строк
     const handleMassPermissionCheckboxChange = (permissionType) => {
         const newPermissions = { ...selectedPermissions };
-        let allChecked = true;
+        const newScopes = { ...permissionScopes };
+        let allCheckedInSelectedSections = true;
 
-        // Проверяем, все ли чекбоксы данного типа уже выбраны
-        Object.keys(SECTIONS).forEach((section) => {
+        // Проверяем, все ли чекбоксы данного типа выбраны у отмеченных строк
+        selectedSections.forEach((section) => {
             const matrix = PERMISSION_MATRIX[section] || {};
             if (matrix[permissionType] === 1) {
                 const key = `${section}_${permissionType}`;
                 if (!newPermissions[key]) {
-                    allChecked = false;
+                    allCheckedInSelectedSections = false;
                 }
             }
         });
 
-        // Если все выбраны - снимаем все, иначе выбираем все
-        Object.keys(SECTIONS).forEach((section) => {
+        // Если все выбраны у отмеченных строк - снимаем, иначе отмечаем
+        selectedSections.forEach((section) => {
             const matrix = PERMISSION_MATRIX[section] || {};
             if (matrix[permissionType] === 1) {
                 const key = `${section}_${permissionType}`;
-                newPermissions[key] = !allChecked;
+                newPermissions[key] = !allCheckedInSelectedSections;
+
+                // Устанавливаем scope по умолчанию, если отмечаем
+                if (!allCheckedInSelectedSections && !newScopes[key]) {
+                    newScopes[key] = 'full';
+                }
             }
         });
 
         setSelectedPermissions(newPermissions);
+        setPermissionScopes(newScopes);
     };
 
     const handleDeletePermission = async (groupId, permissionId) => {
@@ -668,10 +669,25 @@ const AdminGroups = () => {
                                             className="admin-btn admin-btn--secondary"
                                             onClick={() => {
                                                 setSelectedGroup(group);
+
+                                                // Предзаполняем существующие права группы
+                                                const existingPermissions = {};
+                                                const existingScopes = {};
+
+                                                if (group.permissions && group.permissions.length > 0) {
+                                                    group.permissions.forEach(perm => {
+                                                        const key = `${perm.section}_${perm.permission_type}`;
+                                                        existingPermissions[key] = true;
+                                                        existingScopes[key] = perm.scope || 'full';
+                                                    });
+                                                }
+
+                                                setSelectedPermissions(existingPermissions);
+                                                setPermissionScopes(existingScopes);
                                                 setShowAddPermissionModal(true);
                                             }}
                                         >
-                                            Добавить право
+                                            Редактировать права
                                         </button>
                                     )}
                                 </div>
@@ -939,7 +955,7 @@ const AdminGroups = () => {
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="admin-modal__header">
-                            <h2>Добавление группы</h2>
+                            <h2>Редактирование прав группы: {selectedGroup.name}</h2>
                         </div>
                         <form onSubmit={handleAddPermission}>
                             <div className="admin-modal__body">
@@ -1052,7 +1068,6 @@ const AdminGroups = () => {
 
                                             {/* Строка с массовыми чекбоксами внизу */}
                                             <tr className="mass-select-row">
-
                                                 {/* Массовые чекбоксы для "Выбор прав" */}
                                                 {['view', 'edit', 'delete'].map((permType) => (
                                                     <td key={`mass_${permType}`} className="mass-checkbox-cell">
@@ -1064,12 +1079,10 @@ const AdminGroups = () => {
                                                     </td>
                                                 ))}
 
-                                                {/* Пустые ячейки для "Ширина прав" - по одной для каждого столбца */}
+                                                {/* Пустые ячейки для "Ширина прав" + последний столбец */}
                                                 <td className="empty-cell"></td>
                                                 <td className="empty-cell"></td>
                                                 <td className="empty-cell"></td>
-
-                                                {/* Пустая ячейка для последнего столбца */}
                                                 <td className="empty-cell"></td>
                                             </tr>
                                         </tbody>
@@ -1098,7 +1111,7 @@ const AdminGroups = () => {
                                     type="submit"
                                     className="admin-btn admin-btn--primary"
                                 >
-                                    Добавить
+                                    Сохранить
                                 </button>
                             </div>
                         </form>
