@@ -288,8 +288,8 @@ const AdminUsers = () => {
                                         </span>
                                     </td>
                                     <td>
-                                        {user.status === 'invited' 
-                                            ? (user.invited_at 
+                                        {user.status === 'invited'
+                                            ? (user.invited_at
                                                 ? new Date(user.invited_at).toLocaleString("ru-RU")
                                                 : "—")
                                             : (user.last_login_at
