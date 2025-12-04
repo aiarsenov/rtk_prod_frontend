@@ -380,6 +380,8 @@
             padding-right: 15px;
         }
 
+        // Закругляем края у ячеек в справочнике контактов
+        
         .registry-table__item-actions_col,
         .extended__info {
             &::after {

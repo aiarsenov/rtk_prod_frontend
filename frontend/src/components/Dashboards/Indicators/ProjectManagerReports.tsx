@@ -38,7 +38,7 @@ const ProjectManagerReports = ({
     // Открытие окна редактора оценки отчета
     const openRateReportEditor = (data) => {
         let newData = data;
-        newData.name = `"${data.project} / ${data.report_month}`;
+        newData.name = `${data.project} / ${data.report_month}`;
         newData.physical_person = { name: data.responsible };
 
         setReportData(newData);
