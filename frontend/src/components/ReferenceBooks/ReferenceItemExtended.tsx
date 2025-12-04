@@ -86,8 +86,8 @@ const ReferenceItemExtended = ({
                                 onMouseEnter={() => setHoveredIndex(index)}
                                 onMouseLeave={() => setHoveredIndex(null)}
                             >
-                                <td className="min-w-[180px] max-w-[300px] w-full">
-                                    <div className="extended__info">
+                                <td className="min-w-[180px] max-w-[300px] w-full relative">
+                                    <div className="extended__info first-block h-full">
                                         <div>{contact.full_name}</div>
                                         <span>{contact.position}</span>
                                     </div>
@@ -114,9 +114,9 @@ const ReferenceItemExtended = ({
                                     onMouseEnter={() => setHoveredIndex(index)}
                                     onMouseLeave={() => setHoveredIndex(null)}
                                 >
-                                    <td className="min-w-[180px] max-w-[300px]">
-                                        <div className="extended__info">
-                                            {contact.projects_count}
+                                    <td className="min-w-[180px] max-w-[300px] w-full relative">
+                                        <div className="extended__info h-full">
+                                            <div>{contact.projects_count}</div>
                                         </div>
                                     </td>
                                 </tr>
@@ -139,8 +139,8 @@ const ReferenceItemExtended = ({
                                 onMouseEnter={() => setHoveredIndex(index)}
                                 onMouseLeave={() => setHoveredIndex(null)}
                             >
-                                <td className="min-w-[180px] w-full">
-                                    <div className="extended__info">
+                                <td className="min-w-[180px] max-w-[300px] w-full relative">
+                                    <div className="extended__info h-full">
                                         <div>{contact.phone}</div>
                                         <div>{contact.email}</div>
                                     </div>
@@ -166,15 +166,19 @@ const ReferenceItemExtended = ({
                                 onMouseEnter={() => setHoveredIndex(index)}
                                 onMouseLeave={() => setHoveredIndex(null)}
                             >
-                                <td className="min-w-[180px] max-w-[300px]">
-                                    <div className="extended__info">
-                                        {format(
-                                            parseISO(contact.last_updated_at),
-                                            "d MMMM yyyy, HH:mm",
-                                            {
-                                                locale: ru,
-                                            }
-                                        ) || "-"}
+                                <td className="min-w-[180px] max-w-[300px] w-full relative">
+                                    <div className="extended__info h-full">
+                                        <div>
+                                            {format(
+                                                parseISO(
+                                                    contact.last_updated_at
+                                                ),
+                                                "d MMMM yyyy, HH:mm",
+                                                {
+                                                    locale: ru,
+                                                }
+                                            ) || "-"}
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -196,9 +200,9 @@ const ReferenceItemExtended = ({
                                 onMouseEnter={() => setHoveredIndex(index)}
                                 onMouseLeave={() => setHoveredIndex(null)}
                             >
-                                <td className="min-w-[180px] max-w-[300px]">
-                                    <div className="extended__info">
-                                        {contact.author || "-"}
+                                <td className="min-w-[180px] max-w-[300px] w-full relative">
+                                    <div className="extended__info h-full">
+                                        <div>{contact.author || "-"}</div>
                                     </div>
                                 </td>
                             </tr>
@@ -207,7 +211,7 @@ const ReferenceItemExtended = ({
                 </table>
             </td>
 
-            <td className="align-top" style={{ padding: 0 }}>
+            <td className="align-top" style={{ padding: "0 15px 0 0" }}>
                 <table className="w-full">
                     <tbody>
                         {data.contacts.map((contact, index) => (
@@ -220,7 +224,7 @@ const ReferenceItemExtended = ({
                                 onMouseEnter={() => setHoveredIndex(index)}
                                 onMouseLeave={() => setHoveredIndex(null)}
                             >
-                                <td>
+                                <td className="relative">
                                     {mode === "edit" && (
                                         <div className="registry-table__item-actions registry-table__item-actions_col">
                                             <button

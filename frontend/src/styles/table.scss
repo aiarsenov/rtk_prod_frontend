@@ -355,8 +355,22 @@
     }
 
     &__item_extended {
-        background: var(--color-gray-20);
-        border-radius: 10px;
+        position: relative;
+
+        &:hover {
+            background: transparent;
+        }
+
+        &::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--color-gray-20);
+            border-radius: 10px;
+            z-index: -1;
+        }
 
         & > td:first-of-type {
             padding-left: 15px;
@@ -366,13 +380,57 @@
             padding-right: 15px;
         }
 
+        .registry-table__item-actions_col,
+        .extended__info {
+            &::after {
+                content: "";
+                position: absolute;
+                background: transparent;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                transition: background-color 0.2s ease;
+                z-index: 0;
+            }
+
+            div,
+            span {
+                position: relative;
+                z-index: 1;
+            }
+        }
+
+        .extended__info.first-block {
+            &::after {
+                border-radius: 10px 0 0 10px;
+            }
+        }
+
+        .registry-table__item-actions_col {
+            &::after {
+                border-radius: 0 10px 10px 0;
+            }
+        }
+
         .hovered {
-            background-color: var(--color-gray-30);
-            transition: background-color 0.2s ease;
+            .registry-table__item-actions_col,
+            .extended__info {
+                &::after {
+                    background-color: var(--color-gray-30);
+                }
+            }
 
             .registry-table__item-actions_col {
                 opacity: 1;
+
+                button {
+                    z-index: 1;
+                }
             }
+        }
+
+        .registry-table__item-actions {
+            align-items: flex-end;
         }
     }
 
@@ -380,6 +438,7 @@
         display: flex;
         flex-direction: column;
         padding: 15px;
+        min-height: 100%;
 
         span {
             color: var(--color-gray-60);

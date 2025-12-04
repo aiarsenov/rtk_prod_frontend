@@ -76,17 +76,7 @@ const SingleBook = () => {
             )
         );
 
-        const contactOptions = Array.from(
-            new Set(
-                booksItems.flatMap((item) =>
-                    (item.contacts || []).flatMap((contact) =>
-                        [contact.email, contact.phone].filter(Boolean)
-                    )
-                )
-            )
-        );
-
-        return { nameOptions, fullNameOptions, contactOptions };
+        return { nameOptions, fullNameOptions };
     }, [booksItems]);
 
     // Сбрасываем состояние попапа и полей
@@ -1053,7 +1043,6 @@ const SingleBook = () => {
     const [filters, setFilters] = useState({
         selectedNames: [],
         selectedFullNames: [],
-        selectedContacts: [],
     });
 
     const filteredList = useMemo(() => {
@@ -1076,16 +1065,7 @@ const SingleBook = () => {
                                     contact.full_name
                                 );
 
-                            const matchesContact =
-                                filters.selectedContacts.length === 0 ||
-                                filters.selectedContacts.includes(
-                                    contact.email
-                                ) ||
-                                filters.selectedContacts.includes(
-                                    contact.phone
-                                );
-
-                            return matchesFullName && matchesContact;
+                            return matchesFullName;
                         }
                     );
 
