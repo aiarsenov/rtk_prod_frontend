@@ -85,19 +85,8 @@ const SalesItem = ({ props, columns, deleteProject, mode }) => {
                 } else if (typeof value === "object" && value !== null) {
                     if (key === "contragent") {
                         return (
-                            <td className="w-[300px]" key={key}>
-                                <div
-                                    className="hidden-group text-blue cursor-pointer"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        navigate(
-                                            `${
-                                                import.meta.env.VITE_BASE_URL
-                                            }contragents/${value?.id}`
-                                        );
-                                    }}
-                                    title={`Перейти в карточку заказчика ${value.program_name}`}
-                                >
+                            <td className="w-[250px]" key={key}>
+                                <div className="hidden-group cursor-pointer">
                                     <div className="visible-text">
                                         {value?.program_name.toString() || "—"}
                                     </div>
@@ -151,7 +140,10 @@ const SalesItem = ({ props, columns, deleteProject, mode }) => {
                         );
                     } else if (key === "last_service_last_stage") {
                         return (
-                            <td className="min-w-[110px] max-w-[150px]" key={key}>
+                            <td
+                                className="min-w-[110px] max-w-[150px]"
+                                key={key}
+                            >
                                 <div
                                     className={`registry-table__item-status ${statusClass}`}
                                     style={{
