@@ -1,4 +1,3 @@
-import CountUp from "react-countup";
 import Hint from "../../Hint/Hint";
 
 interface FinancialMetrics {
@@ -11,7 +10,9 @@ interface FinancialMetrics {
 }
 
 // Функция для определения цвета на основе change_percent (строка или число)
-const getChangePercentColor = (changePercent: string | number | undefined): string => {
+const getChangePercentColor = (
+    changePercent: string | number | undefined
+): string => {
     if (changePercent === undefined || changePercent === null) return "";
 
     // Если строка, проверяем знак
@@ -35,10 +36,15 @@ const getChangePercentColor = (changePercent: string | number | undefined): stri
 };
 
 // Функция для преобразования change_percent в число для сравнения
-const parseChangePercent = (changePercent: string | number | undefined): number => {
+const parseChangePercent = (
+    changePercent: string | number | undefined
+): number => {
     if (changePercent === undefined || changePercent === null) return 0;
     if (typeof changePercent === "number") return changePercent;
-    return parseFloat(changePercent.replace(",", ".").replace(/[^\d.,+-]/g, "")) || 0;
+    return (
+        parseFloat(changePercent.replace(",", ".").replace(/[^\d.,+-]/g, "")) ||
+        0
+    );
 };
 
 const GrossMetrics = ({
@@ -57,40 +63,39 @@ const GrossMetrics = ({
                     {financialMetrics.gross_profit?.value ? (
                         <div className="statistics-block__item-value-block">
                             <strong>
-                                <CountUp
-                                    end={parseFloat(
-                                        (
-                                            financialMetrics.gross_profit
-                                                ?.value || "0"
-                                        ).replace(",", ".")
-                                    )}
-                                    duration={1}
-                                    separator=" "
-                                    decimals={2}
-                                    decimal=","
-                                />
+                                {financialMetrics.gross_profit?.value || 0}
                             </strong>
 
                             <small>
                                 млн <br /> руб.
                             </small>
 
-                            {financialMetrics.gross_profit?.change_percent !== undefined &&
-                                financialMetrics.gross_profit?.change_percent !== null && (
-                                <div
-                                    className={`statistics-block__item-value-percent ${getChangePercentColor(
-                                        financialMetrics.gross_profit?.change_percent
-                                    )}`}
-                                >
-                                    {typeof financialMetrics.gross_profit?.change_percent === "string"
-                                        ? financialMetrics.gross_profit.change_percent.includes("%")
-                                            ? financialMetrics.gross_profit.change_percent
-                                            : `${financialMetrics.gross_profit.change_percent}%`
-                                        : parseChangePercent(financialMetrics.gross_profit?.change_percent) > 0
-                                        ? `+${financialMetrics.gross_profit.change_percent}%`
-                                        : `${financialMetrics.gross_profit.change_percent}%`}
-                                </div>
-                            )}
+                            {financialMetrics.gross_profit?.change_percent !==
+                                undefined &&
+                                financialMetrics.gross_profit
+                                    ?.change_percent !== null && (
+                                    <div
+                                        className={`statistics-block__item-value-percent ${getChangePercentColor(
+                                            financialMetrics.gross_profit
+                                                ?.change_percent
+                                        )}`}
+                                    >
+                                        {typeof financialMetrics.gross_profit
+                                            ?.change_percent === "string"
+                                            ? financialMetrics.gross_profit.change_percent.includes(
+                                                  "%"
+                                              )
+                                                ? financialMetrics.gross_profit
+                                                      .change_percent
+                                                : `${financialMetrics.gross_profit.change_percent}%`
+                                            : parseChangePercent(
+                                                  financialMetrics.gross_profit
+                                                      ?.change_percent
+                                              ) > 0
+                                            ? `+${financialMetrics.gross_profit.change_percent}%`
+                                            : `${financialMetrics.gross_profit.change_percent}%`}
+                                    </div>
+                                )}
                         </div>
                     ) : (
                         <b>Нет данных</b>
@@ -107,36 +112,39 @@ const GrossMetrics = ({
                     {financialMetrics.gross_margin?.value ? (
                         <div className="statistics-block__item-value-block">
                             <strong>
-                                <CountUp
-                                    end={
-                                        financialMetrics.gross_margin?.value ||
-                                        "0"
-                                    }
-                                    duration={1}
-                                    separator=" "
-                                    decimals={2}
-                                    decimal=","
-                                />
+                                {financialMetrics.gross_margin?.value || 0}
                                 {financialMetrics.gross_margin?.label}
                             </strong>
 
-                            {financialMetrics.gross_margin?.change_percent !== undefined &&
-                                financialMetrics.gross_margin?.change_percent !== null && (
-                                <div
-                                    className={`statistics-block__item-value-percent ${getChangePercentColor(
-                                        financialMetrics.gross_margin?.change_percent
-                                    )}`}
-                                >
-                                    {typeof financialMetrics.gross_margin?.change_percent === "string"
-                                        ? financialMetrics.gross_margin.change_percent.includes("%") ||
-                                          financialMetrics.gross_margin.change_percent.includes("п.п.")
-                                            ? financialMetrics.gross_margin.change_percent
-                                            : `${financialMetrics.gross_margin.change_percent}%`
-                                        : parseChangePercent(financialMetrics.gross_margin?.change_percent) > 0
-                                        ? `+${financialMetrics.gross_margin.change_percent}%`
-                                        : `${financialMetrics.gross_margin.change_percent}%`}
-                                </div>
-                            )}
+                            {financialMetrics.gross_margin?.change_percent !==
+                                undefined &&
+                                financialMetrics.gross_margin
+                                    ?.change_percent !== null && (
+                                    <div
+                                        className={`statistics-block__item-value-percent ${getChangePercentColor(
+                                            financialMetrics.gross_margin
+                                                ?.change_percent
+                                        )}`}
+                                    >
+                                        {typeof financialMetrics.gross_margin
+                                            ?.change_percent === "string"
+                                            ? financialMetrics.gross_margin.change_percent.includes(
+                                                  "%"
+                                              ) ||
+                                              financialMetrics.gross_margin.change_percent.includes(
+                                                  "п.п."
+                                              )
+                                                ? financialMetrics.gross_margin
+                                                      .change_percent
+                                                : `${financialMetrics.gross_margin.change_percent}%`
+                                            : parseChangePercent(
+                                                  financialMetrics.gross_margin
+                                                      ?.change_percent
+                                              ) > 0
+                                            ? `+${financialMetrics.gross_margin.change_percent}%`
+                                            : `${financialMetrics.gross_margin.change_percent}%`}
+                                    </div>
+                                )}
                         </div>
                     ) : (
                         <b>Нет данных</b>

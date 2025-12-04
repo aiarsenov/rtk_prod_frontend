@@ -1,4 +1,3 @@
-import CountUp from "react-countup";
 import Hint from "../Hint/Hint";
 
 const SupplierStatisticBlockMobile = ({
@@ -65,19 +64,7 @@ const SupplierStatisticBlockMobile = ({
                     <div className="statistics-block__item-value">
                         {revenue.revenue?.value !== "0" ? (
                             <div>
-                                <strong>
-                                    <CountUp
-                                        end={parseFloat(
-                                            revenue.revenue?.value?.replace(
-                                                ",",
-                                                "."
-                                            ) || "0"
-                                        )}
-                                        duration={1}
-                                        separator=" "
-                                        decimals={2}
-                                    />
-                                </strong>
+                                <strong>{revenue.revenue?.value || 0}</strong>
                                 <small>{revenue.revenue?.label}</small>
                             </div>
                         ) : (
@@ -94,19 +81,7 @@ const SupplierStatisticBlockMobile = ({
                     <div className="statistics-block__item-value">
                         {revenue.receipts?.value !== "0" ? (
                             <div>
-                                <strong>
-                                    <CountUp
-                                        end={parseFloat(
-                                            revenue.receipts?.value?.replace(
-                                                ",",
-                                                "."
-                                            ) || "0"
-                                        )}
-                                        duration={1}
-                                        separator=" "
-                                        decimals={2}
-                                    />
-                                </strong>
+                                <strong>{revenue.receipts?.value || 0}</strong>
                                 <small>{revenue.receipts?.label}</small>
                             </div>
                         ) : (
@@ -123,19 +98,7 @@ const SupplierStatisticBlockMobile = ({
                     <div className="statistics-block__item-value">
                         {revenue.debts?.value !== "0" ? (
                             <div>
-                                <strong>
-                                    <CountUp
-                                        end={parseFloat(
-                                            revenue.debts?.value?.replace(
-                                                ",",
-                                                "."
-                                            ) || "0"
-                                        )}
-                                        duration={1}
-                                        separator=" "
-                                        decimals={2}
-                                    />
-                                </strong>
+                                <strong>{revenue.debts?.value || 0}</strong>
                                 <small>{revenue.debts?.label}</small>
                             </div>
                         ) : (

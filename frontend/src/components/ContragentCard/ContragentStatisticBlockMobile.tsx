@@ -1,4 +1,3 @@
-import CountUp from "react-countup";
 import Hint from "../Hint/Hint";
 
 const ContragentStatisticBlockMobile = ({
@@ -65,19 +64,7 @@ const ContragentStatisticBlockMobile = ({
                     <div className="statistics-block__item-value">
                         {revenue.revenue?.value !== "0" ? (
                             <div>
-                                <strong>
-                                    <CountUp
-                                        end={parseFloat(
-                                            revenue.revenue?.value?.replace(
-                                                ",",
-                                                "."
-                                            ) || "0"
-                                        )}
-                                        duration={1}
-                                        separator=" "
-                                        decimals={2}
-                                    />
-                                </strong>
+                                <strong>{revenue.revenue?.value || 0}</strong>
                                 <small>{revenue.revenue?.label}</small>
                             </div>
                         ) : (
@@ -94,19 +81,8 @@ const ContragentStatisticBlockMobile = ({
                     <div className="statistics-block__item-value">
                         {revenue.receipts?.value !== "0" ? (
                             <div>
-                                <strong>
-                                    <CountUp
-                                        end={parseFloat(
-                                            revenue.receipts?.value?.replace(
-                                                ",",
-                                                "."
-                                            ) || "0"
-                                        )}
-                                        duration={1}
-                                        separator=" "
-                                        decimals={2}
-                                    />
-                                </strong>
+                                <strong>{revenue.receipts?.value || 0}</strong>
+
                                 <small>{revenue.receipts?.label}</small>
                             </div>
                         ) : (
@@ -123,19 +99,7 @@ const ContragentStatisticBlockMobile = ({
                     <div className="statistics-block__item-value">
                         {revenue.debts?.value !== "0" ? (
                             <div>
-                                <strong>
-                                    <CountUp
-                                        end={parseFloat(
-                                            revenue.debts?.value?.replace(
-                                                ",",
-                                                "."
-                                            ) || "0"
-                                        )}
-                                        duration={1}
-                                        separator=" "
-                                        decimals={2}
-                                    />
-                                </strong>
+                                <strong>{revenue.debts?.value || 0}</strong>
                                 <small>{revenue.debts?.label}</small>
                             </div>
                         ) : (
@@ -154,34 +118,14 @@ const ContragentStatisticBlockMobile = ({
                             <>
                                 <div>
                                     <strong>
-                                        <CountUp
-                                            end={parseFloat(
-                                                revenue.gross_profit?.value?.replace(
-                                                    ",",
-                                                    "."
-                                                ) || "0"
-                                            )}
-                                            duration={1}
-                                            separator=" "
-                                            decimals={2}
-                                        />
+                                        {revenue.gross_profit?.value || 0}
                                     </strong>
                                     <small>{revenue.gross_profit?.label}</small>
                                 </div>
 
                                 {revenue.gross_margin?.value !== "0" && (
                                     <i>
-                                        <CountUp
-                                            end={parseFloat(
-                                                revenue.gross_margin?.value?.replace(
-                                                    ",",
-                                                    "."
-                                                ) || "0"
-                                            )}
-                                            duration={1}
-                                            separator=" "
-                                            decimals={2}
-                                        />
+                                        {revenue.gross_margin?.value || 0}
                                         {revenue.gross_margin?.label} рент-ть
                                     </i>
                                 )}
@@ -201,35 +145,13 @@ const ContragentStatisticBlockMobile = ({
                         {revenue.fot?.value !== "0" ? (
                             <>
                                 <div>
-                                    <strong>
-                                        <CountUp
-                                            end={parseFloat(
-                                                revenue.fot?.value?.replace(
-                                                    ",",
-                                                    "."
-                                                ) || "0"
-                                            )}
-                                            duration={1}
-                                            separator=" "
-                                            decimals={2}
-                                        />
-                                    </strong>
+                                    <strong>{revenue.fot?.value || 0}</strong>
                                     <small>{revenue.fot?.label}</small>
                                 </div>
 
                                 {revenue.fot_percentage?.value !== "0" && (
                                     <i>
-                                        <CountUp
-                                            end={parseFloat(
-                                                revenue.fot_percentage?.value?.replace(
-                                                    ",",
-                                                    "."
-                                                ) || "0"
-                                            )}
-                                            duration={1}
-                                            separator=" "
-                                            decimals={2}
-                                        />
+                                        {revenue.fot_percentage?.value || 0}
                                         {revenue.fot_percentage?.label} от
                                         выручки
                                     </i>
@@ -251,17 +173,7 @@ const ContragentStatisticBlockMobile = ({
                             <>
                                 <div>
                                     <strong>
-                                        <CountUp
-                                            end={parseFloat(
-                                                revenue.suppliers_expenses?.value?.replace(
-                                                    ",",
-                                                    "."
-                                                ) || "0"
-                                            )}
-                                            duration={1}
-                                            separator=" "
-                                            decimals={2}
-                                        />
+                                        {revenue.suppliers_expenses?.value || 0}
                                     </strong>
                                     <small>
                                         {revenue.suppliers_expenses?.label}
@@ -271,17 +183,8 @@ const ContragentStatisticBlockMobile = ({
                                 {revenue.suppliers_fot_percentage?.value !==
                                     "0" && (
                                     <i>
-                                        <CountUp
-                                            end={parseFloat(
-                                                revenue.suppliers_fot_percentage?.value?.replace(
-                                                    ",",
-                                                    "."
-                                                ) || "0"
-                                            )}
-                                            duration={1}
-                                            separator=" "
-                                            decimals={2}
-                                        />
+                                        {revenue.suppliers_fot_percentage
+                                            ?.value || 0}
                                         {
                                             revenue.suppliers_fot_percentage
                                                 ?.label

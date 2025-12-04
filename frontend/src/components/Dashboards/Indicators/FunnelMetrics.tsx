@@ -1,4 +1,3 @@
-import CountUp from "react-countup";
 import Hint from "../../Hint/Hint";
 
 interface FunnelMetrics {
@@ -21,14 +20,7 @@ const FunnelMetrics = ({ funnelMetrics }: { funnelMetrics: FunnelMetrics }) => {
                     {funnelMetrics?.request_received?.value !== "0" ? (
                         <div>
                             <strong>
-                                <CountUp
-                                    end={
-                                        funnelMetrics?.request_received
-                                            ?.value || 0
-                                    }
-                                    duration={1}
-                                    separator=" "
-                                />
+                                {funnelMetrics?.request_received?.value || 0}
                             </strong>
                         </div>
                     ) : (
@@ -46,13 +38,7 @@ const FunnelMetrics = ({ funnelMetrics }: { funnelMetrics: FunnelMetrics }) => {
                     {funnelMetrics?.proposal_sent?.value !== "0" ? (
                         <div>
                             <strong>
-                                <CountUp
-                                    end={
-                                        funnelMetrics?.proposal_sent?.value || 0
-                                    }
-                                    duration={1}
-                                    separator=" "
-                                />
+                                {funnelMetrics?.proposal_sent?.value || 0}
                             </strong>
                         </div>
                     ) : (
@@ -70,11 +56,7 @@ const FunnelMetrics = ({ funnelMetrics }: { funnelMetrics: FunnelMetrics }) => {
                     {funnelMetrics?.agreement?.value !== "0" ? (
                         <div>
                             <strong>
-                                <CountUp
-                                    end={funnelMetrics?.agreement?.value || 0}
-                                    duration={1}
-                                    separator=" "
-                                />
+                                {funnelMetrics?.agreement?.value || 0}
                             </strong>
                         </div>
                     ) : (
@@ -92,11 +74,7 @@ const FunnelMetrics = ({ funnelMetrics }: { funnelMetrics: FunnelMetrics }) => {
                     {funnelMetrics?.rejected?.value !== "0" ? (
                         <div>
                             <strong>
-                                <CountUp
-                                    end={funnelMetrics?.rejected?.value || 0}
-                                    duration={1}
-                                    separator=" "
-                                />
+                                {funnelMetrics?.rejected?.value || 0}
                             </strong>
                         </div>
                     ) : (
@@ -114,11 +92,7 @@ const FunnelMetrics = ({ funnelMetrics }: { funnelMetrics: FunnelMetrics }) => {
                     {funnelMetrics?.postponed?.value !== "0" ? (
                         <div>
                             <strong>
-                                <CountUp
-                                    end={funnelMetrics?.postponed?.value || 0}
-                                    duration={1}
-                                    separator=" "
-                                />
+                                {funnelMetrics?.postponed?.value || 0}
                             </strong>
                         </div>
                     ) : (
