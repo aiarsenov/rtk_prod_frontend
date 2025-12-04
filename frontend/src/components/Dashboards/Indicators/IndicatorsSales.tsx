@@ -19,7 +19,15 @@ const IndicatorsSales = ({
 }) => {
     return (
         <div className="dashboards__block indicators__funnel-metrics">
-            <h2 className="card__subtitle">Продажи</h2>
+            <h2 className="card__subtitle">
+                Продажи
+                <span>
+                    {funnelMetrics.sales_funnel_projects_with_stage_changes
+                        ?.length > 0 &&
+                        funnelMetrics.sales_funnel_projects_with_stage_changes
+                            ?.length}
+                </span>
+            </h2>
 
             <FunnelMetrics funnelMetrics={funnelMetrics.metrics} />
 

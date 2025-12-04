@@ -191,10 +191,11 @@
     &__funnel-metrics {
         &-statistics {
             grid-template-columns: repeat(3, 1fr);
+            align-items: end;
             margin-bottom: 20px;
 
-            @media (min-width: $media-md) {
-                grid-template-columns: repeat(5, 100px);
+            @media (min-width: 680px) {
+                grid-template-columns: repeat(2, 100px) 1px repeat(3, 100px);
             }
         }
 
@@ -517,7 +518,7 @@
             padding: 10px 0;
             border-top: 1px solid var(--color-gray-30);
             border-bottom: none;
-            
+
             gap: 20px;
 
             @media (min-width: $media-xxl) {

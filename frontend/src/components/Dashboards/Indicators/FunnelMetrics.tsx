@@ -47,6 +47,8 @@ const FunnelMetrics = ({ funnelMetrics }: { funnelMetrics: FunnelMetrics }) => {
                 </div>
             </div>
 
+            <div className="h-[46.8px] w-[1px] bg-[#f2f4f7]"></div>
+
             <div className="statistics-block__item">
                 <div className="statistics-block__item-label">
                     {funnelMetrics?.agreement?.label}

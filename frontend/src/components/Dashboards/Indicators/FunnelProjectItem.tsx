@@ -43,8 +43,14 @@ const FunnelProjectItem = ({
             <div className="reports__list-item__col">{source}</div>
 
             <div className="reports__list-item__col">
-                <div>{service_cost_value}</div>
-                <span>{service_cost_label}</span>
+                {service_cost_value ? (
+                    <>
+                        <div>{service_cost_value}</div>
+                        <span>{service_cost_label}</span>
+                    </>
+                ) : (
+                    <div>—</div>
+                )}
             </div>
 
             <div className="reports__list-item__col">
