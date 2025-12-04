@@ -47,12 +47,18 @@ const InviteAccept = () => {
                 setInvitationStatus("valid");
             }
         } catch (err: any) {
+            console.log("Invitation load error:", err);
+            console.log("Error data:", err.data);
+
             const errorData = err.data || {};
             const errorType = errorData.error_type;
             const errorMessage =
                 errorData.message ||
                 err.message ||
                 "Ошибка загрузки приглашения";
+
+            console.log("Error type:", errorType);
+            console.log("Error message:", errorMessage);
 
             if (errorType === "invitation_cancelled") {
                 setInvitationStatus("cancelled");
