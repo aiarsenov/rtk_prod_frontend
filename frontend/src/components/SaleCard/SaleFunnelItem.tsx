@@ -64,7 +64,7 @@ const SaleFunnelItem = ({
 
     useEffect(() => {
         console.log(activeStage);
-    }, []);
+    }, [stage]);
 
     const noActionStages =
         stage.name.toLowerCase() !== "отказ от участия" &&
