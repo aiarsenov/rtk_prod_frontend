@@ -710,7 +710,7 @@ const SaleFunnelStages = ({
                             </div>
                         ) : (
                             <SaleFunnelItem
-                                key={stage.instance_id}
+                                key={stage.instance_key}
                                 stage={stage}
                                 handleStage={handleStage}
                                 getStageDetails={getStageDetails}
