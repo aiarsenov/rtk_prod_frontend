@@ -13,6 +13,7 @@ import ReferenceEditElemForm from "./ReferenceEditElemForm";
 import ReferenceDeleteElemForm from "./ReferenceDeleteElemForm";
 import ReferenceBooksTheadItems from "./ReferenceBooksTheadItems";
 import CreatableSelect from "react-select/creatable";
+import OverlayTransparent from "../Overlay/OverlayTransparent";
 
 import { ToastContainer, toast } from "react-toastify";
 
@@ -1164,6 +1165,13 @@ const SingleBook = () => {
                     <Loader />
                 ) : (
                     <section className="reference-books__table-wrapper registry__table-section w-full">
+                        {openFilter !== "" && (
+                            <OverlayTransparent
+                                state={true}
+                                toggleMenu={() => setOpenFilter("")}
+                            />
+                        )}
+
                         <table
                             className={`registry-table reference-books__table table-auto w-full ${
                                 bookId === "creditor" ||
