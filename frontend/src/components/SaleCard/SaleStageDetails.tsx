@@ -20,6 +20,7 @@ const SaleStageDetails = ({ stage, mode, updateStageDetails }) => {
         <div className="sale-stage-datails">
             {stage.name?.toLowerCase() !== "получен запрос" &&
                 stage.name?.toLowerCase() !== "получен отказ" &&
+                stage.name?.toLowerCase() !== "отказ от участия" &&
                 stage.name?.toLowerCase() !== "проект отложен" &&
                 stage.name?.toLowerCase() !== "подготовка кп" && (
                     <div className="sale-stage-datails__header">

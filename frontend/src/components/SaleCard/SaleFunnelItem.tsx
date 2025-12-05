@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import CustomDatePickerField from "../CustomDatePicker/CustomDatePickerField";
 import SaleStageDetails from "./SaleStageDetails";
@@ -61,6 +61,10 @@ const SaleFunnelItem = ({
             return "status_inprogress";
         }
     };
+
+    useEffect(() => {
+        console.log(activeStage);
+    }, []);
 
     const noActionStages =
         stage.name.toLowerCase() !== "отказ от участия" &&
