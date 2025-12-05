@@ -81,11 +81,13 @@ const PersonalWorkload = ({
 
     // Изменение процентов в блоке Трудозатраты
     const updateLoadPercentage = () => {
-        const totalPercentage =
-            workloads.reduce((sum, item) => sum + item.load_percentage, 0) +
-            personalWorkload.other_workload;
+        // const totalPercentage =
+        //     workloads.reduce((sum, item) => sum + item.load_percentage, 0) +
+        //     personalWorkload.other_workload;
 
-        if (totalPercentage === 100) {
+        console.log(totalWorkload);
+
+        if (totalWorkload === 100) {
             if ("value" in selectedPersonalMonth) {
                 // query = toast.loading("Обновление", {
                 //     containerId: "toastContainer_1",
@@ -131,6 +133,7 @@ const PersonalWorkload = ({
                             setIsShowActions(false);
                             personalWorkloadFilter();
                             getWorkloadSummary();
+                            getYears();
                         }
                     })
                     .catch((error) => {
