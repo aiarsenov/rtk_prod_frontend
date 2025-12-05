@@ -79,7 +79,7 @@ const EmployeesStats = ({
                 borderRadius: 0,
                 barPercentage: 1,
                 categoryPercentage: 0.8,
-                barThickness: 45,
+                barThickness: 39,
                 datalabels: {
                     display: false,
                 },
@@ -93,7 +93,7 @@ const EmployeesStats = ({
                 ),
                 backgroundColor: "#BDB4FE",
                 borderRadius: 5,
-                barThickness: 25,
+                barThickness: 20,
                 categoryPercentage: 1,
                 barPercentage: 1,
                 order: 1,
@@ -199,7 +199,7 @@ const EmployeesStats = ({
                 <div className="indicators__employees-left">
                     <EmployeeMetrics {...employeeMetrics} />
 
-                    <div className="flex items-start gap-[5px] mb-[20px]">
+                    <div className="flex items-start gap-[5px]">
                         <Select
                             className="form-select-extend w-[200px]"
                             options={OPTIONS}
