@@ -15,7 +15,13 @@ const FilterButton = ({
                 openFilter === filterKey ? "active" : ""
             }`}
             title={`Открыть фильтр ${label}`}
-            onClick={() => setOpenFilter(filterKey)}
+            onClick={() => {
+                if (!openFilter) {
+                    setOpenFilter(filterKey);
+                } else {
+                    setOpenFilter("");
+                }
+            }}
         >
             <svg
                 width="16"
