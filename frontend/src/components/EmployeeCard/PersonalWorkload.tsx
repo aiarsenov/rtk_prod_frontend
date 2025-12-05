@@ -181,6 +181,22 @@ const PersonalWorkload = ({
                         response.data.length - 1
                     ]
                 );
+
+                setAvailablePersonalMonths(
+                    response.data
+                        .find(
+                            (item) =>
+                                item.year ===
+                                +response.data.map((item) => item.year)[
+                                    response.data.length - 1
+                                ]
+                        )
+                        .months.map((month) => ({
+                            value: month.number,
+                            label: month.name,
+                            isFull: month.is_full_workload,
+                        }))
+                );
             }
         });
     };
@@ -196,9 +212,9 @@ const PersonalWorkload = ({
                         isFull: month.is_full_workload,
                     }))
             );
-            setSelectedPersonalMonth();
+            setSelectedPersonalMonth({});
         }
-    }, [selectedPersonalYear, datesData]);
+    }, [selectedPersonalYear]);
 
     useEffect(() => {
         setSumToTotalWorkload(
