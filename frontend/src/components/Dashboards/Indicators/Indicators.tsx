@@ -367,7 +367,7 @@ const Indicators = () => {
     const getProjectManagerReports = () => {
         const query = {
             ...mainFilters,
-            ...selectedReportMonth,
+            // ...selectedReportMonth,
         };
 
         const queryString = buildQueryParams(query);
@@ -526,16 +526,17 @@ const Indicators = () => {
         if (!hasInitialized.current) return;
 
         if (
-            selectedReportMonth?.report_month &&
-            selectedReportMonth.report_month.length > 0 &&
-            selectedReportMonth.report_month[0] !== ""
+            mainFilters?.report_month &&
+            mainFilters.report_month.length > 0 &&
+            mainFilters.report_month[0] !== ""
         ) {
             getProjectManagerReports(); // Отчёты руководителей проектов
         }
     }, [
-        selectedReportMonth.report_month,
-        mainFilters.contragent_id,
-        mainFilters.project_id,
+        mainFilters,
+        // // selectedReportMonth.report_month,
+        // mainFilters.contragent_id,
+        // mainFilters.project_id,
     ]);
 
     useBodyScrollLock(isLoading || isActiveFilters);
