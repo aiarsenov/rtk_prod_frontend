@@ -202,6 +202,10 @@ const PersonalWorkload = ({
     };
 
     useEffect(() => {
+        if (availablePersonalMonths?.length > 0) {
+            setSelectedPersonalMonth(availablePersonalMonths[0]);
+        }
+
         if (datesData.length > 0) {
             setAvailablePersonalMonths(
                 datesData
@@ -228,12 +232,6 @@ const PersonalWorkload = ({
             personalWorkloadFilter();
         }
     }, [selectedPersonalYear, selectedPersonalMonth]);
-
-    useEffect(() => {
-        if (availablePersonalMonths.length > 0) {
-            setSelectedPersonalMonth(availablePersonalMonths[0]);
-        }
-    }, [availablePersonalMonths]);
 
     useEffect(() => {
         getYears();
