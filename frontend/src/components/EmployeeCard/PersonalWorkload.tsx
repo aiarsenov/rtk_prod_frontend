@@ -30,6 +30,9 @@ const PersonalWorkload = ({
     const [personalWorkload, setPersonalWorkload] = useState({
         other_workload: 0,
     });
+    const [personalWorkloadRef, setPersonalWorkloadRef] = useState({
+        other_workload: 0,
+    }); // Неизменяемая копия для проверки
 
     const [workloads, setWorkloads] = useState([]);
     const [totalWorkload, setTotalWorkload] = useState(0);
@@ -38,6 +41,8 @@ const PersonalWorkload = ({
     const [selectedPersonalMonth, setSelectedPersonalMonth] = useState({});
     const [selectedPersonalYear, setSelectedPersonalYear] = useState(2024);
     const [availablePersonalMonths, setAvailablePersonalMonths] = useState([]);
+
+    const [isShowActions, setIsShowActions] = useState(false); // Показывать ли кнопки под блоком трудозатрат
 
     const setSumToTotalWorkload = (workloads, otherWorkload) => {
         const workloadsSum = workloads.reduce(
@@ -64,6 +69,7 @@ const PersonalWorkload = ({
             ).then((response) => {
                 if (response.status === 200) {
                     setPersonalWorkload(response.data);
+                    setPersonalWorkloadRef(response.data);
                     setWorkloads(response.data.workload);
                 }
             });
@@ -119,7 +125,7 @@ const PersonalWorkload = ({
                             //             ? "bottom-right"
                             //             : "top-right",
                             // });
-
+                            setIsShowActions(false);
                             personalWorkloadFilter();
                             getWorkloadSummary();
                         }
@@ -255,6 +261,9 @@ const PersonalWorkload = ({
             </div>
 
             <EmployeePersonalWorkloadList
+                isShowActions={isShowActions}
+                setIsShowActions={setIsShowActions}
+                personalWorkloadRef={personalWorkloadRef}
                 personalWorkload={personalWorkload}
                 setPersonalWorkload={setPersonalWorkload}
                 totalWorkload={totalWorkload}

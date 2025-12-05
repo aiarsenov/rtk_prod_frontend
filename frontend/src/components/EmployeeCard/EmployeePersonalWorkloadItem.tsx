@@ -10,12 +10,12 @@ const EmployeePersonalWorkloadItem = ({
     props,
     mode,
     setWorkloads,
-    updateLoadPercentage,
+    setPersonalWorkload,
 }: {
     props: Props;
     mode: string;
     setWorkloads: React.Dispatch<React.SetStateAction<[]>>;
-    updateLoadPercentage: () => void;
+    setPersonalWorkload: React.Dispatch<React.SetStateAction<[]>>;
 }) => {
     return (
         <li className="employee-card__personal-workload__list-item">
@@ -40,24 +40,26 @@ const EmployeePersonalWorkloadItem = ({
                     placeholder="0"
                     max="100"
                     min="0"
-                    defaultValue={props?.load_percentage}
+                    value={props.load_percentage ?? 0}
                     onChange={(evt) => {
                         const raw = evt.target.value;
                         if (raw === "") return;
 
                         let value = parseInt(raw, 10);
 
-                        if (value > 100) {
-                            value = 100;
-                            evt.target.value = 100;
-                        }
+                        if (value > 100) value = 100;
+                        if (value < 0) value = 0;
 
-                        if (value < 0) {
-                            value = 0;
-                            evt.target.value = 0;
-                        }
+                        setPersonalWorkload((prev: any) => ({
+                            ...prev,
+                            workload: prev.workload.map((w: any) =>
+                                w.id === props.id
+                                    ? { ...w, load_percentage: value }
+                                    : w
+                            ),
+                        }));
 
-                        setWorkloads((prev) => {
+                        setWorkloads((prev: any) => {
                             const updated = [...prev];
                             const index = updated.findIndex(
                                 (item) => item.report_id === props.report_id
@@ -70,16 +72,13 @@ const EmployeePersonalWorkloadItem = ({
                                 };
                             } else {
                                 updated.push({
-                                    report_id: props.report_id,
+                                    report_id: props.id,
                                     load_percentage: value,
                                 });
                             }
 
                             return updated;
                         });
-                    }}
-                    onBlur={() => {
-                        updateLoadPercentage();
                     }}
                     disabled={mode == "read"}
                 />

@@ -153,6 +153,18 @@
         }
 
         &__list {
+            &-actions {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 15px;
+                margin-top: 15px;
+
+                button {
+                    flex: 1 0 auto;
+                }
+            }
+
             &-result {
                 display: flex;
                 align-items: center;

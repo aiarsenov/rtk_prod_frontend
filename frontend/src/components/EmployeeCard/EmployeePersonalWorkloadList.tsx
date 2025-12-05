@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import EmployeePersonalWorkloadItem from "./EmployeePersonalWorkloadItem";
 
 interface PersonalWorkload {
@@ -6,20 +7,53 @@ interface PersonalWorkload {
 }
 
 const EmployeePersonalWorkloadList = ({
+    isShowActions,
+    setIsShowActions,
     personalWorkload,
+    personalWorkloadRef,
     setPersonalWorkload,
     totalWorkload,
     setWorkloads,
     updateLoadPercentage,
     mode,
 }: {
+    isShowActions: boolean;
+    setIsShowActions: React.Dispatch<React.SetStateAction<boolean>>;
     personalWorkload: PersonalWorkload;
+    personalWorkloadRef: PersonalWorkload;
     setPersonalWorkload: React.Dispatch<React.SetStateAction<object>>;
     totalWorkload: number | string;
     setWorkloads: React.Dispatch<React.SetStateAction<[]>>;
     updateLoadPercentage: () => void;
     mode: string;
 }) => {
+    // Проверяем, изменились ли трудозатраты
+    const isWorkloadChanged = (a: any[], b: any[]) => {
+        if (a.length !== b.length) return true;
+
+        return a.some((item, index) => {
+            const refItem = b[index];
+            return (
+                item.id !== refItem.id ||
+                item.load_percentage !== refItem.load_percentage
+            );
+        });
+    };
+
+    // Отображаем кнопки если есть изменения в трудозатратах
+    useEffect(() => {
+        const otherChanged =
+            personalWorkload?.other_workload !==
+            personalWorkloadRef?.other_workload;
+
+        const workloadChanged = isWorkloadChanged(
+            personalWorkload?.workload ?? [],
+            personalWorkloadRef?.workload ?? []
+        );
+
+        setIsShowActions(otherChanged || workloadChanged);
+    }, [personalWorkload, personalWorkloadRef]);
+
     return (
         <ul className="employee-card__personal-workload__list">
             {personalWorkload?.workload?.length > 0 &&
@@ -31,7 +65,7 @@ const EmployeePersonalWorkloadList = ({
                                 mode={mode}
                                 props={item}
                                 setWorkloads={setWorkloads}
-                                updateLoadPercentage={updateLoadPercentage}
+                                setPersonalWorkload={setPersonalWorkload}
                             />
                         ))}
 
@@ -84,9 +118,6 @@ const EmployeePersonalWorkloadList = ({
                                                 }));
                                             }
                                         }}
-                                        onBlur={() => {
-                                            updateLoadPercentage();
-                                        }}
                                         disabled={mode == "read"}
                                     />
                                     <span className="symbol">%</span>
@@ -99,6 +130,36 @@ const EmployeePersonalWorkloadList = ({
 
                             <div>{totalWorkload}%</div>
                         </li>
+
+                        {isShowActions && (
+                            <div className="employee-card__personal-workload__list-actions">
+                                <button
+                                    type="button"
+                                    className="cancel-button"
+                                    title="Отменить изменения"
+                                    onClick={() => {
+                                        setPersonalWorkload(
+                                            personalWorkloadRef
+                                        );
+                                        setWorkloads(
+                                            personalWorkloadRef.workload
+                                        );
+                                        setIsShowActions(false);
+                                    }}
+                                >
+                                    Отменить
+                                </button>
+
+                                <button
+                                    type="button"
+                                    className="action-button"
+                                    title="Сохранить изменения"
+                                    onClick={updateLoadPercentage}
+                                >
+                                    Сохранить
+                                </button>
+                            </div>
+                        )}
                     </>
                 )}
         </ul>
