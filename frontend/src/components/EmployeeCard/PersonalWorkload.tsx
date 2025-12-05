@@ -198,7 +198,7 @@ const PersonalWorkload = ({
             );
             setSelectedPersonalMonth();
         }
-    }, [selectedPersonalYear]);
+    }, [selectedPersonalYear, datesData]);
 
     useEffect(() => {
         setSumToTotalWorkload(
