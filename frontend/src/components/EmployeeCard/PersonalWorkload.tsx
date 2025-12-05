@@ -181,7 +181,7 @@ const PersonalWorkload = ({
     };
 
     useEffect(() => {
-        if (datesData.length === 0 || !selectedPersonalYear) return;
+        if (!selectedPersonalYear || datesData.length === 0) return;
 
         const yearData = datesData.find(
             (item) => item.year === +selectedPersonalYear
@@ -197,18 +197,10 @@ const PersonalWorkload = ({
         setAvailablePersonalMonths(months);
 
         setSelectedPersonalMonth((prevMonth) => {
-            // если месяц уже выбран и он есть в новых данных — оставляем
             const found = months.find((m) => m.value === prevMonth?.value);
-            // если нет — выбираем первый доступный месяц
             return found || months[0] || null;
         });
     }, [datesData, selectedPersonalYear]);
-
-    // useEffect(() => {
-    //     if (availablePersonalMonths.length > 0) {
-    //         setSelectedPersonalMonth(availablePersonalMonths[0]);
-    //     }
-    // }, [availablePersonalMonths]);
 
     useEffect(() => {
         setSumToTotalWorkload(
