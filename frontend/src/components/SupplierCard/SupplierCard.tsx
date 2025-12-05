@@ -253,7 +253,7 @@ const SupplierCard = () => {
                 if (response?.ok) {
                     setResponsiblePersons((prevPerson) => [
                         ...prevPerson,
-                        response,
+                        response.data,
                     ]);
 
                     setAddRespPerson(false);
