@@ -40,45 +40,78 @@ const EmployeePersonalWorkloadItem = ({
                     placeholder="0"
                     max="100"
                     min="0"
-                    value={props.load_percentage ?? 0}
+                    value={props.load_percentage ?? ""}
                     onChange={(evt) => {
                         const raw = evt.target.value;
-                        if (raw === "") return;
 
-                        let value = parseInt(raw, 10);
+                        // Если после пустое, то сохраняем пустую строку
+                        if (raw === "") {
+                            setPersonalWorkload((prev: any) => ({
+                                ...prev,
+                                workload: prev.workload.map((w: any) =>
+                                    w.id === props.id
+                                        ? { ...w, load_percentage: "" }
+                                        : w
+                                ),
+                            }));
 
-                        if (value > 100) value = 100;
-                        if (value < 0) value = 0;
+                            setWorkloads((prev: any) => {
+                                const updated = [...prev];
+                                const index = updated.findIndex(
+                                    (item) => item.report_id === props.report_id
+                                );
 
-                        setPersonalWorkload((prev: any) => ({
-                            ...prev,
-                            workload: prev.workload.map((w: any) =>
-                                w.id === props.id
-                                    ? { ...w, load_percentage: value }
-                                    : w
-                            ),
-                        }));
+                                if (index !== -1) {
+                                    updated[index] = {
+                                        ...updated[index],
+                                        load_percentage: "",
+                                    };
+                                } else {
+                                    updated.push({
+                                        report_id: props.id,
+                                        load_percentage: "",
+                                    });
+                                }
 
-                        setWorkloads((prev: any) => {
-                            const updated = [...prev];
-                            const index = updated.findIndex(
-                                (item) => item.report_id === props.report_id
-                            );
+                                return updated;
+                            });
 
-                            if (index !== -1) {
-                                updated[index] = {
-                                    ...updated[index],
-                                    load_percentage: value,
-                                };
-                            } else {
-                                updated.push({
-                                    report_id: props.id,
-                                    load_percentage: value,
-                                });
-                            }
+                            return;
+                        }
 
-                            return updated;
-                        });
+                        const value = parseInt(raw, 10);
+
+                        if (!isNaN(value) && value >= 0 && value <= 100) {
+                            setPersonalWorkload((prev: any) => ({
+                                ...prev,
+                                workload: prev.workload.map((w: any) =>
+                                    w.id === props.id
+                                        ? { ...w, load_percentage: value }
+                                        : w
+                                ),
+                            }));
+
+                            setWorkloads((prev: any) => {
+                                const updated = [...prev];
+                                const index = updated.findIndex(
+                                    (item) => item.report_id === props.report_id
+                                );
+
+                                if (index !== -1) {
+                                    updated[index] = {
+                                        ...updated[index],
+                                        load_percentage: value,
+                                    };
+                                } else {
+                                    updated.push({
+                                        report_id: props.id,
+                                        load_percentage: value,
+                                    });
+                                }
+
+                                return updated;
+                            });
+                        }
                     }}
                     disabled={mode == "read"}
                 />

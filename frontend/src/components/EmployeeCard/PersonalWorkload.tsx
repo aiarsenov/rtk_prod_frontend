@@ -44,13 +44,16 @@ const PersonalWorkload = ({
 
     const [isShowActions, setIsShowActions] = useState(false); // Показывать ли кнопки под блоком трудозатрат
 
-    const setSumToTotalWorkload = (workloads, otherWorkload) => {
-        const workloadsSum = workloads.reduce(
-            (sum, current) => sum + current,
-            0
-        );
+    const setSumToTotalWorkload = (
+        workloads: (number | string | undefined | null)[],
+        otherWorkload: number
+    ) => {
+        const workloadsSum = workloads.reduce((sum, current) => {
+            const value = !current ? 0 : Number(current);
+            return sum + value;
+        }, 0);
 
-        setTotalWorkload(workloadsSum + otherWorkload || 0);
+        setTotalWorkload(workloadsSum + (otherWorkload || 0));
     };
 
     // Получение трудозатрат

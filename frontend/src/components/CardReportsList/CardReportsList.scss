@@ -115,7 +115,7 @@
 
         @media (min-width: $media-xxl) {
             margin: 0;
-            grid-template-columns: 80px 80px 1fr 17% 80px;
+            grid-template-columns: 1fr 80px 1fr 17% 80px;
         }
     }
 
@@ -142,7 +142,7 @@
 
         @media (min-width: $media-xxl) {
             padding: 20px;
-            grid-template-columns: 80px 80px 1fr 17% 80px;
+            grid-template-columns: 1fr 80px 1fr 17% 80px;
         }
 
         .management-reports__item__col {
@@ -155,19 +155,11 @@
     }
 
     .reports__list-item__col-name > div {
-        overflow: hidden;
-        white-space: nowrap;
         text-overflow: ellipsis;
-        max-width: 150px;
-
-        @media (min-width: 560px) {
-            white-space: unset;
-            max-width: none;
-        }
-
-        @media (min-width: $media-xxl) {
-            white-space: nowrap;
-            max-width: 85px;
-        }
+        display: -webkit-box !important;
+        -webkit-box-orient: vertical !important;
+        -webkit-line-clamp: 2 !important;
+        overflow: hidden !important;
+        white-space: normal !important;
     }
 }

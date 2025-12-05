@@ -9,9 +9,11 @@ import Loader from "../Loader.js";
 const CardManagementReportList = ({
     managerReports,
     isDataLoaded,
+    showFullName,
 }: {
     managerReports: [];
     isDataLoaded: boolean;
+    showFullName: boolean;
 }) => {
     let statusClass;
 
@@ -83,6 +85,13 @@ const CardManagementReportList = ({
                                         >
                                             <div className="reports__list-item__col reports__list-item__col-name">
                                                 <div>{item.project_name}</div>
+                                                <span>
+                                                    {
+                                                        item
+                                                            ?.project_main_industry
+                                                            ?.name
+                                                    }
+                                                </span>
                                             </div>
 
                                             <div className="reports__list-item__col">
@@ -129,6 +138,7 @@ const CardManagementReportList = ({
                     </div>
 
                     <ReportRateEditor
+                        showFullName={showFullName}
                         rateEditorState={rateEditorState}
                         reportData={reportData}
                         closeEditor={closeRateReportEditor}

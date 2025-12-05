@@ -8,6 +8,7 @@ import Popup from "../Popup/Popup";
 import "./ReportRateEditor.scss";
 
 type Props = {
+    showFullName: boolean;
     closeEditor: () => void;
     updateReportDetails?: (report: object, action: string) => void;
     rateEditorState: boolean;
@@ -23,6 +24,7 @@ const RATE_LABELS = [
 ];
 
 const ReportRateEditor = ({
+    showFullName,
     closeEditor,
     updateReportDetails,
     rateEditorState,
@@ -87,6 +89,10 @@ const ReportRateEditor = ({
         };
     }, [rateEditorState, saveBeforeClose, resetState]);
 
+    useEffect(() => {
+        console.log(showFullName);
+    }, [showFullName]);
+
     return !saveBeforeClose ? (
         <div
             className={`bottom-sheet bottom-sheet_desk ${
@@ -101,21 +107,21 @@ const ReportRateEditor = ({
                 <div className="bottom-sheet__icon"></div>
 
                 <form
-                        ref={formRef}
-                        className="bottom-sheet__body"
-                        tabIndex={-1}
-                        onKeyDown={(e) => {
-                            if (
-                                (e.key === "Escape" || e.keyCode === 27) &&
-                                rateEditorState &&
-                                !saveBeforeClose
-                            ) {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                resetState();
-                            }
-                        }}
-                    >
+                    ref={formRef}
+                    className="bottom-sheet__body"
+                    tabIndex={-1}
+                    onKeyDown={(e) => {
+                        if (
+                            (e.key === "Escape" || e.keyCode === 27) &&
+                            rateEditorState &&
+                            !saveBeforeClose
+                        ) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            resetState();
+                        }
+                    }}
+                >
                     <div
                         className={`report-window report-rate-editor ${
                             mode === "read" && "report-rate-editor_read-mode"
@@ -126,6 +132,12 @@ const ReportRateEditor = ({
                                 <div>
                                     <div className="report-window__name">
                                         {reportRateData.name}
+
+                                        {showFullName &&
+                                            reportRateData.report_month}
+
+                                        {showFullName &&
+                                            ` / ${reportRateData.report_month}`}
                                     </div>
 
                                     {reportRateData.misc?.length > 0 && (
