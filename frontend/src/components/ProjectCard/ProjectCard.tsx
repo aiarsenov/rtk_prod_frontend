@@ -1563,6 +1563,7 @@ const ProjectCard = () => {
                                         {activeReportTab ===
                                             "managementReports" && (
                                             <ManagementReportsTab
+                                                showFullName={true}
                                                 projectId={projectId}
                                                 setManagementReports={
                                                     setManagementReports
@@ -1713,6 +1714,7 @@ const ProjectCard = () => {
 
                             {activeReportTab === "managementReports" && (
                                 <ManagementReportsTabMobile
+                                    showFullName={true}
                                     activeWindow={activeWindow}
                                     setActiveWindow={setActiveWindow}
                                     managementReports={managementReports}

@@ -4,9 +4,11 @@ import ManagementReportListItem from "./ManagementReportListItem";
 import ReportRateEditor from "../ReportRateEditor/ReportRateEditor";
 
 const ManagementReportsTab = ({
+    showFullName,
     managementReports,
     mode,
 }: {
+    showFullName: boolean;
     managementReports: [];
     mode: string;
 }) => {
@@ -38,6 +40,7 @@ const ManagementReportsTab = ({
             </ul>
 
             <ReportRateEditor
+                showFullName={showFullName}
                 rateEditorState={rateEditorState}
                 reportData={reportData}
                 closeEditor={closeRateReportEditor}

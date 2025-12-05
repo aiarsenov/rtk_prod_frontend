@@ -13,12 +13,14 @@ import "./ManagementReports.scss";
 const URL = `${import.meta.env.VITE_API_URL}projects`;
 
 const ManagementReportsTab = ({
+    showFullName,
     projectId,
     setManagementReports,
     activeWindow,
     setActiveWindow,
     mode,
 }: {
+    showFullName: boolean;
     projectId: number;
     setManagementReports: React.Dispatch<React.SetStateAction<object[]>>;
     activeWindow: string;
@@ -95,6 +97,7 @@ const ManagementReportsTab = ({
                     </ul>
 
                     <ReportRateEditor
+                        showFullName={showFullName}
                         rateEditorState={rateEditorState}
                         reportData={reportData}
                         closeEditor={closeRateReportEditor}
