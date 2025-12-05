@@ -9,11 +9,9 @@ import Loader from "../Loader.js";
 const CardManagementReportList = ({
     managerReports,
     isDataLoaded,
-    showFullName,
 }: {
     managerReports: any[];
     isDataLoaded: boolean;
-    showFullName: boolean;
 }) => {
     let statusClass;
 
@@ -138,7 +136,6 @@ const CardManagementReportList = ({
                     </div>
 
                     <ReportRateEditor
-                        showFullName={showFullName}
                         rateEditorState={rateEditorState}
                         reportData={reportData}
                         closeEditor={closeRateReportEditor}

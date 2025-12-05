@@ -8,7 +8,6 @@ import Popup from "../Popup/Popup";
 import "./ReportRateEditor.scss";
 
 type Props = {
-    showFullName: boolean;
     closeEditor: () => void;
     updateReportDetails?: (report: object, action: string) => void;
     rateEditorState: boolean;
@@ -24,7 +23,6 @@ const RATE_LABELS = [
 ];
 
 const ReportRateEditor = ({
-    showFullName,
     closeEditor,
     updateReportDetails,
     rateEditorState,
@@ -127,10 +125,8 @@ const ReportRateEditor = ({
                             <div className="report-window__header">
                                 <div>
                                     <div className="report-window__name">
-                                        {reportRateData.name}
-
-                                        {showFullName &&
-                                            ` / ${reportRateData.report_month}`}
+                                        {reportRateData.name} /{" "}
+                                        {reportRateData.report_month}
                                     </div>
 
                                     {reportRateData.misc?.length > 0 && (

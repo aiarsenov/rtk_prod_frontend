@@ -708,7 +708,6 @@ const SupplierCard = () => {
                                     {activeReportTab ===
                                         "managementReports" && (
                                         <CardManagementReportList
-                                            showFullName={true}
                                             managerReports={
                                                 selectedManagerReports
                                             }
@@ -829,7 +828,6 @@ const SupplierCard = () => {
 
                                 {activeReportTab === "managementReports" && (
                                     <CardManagementReportList
-                                        showFullName={true}
                                         managerReports={selectedManagerReports}
                                         isDataLoaded={
                                             isManagementReportsDataLoaded
