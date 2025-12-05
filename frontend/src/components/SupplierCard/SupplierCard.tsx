@@ -253,7 +253,7 @@ const SupplierCard = () => {
                 if (response?.ok) {
                     setResponsiblePersons((prevPerson) => [
                         ...prevPerson,
-                        ...response.data.created.map((item) => ({
+                        ...response.created.map((item) => ({
                             ...item,
                             id: item.id,
                         })),
