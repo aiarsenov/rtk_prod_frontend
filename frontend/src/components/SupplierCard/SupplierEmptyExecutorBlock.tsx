@@ -8,7 +8,7 @@ import { IMaskInput } from "react-imask";
 
 import "../ExecutorBlock/ExecutorBlock.scss";
 
-const CUSTOMER_TEMPLATE = {
+const SUPPLIER_TEMPLATE = {
     full_name: "",
     phone: "",
     position: "",
@@ -18,6 +18,13 @@ const CUSTOMER_TEMPLATE = {
 const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
+};
+
+const prepareContactsForSubmit = (contacts) => {
+    return contacts.map(({ value, label, ...rest }) => ({
+        full_name: value,
+        ...rest,
+    }));
 };
 
 const SupplierEmptyExecutorBlock = ({
@@ -32,12 +39,11 @@ const SupplierEmptyExecutorBlock = ({
     const PhoneMask = "+{7}(000) 000 00 00";
 
     const [errors, setErrors] = useState({});
-    const [isReadonly, setIsReadonly] = useState(false);
 
     const [contactsList, setContactsList] = useState([]);
-    const [allContacts, setAllContacts] = useState([]);
+    const [contactsArray, setContactsArray] = useState([]);
 
-    const [newContact, setNewContact] = useState(CUSTOMER_TEMPLATE);
+    const [newContact, setNewContact] = useState(SUPPLIER_TEMPLATE);
 
     const [activeTab, setActiveTab] = useState("create");
     const [isFilled, setIsFilled] = useState(false);
@@ -50,46 +56,50 @@ const SupplierEmptyExecutorBlock = ({
     };
 
     const handleSave = () => {
-        const newErrors = {
-            full_name: !newContact.full_name,
-            phone: !newContact.phone,
-            position: !newContact.position,
-            email: !newContact.email || !validateEmail(newContact.email),
-        };
+        if (activeTab == "create") {
+            const newErrors = {
+                full_name: !newContact.full_name,
+                phone: !newContact.phone,
+                position: !newContact.position,
+                email: !newContact.email || !validateEmail(newContact.email),
+            };
 
-        setErrors(newErrors);
-        if (Object.values(newErrors).some((err) => err)) return;
-        sendExecutor(newContact);
+            setErrors(newErrors);
+            if (Object.values(newErrors).some((err) => err)) return;
+
+            sendExecutor([newContact]);
+        } else {
+            sendExecutor(prepareContactsForSubmit(contactsArray));
+        }
     };
 
     // Получение доступных для добавления контактных лиц заказчика
-    const getContragentsContacts = () => {
+    const getSupplierContacts = () => {
         getData(
             `${
                 import.meta.env.VITE_API_URL
             }responsible-persons/supplier?supplier_id=${supplierId}`
         ).then((response) => {
             if (response.status == 200) {
-                setContactsList(response.data.data);
+                setContactsList(
+                    response.data?.data?.map((person) => ({
+                        value: person.full_name,
+                        label: person.full_name,
+                        email: person.email,
+                        phone: person.phone,
+                        position: person.position,
+                    }))
+                );
             }
         });
     };
 
     useEffect(() => {
-        getContragentsContacts();
-    }, []);
+        setIsFilled(false);
+        setContactsArray([]);
 
-    useEffect(() => {
-        setAllContacts(
-            contactsList?.map((person) => ({
-                value: person.full_name,
-                label: person.full_name,
-                email: person.email,
-                phone: person.phone,
-                position: person.position,
-            }))
-        );
-    }, [contactsList]);
+        setNewContact(SUPPLIER_TEMPLATE);
+    }, [activeTab]);
 
     useEffect(() => {
         setIsFilled(
@@ -101,6 +111,14 @@ const SupplierEmptyExecutorBlock = ({
             })
         );
     }, [newContact]);
+
+    useEffect(() => {
+        setIsFilled(contactsArray.length > 0);
+    }, [contactsArray]);
+
+    useEffect(() => {
+        getSupplierContacts();
+    }, []);
 
     return (
         <Popup onClick={removeBlock} title="Добавить ключевое лицо">
@@ -148,7 +166,6 @@ const SupplierEmptyExecutorBlock = ({
                                         full_name: evt.target.value,
                                     }))
                                 }
-                                disabled={isReadonly}
                             />
 
                             {errors.full_name && (
@@ -169,7 +186,6 @@ const SupplierEmptyExecutorBlock = ({
                                 onChange={(e) =>
                                     handleNewExecutor(e, "position")
                                 }
-                                disabled={isReadonly}
                             />
                             {errors.position && (
                                 <p className="message message-error">
@@ -187,7 +203,6 @@ const SupplierEmptyExecutorBlock = ({
                                 placeholder="E-mail"
                                 value={newContact.email}
                                 onChange={(e) => handleNewExecutor(e, "email")}
-                                disabled={isReadonly}
                             />
                             {errors.email && (
                                 <p className="message message-error">
@@ -210,7 +225,6 @@ const SupplierEmptyExecutorBlock = ({
                                 }
                                 value={newContact.phone || ""}
                                 placeholder="Телефон"
-                                disabled={isReadonly}
                             />
                             {errors.phone && (
                                 <p className="message message-error">
@@ -221,31 +235,11 @@ const SupplierEmptyExecutorBlock = ({
                     </div>
                 ) : (
                     <SelectList
-                        options={allContacts}
+                        options={contactsList}
                         selectedContact={newContact}
-                        onChange={(selected) => {
-                            if (selected) {
-                                setNewContact({
-                                    ...newContact,
-                                    full_name: selected.value,
-                                    phone: selected.phone || "",
-                                    email: selected.email || "",
-                                    position: selected.position || "",
-                                });
-
-                                setIsReadonly(true);
-                                setActiveTab("create");
-                            } else {
-                                setNewContact({
-                                    ...newContact,
-                                    full_name: "",
-                                    phone: "",
-                                    email: "",
-                                    position: "",
-                                });
-                                setIsReadonly(false);
-                                setActiveTab("create");
-                            }
+                        multi={true}
+                        onChange={(items) => {
+                            setContactsArray(items);
                         }}
                     />
                 )}
@@ -264,9 +258,13 @@ const SupplierEmptyExecutorBlock = ({
                     <button
                         type="button"
                         className="action-button flex-[1_0_auto]"
-                        onClick={handleSave}
+                        onClick={() => {
+                            if (isFilled) {
+                                handleSave();
+                            }
+                        }}
                         disabled={!isFilled}
-                        title="Добавить исполнителя"
+                        title="Добавить ключевое лицо"
                     >
                         Добавить
                     </button>

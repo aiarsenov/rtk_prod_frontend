@@ -176,14 +176,6 @@ const EmptyExecutorBlock = ({
     }, [activeTab]);
 
     useEffect(() => {
-        if (type === "creditor") {
-            getCreditorContacts();
-        } else if (type === "customer") {
-            getContragentsContacts();
-        }
-    }, [newContact.creditor_id]);
-
-    useEffect(() => {
         setIsFilled(
             Object.values(newContact).every((value) => {
                 if (typeof value === "string") {
@@ -197,6 +189,14 @@ const EmptyExecutorBlock = ({
     useEffect(() => {
         setIsFilled(contactsArray.length > 0);
     }, [contactsArray]);
+
+    useEffect(() => {
+        if (type === "creditor") {
+            getCreditorContacts();
+        } else if (type === "customer") {
+            getContragentsContacts();
+        }
+    }, [newContact.creditor_id]);
 
     return (
         <Popup

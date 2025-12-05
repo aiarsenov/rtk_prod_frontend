@@ -591,7 +591,7 @@ const SupplierCard = () => {
                                                 setAddRespPerson(true);
                                             }
                                         }}
-                                        title="Добавить ключевое лицо подрядчика"
+                                        title="Добавить ключевое лицо"
                                     >
                                         Добавить
                                         <span>

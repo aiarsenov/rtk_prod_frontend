@@ -436,7 +436,7 @@ const ProjectCard = () => {
                                 })),
                             ]);
 
-                            toast.dismiss(query);
+                            // toast.dismiss(query);
 
                             // toast.update(query, {
                             //     render:
@@ -457,7 +457,7 @@ const ProjectCard = () => {
                         }
                     })
                     .catch((error) => {
-                        toast.dismiss(query);
+                        // toast.dismiss(query);
                         toast.error(
                             error.message || "Ошибка прикрепления исполнителя",
                             {
