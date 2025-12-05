@@ -62,8 +62,9 @@ const SaleFunnelItem = ({
     };
 
     useEffect(() => {
-        console.log(stage);
-        console.log(isLast);
+        // console.log(stage);
+        // console.log(isLast);
+        setActiveStage(isLast || null);
     }, [stage]);
 
     const noActionStages =
