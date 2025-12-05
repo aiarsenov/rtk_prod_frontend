@@ -253,7 +253,10 @@ const SupplierCard = () => {
                 if (response?.ok) {
                     setResponsiblePersons((prevPerson) => [
                         ...prevPerson,
-                        response.data,
+                        ...response.data.created.map((item) => ({
+                            ...item,
+                            id: item.id,
+                        })),
                     ]);
 
                     setAddRespPerson(false);
