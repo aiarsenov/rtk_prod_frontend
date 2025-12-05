@@ -640,12 +640,12 @@ const ContragentCard = () => {
                 {/* Редактор отчёта */}
                 <div ref={block4Ref}>
                     <ReportWindow
+                        reportName={reportName}
                         reportWindowsState={reportWindowsState}
                         setReportWindowsState={setReportWindowsState}
                         contracts={contracts}
                         reportId={reportId}
                         setReportId={setReportId}
-                        reportName={reportName}
                         mode={"read"}
                     />
                 </div>

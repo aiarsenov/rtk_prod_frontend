@@ -57,6 +57,7 @@ const SupplierCard = () => {
     const [projects, setProjects] = useState([]); // Проекты
 
     const [reportWindowsState, setReportWindowsState] = useState(false); // Конструктор отчёта
+    const [reportName, setReportName] = useState(""); // Название отчета
     const [reportId, setReportId] = useState(null);
     const [contracts, setContracts] = useState([]);
     const [responsiblePersons, setResponsiblePersons] = useState([]);
@@ -103,6 +104,7 @@ const SupplierCard = () => {
     // Получаем список отчетов
     const getProjectsReports = () => {
         setIsReportsDataLoaded(false);
+        setReportName("");
 
         getData(`${URL}/${supplierId}/reports`, {
             Accept: "application/json",
@@ -227,7 +229,12 @@ const SupplierCard = () => {
     // Открытие редактора отчёта
     const openReportEditor = (id) => {
         setReportId(id);
+        const targetReport = reports.find((item) => item.id === id);
+
         if (id) {
+            setReportName(
+                `${targetReport.project_name} / ${targetReport.report_period_code}`
+            );
             setActiveWindow("");
             setReportWindowsState(true);
         }
@@ -719,6 +726,7 @@ const SupplierCard = () => {
                 {/* Редактор отчёта */}
                 <div ref={block4Ref}>
                     <ReportWindow
+                        reportName={reportName}
                         reportWindowsState={reportWindowsState}
                         setReportWindowsState={setReportWindowsState}
                         contracts={contracts}
