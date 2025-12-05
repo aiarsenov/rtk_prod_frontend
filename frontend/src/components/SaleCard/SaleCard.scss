@@ -81,6 +81,8 @@
                 }
 
                 &__date {
+                    position: relative;
+
                     .custom-datepicker__field {
                         background: var(--color-gray-20);
                         font-weight: 500;
@@ -90,6 +92,13 @@
 
                     input {
                         width: 120px;
+                    }
+
+                    .hint {
+                        position: absolute;
+                        margin: 0;
+                        top: 0;
+                        right: -15px;
                     }
                 }
 

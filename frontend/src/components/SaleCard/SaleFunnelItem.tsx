@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import Hint from "../Hint/Hint";
+
 import CustomDatePickerField from "../CustomDatePicker/CustomDatePickerField";
 import SaleStageDetails from "./SaleStageDetails";
 
@@ -100,6 +102,8 @@ const SaleFunnelItem = ({
                         disabled={!isLast}
                         single={true}
                     />
+
+                    <Hint message="Дата" />
                 </div>
 
                 {stage.hasOwnProperty("next_possible_stages") &&
