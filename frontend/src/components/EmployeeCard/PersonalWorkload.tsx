@@ -81,12 +81,6 @@ const PersonalWorkload = ({
 
     // Изменение процентов в блоке Трудозатраты
     const updateLoadPercentage = () => {
-        // const totalPercentage =
-        //     workloads.reduce((sum, item) => sum + item.load_percentage, 0) +
-        //     personalWorkload.other_workload;
-
-        console.log(totalWorkload);
-
         if (totalWorkload === 100) {
             if ("value" in selectedPersonalMonth) {
                 // query = toast.loading("Обновление", {
@@ -173,52 +167,48 @@ const PersonalWorkload = ({
                 import.meta.env.VITE_API_URL
             }personal-available-years?physical_person_id=${employeeId}`
         ).then((response) => {
-            if (response.status == 200) {
-                setDatesData(response.data);
-                setAvailableYears(response.data.map((item) => item.year));
-                setSelectedPersonalYear(
-                    response.data.map((item) => item.year)[
-                        response.data.length - 1
-                    ]
-                );
+            if (response.status === 200) {
+                const data = response.data;
+                setDatesData(data);
 
-                setAvailablePersonalMonths(
-                    response.data
-                        .find(
-                            (item) =>
-                                item.year ===
-                                +response.data.map((item) => item.year)[
-                                    response.data.length - 1
-                                ]
-                        )
-                        .months.map((month) => ({
-                            value: month.number,
-                            label: month.name,
-                            isFull: month.is_full_workload,
-                        }))
-                );
+                const years = data.map((item) => item.year);
+                setAvailableYears(years);
+
+                const lastYear = years[years.length - 1];
+                setSelectedPersonalYear(lastYear);
             }
         });
     };
 
     useEffect(() => {
-        if (availablePersonalMonths?.length > 0) {
-            setSelectedPersonalMonth(availablePersonalMonths[0]);
-        }
+        if (datesData.length === 0 || !selectedPersonalYear) return;
 
-        if (datesData.length > 0) {
-            setAvailablePersonalMonths(
-                datesData
-                    .find((item) => item.year === +selectedPersonalYear)
-                    .months.map((month) => ({
-                        value: month.number,
-                        label: month.name,
-                        isFull: month.is_full_workload,
-                    }))
-            );
-            setSelectedPersonalMonth({});
-        }
-    }, [selectedPersonalYear]);
+        const yearData = datesData.find(
+            (item) => item.year === +selectedPersonalYear
+        );
+        if (!yearData) return;
+
+        const months = yearData.months.map((month) => ({
+            value: month.number,
+            label: month.name,
+            isFull: month.is_full_workload,
+        }));
+
+        setAvailablePersonalMonths(months);
+
+        setSelectedPersonalMonth((prevMonth) => {
+            // если месяц уже выбран и он есть в новых данных — оставляем
+            const found = months.find((m) => m.value === prevMonth?.value);
+            // если нет — выбираем первый доступный месяц
+            return found || months[0] || null;
+        });
+    }, [datesData, selectedPersonalYear]);
+
+    // useEffect(() => {
+    //     if (availablePersonalMonths.length > 0) {
+    //         setSelectedPersonalMonth(availablePersonalMonths[0]);
+    //     }
+    // }, [availablePersonalMonths]);
 
     useEffect(() => {
         setSumToTotalWorkload(
