@@ -155,6 +155,11 @@
         background: var(--color-gray-30);
         color: var(--color-gray-70);
     }
+
+    &--warning {
+        background: var(--color-orange-30);
+        color: var(--color-orange-80);
+    }
 }
 
 .admin-modal {

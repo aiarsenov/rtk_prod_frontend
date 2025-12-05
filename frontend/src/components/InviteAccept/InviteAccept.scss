@@ -22,6 +22,37 @@
         @media (max-width: $media-md) {
             padding: 24px;
         }
+
+        &--error {
+            border: 2px solid var(--color-red-60);
+        }
+
+        &--info {
+            border: 2px solid var(--color-blue-60);
+        }
+    }
+
+    &__icon {
+        font-size: 64px;
+        text-align: center;
+        margin-bottom: 20px;
+
+        &--error {
+            filter: grayscale(0);
+        }
+
+        &--info {
+            filter: grayscale(0);
+        }
+    }
+
+    &__message {
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 150%;
+        color: var(--color-gray-80);
+        margin: 0 0 16px 0;
+        text-align: center;
     }
 
     &__title {

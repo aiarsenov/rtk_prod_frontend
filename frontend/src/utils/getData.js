@@ -22,6 +22,11 @@ async function getData(url = "", options = {}) {
         if (!response.ok) {
             const error = new Error("Ошибка сервера");
             error.status = response.status;
+            try {
+                error.data = await response.json();
+            } catch {
+                error.data = {};
+            }
             throw error;
         }
 

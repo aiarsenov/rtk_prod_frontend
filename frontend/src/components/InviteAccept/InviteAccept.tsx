@@ -16,8 +16,10 @@ const InviteAccept = () => {
     const [passwordConfirmation, setPasswordConfirmation] = useState("");
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState<Record<string, string>>({});
+    const [invitationStatus, setInvitationStatus] = useState<string | null>(null); // Статус приглашения
 
+    // @ts-ignore - Vite env variable
     const API_URL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
@@ -37,23 +39,34 @@ const InviteAccept = () => {
         try {
             setLoading(true);
             const response = await getData(
-                `${API_URL}invite/accept?token=${encodeURIComponent(token)}`
+                `${API_URL}invite/accept?token=${encodeURIComponent(token || "")}`
             );
 
             if (response.status === 200) {
                 setEmail(response.data.email);
+                setInvitationStatus("valid");
             }
-        } catch (err) {
+        } catch (err: any) {
+            const errorData = err.data || {};
+            const errorType = errorData.error_type;
             const errorMessage =
-                err.data?.message ||
+                errorData.message ||
                 err.message ||
                 "Ошибка загрузки приглашения";
-            toast.error(errorMessage, {
-                position:
-                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-            });
 
-            if (err.status === 404 || err.status === 400) {
+            if (errorType === "invitation_cancelled") {
+                setInvitationStatus("cancelled");
+            } else if (errorType === "expired") {
+                setInvitationStatus("expired");
+            } else if (errorType === "already_accepted") {
+                setInvitationStatus("already_accepted");
+            } else {
+                // Для других ошибок показываем тост и редиректим
+                toast.error(errorMessage, {
+                    position:
+                        window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+                });
+
                 setTimeout(() => {
                     navigate("/");
                 }, 2000);
@@ -64,7 +77,7 @@ const InviteAccept = () => {
     };
 
     const validateForm = () => {
-        const newErrors = {};
+        const newErrors: Record<string, string> = {};
 
         if (!password) {
             newErrors.password = "Пароль обязателен";
@@ -82,7 +95,7 @@ const InviteAccept = () => {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (!validateForm()) {
@@ -118,14 +131,14 @@ const InviteAccept = () => {
             setTimeout(() => {
                 window.location.href = `${API_URL}auth/login`;
             }, 2000);
-        } catch (err) {
+        } catch (err: any) {
             const errorData = err.data || {};
             const errorMessage =
                 errorData.message || err.message || "Ошибка установки пароля";
 
             // Обработка ошибок валидации с бекенда
             if (errorData.errors) {
-                const validationErrors = {};
+                const validationErrors: Record<string, string> = {};
                 Object.keys(errorData.errors).forEach((key) => {
                     validationErrors[key] = Array.isArray(errorData.errors[key])
                         ? errorData.errors[key][0]
@@ -159,6 +172,78 @@ const InviteAccept = () => {
 
     if (loading) {
         return <Loader />;
+    }
+
+    // Показываем сообщение об отозванном приглашении
+    if (invitationStatus === "cancelled") {
+        return (
+            <div className="invite-accept">
+                <div className="invite-accept__container">
+                    <div className="invite-accept__card invite-accept__card--error">
+                        <div className="invite-accept__icon invite-accept__icon--error">
+                            ⚠️
+                        </div>
+                        <h1 className="invite-accept__title">Приглашение отозвано</h1>
+                        <p className="invite-accept__message">
+                            Это приглашение было отозвано администратором и больше не действительно.
+                        </p>
+                        <p className="invite-accept__message">
+                            Если вы считаете, что это ошибка, пожалуйста, обратитесь к администратору системы.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Показываем сообщение об истекшем приглашении
+    if (invitationStatus === "expired") {
+        return (
+            <div className="invite-accept">
+                <div className="invite-accept__container">
+                    <div className="invite-accept__card invite-accept__card--error">
+                        <div className="invite-accept__icon invite-accept__icon--error">
+                            ⏰
+                        </div>
+                        <h1 className="invite-accept__title">Приглашение истекло</h1>
+                        <p className="invite-accept__message">
+                            Срок действия этого приглашения истек.
+                        </p>
+                        <p className="invite-accept__message">
+                            Пожалуйста, обратитесь к администратору для получения нового приглашения.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Показываем сообщение об уже принятом приглашении
+    if (invitationStatus === "already_accepted") {
+        return (
+            <div className="invite-accept">
+                <div className="invite-accept__container">
+                    <div className="invite-accept__card invite-accept__card--info">
+                        <div className="invite-accept__icon invite-accept__icon--info">
+                            ℹ️
+                        </div>
+                        <h1 className="invite-accept__title">Приглашение уже принято</h1>
+                        <p className="invite-accept__message">
+                            Это приглашение уже было использовано.
+                        </p>
+                        <p className="invite-accept__message">
+                            Вы можете войти в систему, используя ваши учетные данные.
+                        </p>
+                        <button
+                            className="action-button invite-accept__submit"
+                            onClick={() => window.location.href = `${API_URL}auth/login`}
+                        >
+                            Войти в систему
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     return (

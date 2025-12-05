@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
 import getData from "../../utils/getData";
 import postData from "../../utils/postData";
@@ -18,11 +18,7 @@ const AdminUsers = () => {
 
     const API_URL = import.meta.env.VITE_API_URL;
 
-    useEffect(() => {
-        loadUsers();
-    }, []);
-
-    const loadUsers = async () => {
+    const loadUsers = useCallback(async () => {
         try {
             setIsLoading(true);
             setAccessDenied(false);
@@ -38,7 +34,11 @@ const AdminUsers = () => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [API_URL]);
+
+    useEffect(() => {
+        loadUsers();
+    }, [loadUsers]);
 
     const loadAvailableEmployees = async () => {
         try {
@@ -115,14 +115,14 @@ const AdminUsers = () => {
         });
 
         try {
-            const response = await postData(
+            await postData(
                 "PATCH",
                 `${API_URL}admin/users/${userId}/activate`
             );
             toast.dismiss(toastId);
 
             // toast.update(toastId, {
-            //     render: response.message || "Пользователь успешно активирован",
+            //     render: "Пользователь успешно активирован",
             //     type: "success",
             //     isLoading: false,
             //     autoClose: 2000,
@@ -154,15 +154,14 @@ const AdminUsers = () => {
         });
 
         try {
-            const response = await postData(
+            await postData(
                 "PATCH",
                 `${API_URL}admin/users/${userId}/deactivate`
             );
             toast.dismiss(toastId);
 
             // toast.update(toastId, {
-            //     render:
-            //         response.message || "Пользователь успешно деактивирован",
+            //     render: "Пользователь успешно деактивирован",
             //     type: "success",
             //     isLoading: false,
             //     autoClose: 2000,
@@ -179,6 +178,72 @@ const AdminUsers = () => {
                         : err.message || "Ошибка деактивации пользователя",
                 type: "error",
                 isLoading: false,
+                autoClose: 3000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
+        }
+    };
+
+    const handleResendInvitation = async (invitationId) => {
+        if (!confirm("Вы уверены, что хотите повторно отправить приглашение?")) {
+            return;
+        }
+
+        try {
+            await postData(
+                "POST",
+                `${API_URL}admin/users/invitations/${invitationId}/resend`
+            );
+            loadUsers();
+        } catch (err) {
+            toast.error(err.message || "Ошибка повторной отправки приглашения", {
+                position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+                autoClose: 3000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
+        }
+    };
+
+    const handleCancelInvitation = async (invitationId) => {
+        if (!confirm("Вы уверены, что хотите отозвать приглашение?")) {
+            return;
+        }
+
+        try {
+            await postData(
+                "DELETE",
+                `${API_URL}admin/users/invitations/${invitationId}`
+            );
+            loadUsers();
+        } catch (err) {
+            toast.error(err.message || "Ошибка отзыва приглашения", {
+                position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+                autoClose: 3000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
+        }
+    };
+
+    const handleDeleteUser = async (userId) => {
+        if (!confirm("Вы уверены, что хотите удалить пользователя? Это действие необратимо!")) {
+            return;
+        }
+
+        try {
+            await postData(
+                "DELETE",
+                `${API_URL}admin/users/${userId}`
+            );
+            loadUsers();
+        } catch (err) {
+            toast.error(err.message || "Ошибка удаления пользователя", {
+                position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
                 autoClose: 3000,
                 pauseOnFocusLoss: false,
                 pauseOnHover: false,
@@ -239,53 +304,97 @@ const AdminUsers = () => {
                         <tbody>
                             {users.map((user) => (
                                 <tr key={user.id}>
-                                    <td>{user.id}</td>
+                                    <td>{user.type === 'invitation' ? '—' : user.id}</td>
                                     <td>{user.name || "—"}</td>
                                     <td>{user.email || "—"}</td>
                                     <td>
                                         <span
                                             className={`admin-badge ${
-                                                user.is_active
+                                                user.status === 'invited'
+                                                    ? "admin-badge--warning"
+                                                    : user.is_active
                                                     ? "admin-badge--active"
                                                     : "admin-badge--inactive"
                                             }`}
                                         >
-                                            {user.is_active
+                                            {user.status === 'invited'
+                                                ? "Приглашен"
+                                                : user.is_active
                                                 ? "Активен"
                                                 : "Неактивен"}
                                         </span>
                                     </td>
                                     <td>
-                                        {user.last_login_at
-                                            ? new Date(
-                                                  user.last_login_at
-                                              ).toLocaleString("ru-RU")
-                                            : "—"}
+                                        {user.status === 'invited'
+                                            ? (user.invited_at
+                                                ? new Date(user.invited_at).toLocaleString("ru-RU")
+                                                : "—")
+                                            : (user.last_login_at
+                                                ? new Date(user.last_login_at).toLocaleString("ru-RU")
+                                                : "—")}
                                     </td>
                                     <td>
                                         <div className="admin-actions">
-                                            {user.is_active ? (
-                                                <button
-                                                    className="admin-btn admin-btn--danger admin-btn--sm"
-                                                    onClick={() =>
-                                                        handleDeactivate(
-                                                            user.id
-                                                        )
-                                                    }
-                                                    title="Деактивировать пользователя"
-                                                >
-                                                    Деактивировать
-                                                </button>
+                                            {user.status === 'invited' ? (
+                                                <>
+                                                    <button
+                                                        className="admin-btn admin-btn--primary admin-btn--sm"
+                                                        onClick={() =>
+                                                            handleResendInvitation(
+                                                                user.invitation_id
+                                                            )
+                                                        }
+                                                        title="Повторно отправить приглашение"
+                                                    >
+                                                        Отправить повторно
+                                                    </button>
+                                                    <button
+                                                        className="admin-btn admin-btn--danger admin-btn--sm"
+                                                        onClick={() =>
+                                                            handleCancelInvitation(
+                                                                user.invitation_id
+                                                            )
+                                                        }
+                                                        title="Отозвать приглашение"
+                                                    >
+                                                        Отозвать
+                                                    </button>
+                                                </>
                                             ) : (
-                                                <button
-                                                    className="admin-btn admin-btn--success admin-btn--sm"
-                                                    onClick={() =>
-                                                        handleActivate(user.id)
-                                                    }
-                                                    title="Активировать пользователя"
-                                                >
-                                                    Активировать
-                                                </button>
+                                                <>
+                                                    {user.is_active ? (
+                                                        <button
+                                                            className="admin-btn admin-btn--danger admin-btn--sm"
+                                                            onClick={() =>
+                                                                handleDeactivate(
+                                                                    user.id
+                                                                )
+                                                            }
+                                                            title="Деактивировать пользователя"
+                                                        >
+                                                            Деактивировать
+                                                        </button>
+                                                    ) : (
+                                                        <button
+                                                            className="admin-btn admin-btn--success admin-btn--sm"
+                                                            onClick={() =>
+                                                                handleActivate(user.id)
+                                                            }
+                                                            title="Активировать пользователя"
+                                                        >
+                                                            Активировать
+                                                        </button>
+                                                    )}
+                                                    <button
+                                                        className="admin-btn admin-btn--danger admin-btn--sm"
+                                                        onClick={() =>
+                                                            handleDeleteUser(user.id)
+                                                        }
+                                                        title="Удалить пользователя из системы"
+                                                    >
+                                                        Удалить
+                                                    </button>
+                                                </>
                                             )}
                                         </div>
                                     </td>
