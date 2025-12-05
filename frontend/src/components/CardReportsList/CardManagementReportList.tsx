@@ -11,7 +11,7 @@ const CardManagementReportList = ({
     isDataLoaded,
     showFullName,
 }: {
-    managerReports: [];
+    managerReports: any[];
     isDataLoaded: boolean;
     showFullName: boolean;
 }) => {

@@ -89,10 +89,6 @@ const ReportRateEditor = ({
         };
     }, [rateEditorState, saveBeforeClose, resetState]);
 
-    useEffect(() => {
-        console.log(showFullName);
-    }, [showFullName]);
-
     return !saveBeforeClose ? (
         <div
             className={`bottom-sheet bottom-sheet_desk ${
@@ -132,9 +128,6 @@ const ReportRateEditor = ({
                                 <div>
                                     <div className="report-window__name">
                                         {reportRateData.name}
-
-                                        {showFullName &&
-                                            reportRateData.report_month}
 
                                         {showFullName &&
                                             ` / ${reportRateData.report_month}`}
