@@ -13,7 +13,6 @@ type ReportItemProps = {
     props: object;
     openReportEditor: () => void;
     activeReportId?: number | null;
-    activeReportId?: number | null;
 };
 
 const ReportItem = ({

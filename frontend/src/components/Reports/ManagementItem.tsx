@@ -13,6 +13,7 @@ type Column = {
 };
 
 type ReportItemProps = {
+    activeReportId?: number | null;
     columns: Column[];
     props: object;
     openManagementReportEditor: () => void;
@@ -21,6 +22,7 @@ type ReportItemProps = {
 };
 
 const ManagementItem = ({
+    activeReportId,
     columns,
     props,
     openManagementReportEditor,
@@ -28,6 +30,10 @@ const ManagementItem = ({
     managementReportEditorHandler,
 }: ReportItemProps) => {
     const navigate = useNavigate();
+    const isActive =
+        activeReportId !== null &&
+        activeReportId !== undefined &&
+        props?.real_id === activeReportId;
 
     return (
         <tr
@@ -147,7 +153,7 @@ const ManagementItem = ({
                             <td className="w-[110px]" key={key}>
                                 <div className="flex flex-col gap-[5px] min-w-[250px]">
                                     <div
-                                        className="hidden-group smax-w-[250px]"
+                                        className="hidden-group max-w-[250px]"
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             const projectId = (props as any)
@@ -168,14 +174,12 @@ const ManagementItem = ({
                                         }`}
                                     >
                                         <div
-                                            className="text-left visible-text text-blue cursor-pointer"
-                                            style={{
-                                                maxWidth: "250px",
-                                            }}
+                                            className={`text-left visible-text text-blue cursor-pointer max-w-[250px] ${
+                                                isActive ? "font-bold" : ""
+                                            }`}
                                         >
                                             {value?.toString() || "—"}
                                         </div>
-
                                         <div className="hidden-text">
                                             {value?.toString() || "—"}
                                         </div>
@@ -241,7 +245,11 @@ const ManagementItem = ({
                                     key === "name"
                                 ) {
                                     return (
-                                        <div className="min-w-[250px] max-w-[250px]">
+                                        <div
+                                            className={`min-w-[250px] max-w-[250px] ${
+                                                isActive ? "font-bold" : ""
+                                            }`}
+                                        >
                                             {value?.toString() || "—"}
                                         </div>
                                     );

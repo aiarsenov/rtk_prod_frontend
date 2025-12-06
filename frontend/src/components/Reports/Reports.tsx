@@ -69,6 +69,7 @@ const Reports = () => {
     const [reportName, setReportName] = useState("");
     const [contracts, setContracts] = useState([]);
     const [reportId, setReportId] = useState(null);
+    const [managementReportId, setManagementReportId] = useState(null);
 
     const [managementReportData, setManagementReportData] = useState({
         name: "",
@@ -164,26 +165,28 @@ const Reports = () => {
 
     // Открытие окна редактора оценки отчета
     const openRateReportEditor = (props) => {
-        closeManagementReportEditor();
+        setManagementReportId(props.real_id);
         setReportData(props);
         setRateEditorState(true);
     };
 
     // Закрытие окно редактора отчета менеджмента
     const closeRateReportEditor = () => {
+        setManagementReportId(null);
         setReportData({});
         setRateEditorState(false);
     };
 
     // Открытие окна редактора отчета менеджмента
     const openManagementReportEditor = (props) => {
-        closeRateReportEditor();
+        setManagementReportId(props.real_id);
         setManagementReportData(props);
         setManagementEditorState(true);
     };
 
     // Закрытие окно редактора отчета менеджмента
     const closeManagementReportEditor = () => {
+        setManagementReportId(null);
         setManagementReportData({});
         setManagementEditorState(false);
     };
@@ -940,6 +943,7 @@ const Reports = () => {
                                             managementReportEditorHandler={
                                                 managementReportEditorHandler
                                             }
+                                            activeReportId={managementReportId}
                                         />
                                     ))
                                 )}
