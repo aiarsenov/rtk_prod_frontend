@@ -70,7 +70,7 @@
     ],
     "management-report-types": [
         { "label": "Наименование", "key": "name" },
-        { "label": "Должность отвественного", "key": "position_id" },
+        { "label": "Должность ответственного", "key": "position_id" },
         { "label": "Кол-во отчётов", "key": "count" },
         { "label": "Последнее изменение", "key": "updated_at" },
         { "label": "Автор измнения", "key": "updated_by" }

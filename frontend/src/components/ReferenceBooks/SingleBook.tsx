@@ -43,6 +43,7 @@ const SingleBook = () => {
     const [listLength, setListLength] = useState(0);
 
     const [rolesAction, setRolesAction] = useState({ action: "", roleId: "" }); // Состояние генерации отчетов в справочнике Роли в проектах
+    const [managementReportTypeAction, setManagementReportTypeAction] = useState({ action: "", typeId: "" });
     const [isNewElem, setIsNewElem] = useState(false); // Попап добавления записи
     const [isEditElem, setIsEditElem] = useState(false); // Попап изменения записи
     const [isDeleteElem, setIsDeleteElem] = useState(false); // Попап удаления записи
@@ -219,6 +220,52 @@ const SingleBook = () => {
             })
             .catch((error) => {
                 // toast.dismiss(query);
+                toast.error(error.message || "Ошибка операции", {
+                    isLoading: false,
+                    autoClose: 2500,
+                    pauseOnFocusLoss: false,
+                    pauseOnHover: false,
+                    position:
+                        window.innerWidth >= 1440
+                            ? "bottom-right"
+                            : "top-right",
+                    containerId: "singleBook",
+                });
+            });
+    };
+
+    // Изменение генерации отчетов менеджмента
+    const toggleManagementReportTypeResponse = (action) => {
+        if (mode === "read") {
+            return;
+        }
+
+        postData(
+            "POST",
+            `${import.meta.env.VITE_API_URL}management-report-types/${
+                managementReportTypeAction.typeId
+            }/toggle`,
+            action
+        )
+            .then((response) => {
+                if (response?.ok) {
+                    setManagementReportTypeAction({ action: "", typeId: "" });
+                    getBooks();
+                } else {
+                    toast.error(response.message || "Ошибка операции", {
+                        isLoading: false,
+                        autoClose: 2500,
+                        pauseOnFocusLoss: false,
+                        pauseOnHover: false,
+                        position:
+                            window.innerWidth >= 1440
+                                ? "bottom-right"
+                                : "top-right",
+                        containerId: "singleBook",
+                    });
+                }
+            })
+            .catch((error) => {
                 toast.error(error.message || "Ошибка операции", {
                     isLoading: false,
                     autoClose: 2500,
@@ -832,13 +879,20 @@ const SingleBook = () => {
             });
     };
 
-    // Открытие попапа удаления зависи
+    // Открытие попапа удаления записи
     const handleOpenDeletePopup = (data) => {
-        setElemToDelete(data);
-        setIsDeleteElem(true);
+        if (bookId === "management-report-types") {
+            setManagementReportTypeAction({
+                action: "disable",
+                typeId: data.id,
+            });
+        } else {
+            setElemToDelete(data);
+            setIsDeleteElem(true);
+        }
     };
 
-    // Открытие попапа добавления зависи
+    // Открытие попапа добавления записи
     const handleOpenNewPopup = () => {
         const editableFields = (REFERENCE_LABELS[bookId] || [])
             .filter((field) => EDITABLE_KEYS.includes(field.key))
@@ -1275,16 +1329,18 @@ const SingleBook = () => {
                 />
             )}
 
-            {isDeleteElem && mode === "edit" && (
-                <ReferenceDeleteElemForm
-                    bookId={bookId}
-                    elemToDelete={elemToDelete}
-                    resetElemPopupState={resetElemPopupState}
-                    deleteContact={deleteContact}
-                    deleteContactElem={deleteContactElem}
-                    deleteElement={deleteElement}
-                />
-            )}
+            {isDeleteElem &&
+                mode === "edit" &&
+                bookId !== "management-report-types" && (
+                    <ReferenceDeleteElemForm
+                        bookId={bookId}
+                        elemToDelete={elemToDelete}
+                        resetElemPopupState={resetElemPopupState}
+                        deleteContact={deleteContact}
+                        deleteContactElem={deleteContactElem}
+                        deleteElement={deleteElement}
+                    />
+                )}
 
             {rolesAction.action != "" &&
                 mode === "edit" &&
@@ -1382,6 +1438,72 @@ const SingleBook = () => {
                                         </button>
                                     </>
                                 )}
+                            </div>
+                        </div>
+                    </Popup>
+                )}
+
+            {managementReportTypeAction.action != "" &&
+                mode === "edit" &&
+                bookId === "management-report-types" && (
+                    <Popup
+                        onClick={() => {
+                            setManagementReportTypeAction({
+                                action: "",
+                                typeId: "",
+                            });
+                        }}
+                        title="Отключение генерации отчетов"
+                    >
+                        <div className="action-form__body">
+                            <p>
+                                Начиная с текущего месяца отчёты менеджмента
+                                данного типа перестанут генерироваться. Что
+                                следует сделать с ранее созданными отчетами?
+                            </p>
+
+                            <div className="flex flex-col gap-[15px] mt-[15px]">
+                                <button
+                                    type="button"
+                                    className="cancel-button"
+                                    title="Безвозвратно удалить"
+                                    onClick={() =>
+                                        toggleManagementReportTypeResponse({
+                                            action: "disable",
+                                            policy: "delete",
+                                        })
+                                    }
+                                >
+                                    Безвозвратно удалить
+                                </button>
+
+                                <button
+                                    type="button"
+                                    className="cancel-button"
+                                    title="Скрыть из списка"
+                                    onClick={() =>
+                                        toggleManagementReportTypeResponse({
+                                            action: "disable",
+                                            policy: "hide",
+                                        })
+                                    }
+                                >
+                                    Скрыть из списка
+                                </button>
+
+                                <button
+                                    type="button"
+                                    className="action-button"
+                                    title="Оставить в списке"
+                                    onClick={() =>
+                                        toggleManagementReportTypeResponse({
+                                            action: "disable",
+                                            policy: "keep",
+                                        })
+                                    }
+                                >
+                                    Оставить в списке
+                                </button>
                             </div>
                         </div>
                     </Popup>

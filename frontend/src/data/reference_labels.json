@@ -45,7 +45,7 @@
     ],
     "management-report-types": [
         { "label": "Наименование", "key": "name" },
-        { "label": "Должность отвественного", "key": "position_id" }
+        { "label": "Должность ответственного", "key": "position_id" }
     ],
     "request-sources": [
         { "label": "Наименование", "key": "name" }

@@ -21,11 +21,20 @@ const ReferenceNewElemForm = ({
                 bookId === "contragent" ||
                 bookId === "suppliers-with-reports"
                     ? "Создать контакт"
+                    : bookId === "management-report-types"
+                    ? "Создать тип отчёта"
                     : "Создать запись"
             }
         >
             <form>
                 <div className="action-form__body flex flex-col gap-[18px]">
+                    {bookId === "management-report-types" && (
+                        <p className="text-sm text-gray-600">
+                            Созданный тип отчёта начнёт генерироваться начиная с
+                            текущего месяца. Первая генерация будет произведена
+                            в 00:00 первого числа следующего месяца.
+                        </p>
+                    )}
                     {popupFields.length > 0 &&
                         popupFields.map(({ key, label, value }) => {
                             if (key === "phone") {
