@@ -582,7 +582,7 @@ const ContragentCard = () => {
                                                         "projectReports"
                                                     )
                                                 }
-                                                aria-label="Открыть вкладку Отчёты ответственного"
+                                                aria-label="Открыть вкладку Отчёты ответственных"
                                             >
                                                 <input
                                                     id="managementReports"
@@ -599,7 +599,7 @@ const ContragentCard = () => {
                                                     }
                                                 />
                                                 <label htmlFor="managementReports">
-                                                Отчёты ответственногоа
+                                                Отчёты ответственных
                                                 </label>
                                             </div>
                                         </nav>

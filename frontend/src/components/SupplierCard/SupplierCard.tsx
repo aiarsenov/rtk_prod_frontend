@@ -677,7 +677,7 @@ const SupplierCard = () => {
                                                     "projectReports"
                                                 )
                                             }
-                                            aria-label="Открыть вкладку Отчёты ответственного"
+                                            aria-label="Открыть вкладку Отчёты ответственных"
                                         >
                                             <input
                                                 id="managementReports"
@@ -694,7 +694,7 @@ const SupplierCard = () => {
                                                 }
                                             />
                                             <label htmlFor="managementReports">
-                                            Отчёты ответственного
+                                            Отчёты ответственных
                                             </label>
                                         </div>
                                     </nav>
@@ -798,7 +798,7 @@ const SupplierCard = () => {
                                         onClick={() =>
                                             setActiveReportTab("projectReports")
                                         }
-                                        aria-label="Открыть вкладку Отчёты ответственного"
+                                        aria-label="Открыть вкладку Отчёты ответственных"
                                     >
                                         <input
                                             id="managementReports"
@@ -815,7 +815,7 @@ const SupplierCard = () => {
                                             }
                                         />
                                         <label htmlFor="managementReports">
-                                        Отчёты ответственного
+                                        Отчёты ответственных
                                         </label>
                                     </div>
                                 </nav>
