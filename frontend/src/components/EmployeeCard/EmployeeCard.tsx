@@ -652,10 +652,10 @@ const EmployeeCard = () => {
                                         />
                                     </div>
 
-                                    <div>
-                                        <div className="form-label">Статус</div>
+                                    {cardDataCustom.is_staff && (
+                                        <div>
+                                            <div className="form-label">Статус</div>
 
-                                        {cardDataCustom.is_staff && (
                                             <CreatableSelect
                                                 options={STATUSES}
                                                 className="form-select-extend"
@@ -734,8 +734,8 @@ const EmployeeCard = () => {
                                                     }),
                                                 }}
                                             />
-                                        )}
-                                    </div>
+                                        </div>
+                                    )}
                                 </div>
                             </section>
 

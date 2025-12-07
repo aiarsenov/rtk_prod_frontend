@@ -17,8 +17,12 @@ const EmployeeItem = ({ props, columns }) => {
                 }
 
                 if (key === "status") {
-                    const isActive = props.is_active;
-                    value = isActive ? "Работает" : "Не работает";
+                    if (props.is_staff === false) {
+                        value = "—";
+                    } else {
+                        const isActive = props.is_active;
+                        value = isActive ? "Работает" : "Не работает";
+                    }
                 }
 
                 if (Array.isArray(value) && value.length > 0) {
@@ -103,6 +107,18 @@ const EmployeeItem = ({ props, columns }) => {
                             </td>
                         );
                     } else if (key === "status") {
+                        // Для внештатных сотрудников не показываем статус с классом
+                        if (props.is_staff === false) {
+                            return (
+                                <td
+                                    className="px-4 py-7 min-w-[180px] max-w-[200px]"
+                                    key={key}
+                                >
+                                    —
+                                </td>
+                            );
+                        }
+
                         let statusClass;
                         const isActive = props.is_active;
 
