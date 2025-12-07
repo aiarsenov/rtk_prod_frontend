@@ -249,7 +249,20 @@ const SingleBook = () => {
         )
             .then((response) => {
                 if (response?.ok) {
+                    const typeIdToRemove = managementReportTypeAction.typeId;
                     setManagementReportTypeAction({ action: "", typeId: "" });
+
+                    setBooksItems((prevBooksItems) =>
+                        prevBooksItems.filter(
+                            (item) => item.id !== typeIdToRemove
+                        )
+                    );
+                    setRefBooksItems((prevBooksItems) =>
+                        prevBooksItems.filter(
+                            (item) => item.id !== typeIdToRemove
+                        )
+                    );
+
                     getBooks();
                 } else {
                     toast.error(response.message || "Ошибка операции", {
