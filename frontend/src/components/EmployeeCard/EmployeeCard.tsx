@@ -307,19 +307,21 @@ const EmployeeCard = () => {
                                     disabled
                                 />
 
-                                <span
-                                    className={`status
-                                    ${
-                                        cardDataCustom?.is_active === true
-                                            ? "completed"
-                                            : ""
-                                    }
-                                `}
-                                >
-                                    {cardDataCustom?.is_active
-                                        ? "Работает"
-                                        : "Не работает"}
-                                </span>
+                                {cardDataCustom?.is_staff && (
+                                    <span
+                                        className={`status
+                                        ${
+                                            cardDataCustom?.is_active === true
+                                                ? "completed"
+                                                : ""
+                                        }
+                                    `}
+                                    >
+                                        {cardDataCustom?.is_active
+                                            ? "Работает"
+                                            : "Не работает"}
+                                    </span>
+                                )}
                             </div>
 
                             <section className="card__general-info employee-card__general-info">
