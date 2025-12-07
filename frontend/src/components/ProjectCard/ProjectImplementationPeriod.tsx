@@ -67,10 +67,10 @@ const ProjectImplementationPeriod = ({ projectData }) => {
                     <>
                         <span className="active">срок реализации</span>
 
-                        {projectData?.completion_percentage !== 0 && (
+                        {percentage !== 0 && (
                             <span className="flex items-center gap-[10px]">
                                 <span>
-                                    {projectData?.completion_percentage}%
+                                    {percentage}%
                                 </span>
 
                                 {projectData?.implementation_period_string}
@@ -80,7 +80,6 @@ const ProjectImplementationPeriod = ({ projectData }) => {
                         {percentage && (
                             <ProgressBlock
                                 percentage={percentage}
-                                date={date}
                             />
                         )}
                     </>

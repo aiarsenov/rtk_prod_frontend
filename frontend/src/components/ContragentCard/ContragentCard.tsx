@@ -582,7 +582,7 @@ const ContragentCard = () => {
                                                         "projectReports"
                                                     )
                                                 }
-                                                aria-label="Открыть вкладку Отчёты руководителя проекта"
+                                                aria-label="Открыть вкладку Отчёты ответственного"
                                             >
                                                 <input
                                                     id="managementReports"
@@ -599,7 +599,7 @@ const ContragentCard = () => {
                                                     }
                                                 />
                                                 <label htmlFor="managementReports">
-                                                    Отчёты руководителя проекта
+                                                Отчёты ответственногоа
                                                 </label>
                                             </div>
                                         </nav>
@@ -710,7 +710,7 @@ const ContragentCard = () => {
                                         onClick={() =>
                                             setActiveReportTab("projectReports")
                                         }
-                                        aria-label="Открыть вкладку Отчёты руководителя проекта"
+                                        aria-label="Открыть вкладку Отчёты ответственного"
                                     >
                                         <input
                                             id="managementReports"
@@ -727,7 +727,7 @@ const ContragentCard = () => {
                                             }
                                         />
                                         <label htmlFor="managementReports">
-                                            Отчёты руководителя проекта
+                                            Отчёты ответственного
                                         </label>
                                     </div>
                                 </nav>
