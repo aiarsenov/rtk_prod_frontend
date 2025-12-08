@@ -36,15 +36,16 @@ const CardReportsList = ({
                             item.status?.toLowerCase() === "завершён" ||
                             item.status?.toLowerCase() === "утверждён"
                         ) {
-                            statusClass =
-                                "reports__list-item__status_completed completed";
+                            statusClass = "completed";
                         } else if (
                             item.status?.toLowerCase() === "в процессе" ||
-                            item.status?.toLowerCase() === "запланирован" ||
                             item.status?.toLowerCase() === "в работе"
                         ) {
-                            statusClass =
-                                "reports__list-item__status_active active";
+                            statusClass = "status_inprogress";
+                        } else if (
+                            item.status?.toLowerCase() === "запланирован"
+                        ) {
+                            return "";
                         }
 
                         return (
