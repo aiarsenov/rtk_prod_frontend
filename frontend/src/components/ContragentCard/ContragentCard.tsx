@@ -362,13 +362,13 @@ const ContragentCard = () => {
                                 />
 
                                 <span
-                                    className={`status
-                                    ${
+                                    className={`status status_new ${
                                         cardData?.status === "active"
                                             ? "active"
                                             : cardData?.status === "completed"
-                                    }
-                                `}
+                                            ? "completed"
+                                            : ""
+                                    }`}
                                 >
                                     {handleStatus(cardData?.status)}
                                 </span>
@@ -599,7 +599,7 @@ const ContragentCard = () => {
                                                     }
                                                 />
                                                 <label htmlFor="managementReports">
-                                                Отчёты ответственных
+                                                    Отчёты ответственных
                                                 </label>
                                             </div>
                                         </nav>

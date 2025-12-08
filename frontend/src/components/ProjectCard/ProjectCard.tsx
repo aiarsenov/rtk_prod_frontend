@@ -918,14 +918,14 @@ const ProjectCard = () => {
                                 />
 
                                 <span
-                                    className={`status
-                                    ${
+                                    className={`status status_new ${
                                         projectData?.status === "active"
                                             ? "active"
                                             : projectData?.status ===
                                               "completed"
-                                    }
-                                `}
+                                            ? "completed"
+                                            : ""
+                                    }`}
                                 >
                                     {handleStatus(projectData?.status)}
                                 </span>
@@ -1697,7 +1697,7 @@ const ProjectCard = () => {
                                         }
                                     />
                                     <label htmlFor="managementReports">
-                                    Отчёты ответственных
+                                        Отчёты ответственных
                                     </label>
                                 </div>
                             </nav>

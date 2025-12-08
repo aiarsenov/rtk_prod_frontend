@@ -180,6 +180,21 @@
             line-height: 120%;
             min-width: 0;
         }
+
+        .status_new {
+            color: var(--color-red-70);
+            background: var(--color-red-30);
+
+            &.completed {
+                color: var(--color-orange-80);
+                background: var(--color-orange-30);
+            }
+
+            &.active {
+                color: var(--color-green-80);
+                background: var(--color-green-30);
+            }
+        }
     }
 
     &__tabs {

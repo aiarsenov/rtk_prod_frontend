@@ -926,7 +926,7 @@ const ReportWindow = ({
                                                                 "report_type_id"
                                                             );
                                                         }}
-                                                        disabled={
+                                                        isDisabled={
                                                             mode == "read"
                                                         }
                                                         styles={{
