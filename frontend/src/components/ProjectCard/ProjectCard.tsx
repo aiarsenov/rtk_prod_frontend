@@ -844,7 +844,7 @@ const ProjectCard = () => {
 
     useEffect(() => {
         if (
-            !autoFilterAppliedRef.current &&
+            // !autoFilterAppliedRef.current &&
             matchedBanks.length > 0 &&
             creditors.length > 0
             // && filteredCreditors.length === creditors.length
