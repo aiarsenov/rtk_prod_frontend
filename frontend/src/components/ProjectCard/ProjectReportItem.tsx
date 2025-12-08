@@ -17,13 +17,14 @@ const ProjectReportItem = ({
         status?.toLowerCase() === "завершён" ||
         status?.toLowerCase() === "утверждён"
     ) {
-        statusClass = "reports__list-item__status_completed completed";
+        statusClass = "completed";
     } else if (
         status?.toLowerCase() === "в процессе" ||
-        status?.toLowerCase() === "запланирован" ||
         status?.toLowerCase() === "в работе"
     ) {
-        statusClass = "reports__list-item__status_active active";
+        statusClass = "status_inprogress";
+    } else if (status?.toLowerCase() === "запланирован") {
+        return "";
     }
 
     return (

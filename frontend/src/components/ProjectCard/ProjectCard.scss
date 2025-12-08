@@ -76,6 +76,21 @@
                     border-radius: 99px;
                     padding: 3px 8px;
                 }
+
+                .status {
+                    color: var(--color-gray-70);
+                    background: var(--color-gray-30);
+
+                    &.completed {
+                        color: var(--color-purple-80);
+                        background: var(--color-purple-30);
+                    }
+
+                    &.active {
+                        color: var(--color-green-80);
+                        background: var(--color-green-30);
+                    }
+                }
             }
 
             &-period {
