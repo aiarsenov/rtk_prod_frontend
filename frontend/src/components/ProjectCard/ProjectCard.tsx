@@ -850,11 +850,14 @@ const ProjectCard = () => {
             filteredCreditors.length === creditors.length
         ) {
             const firstBankId = matchedBanks[0].id;
+            console.log(firstBankId);
+            console.log(creditors);
+
             const newFilteredCreditors = creditors.filter(
                 (lender) => +lender.creditor_id === +firstBankId
             );
             console.log(newFilteredCreditors);
-            
+
             setFilteredCreditors(newFilteredCreditors);
             autoFilterAppliedRef.current = true;
         }
