@@ -19,9 +19,9 @@ const ProjectReportsList = ({
             <ul className="reports__list">
                 {!isDataLoaded && <Loader />}
 
-                {reports.map((report, index) => (
+                {reports.map((report) => (
                     <ProjectReportItem
-                        key={report.id || index}
+                        key={report.id}
                         {...report}
                         deleteReport={deleteReport}
                         openReportEditor={openReportEditor}

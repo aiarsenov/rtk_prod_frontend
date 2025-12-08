@@ -838,9 +838,9 @@ const ProjectCard = () => {
         }
     }, [creditors, banks]);
 
-    useEffect(() => {
-        console.log(matchedBanks);
-    }, [matchedBanks]);
+    // useEffect(() => {
+    //     console.log(matchedBanks);
+    // }, [matchedBanks]);
 
     useEffect(() => {
         if (

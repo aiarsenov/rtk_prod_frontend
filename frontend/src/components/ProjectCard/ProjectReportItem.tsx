@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 const ProjectReportItem = ({
     id,
     report_period_code,
@@ -24,7 +26,7 @@ const ProjectReportItem = ({
     ) {
         statusClass = "status_inprogress";
     } else if (status?.toLowerCase() === "запланирован") {
-        return "";
+        statusClass = "";
     }
 
     return (
