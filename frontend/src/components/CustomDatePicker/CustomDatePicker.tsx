@@ -229,7 +229,7 @@ const CustomDatePicker = ({
                                                 value: year,
                                                 label: year.toString(),
                                             }))}
-                                            className="form-select-extend sale-funnel-stages__datepicker sale-funnel-stages__datepicker_center custom-datepicker__select-year form-select-extend_nosearch"
+                                            className="form-select-extend text-center custom-datepicker__select-year form-select-extend_nosearch"
                                             placeholder=""
                                             components={{
                                                 DropdownIndicator: () => null,
@@ -326,7 +326,7 @@ const CustomDatePicker = ({
 
                                         <CreatableSelect
                                             options={monthOptions}
-                                            className="sale-funnel-stages__datepicker form-select-extend form-select-extend_nosearch"
+                                            className="form-select-extend form-select-extend_nosearch"
                                             placeholder=""
                                             noOptionsMessage={() =>
                                                 "Совпадений нет"
@@ -362,7 +362,7 @@ const CustomDatePicker = ({
                                                 value: year,
                                                 label: year.toString(),
                                             }))}
-                                            className="form-select-extend sale-funnel-stages__datepicker custom-datepicker__select-year form-select-extend_nosearch"
+                                            className="form-select-extend custom-datepicker__select-year form-select-extend_nosearch"
                                             placeholder=""
                                             noOptionsMessage={() =>
                                                 "Совпадений нет"

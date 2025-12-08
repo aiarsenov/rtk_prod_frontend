@@ -65,19 +65,6 @@
             width: fit-content;
         }
 
-        &__datepicker {
-            [class*="-control"]:not([aria-disabled="true"])
-                [class*="-indicatorContainer"] {
-                width: 15px !important;
-            }
-
-            &_center {
-                [class*="-control"] {
-                    text-align: center;
-                }
-            }
-        }
-
         &__list {
             display: flex;
             flex-direction: column;

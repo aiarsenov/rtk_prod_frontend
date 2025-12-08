@@ -110,6 +110,19 @@
             gap: 10px;
         }
 
+        .form-select-extend {
+            [class*="-control"]:not([aria-disabled="true"])
+                [class*="-indicatorContainer"] {
+                width: 15px !important;
+            }
+
+            &.text-center {
+                [class*="-control"] {
+                    text-align: center;
+                }
+            }
+        }
+
         &_months {
             gap: 10px;
 
