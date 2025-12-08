@@ -28,6 +28,7 @@ const TeammatesSection = ({
                     <button
                         className="delete-button"
                         title="Удалить участника"
+                        type="button"
                         onClick={() => removeTeammate(index)}
                     >
                         <svg

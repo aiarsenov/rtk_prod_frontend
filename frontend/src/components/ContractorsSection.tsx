@@ -64,6 +64,7 @@ const ContractorsSection = ({
                     <button
                         className="delete-button"
                         title="Удалить подрядчика"
+                        type="button"
                         onClick={() => removeContractor(index)}
                     >
                         <svg
