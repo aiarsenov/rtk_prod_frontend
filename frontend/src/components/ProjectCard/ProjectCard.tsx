@@ -77,7 +77,7 @@ const ProjectCard = () => {
 
     const [creditors, setCreditors] = useState([]); // Кредиторы
     const [filteredCreditors, setFilteredCreditors] = useState([]);
-    const autoFilterAppliedRef = useRef(false); // Флаг для отслеживания применения автоматической фильтрации
+    // const autoFilterAppliedRef = useRef(false); // Флаг для отслеживания применения автоматической фильтрации
     const [customers, setCustomers] = useState([]); // Заказчики
 
     const [addCreditor, setAddCreditor] = useState(false); // Добавить кредитора
@@ -838,10 +838,6 @@ const ProjectCard = () => {
         }
     }, [creditors, banks]);
 
-    // useEffect(() => {
-    //     console.log(matchedBanks);
-    // }, [matchedBanks]);
-
     useEffect(() => {
         if (
             // !autoFilterAppliedRef.current &&
@@ -859,12 +855,12 @@ const ProjectCard = () => {
             console.log(newFilteredCreditors);
 
             setFilteredCreditors(newFilteredCreditors);
-            autoFilterAppliedRef.current = true;
+            // autoFilterAppliedRef.current = true;
         }
 
-        if (creditors.length === 0) {
-            autoFilterAppliedRef.current = false;
-        }
+        // if (creditors.length === 0) {
+        //     autoFilterAppliedRef.current = false;
+        // }
     }, [matchedBanks, creditors]);
 
     useEffect(() => {
