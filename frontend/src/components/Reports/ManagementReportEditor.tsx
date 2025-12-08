@@ -214,8 +214,6 @@ const ManagementReportEditor = ({
                                             ""
                                         }
                                         onChange={(e) => {
-                                            console.log(e.target.value);
-
                                             handleTextArea(e, currentTab);
                                         }}
                                         disabled={mode == "read"}
