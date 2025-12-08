@@ -30,6 +30,11 @@ const ContragentItem = ({
                         statusClass = "registry-table__item-status_completed";
                     } else if (value === "active") {
                         statusClass = "registry-table__item-status_active";
+                    } else if (
+                        value === "undefined" ||
+                        value === "not_active"
+                    ) {
+                        statusClass = "registry-table__item-status_canceled";
                     }
                 }
 
