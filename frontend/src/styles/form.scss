@@ -314,6 +314,18 @@
     }
 
     &-select-extend {
+        &_nosearch {
+            > [class*="-control"] {
+                padding: 5px;
+                text-align: left;
+            }
+
+            [class*="-control"]:not([aria-disabled="true"])
+                [class*="-indicatorContainer"] {
+                padding: 0;
+            }
+        }
+
         > [class*="-control"] {
             padding: 3px 5px;
             border-radius: 10px;

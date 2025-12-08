@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 import DatePicker, { registerLocale } from "react-datepicker";
+import CreatableSelect from "react-select/creatable";
 import { ru } from "date-fns/locale";
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -24,6 +25,17 @@ const areDatesEqual = (date1: Date | null, date2: Date | null): boolean => {
         date1.getDate() === date2.getDate()
     );
 };
+
+// Генерируем список месяцев
+const monthOptions = Array.from({ length: 12 }, (_, i) => {
+    const name = new Date(0, i).toLocaleString("ru-RU", { month: "long" });
+    const capitalized = name.charAt(0).toUpperCase() + name.slice(1);
+
+    return {
+        value: i,
+        label: capitalized,
+    };
+});
 
 const CustomDatePicker = ({
     type = "days",
@@ -201,7 +213,7 @@ const CustomDatePicker = ({
                         <div
                             className={`custom-datepicker__header custom-datepicker__header_${type}`}
                         >
-                            <div className="flex items-center gap-[10px]">
+                            <div className="flex items-center gap-[10px] flex-grow">
                                 {type === "months" ? (
                                     <>
                                         <button
@@ -209,9 +221,49 @@ const CustomDatePicker = ({
                                             disabled={prevMonthButtonDisabled}
                                             className="custom-datepicker__header-actions-prev-btn"
                                             title="Предыдущий год"
+                                            type="button"
                                         ></button>
 
-                                        <select
+                                        <CreatableSelect
+                                            options={years.map((year) => ({
+                                                value: year,
+                                                label: year.toString(),
+                                            }))}
+                                            className="form-select-extend sale-funnel-stages__datepicker sale-funnel-stages__datepicker_center custom-datepicker__select-year form-select-extend_nosearch"
+                                            placeholder=""
+                                            components={{
+                                                DropdownIndicator: () => null,
+                                                IndicatorSeparator: () => null,
+                                            }}
+                                            noOptionsMessage={() =>
+                                                "Совпадений нет"
+                                            }
+                                            isValidNewOption={() => false}
+                                            isSearchable={false}
+                                            value={{
+                                                value: date.getFullYear(),
+                                                label: date
+                                                    .getFullYear()
+                                                    .toString(),
+                                            }}
+                                            onChange={(selectedOption) => {
+                                                const newValue = Number(
+                                                    selectedOption?.value
+                                                );
+                                                changeYear(newValue);
+                                            }}
+                                            styles={{
+                                                input: (base) => ({
+                                                    ...base,
+                                                    maxWidth: "100%",
+                                                    whiteSpace: "nowrap",
+                                                    overflow: "hidden",
+                                                    textOverflow: "ellipsis",
+                                                }),
+                                            }}
+                                        />
+
+                                        {/* <select
                                             className="form-select custom-datepicker__select-year"
                                             value={date.getFullYear()}
                                             onChange={(e) =>
@@ -225,18 +277,19 @@ const CustomDatePicker = ({
                                                     {year}
                                                 </option>
                                             ))}
-                                        </select>
+                                        </select> */}
 
                                         <button
                                             onClick={increaseYear}
                                             disabled={nextMonthButtonDisabled}
                                             className="custom-datepicker__header-actions-next-btn"
                                             title="Следующий год"
+                                            type="button"
                                         ></button>
                                     </>
                                 ) : (
                                     <>
-                                        <select
+                                        {/* <select
                                             className="form-select"
                                             value={date.getMonth()}
                                             onChange={(e) =>
@@ -269,9 +322,77 @@ const CustomDatePicker = ({
                                                     );
                                                 }
                                             )}
-                                        </select>
+                                        </select> */}
 
-                                        <select
+                                        <CreatableSelect
+                                            options={monthOptions}
+                                            className="sale-funnel-stages__datepicker form-select-extend form-select-extend_nosearch"
+                                            placeholder=""
+                                            noOptionsMessage={() =>
+                                                "Совпадений нет"
+                                            }
+                                            isSearchable={false}
+                                            isValidNewOption={() => false}
+                                            value={
+                                                monthOptions.find(
+                                                    (item) =>
+                                                        item.value ===
+                                                        date.getMonth()
+                                                ) || null
+                                            }
+                                            onChange={(selectedOption) => {
+                                                const newValue = Number(
+                                                    selectedOption?.value
+                                                );
+                                                changeMonth(newValue);
+                                            }}
+                                            styles={{
+                                                input: (base) => ({
+                                                    ...base,
+                                                    maxWidth: "100%",
+                                                    whiteSpace: "nowrap",
+                                                    overflow: "hidden",
+                                                    textOverflow: "ellipsis",
+                                                }),
+                                            }}
+                                        />
+
+                                        <CreatableSelect
+                                            options={years.map((year) => ({
+                                                value: year,
+                                                label: year.toString(),
+                                            }))}
+                                            className="form-select-extend sale-funnel-stages__datepicker custom-datepicker__select-year form-select-extend_nosearch"
+                                            placeholder=""
+                                            noOptionsMessage={() =>
+                                                "Совпадений нет"
+                                            }
+                                            isValidNewOption={() => false}
+                                            isSearchable={false}
+                                            value={{
+                                                value: date.getFullYear(),
+                                                label: date
+                                                    .getFullYear()
+                                                    .toString(),
+                                            }}
+                                            onChange={(selectedOption) => {
+                                                const newValue = Number(
+                                                    selectedOption?.value
+                                                );
+                                                changeYear(newValue);
+                                            }}
+                                            styles={{
+                                                input: (base) => ({
+                                                    ...base,
+                                                    maxWidth: "100%",
+                                                    whiteSpace: "nowrap",
+                                                    overflow: "hidden",
+                                                    textOverflow: "ellipsis",
+                                                }),
+                                            }}
+                                        />
+
+                                        {/* <select
                                             className="form-select custom-datepicker__select-year"
                                             value={date.getFullYear()}
                                             onChange={(e) =>
@@ -285,7 +406,7 @@ const CustomDatePicker = ({
                                                     {year}
                                                 </option>
                                             ))}
-                                        </select>
+                                        </select> */}
                                     </>
                                 )}
                             </div>
@@ -297,6 +418,7 @@ const CustomDatePicker = ({
                                         disabled={prevMonthButtonDisabled}
                                         className="custom-datepicker__header-actions-prev-btn"
                                         title="Предыдущий месяц"
+                                        type="button"
                                     ></button>
 
                                     <button
@@ -304,6 +426,7 @@ const CustomDatePicker = ({
                                         disabled={nextMonthButtonDisabled}
                                         className="custom-datepicker__header-actions-next-btn"
                                         title="Следующий месяц"
+                                        type="button"
                                     ></button>
                                 </div>
                             )}
@@ -316,10 +439,15 @@ const CustomDatePicker = ({
                 <button
                     className="cancel-button"
                     onClick={() => closePicker(false)}
+                    type="button"
                 >
                     Отменить
                 </button>
-                <button className="action-button" onClick={handleApply}>
+                <button
+                    className="action-button"
+                    onClick={handleApply}
+                    type="button"
+                >
                     Применить
                 </button>
             </div>

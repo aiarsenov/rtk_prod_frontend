@@ -61,31 +61,32 @@ const ManagementReportEditor = ({
     useBodyScrollLock(editorState);
 
     // Обработчик ESC для закрытия панели детализации отчета
-    // useEffect(() => {
-    //     const handleEscKey = (event: KeyboardEvent) => {
-    //         if (
-    //             (event.key === "Escape" || event.keyCode === 27) &&
-    //             editorState &&
-    //             !saveBeforeClose
-    //         ) {
-    //             event.preventDefault();
-    //             event.stopPropagation();
-    //             resetState();
-    //         }
-    //     };
+    useEffect(() => {
+        const handleEscKey = (event: KeyboardEvent) => {
+            if (
+                (event.key === "Escape" || event.key === 27) &&
+                editorState 
+                &&
+                !saveBeforeClose
+            ) {
+                event.preventDefault();
+                event.stopPropagation();
+                resetState();
+            }
+        };
 
-    //     if (editorState) {
-    //         window.addEventListener("keydown", handleEscKey, true);
-    //         // Устанавливаем фокус на форму для обработки событий клавиатуры
-    //         setTimeout(() => {
-    //             formRef.current?.focus();
-    //         }, 100);
-    //     }
+        if (editorState) {
+            window.addEventListener("keydown", handleEscKey, true);
+            // Устанавливаем фокус на форму для обработки событий клавиатуры
+            // setTimeout(() => {
+            //     formRef.current?.focus();
+            // }, 100);
+        }
 
-    //     return () => {
-    //         window.removeEventListener("keydown", handleEscKey, true);
-    //     };
-    // }, [editorState, saveBeforeClose, resetState]);
+        return () => {
+            window.removeEventListener("keydown", handleEscKey, true);
+        };
+    }, [editorState, saveBeforeClose, resetState]);
 
     return !saveBeforeClose ? (
         <div

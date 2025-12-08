@@ -65,6 +65,19 @@
             width: fit-content;
         }
 
+        &__datepicker {
+            [class*="-control"]:not([aria-disabled="true"])
+                [class*="-indicatorContainer"] {
+                width: 15px !important;
+            }
+
+            &_center {
+                [class*="-control"] {
+                    text-align: center;
+                }
+            }
+        }
+
         &__list {
             display: flex;
             flex-direction: column;
@@ -88,10 +101,10 @@
                         font-weight: 500;
                         font-size: 14px;
                         line-height: 150%;
-                    }
 
-                    input {
-                        width: 120px;
+                        input {
+                            width: 120px;
+                        }
                     }
 
                     .hint {
@@ -281,7 +294,6 @@
     display: grid;
     color: var(--color-gray-70);
     font-weight: 500;
-
 
     @media (min-width: $media-xxl) {
         grid-template-columns: 55% 17% 19%;

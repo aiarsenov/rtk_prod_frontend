@@ -64,6 +64,11 @@
     overflow: hidden;
     background: var(--color-white);
 
+    .form-select-extend {
+        // max-width: 115px;
+        flex: 1 0 80px;
+    }
+
     // Сбрасываем стили пикера
     .react-datepicker__month-text:hover,
     .react-datepicker__month-text {
@@ -99,6 +104,7 @@
         justify-content: space-between;
 
         &-actions {
+            flex: 0 0 fit-content;
             display: flex;
             align-items: center;
             gap: 10px;
