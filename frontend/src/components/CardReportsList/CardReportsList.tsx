@@ -45,7 +45,7 @@ const CardReportsList = ({
                         } else if (
                             item.status?.toLowerCase() === "запланирован"
                         ) {
-                            return "";
+                            statusClass = "";
                         }
 
                         return (

@@ -846,8 +846,8 @@ const ProjectCard = () => {
         if (
             !autoFilterAppliedRef.current &&
             matchedBanks.length > 0 &&
-            creditors.length > 0 &&
-            filteredCreditors.length === creditors.length
+            creditors.length > 0
+            // && filteredCreditors.length === creditors.length
         ) {
             const firstBankId = matchedBanks[0].id;
             console.log(firstBankId);
