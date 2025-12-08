@@ -61,31 +61,31 @@ const ManagementReportEditor = ({
     useBodyScrollLock(editorState);
 
     // Обработчик ESC для закрытия панели детализации отчета
-    useEffect(() => {
-        const handleEscKey = (event: KeyboardEvent) => {
-            if (
-                (event.key === "Escape" || event.keyCode === 27) &&
-                editorState &&
-                !saveBeforeClose
-            ) {
-                event.preventDefault();
-                event.stopPropagation();
-                resetState();
-            }
-        };
+    // useEffect(() => {
+    //     const handleEscKey = (event: KeyboardEvent) => {
+    //         if (
+    //             (event.key === "Escape" || event.keyCode === 27) &&
+    //             editorState &&
+    //             !saveBeforeClose
+    //         ) {
+    //             event.preventDefault();
+    //             event.stopPropagation();
+    //             resetState();
+    //         }
+    //     };
 
-        if (editorState) {
-            window.addEventListener("keydown", handleEscKey, true);
-            // Устанавливаем фокус на форму для обработки событий клавиатуры
-            setTimeout(() => {
-                formRef.current?.focus();
-            }, 100);
-        }
+    //     if (editorState) {
+    //         window.addEventListener("keydown", handleEscKey, true);
+    //         // Устанавливаем фокус на форму для обработки событий клавиатуры
+    //         setTimeout(() => {
+    //             formRef.current?.focus();
+    //         }, 100);
+    //     }
 
-        return () => {
-            window.removeEventListener("keydown", handleEscKey, true);
-        };
-    }, [editorState, saveBeforeClose, resetState]);
+    //     return () => {
+    //         window.removeEventListener("keydown", handleEscKey, true);
+    //     };
+    // }, [editorState, saveBeforeClose, resetState]);
 
     return !saveBeforeClose ? (
         <div
@@ -101,21 +101,21 @@ const ManagementReportEditor = ({
                 <div className="bottom-sheet__icon"></div>
 
                 <form
-                        ref={formRef}
-                        className="bottom-sheet__body"
-                        tabIndex={-1}
-                        onKeyDown={(e) => {
-                            if (
-                                (e.key === "Escape" || e.keyCode === 27) &&
-                                editorState &&
-                                !saveBeforeClose
-                            ) {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                resetState();
-                            }
-                        }}
-                    >
+                    ref={formRef}
+                    className="bottom-sheet__body"
+                    tabIndex={-1}
+                    onKeyDown={(e) => {
+                        if (
+                            (e.key === "Escape" || e.keyCode === 27) &&
+                            editorState &&
+                            !saveBeforeClose
+                        ) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            resetState();
+                        }
+                    }}
+                >
                     <div
                         className={`report-window report-rate-editor ${
                             mode === "read" && "report-rate-editor_read-mode"
@@ -204,16 +204,20 @@ const ManagementReportEditor = ({
 
                                     <AutoResizeTextarea
                                         className="form-textarea"
-                                        placeholder="Добавьте описание"
-                                        type="text"
-                                        name="description"
+                                        placeholder={
+                                            mode == "read"
+                                                ? ""
+                                                : "Добавьте описание"
+                                        }
                                         value={
                                             managementReportData[currentTab] ||
                                             ""
                                         }
-                                        onChange={(e) =>
-                                            handleTextArea(e, currentTab)
-                                        }
+                                        onChange={(e) => {
+                                            console.log(e.target.value);
+
+                                            handleTextArea(e, currentTab);
+                                        }}
                                         disabled={mode == "read"}
                                     />
                                 </div>

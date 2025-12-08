@@ -10,7 +10,7 @@ function AutoResizeTextarea({
     minHeight = 78,
 }) {
     const textareaRef = useRef(null);
-    
+
     const resizeTextarea = () => {
         const el = textareaRef.current;
         if (el) {

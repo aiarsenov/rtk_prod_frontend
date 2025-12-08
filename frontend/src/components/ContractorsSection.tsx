@@ -166,26 +166,6 @@ const ContractorsSection = ({
                     }}
                 />
 
-                {/* <select
-                    className="form-select"
-                    value={person?.role_id}
-                    onChange={(e) =>
-                        handleContractorChange(
-                            index,
-                            "role_id",
-                            Number(e.target.value)
-                        )
-                    }
-                    disabled={mode === "read" ? true : false}
-                >
-                    <option value="0">Выберите роль</option>
-                    {roles?.map((role) => (
-                        <option value={role.id} key={role.id}>
-                            {role.name}
-                        </option>
-                    ))}
-                </select> */}
-
                 {person?.contract_id ? (
                     <CreatableSelect
                         options={
