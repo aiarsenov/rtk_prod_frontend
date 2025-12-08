@@ -94,10 +94,7 @@ const ProjectCard = () => {
     const [revenue, setRevenue] = useState({}); // ОСВ
     const [period, setPeriod] = useState("current_year"); // Период ОСВ
 
-    // Закрепленные за карточкой банки для отображения вкладок
-    const matchedBanks = banks.filter((bank) =>
-        creditors?.some((item) => item.creditor_id === bank.id)
-    );
+    const [matchedBanks, setMatchedBanks] = useState([]); // Закрепленные за карточкой банки для отображения вкладок
 
     // Фильтр кредиторов
     const handleFilterCreditors = (evt) => {
@@ -832,6 +829,20 @@ const ProjectCard = () => {
     }, [otherIndustries]);
 
     useEffect(() => {
+        if (creditors.length > 0) {
+            setMatchedBanks(
+                banks.filter((bank) =>
+                    creditors?.some((item) => item.creditor_id === bank.id)
+                )
+            );
+        }
+    }, [creditors, banks]);
+
+    useEffect(() => {
+        console.log(matchedBanks);
+    }, [matchedBanks]);
+
+    useEffect(() => {
         if (
             !autoFilterAppliedRef.current &&
             matchedBanks.length > 0 &&
@@ -842,13 +853,15 @@ const ProjectCard = () => {
             const newFilteredCreditors = creditors.filter(
                 (lender) => +lender.creditor_id === +firstBankId
             );
+            console.log(newFilteredCreditors);
+            
             setFilteredCreditors(newFilteredCreditors);
             autoFilterAppliedRef.current = true;
         }
+
         if (creditors.length === 0) {
             autoFilterAppliedRef.current = false;
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [matchedBanks, creditors]);
 
     useEffect(() => {
