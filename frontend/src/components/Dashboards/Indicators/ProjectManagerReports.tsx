@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 import handleStatusString from "../../../utils/handleStatusString";
 
 import ReportRateEditor from "../../ReportRateEditor/ReportRateEditor";
+import MultiSelectWithSearch from "../../MultiSelect/MultiSelectWithSearch";
 import Hint from "../../Hint/Hint";
 
 const handleStaticStatusClass = (item) => {
@@ -24,7 +25,62 @@ interface ProjectManagerReportItem {
     report_month: string;
     responsible: string;
     status: string;
+    assessment: number;
 }
+
+const rateOptions = [
+    {
+        label: (
+            <span className="flex items-center gap-[5px]">
+                <span
+                    style={{
+                        display: "block",
+                        background: "var(--color-green-60)",
+                        width: "16px",
+                        height: "16px",
+                        borderRadius: "50%",
+                    }}
+                ></span>
+                Проблем нет
+            </span>
+        ),
+        value: 2,
+    },
+    {
+        label: (
+            <span className="flex items-center gap-[5px]">
+                <span
+                    style={{
+                        display: "block",
+                        background: "var(--color-orange-60)",
+                        width: "16px",
+                        height: "16px",
+                        borderRadius: "50%",
+                    }}
+                ></span>
+                Есть сложности
+            </span>
+        ),
+        value: 1,
+    },
+    {
+        label: (
+            <span className="flex items-center gap-[5px]">
+                <span
+                    style={{
+                        display: "block",
+                        background: "var(--color-red-60)",
+                        width: "16px",
+                        height: "16px",
+                        borderRadius: "50%",
+                    }}
+                ></span>
+                Есть проблемы
+            </span>
+        ),
+        value: 0,
+    },
+];
 
 const ProjectManagerReports = ({
     projectManagerReports,
@@ -34,8 +90,11 @@ const ProjectManagerReports = ({
     const [activeReportId, setActiveReportId] = useState<
         number | string | null
     >(null);
+
     const [rateEditorState, setRateEditorState] = useState(false);
     const [reportData, setReportData] = useState({});
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const [selectedRates, setSelectedRates] = useState([]);
 
     // Открытие окна редактора оценки отчета
     const openRateReportEditor = (data) => {
@@ -55,13 +114,22 @@ const ProjectManagerReports = ({
         setRateEditorState(false);
     };
 
+    const filteredManagementReports = useMemo(() => {
+        return projectManagerReports.filter((report) => {
+            return (
+                selectedRates.length === 0 ||
+                selectedRates.includes(report?.assessment?.toString())
+            );
+        });
+    }, [projectManagerReports, selectedRates]);
+
     return (
         <div className="dashboards__block indicators__project-manager-reports">
             <h2 className="card__subtitle">
                 Отчёты ответственных
                 <span>
-                    {projectManagerReports.length > 0 &&
-                        projectManagerReports.length}
+                    {filteredManagementReports.length > 0 &&
+                        filteredManagementReports.length}
                 </span>
                 <Hint message={"Отчёты ответственных"} />
             </h2>
@@ -71,12 +139,92 @@ const ProjectManagerReports = ({
                 <span>Месяц</span>
                 <span>Ответственный</span>
                 <span>Статус</span>
-                <span>Оценка</span>
+
+                <span className="registry-table__thead-item">
+                    Оценка
+                    {selectedRates.length > 0 && (
+                        <button
+                            type="button"
+                            title="Сбросить фильтр"
+                            onClick={() => setSelectedRates([])}
+                        >
+                            <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    d="M9.06 8l3.713 3.712-1.06 1.06L8 9.06l-3.712 3.713-1.061-1.06L6.939 8 3.227 4.287l1.06-1.06L8 6.939l3.712-3.712 1.061 1.06L9.061 8z"
+                                    fill="#000"
+                                />
+                            </svg>
+                        </button>
+                    )}
+                    {filteredManagementReports.length > 0 && (
+                        <button
+                            className={`filter-button ${
+                                isFilterOpen ? "active" : ""
+                            }`}
+                            title={`Открыть фильтр оценки`}
+                            onClick={() => {
+                                if (!isFilterOpen) {
+                                    setIsFilterOpen(true);
+                                } else {
+                                    setIsFilterOpen(false);
+                                }
+                            }}
+                        >
+                            <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    d="M2 5.093l4.8 3.429v6l2.4-1.286V8.522L14 5.093V2.522H2v2.571z"
+                                    fill="currentColor"
+                                />
+                            </svg>
+                        </button>
+                    )}
+                    {isFilterOpen && (
+                        <MultiSelectWithSearch
+                            options={
+                                Array.isArray(rateOptions) &&
+                                rateOptions.length > 0
+                                    ? rateOptions.map((opt) =>
+                                          typeof opt === "string"
+                                              ? {
+                                                    value: opt,
+                                                    label: opt,
+                                                }
+                                              : {
+                                                    value:
+                                                        opt.value ?? opt.name,
+                                                    label:
+                                                        opt.label ?? opt.name,
+                                                }
+                                      )
+                                    : []
+                            }
+                            selectedValues={selectedRates}
+                            onChange={(updated) => {
+                                setSelectedRates(updated.score ?? []);
+                            }}
+                            filterNoSearch={true}
+                            fieldName={"score"}
+                            close={() => setIsFilterOpen(false)}
+                        />
+                    )}
+                </span>
             </div>
 
             <ul className="reports__list">
-                {projectManagerReports.length > 0 &&
-                    projectManagerReports.map((item) => (
+                {filteredManagementReports.length > 0 &&
+                    filteredManagementReports.map((item) => (
                         <li
                             className="reports__list-item"
                             key={item.id}

@@ -85,6 +85,7 @@ const TheadRow = ({
                                                 )?.length > 0 && (
                                                     <button
                                                         type="button"
+                                                        title="Сбросить фильтр"
                                                         onClick={() => {
                                                             if (
                                                                 activeTab ===
