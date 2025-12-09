@@ -214,7 +214,7 @@ const ReportWindow = ({
 
             if (invalidContragents.length > 0) {
                 newErrors.contragents =
-                    "Убедитесь, что у каждого подрядчика заполнены все поля";
+                    "Убедитесь, что у каждого подрядчика выбран исполнитель и роль";
             }
         }
 
