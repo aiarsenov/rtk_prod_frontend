@@ -209,10 +209,7 @@ const ReportWindow = ({
 
         if (reportData.contragents.length > 0) {
             const invalidContragents = reportData.contragents.filter(
-                (contractor) =>
-                    !contractor.contract_id ||
-                    !contractor.contragent_id ||
-                    !contractor.role_id
+                (contractor) => !contractor.contragent_id || !contractor.role_id
             );
 
             if (invalidContragents.length > 0) {
