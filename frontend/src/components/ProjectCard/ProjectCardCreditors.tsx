@@ -20,13 +20,13 @@ const ProjectCardCreditors = ({
     const [activeBankId, setActiveBankId] = useState(null); // Выбранный банк
 
     useEffect(() => {
-        if (creditors.length > 0) {
-            setMatchedBanks(
-                banks.filter((bank) =>
-                    creditors?.some((item) => item.creditor_id === bank.id)
+        setMatchedBanks(
+            banks.filter((bank) =>
+                creditors.some(
+                    (item) => Number(item.creditor_id) === Number(bank.id)
                 )
-            );
-        }
+            )
+        );
     }, [creditors, banks]);
 
     useEffect(() => {
@@ -36,23 +36,26 @@ const ProjectCardCreditors = ({
             return;
         }
 
-        // Если выбранный банк всё ещё существует — оставляем
-        const exists = matchedBanks.some((b) => b.id === activeBankId);
-
+        const exists = matchedBanks.some(
+            (b) => Number(b.id) === Number(activeBankId)
+        );
         if (!exists) {
             setActiveBankId(matchedBanks[0].id);
         }
     }, [matchedBanks]);
 
     useEffect(() => {
-        if (activeBankId && creditors.length > 0) {
-            setFilteredCreditors(
-                creditors.filter(
-                    (creditor) =>
-                        Number(creditor.creditor_id) === Number(activeBankId)
-                )
-            );
+        if (!activeBankId) {
+            setFilteredCreditors([]);
+            return;
         }
+
+        setFilteredCreditors(
+            creditors.filter(
+                (creditor) =>
+                    Number(creditor.creditor_id) === Number(activeBankId)
+            )
+        );
     }, [activeBankId, creditors]);
 
     return (
