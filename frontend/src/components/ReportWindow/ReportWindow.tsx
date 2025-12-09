@@ -845,16 +845,32 @@ const ReportWindow = ({
                                             {!reportId &&
                                                 Object.keys(preFillReportData)
                                                     .length > 0 && (
-                                                    <button
-                                                        type="button"
-                                                        className="action-button"
-                                                        title="Доступно автозаполнение"
-                                                        onClick={() =>
-                                                            handleReportPrefill()
-                                                        }
-                                                    >
-                                                        Доступно автозаполнение
-                                                    </button>
+                                                    <div className="flex items-center gap-[15px]">
+                                                        <button
+                                                            type="button"
+                                                            className="cancel-button"
+                                                            title="Скрыть кнопку автозаполнения"
+                                                            onClick={() =>
+                                                                setPreFillReportData(
+                                                                    {}
+                                                                )
+                                                            }
+                                                        >
+                                                            X
+                                                        </button>
+
+                                                        <button
+                                                            type="button"
+                                                            className="action-button flex-grow"
+                                                            title="Доступно автозаполнение"
+                                                            onClick={() =>
+                                                                handleReportPrefill()
+                                                            }
+                                                        >
+                                                            Доступно
+                                                            автозаполнение
+                                                        </button>
+                                                    </div>
                                                 )}
 
                                             <div className="report-window__fields">
