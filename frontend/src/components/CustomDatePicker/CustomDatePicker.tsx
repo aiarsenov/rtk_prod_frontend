@@ -37,6 +37,9 @@ const monthOptions = Array.from({ length: 12 }, (_, i) => {
     };
 });
 
+const MIN_YEAR = 2015;
+const MIN_DATE = new Date(2015, 0, 1);
+
 const CustomDatePicker = ({
     type = "days",
     closePicker,
@@ -111,11 +114,15 @@ const CustomDatePicker = ({
     return (
         <div className={`custom-datepicker custom-datepicker_${type}`}>
             <DatePicker
-                minDate={minDate}
+                minDate={minDate || MIN_DATE}
+                filterDate={(date) => date >= MIN_DATE}
                 onChange={(update) => {
                     if (single) {
                         const clickedDate = update as Date;
                         // Если кликнули на уже выбранную дату, снимаем выбор
+
+                        if (clickedDate < MIN_DATE) return;
+
                         if (
                             singleDate &&
                             areDatesEqual(clickedDate, singleDate)
@@ -202,11 +209,11 @@ const CustomDatePicker = ({
                     prevMonthButtonDisabled,
                     nextMonthButtonDisabled,
                 }) => {
-                    // Массив года (1900 -> текущий -> +15 лет)
+                    // Массив года (2015 -> текущий -> +15 лет)
                     const currentYear = new Date().getFullYear();
                     const years = Array.from(
-                        { length: currentYear - 1900 + 11 },
-                        (_, i) => 1900 + i
+                        { length: currentYear - 2015 + 11 },
+                        (_, i) => 2015 + i
                     );
 
                     return (
@@ -217,12 +224,21 @@ const CustomDatePicker = ({
                                 {type === "months" ? (
                                     <>
                                         <button
-                                            onClick={decreaseYear}
-                                            disabled={prevMonthButtonDisabled}
+                                            onClick={() => {
+                                                if (
+                                                    date.getFullYear() >
+                                                    MIN_YEAR
+                                                ) {
+                                                    decreaseYear();
+                                                }
+                                            }}
+                                            disabled={
+                                                date.getFullYear() <= MIN_YEAR
+                                            }
                                             className="custom-datepicker__header-actions-prev-btn"
                                             title="Предыдущий год"
                                             type="button"
-                                        ></button>
+                                        />
 
                                         <CreatableSelect
                                             options={years.map((year) => ({
@@ -263,22 +279,6 @@ const CustomDatePicker = ({
                                             }}
                                         />
 
-                                        {/* <select
-                                            className="form-select custom-datepicker__select-year"
-                                            value={date.getFullYear()}
-                                            onChange={(e) =>
-                                                changeYear(
-                                                    Number(e.target.value)
-                                                )
-                                            }
-                                        >
-                                            {years.map((year) => (
-                                                <option key={year} value={year}>
-                                                    {year}
-                                                </option>
-                                            ))}
-                                        </select> */}
-
                                         <button
                                             onClick={increaseYear}
                                             disabled={nextMonthButtonDisabled}
@@ -289,41 +289,6 @@ const CustomDatePicker = ({
                                     </>
                                 ) : (
                                     <>
-                                        {/* <select
-                                            className="form-select"
-                                            value={date.getMonth()}
-                                            onChange={(e) =>
-                                                changeMonth(
-                                                    Number(e.target.value)
-                                                )
-                                            }
-                                        >
-                                            {Array.from(
-                                                { length: 12 },
-                                                (_, i) => {
-                                                    const monthName = new Date(
-                                                        0,
-                                                        i
-                                                    ).toLocaleString("ru-RU", {
-                                                        month: "long",
-                                                    });
-                                                    const capitalized =
-                                                        monthName
-                                                            .charAt(0)
-                                                            .toUpperCase() +
-                                                        monthName.slice(1);
-                                                    return (
-                                                        <option
-                                                            key={i}
-                                                            value={i}
-                                                        >
-                                                            {capitalized}
-                                                        </option>
-                                                    );
-                                                }
-                                            )}
-                                        </select> */}
-
                                         <CreatableSelect
                                             options={monthOptions}
                                             className="form-select-extend form-select-extend_nosearch"
@@ -391,22 +356,6 @@ const CustomDatePicker = ({
                                                 }),
                                             }}
                                         />
-
-                                        {/* <select
-                                            className="form-select custom-datepicker__select-year"
-                                            value={date.getFullYear()}
-                                            onChange={(e) =>
-                                                changeYear(
-                                                    Number(e.target.value)
-                                                )
-                                            }
-                                        >
-                                            {years.map((year) => (
-                                                <option key={year} value={year}>
-                                                    {year}
-                                                </option>
-                                            ))}
-                                        </select> */}
                                     </>
                                 )}
                             </div>
@@ -414,12 +363,27 @@ const CustomDatePicker = ({
                             {type === "days" && (
                                 <div className="custom-datepicker__header-actions">
                                     <button
-                                        onClick={decreaseMonth}
-                                        disabled={prevMonthButtonDisabled}
+                                        onClick={() => {
+                                            const year = date.getFullYear();
+                                            const month = date.getMonth();
+
+                                            if (
+                                                !(
+                                                    year === MIN_YEAR &&
+                                                    month === 0
+                                                )
+                                            ) {
+                                                decreaseMonth();
+                                            }
+                                        }}
+                                        disabled={
+                                            date.getFullYear() === MIN_YEAR &&
+                                            date.getMonth() === 0
+                                        }
                                         className="custom-datepicker__header-actions-prev-btn"
                                         title="Предыдущий месяц"
                                         type="button"
-                                    ></button>
+                                    />
 
                                     <button
                                         onClick={increaseMonth}
