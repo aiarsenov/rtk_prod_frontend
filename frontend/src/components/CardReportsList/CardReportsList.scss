@@ -103,10 +103,7 @@
         color: var(--color-gray-70);
         padding: 0 20px 20px;
         margin-bottom: 20px;
-
-        &:not(:last-of-type) {
-            border-bottom: 1px solid var(--color-gray-30);
-        }
+        border-bottom: 1px solid var(--color-gray-30);
 
         @media (min-width: 560px) {
             gap: 20px;
@@ -129,6 +126,10 @@
 
         &:hover {
             background: var(--color-gray-20);
+        }
+
+        &:not(:last-of-type) {
+            border-bottom: 1px solid var(--color-gray-30);
         }
 
         &:last-of-type {
@@ -156,7 +157,7 @@
 
     .reports__list-item__col-name > div {
         display: -webkit-box !important;
-        -webkit-box-orient: vertical !important; 
+        -webkit-box-orient: vertical !important;
         -webkit-line-clamp: 2 !important;
         overflow: hidden;
         white-space: normal !important;

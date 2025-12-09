@@ -153,7 +153,7 @@
             max-height: 500px;
             overflow-x: hidden;
             overflow-y: auto;
-            scrollbar-gutter: stable;
+            // scrollbar-gutter: stable;
 
             @media (min-width: $media-xxl) {
                 min-height: 500px;
@@ -203,7 +203,7 @@
             max-height: 400px;
             overflow-x: hidden;
             overflow-y: auto;
-            scrollbar-gutter: stable;
+            // scrollbar-gutter: stable;
 
             @media (min-width: $media-xxl) {
                 min-height: 400px;
@@ -226,7 +226,7 @@
             max-height: 400px;
             overflow-x: hidden;
             overflow-y: auto;
-            scrollbar-gutter: stable;
+            // scrollbar-gutter: stable;
 
             @media (min-width: $media-xxl) {
                 min-height: 400px;
@@ -303,7 +303,7 @@
 
     &__completed-reports {
         .reports__list {
-            scrollbar-gutter: stable;
+            // scrollbar-gutter: stable;
         }
 
         .reports__list-header {
@@ -501,6 +501,11 @@
         font-weight: 400;
         font-size: 14px;
         line-height: 150%;
+        margin: 0 -10px;
+
+        @media (min-width: $media-xxl) {
+            margin: 0 -20px;
+        }
 
         &-header {
             display: none;
@@ -515,14 +520,13 @@
         }
 
         &-item {
-            padding: 10px 0;
+            padding: 10px;
             border-top: 1px solid var(--color-gray-30);
             border-bottom: none;
-
             gap: 20px;
 
             @media (min-width: $media-xxl) {
-                padding: 20px 0;
+                padding: 20px;
                 min-height: 80px;
             }
         }
