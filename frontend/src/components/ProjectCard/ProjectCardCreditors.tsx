@@ -30,13 +30,17 @@ const ProjectCardCreditors = ({
     }, [creditors, banks]);
 
     useEffect(() => {
-        if (matchedBanks.length > 0) {
-            // Если выбранный банк всё ещё существует — не трогаем
-            const exists = matchedBanks.some((b) => b.id === activeBankId);
+        if (matchedBanks.length === 0) {
+            setActiveBankId(null);
+            setFilteredCreditors([]);
+            return;
+        }
 
-            if (!exists) {
-                setActiveBankId(matchedBanks[0].id);
-            }
+        // Если выбранный банк всё ещё существует — оставляем
+        const exists = matchedBanks.some((b) => b.id === activeBankId);
+
+        if (!exists) {
+            setActiveBankId(matchedBanks[0].id);
         }
     }, [matchedBanks]);
 
@@ -63,13 +67,13 @@ const ProjectCardCreditors = ({
                             className="card__tabs-item radio-field_tab"
                         >
                             <input
-                                id={`bank_${bank.id}`}
                                 type="radio"
                                 name="active_bank"
                                 value={bank.id}
                                 checked={activeBankId === bank.id}
                                 onChange={() => setActiveBankId(bank.id)}
                             />
+
                             <label htmlFor={`bank_${bank.id}`}>
                                 {bank.name}
                             </label>
