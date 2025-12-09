@@ -55,8 +55,6 @@ const ProjectManagerReports = ({
         setRateEditorState(false);
     };
 
-    console.log(projectManagerReports);
-
     return (
         <div className="dashboards__block indicators__project-manager-reports">
             <h2 className="card__subtitle">

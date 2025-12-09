@@ -15,9 +15,22 @@ const ProjectCardCreditors = ({
     setAddCreditor,
     projectId,
     sendExecutor,
+    addedBank,
+    setAddedBank,
 }) => {
     const [matchedBanks, setMatchedBanks] = useState([]); // Закрепленные за карточкой банки для отображения вкладок
     const [activeBankId, setActiveBankId] = useState(null); // Выбранный банк
+
+    useEffect(() => {
+        if (addedBank !== null) {
+            const bankExists = matchedBanks.some(
+                (b) => Number(b.id) === Number(addedBank)
+            );
+            if (bankExists) {
+                setActiveBankId(addedBank);
+            }
+        }
+    }, [addedBank, matchedBanks]);
 
     useEffect(() => {
         setMatchedBanks(
@@ -75,7 +88,10 @@ const ProjectCardCreditors = ({
                                 name="active_bank"
                                 value={bank.id}
                                 checked={activeBankId === bank.id}
-                                onChange={() => setActiveBankId(bank.id)}
+                                onChange={() => {
+                                    setActiveBankId(bank.id);
+                                    setAddedBank(null);
+                                }}
                             />
 
                             <label htmlFor={`bank_${bank.id}`}>

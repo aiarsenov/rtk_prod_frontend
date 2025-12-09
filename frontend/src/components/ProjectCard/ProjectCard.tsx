@@ -77,7 +77,8 @@ const ProjectCard = () => {
     const [contracts, setContracts] = useState([]); // Договора
 
     const [creditors, setCreditors] = useState([]); // Кредиторы
-    const [filteredCreditors, setFilteredCreditors] = useState([]);
+    const [filteredCreditors, setFilteredCreditors] = useState([]); // Кредиторы активной вкладки
+    const [addedBank, setAddedBank] = useState(null); // Банк добавленного кредитора в последний раз
 
     // const autoFilterAppliedRef = useRef(false); // Флаг для отслеживания применения автоматической фильтрации
     const [customers, setCustomers] = useState([]); // Заказчики
@@ -355,6 +356,8 @@ const ProjectCard = () => {
                     if (response?.ok) {
                         setAddCreditor(false);
 
+                        setAddedBank(data[0].creditor_id);
+
                         setCreditors((prevCreditor) => [
                             ...prevCreditor,
                             ...response.created.map((item) => ({
@@ -363,13 +366,13 @@ const ProjectCard = () => {
                             })),
                         ]);
 
-                        setFilteredCreditors((prevCreditor) => [
-                            ...prevCreditor,
-                            ...response.created.map((item) => ({
-                                ...item.creditor_contact,
-                                id: item.id,
-                            })),
-                        ]);
+                        // setFilteredCreditors((prevCreditor) => [
+                        //     ...prevCreditor,
+                        //     ...response.created.map((item) => ({
+                        //         ...item.creditor_contact,
+                        //         id: item.id,
+                        //     })),
+                        // ]);
 
                         // toast.dismiss(query);
 
@@ -1373,6 +1376,8 @@ const ProjectCard = () => {
                                 setAddCreditor={setAddCreditor}
                                 projectId={projectId}
                                 sendExecutor={sendExecutor}
+                                addedBank={addedBank}
+                                setAddedBank={setAddedBank}
                             />
                         </section>
 
