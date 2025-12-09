@@ -13,6 +13,7 @@ import EmptyExecutorBlock from "../ExecutorBlock/EmptyExecutorBlock";
 import ReportWindow from "../ReportWindow/ReportWindow.jsx";
 import CardBottomActions from "../CardBottomActions.js";
 import ProjectReportsList from "./ProjectReportsList.jsx";
+import ProjectCardCreditors from "./ProjectCardCreditors";
 
 import ProjectStatisticsBlock from "./ProjectStatisticsBlock";
 import ProjectStatisticsBlockMobile from "./ProjectStatisticsBlockMobile";
@@ -77,6 +78,7 @@ const ProjectCard = () => {
 
     const [creditors, setCreditors] = useState([]); // Кредиторы
     const [filteredCreditors, setFilteredCreditors] = useState([]);
+
     // const autoFilterAppliedRef = useRef(false); // Флаг для отслеживания применения автоматической фильтрации
     const [customers, setCustomers] = useState([]); // Заказчики
 
@@ -94,18 +96,16 @@ const ProjectCard = () => {
     const [revenue, setRevenue] = useState({}); // ОСВ
     const [period, setPeriod] = useState("current_year"); // Период ОСВ
 
-    const [matchedBanks, setMatchedBanks] = useState([]); // Закрепленные за карточкой банки для отображения вкладок
-
     // Фильтр кредиторов
-    const handleFilterCreditors = (evt) => {
-        evt.target.value === ""
-            ? setFilteredCreditors(creditors)
-            : setFilteredCreditors(
-                  creditors.filter(
-                      (lender) => +lender.creditor_id === +evt.target.value
-                  )
-              );
-    };
+    // const handleFilterCreditors = (evt) => {
+    //     evt.target.value === ""
+    //         ? setFilteredCreditors(creditors)
+    //         : setFilteredCreditors(
+    //               creditors.filter(
+    //                   (lender) => +lender.creditor_id === +evt.target.value
+    //               )
+    //           );
+    // };
 
     // Получение отраслей
     const fetchIndustries = () => {
@@ -829,41 +829,6 @@ const ProjectCard = () => {
     }, [otherIndustries]);
 
     useEffect(() => {
-        if (creditors.length > 0) {
-            setMatchedBanks(
-                banks.filter((bank) =>
-                    creditors?.some((item) => item.creditor_id === bank.id)
-                )
-            );
-        }
-    }, [creditors, banks]);
-
-    useEffect(() => {
-        if (
-            // !autoFilterAppliedRef.current &&
-            matchedBanks.length > 0 &&
-            creditors.length > 0
-            // && filteredCreditors.length === creditors.length
-        ) {
-            const firstBankId = matchedBanks[0].id;
-            console.log(firstBankId);
-            console.log(creditors);
-
-            const newFilteredCreditors = creditors.filter(
-                (lender) => +lender.creditor_id === +firstBankId
-            );
-            console.log(newFilteredCreditors);
-
-            setFilteredCreditors(newFilteredCreditors);
-            // autoFilterAppliedRef.current = true;
-        }
-
-        // if (creditors.length === 0) {
-        //     autoFilterAppliedRef.current = false;
-        // }
-    }, [matchedBanks, creditors]);
-
-    useEffect(() => {
         if (projectId) {
             getCard();
         }
@@ -1394,101 +1359,21 @@ const ProjectCard = () => {
                                 )}
                             </section>
 
-                            <section className="project-card__project-executors">
-                                <h2 className="card__subtitle">Кредиторы</h2>
-
-                                {matchedBanks.length > 0 && (
-                                    <ul className="card__tabs project-card__banks-tabs">
-                                        {matchedBanks.map((bank, index) => (
-                                            <li
-                                                key={bank.id}
-                                                className="card__tabs-item radio-field_tab"
-                                            >
-                                                <input
-                                                    id={`bank_${bank.id}`}
-                                                    type="radio"
-                                                    name="active_bank"
-                                                    value={bank.id}
-                                                    defaultChecked={index === 0}
-                                                    onChange={(evt) => {
-                                                        handleFilterCreditors(
-                                                            evt
-                                                        );
-                                                    }}
-                                                />
-                                                <label
-                                                    htmlFor={`bank_${bank.id}`}
-                                                >
-                                                    {bank.name}
-                                                </label>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                )}
-
-                                <ul className="project-card__executors-list">
-                                    {filteredCreditors.length > 0 &&
-                                    banks.length > 0 ? (
-                                        filteredCreditors.map((lender) => (
-                                            <ExecutorBlock
-                                                key={lender.id}
-                                                contanct={lender}
-                                                mode={mode}
-                                                banks={banks}
-                                                type={"creditor"}
-                                                deleteBlock={
-                                                    openExecutorDeletePopup
-                                                }
-                                            />
-                                        ))
-                                    ) : (
-                                        <li>
-                                            <p>Нет данных</p>
-                                        </li>
-                                    )}
-                                </ul>
-
-                                {mode == "edit" && availableToChange && (
-                                    <button
-                                        type="button"
-                                        className="button-add"
-                                        onClick={() => {
-                                            if (!addCreditor) {
-                                                setAddCreditor(true);
-                                            }
-                                        }}
-                                        title="Добавить Кредитора"
-                                    >
-                                        Добавить
-                                        <span>
-                                            <svg
-                                                width="10"
-                                                height="9"
-                                                viewBox="0 0 10 9"
-                                                fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path
-                                                    d="M5.75 3.75H9.5v1.5H5.75V9h-1.5V5.25H.5v-1.5h3.75V0h1.5v3.75z"
-                                                    fill="currentColor"
-                                                />
-                                            </svg>
-                                        </span>
-                                    </button>
-                                )}
-
-                                {addCreditor && (
-                                    <EmptyExecutorBlock
-                                        projectId={projectId}
-                                        banks={banks}
-                                        type={"creditor"}
-                                        removeBlock={() =>
-                                            setAddCreditor(false)
-                                        }
-                                        sendExecutor={sendExecutor}
-                                    />
-                                )}
-                            </section>
+                            <ProjectCardCreditors
+                                mode={mode}
+                                availableToChange={availableToChange}
+                                banks={banks}
+                                creditors={creditors}
+                                filteredCreditors={filteredCreditors}
+                                setFilteredCreditors={setFilteredCreditors}
+                                openExecutorDeletePopup={
+                                    openExecutorDeletePopup
+                                }
+                                addCreditor={addCreditor}
+                                setAddCreditor={setAddCreditor}
+                                projectId={projectId}
+                                sendExecutor={sendExecutor}
+                            />
                         </section>
 
                         <section className="card__aside-content project-card__aside-content">

@@ -123,8 +123,6 @@ const EmptyExecutorBlock = ({
             }`
         ).then((response) => {
             if (response.status == 200) {
-                console.log(response.data.data);
-                
                 if (response.data.data) {
                     setContactsList(
                         response.data?.data?.map((person) => ({
