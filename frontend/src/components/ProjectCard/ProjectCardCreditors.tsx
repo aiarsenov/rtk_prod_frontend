@@ -67,6 +67,7 @@ const ProjectCardCreditors = ({
                             className="card__tabs-item radio-field_tab"
                         >
                             <input
+                                id={`bank_${bank.id}`}
                                 type="radio"
                                 name="active_bank"
                                 value={bank.id}
