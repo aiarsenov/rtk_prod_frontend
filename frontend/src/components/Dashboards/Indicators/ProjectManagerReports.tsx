@@ -31,7 +31,9 @@ const ProjectManagerReports = ({
 }: {
     projectManagerReports: ProjectManagerReportItem[];
 }) => {
-    const [activeReportId, setActiveReportId] = useState<number | string | null>(null);
+    const [activeReportId, setActiveReportId] = useState<
+        number | string | null
+    >(null);
     const [rateEditorState, setRateEditorState] = useState(false);
     const [reportData, setReportData] = useState({});
 
@@ -53,15 +55,17 @@ const ProjectManagerReports = ({
         setRateEditorState(false);
     };
 
+    console.log(projectManagerReports);
+
     return (
         <div className="dashboards__block indicators__project-manager-reports">
             <h2 className="card__subtitle">
-                Отчёты руководителей проектов
+                Отчёты ответственных
                 <span>
                     {projectManagerReports.length > 0 &&
                         projectManagerReports.length}
                 </span>
-                <Hint message={"Отчёты руководителей проектов"} />
+                <Hint message={"Отчёты ответственных"} />
             </h2>
 
             <div className="reports__list-header">

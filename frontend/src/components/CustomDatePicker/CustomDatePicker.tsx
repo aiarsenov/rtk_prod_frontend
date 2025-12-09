@@ -216,6 +216,15 @@ const CustomDatePicker = ({
                         (_, i) => 2015 + i
                     );
 
+                    const yearOptions = years.map((year) => ({
+                        value: year,
+                        label: year.toString(),
+                    }));
+
+                    const selectedYearOption = yearOptions.find(
+                        (opt) => opt.value === date.getFullYear()
+                    );
+
                     return (
                         <div
                             className={`custom-datepicker__header custom-datepicker__header_${type}`}
@@ -241,10 +250,8 @@ const CustomDatePicker = ({
                                         />
 
                                         <CreatableSelect
-                                            options={years.map((year) => ({
-                                                value: year,
-                                                label: year.toString(),
-                                            }))}
+                                            options={yearOptions}
+                                            value={selectedYearOption}
                                             className="form-select-extend text-center custom-datepicker__select-year form-select-extend_nosearch"
                                             placeholder=""
                                             components={{
@@ -256,12 +263,12 @@ const CustomDatePicker = ({
                                             }
                                             isValidNewOption={() => false}
                                             isSearchable={false}
-                                            value={{
-                                                value: date.getFullYear(),
-                                                label: date
-                                                    .getFullYear()
-                                                    .toString(),
-                                            }}
+                                            // value={{
+                                            //     value: date.getFullYear(),
+                                            //     label: date
+                                            //         .getFullYear()
+                                            //         .toString(),
+                                            // }}
                                             onChange={(selectedOption) => {
                                                 const newValue = Number(
                                                     selectedOption?.value
@@ -269,12 +276,9 @@ const CustomDatePicker = ({
                                                 changeYear(newValue);
                                             }}
                                             styles={{
-                                                input: (base) => ({
+                                                menuList: (base) => ({
                                                     ...base,
-                                                    maxWidth: "100%",
-                                                    whiteSpace: "nowrap",
-                                                    overflow: "hidden",
-                                                    textOverflow: "ellipsis",
+                                                    maxHeight: 200,
                                                 }),
                                             }}
                                         />
@@ -323,10 +327,8 @@ const CustomDatePicker = ({
                                         />
 
                                         <CreatableSelect
-                                            options={years.map((year) => ({
-                                                value: year,
-                                                label: year.toString(),
-                                            }))}
+                                            options={yearOptions}
+                                            value={selectedYearOption}
                                             className="form-select-extend custom-datepicker__select-year form-select-extend_nosearch"
                                             placeholder=""
                                             noOptionsMessage={() =>
@@ -334,12 +336,12 @@ const CustomDatePicker = ({
                                             }
                                             isValidNewOption={() => false}
                                             isSearchable={false}
-                                            value={{
-                                                value: date.getFullYear(),
-                                                label: date
-                                                    .getFullYear()
-                                                    .toString(),
-                                            }}
+                                            // value={{
+                                            //     value: date.getFullYear(),
+                                            //     label: date
+                                            //         .getFullYear()
+                                            //         .toString(),
+                                            // }}
                                             onChange={(selectedOption) => {
                                                 const newValue = Number(
                                                     selectedOption?.value
