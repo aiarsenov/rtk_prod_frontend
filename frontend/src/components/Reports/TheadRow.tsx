@@ -198,6 +198,9 @@ const TheadRow = ({
                                                                 );
                                                             }
                                                         }}
+                                                        filterNoSearch={
+                                                            key === "score"
+                                                        }
                                                         fieldName={filter}
                                                         close={setOpenFilter}
                                                     />

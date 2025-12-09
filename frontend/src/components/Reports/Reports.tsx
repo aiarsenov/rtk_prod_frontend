@@ -516,7 +516,6 @@ const Reports = () => {
         {
             label: (
                 <span className="flex items-center gap-[5px]">
-                    Проблем нет
                     <span
                         style={{
                             display: "block",
@@ -526,6 +525,7 @@ const Reports = () => {
                             borderRadius: "50%",
                         }}
                     ></span>
+                    Проблем нет
                 </span>
             ),
             value: 2,
@@ -533,7 +533,6 @@ const Reports = () => {
         {
             label: (
                 <span className="flex items-center gap-[5px]">
-                    Есть сложности
                     <span
                         style={{
                             display: "block",
@@ -543,6 +542,7 @@ const Reports = () => {
                             borderRadius: "50%",
                         }}
                     ></span>
+                    Есть сложности
                 </span>
             ),
             value: 1,
@@ -550,7 +550,6 @@ const Reports = () => {
         {
             label: (
                 <span className="flex items-center gap-[5px]">
-                    Есть проблемы
                     <span
                         style={{
                             display: "block",
@@ -560,6 +559,7 @@ const Reports = () => {
                             borderRadius: "50%",
                         }}
                     ></span>
+                    Есть проблемы
                 </span>
             ),
             value: 0,
