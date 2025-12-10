@@ -56,6 +56,10 @@ const ReportRateEditor = ({
         if (reportData) {
             setReportRateData({ ...reportData });
         }
+
+        if (reportData.show_save_bar) {
+            setIsChanged(true);
+        }
     }, [reportData]);
 
     useBodyScrollLock(rateEditorState);
@@ -171,7 +175,9 @@ const ReportRateEditor = ({
                                 </div>
 
                                 <div className="report-window__field">
-                                    <label className="form-label">Роль ответственного</label>
+                                    <label className="form-label">
+                                        Роль ответственного
+                                    </label>
 
                                     {reportRateData.physical_person?.roles &&
                                         reportRateData.physical_person?.roles
@@ -197,13 +203,16 @@ const ReportRateEditor = ({
                                                 reportRateData.status.toLowerCase() ===
                                                     "утверждён" ||
                                                 reportRateData.status.toLowerCase() ===
-                                                    "в процессе"
+                                                    "в процессе" ||
+                                                isChanged
                                                     ? "form-field__status_completed"
                                                     : ""
                                             }`}
                                         >
                                             <span></span>
-                                            {reportRateData.status}
+                                            {isChanged
+                                                ? "В процессе"
+                                                : reportRateData.status}
                                         </div>
                                     )}
                                 </div>

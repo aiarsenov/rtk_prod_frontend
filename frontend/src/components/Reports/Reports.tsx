@@ -198,6 +198,7 @@ const Reports = () => {
                 const newReportData = {
                     ...reportData,
                     general_assessment: 0,
+                    show_save_bar: true,
                 };
                 openRateReportEditor(newReportData);
                 break;
@@ -207,6 +208,7 @@ const Reports = () => {
                 const newReportData = {
                     ...reportData,
                     general_assessment: 1,
+                    show_save_bar: true,
                 };
                 openRateReportEditor(newReportData);
                 break;
