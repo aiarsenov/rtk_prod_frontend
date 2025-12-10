@@ -31,10 +31,9 @@ function App() {
     useEffect(() => {
         if (
             !isInvitePage &&
-            import.meta.env.MODE !== "development" &&
+            import.meta.env.MODE == "development" &&
             error === "unauthorized"
         ) {
-            // if (error === "unauthorized") {
             window.location.replace(
                 `${import.meta.env.VITE_API_URL}auth/login`
             );
