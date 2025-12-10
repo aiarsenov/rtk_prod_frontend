@@ -32,6 +32,8 @@ import Hint from "../Hint/Hint";
 import CreatableSelect from "react-select/creatable";
 import CustomSelect from "../CustomSelect/CustomSelect";
 
+import CardMultiSelector from "../CardMultiSelector/CardMultiSelector";
+
 import BottomSheet from "../BottomSheet/BottomSheet";
 import BottomNavCard from "../BottomNav/BottomNavCard";
 import Popup from "../Popup/Popup.jsx";
@@ -1096,7 +1098,41 @@ const ProjectCard = () => {
                                         />
                                     </div>
 
-                                    <CustomSelect
+                                    <CardMultiSelector
+                                        options={industries
+                                            .filter(
+                                                (industry) =>
+                                                    industry.id !==
+                                                    projectDataCustom
+                                                        ?.industries?.main
+                                            )
+                                            .map((industry) => ({
+                                                value: industry.id,
+                                                label: industry.name,
+                                            }))}
+                                        onChange={(updated) => {
+                                            console.log(updated);
+
+                                            if (mode === "read") return;
+
+                                            setOtherIndustries(updated.others);
+                                        }}
+                                        submit={() =>
+                                            updateCard(true, {
+                                                industries: {
+                                                    ...projectDataCustom.industries,
+                                                    others: otherIndustries,
+                                                },
+                                            })
+                                        }
+                                        filedName="others"
+                                        selectedValues={otherIndustries}
+                                        popupTitle="Добавить дополнительные отрасли"
+                                        buttonTitle="Добавить дополнительную отрасль"
+                                        disabled={mode === "read"}
+                                    />
+
+                                    {/* <CustomSelect
                                         type={"checkbox"}
                                         placeholder={
                                             mode === "edit"
@@ -1133,7 +1169,7 @@ const ProjectCard = () => {
                                         }}
                                         mode={mode}
                                         isDisabled={mode == "read"}
-                                    />
+                                    /> */}
                                 </div>
 
                                 <div className="project-card__description">
