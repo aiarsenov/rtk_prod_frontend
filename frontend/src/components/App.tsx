@@ -61,16 +61,13 @@ function App() {
             const currentUrl = window.location.href;
             const isOnLoginPage = currentUrl.includes('/auth/login') || currentUrl.includes('/auth/callback');
 
-            // Проверяем, не вернулись ли мы только что с callback
             const urlParams = new URLSearchParams(window.location.search);
             const justReturnedFromCallback = urlParams.get('auth_callback') === '1';
 
-            // Также проверяем, не было ли уже попытки редиректа (чтобы избежать бесконечного цикла)
             const redirectAttempted = sessionStorage.getItem('auth_redirect_attempted');
 
-            // Не делаем редирект сразу после callback - даем время cookie установиться
+
             if (justReturnedFromCallback) {
-                console.log('Just returned from callback, waiting for cookie to be set...');
                 return;
             }
 
@@ -79,14 +76,11 @@ function App() {
                 sessionStorage.setItem('auth_redirect_attempted', 'true');
 
                 const loginUrl = getBackendLoginUrl();
-                console.log('Redirecting to login:', loginUrl);
                 window.location.replace(loginUrl);
             } else if (redirectAttempted && !isOnLoginPage) {
 
                 sessionStorage.removeItem('auth_redirect_attempted');
-                console.error('Auth redirect loop detected. Please check cookies and CORS settings.');
-                console.error('Current URL:', currentUrl);
-                console.error('Error:', error);
+
             }
         } else if (user) {
             // Если пользователь авторизован, очищаем флаг редиректа
