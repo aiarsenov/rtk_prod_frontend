@@ -7,6 +7,19 @@ import { initCsrfToken } from "../utils/initCsrf";
 import Router from "./Router";
 import Loader from "./Loader";
 
+function getBackendLoginUrl() {
+    const apiUrl = import.meta.env.VITE_API_URL || '/api/';
+
+    if (apiUrl.startsWith('http://') || apiUrl.startsWith('https://')) {
+        return `${apiUrl}auth/login`;
+    }
+
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://127.0.0.1:8000';
+    const apiPath = apiUrl.startsWith('/') ? apiUrl : `/${apiUrl}`;
+
+    return `${backendUrl}${apiPath}auth/login`;
+}
+
 function App() {
     // if (import.meta.env.MODE !== "development") {
     //     useAutoRefreshToken();
@@ -23,36 +36,67 @@ function App() {
     }, []);
 
     useEffect(() => {
-        if (!isInvitePage) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const isCallback = urlParams.get('auth_callback') === '1';
+
+        if (isCallback) {
+            sessionStorage.removeItem('auth_redirect_attempted');
+            urlParams.delete('auth_callback');
+            const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+            window.history.replaceState({}, '', newUrl);
+
+            setTimeout(() => {
+                if (!isInvitePage) {
+                    dispatch(fetchUser());
+                }
+            }, 300);
+        } else if (!isInvitePage) {
+            // Обычная проверка авторизации
             dispatch(fetchUser());
         }
     }, [dispatch, isInvitePage]);
 
     useEffect(() => {
-        if (
-            !isInvitePage &&
-            import.meta.env.MODE == "development" &&
-            error === "unauthorized"
-        ) {
-            window.location.replace(
-                `${import.meta.env.VITE_API_URL}auth/login`
-            );
+        if (!isInvitePage && error === "unauthorized") {
+            const currentUrl = window.location.href;
+            const isOnLoginPage = currentUrl.includes('/auth/login') || currentUrl.includes('/auth/callback');
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const justReturnedFromCallback = urlParams.get('auth_callback') === '1';
+
+            const redirectAttempted = sessionStorage.getItem('auth_redirect_attempted');
+
+
+            if (justReturnedFromCallback) {
+                return;
+            }
+
+            if (!isOnLoginPage && !redirectAttempted) {
+                // Помечаем, что редирект был попыткой
+                sessionStorage.setItem('auth_redirect_attempted', 'true');
+
+                const loginUrl = getBackendLoginUrl();
+                window.location.replace(loginUrl);
+            } else if (redirectAttempted && !isOnLoginPage) {
+
+                sessionStorage.removeItem('auth_redirect_attempted');
+
+            }
+        } else if (user) {
+            // Если пользователь авторизован, очищаем флаг редиректа
+            sessionStorage.removeItem('auth_redirect_attempted');
         }
-    }, [error, isInvitePage]);
+    }, [error, isInvitePage, user]);
 
     if (isInvitePage) {
         return <Router />;
     }
 
-    const displayUser =
-        import.meta.env.MODE === "development"
-            ? { name: "Dev", family_name: "User", email: "dev@example.com" }
-            : user;
 
-    // const displayUser = user;
+    const displayUser = user;
 
-    if ((import.meta.env.MODE !== "development" && loading) || !displayUser) {
-        // if (loading || !displayUser) {
+
+    if (loading || !displayUser) {
         return <Loader />;
     }
 

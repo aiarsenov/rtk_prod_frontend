@@ -14,9 +14,10 @@ export default defineConfig(() => {
             proxy: {
                 // Прокси для локальной разработки - проксируем запросы к /api на бэкенд
                 "/api": {
-                    target: "http://158.160.109.174",
+                    target: "http://127.0.0.1:8000",
                     changeOrigin: true,
                     secure: false,
+                    cookieDomainRewrite: "",
                     configure: (proxy, _options) => {
                         proxy.on("error", (err, _req, _res) => {
                             console.log("proxy error", err);
@@ -30,6 +31,15 @@ export default defineConfig(() => {
                             // Сохраняем Referer
                             if (req.headers.referer) {
                                 proxyReq.setHeader("Referer", req.headers.referer);
+                            }
+                        });
+                        proxy.on("proxyRes", (proxyRes, req, res) => {
+                            if (proxyRes.headers['set-cookie']) {
+                                proxyRes.headers['set-cookie'] = proxyRes.headers['set-cookie'].map((cookie) => {
+                                    return cookie
+                                        .replace(/Domain=[^;]+/gi, '')
+                                        .replace(/SameSite=None/gi, 'SameSite=Lax');
+                                });
                             }
                         });
                     },

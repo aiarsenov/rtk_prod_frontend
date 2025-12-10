@@ -106,7 +106,7 @@ const ReportRateEditor = ({
                     tabIndex={-1}
                     onKeyDown={(e) => {
                         if (
-                            (e.key === "Escape" || e.keyCode === 27) &&
+                            (e.key === "Escape" || e.key === 27) &&
                             rateEditorState &&
                             !saveBeforeClose
                         ) {
@@ -168,6 +168,24 @@ const ReportRateEditor = ({
                                     <div className="form-field form-field__text">
                                         {reportRateData.physical_person?.name}
                                     </div>
+                                </div>
+
+                                <div className="report-window__field">
+                                    <label className="form-label">Роль ответственного</label>
+
+                                    {reportRateData.physical_person?.roles &&
+                                        reportRateData.physical_person?.roles
+                                            .length > 0 &&
+                                        reportRateData.physical_person?.roles.map(
+                                            (item) => (
+                                                <div
+                                                    className="form-field form-field__text mt-[10px]"
+                                                    key={item.id}
+                                                >
+                                                    {item.name}
+                                                </div>
+                                            )
+                                        )}
                                 </div>
 
                                 <div className="report-window__field">
