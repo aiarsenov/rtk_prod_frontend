@@ -223,6 +223,8 @@
 
     &__project-manager-reports {
         .registry-table__thead-item {
+            z-index: 1 !important;
+
             .multi-select {
                 position: absolute;
                 top: 40px;
