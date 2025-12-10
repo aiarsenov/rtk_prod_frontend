@@ -243,7 +243,8 @@
             &-header {
                 margin-right: 10px;
                 @media (min-width: $media-md) {
-                    grid-template-columns: repeat(4, 1fr) 120px;
+                    // grid-template-columns: repeat(4, 1fr) 120px;
+                    grid-template-columns: repeat(2, 1fr) 22% 1fr 120px;
                 }
 
                 @media (min-width: $media-xxxl) {
@@ -254,10 +255,11 @@
             &-item {
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
-                grid-template-rows: repeat(2, auto);
+                // grid-template-rows: repeat(2, auto);
 
                 @media (min-width: $media-md) {
-                    grid-template-columns: repeat(4, 1fr) 120px;
+                    // grid-template-columns: repeat(4, 1fr) 120px;
+                    grid-template-columns: repeat(2, 1fr) 22% 1fr 120px;
                 }
 
                 @media (min-width: $media-xxxl) {
@@ -535,7 +537,7 @@
 
             @media (min-width: $media-xxl) {
                 padding: 20px;
-                min-height: 80px;
+                // min-height: 80px;
             }
         }
     }
