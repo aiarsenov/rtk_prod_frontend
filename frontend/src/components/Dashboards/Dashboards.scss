@@ -172,10 +172,6 @@
                 display: grid;
                 grid-template-columns: 1fr 100px 1fr 120px;
 
-                @media (min-width: $media-xxl) {
-                    padding: 20px;
-                }
-
                 @media (min-width: $media-xxxl) {
                     grid-template-columns: 1fr 140px 1fr 140px;
                 }
@@ -264,6 +260,10 @@
                 @media (min-width: $media-md) {
                     // grid-template-columns: repeat(4, 1fr) 120px;
                     grid-template-columns: repeat(2, 1fr) 22% 1fr 120px;
+                }
+
+                @media (min-width: $media-xxl) {
+                    padding: 20px;
                 }
 
                 @media (min-width: $media-xxxl) {
