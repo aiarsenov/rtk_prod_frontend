@@ -26,6 +26,7 @@ interface ProjectManagerReportItem {
     responsible: string;
     status: string;
     assessment: number;
+    role: object;
 }
 
 const rateOptions = [
@@ -245,15 +246,18 @@ const ProjectManagerReports = ({
                                 {item.report_month}
                             </div>
 
-                            <div
-                                className="reports__list-item__col overflow-hidden text-ellipsis"
-                                style={{
-                                    WebkitLineClamp: 2,
-                                    WebkitBoxOrient: "vertical",
-                                    display: "-webkit-box",
-                                }}
-                            >
-                                {item.responsible}
+                            <div className="reports__list-item__col">
+                                <div
+                                    className="overflow-hidden text-ellipsis"
+                                    style={{
+                                        WebkitLineClamp: 2,
+                                        WebkitBoxOrient: "vertical",
+                                        display: "-webkit-box",
+                                    }}
+                                >
+                                    {item.responsible}
+                                </div>
+                                <span>{item?.role?.name}</span>
                             </div>
 
                             <div
