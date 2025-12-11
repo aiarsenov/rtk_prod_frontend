@@ -30,8 +30,6 @@ import ManagementReportsTabMobile from "../ManagementReportsTab/ManagementReport
 import Hint from "../Hint/Hint";
 
 import CreatableSelect from "react-select/creatable";
-import CustomSelect from "../CustomSelect/CustomSelect";
-
 import CardMultiSelector from "../CardMultiSelector/CardMultiSelector";
 
 import BottomSheet from "../BottomSheet/BottomSheet";
@@ -1129,45 +1127,6 @@ const ProjectCard = () => {
                                         buttonTitle="Добавить дополнительную отрасль"
                                         disabled={mode === "read"}
                                     />
-
-                                    {/* <CustomSelect
-                                        type={"checkbox"}
-                                        placeholder={
-                                            mode === "edit"
-                                                ? "Выбрать из списка"
-                                                : ""
-                                        }
-                                        options={industries
-                                            .filter(
-                                                (industry) =>
-                                                    industry.id !==
-                                                    projectDataCustom
-                                                        ?.industries?.main
-                                            )
-                                            .map((industry) => ({
-                                                value: industry.id,
-                                                label: industry.name,
-                                            }))}
-                                        selectedValues={otherIndustries}
-                                        fieldName={"others"}
-                                        onChange={(values) => {
-                                            if (mode === "read") return;
-                                            const newArray = values.map(
-                                                (item) => item.value
-                                            );
-
-                                            setOtherIndustries(newArray);
-
-                                            updateCard(true, {
-                                                industries: {
-                                                    ...projectDataCustom.industries,
-                                                    others: newArray,
-                                                },
-                                            });
-                                        }}
-                                        mode={mode}
-                                        isDisabled={mode == "read"}
-                                    /> */}
                                 </div>
 
                                 <div className="project-card__description">
