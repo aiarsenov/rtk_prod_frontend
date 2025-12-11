@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+
+import { useControlledSelect } from "../hooks/useControlledSelect.js";
+
 import getData from "../utils/getData";
 
 import CreatableSelect from "react-select/creatable";
@@ -54,6 +57,11 @@ const ContractorsSection = ({
             setIsMounted(true);
         }
     }, [person?.contragent_id, isMounted]);
+
+    // Список селекторов, которые не будут закрываться при повторном клике на поле ввода
+    const selectA = useControlledSelect("selectA");
+    const selectB = useControlledSelect("selectB");
+    const selectC = useControlledSelect("selectC");
 
     return (
         <li className="person-block">
@@ -115,8 +123,15 @@ const ContractorsSection = ({
                                     )) ||
                             null
                         }
+                        classNamePrefix="selectA"
+                        menuIsOpen={selectA.isOpen}
+                        openMenuOnClick
+                        onMenuOpen={selectA.open}
+                        onMenuClose={selectA.handleMenuClose}
+                        onFocus={selectA.open}
                         onChange={(selectedOption) => {
                             handleContragentChange(selectedOption.value);
+                            selectA.close();
                         }}
                         isDisabled={mode == "read"}
                     />
@@ -143,6 +158,12 @@ const ContractorsSection = ({
                                 )) ||
                         null
                     }
+                    classNamePrefix="selectB"
+                    menuIsOpen={selectB.isOpen}
+                    openMenuOnClick
+                    onMenuOpen={selectB.open}
+                    onMenuClose={selectB.handleMenuClose}
+                    onFocus={selectB.open}
                     onChange={(selectedOption) => {
                         if (mode === "read") return;
 
@@ -153,6 +174,7 @@ const ContractorsSection = ({
                             "role_id",
                             Number(newValue)
                         );
+                        selectB.close();
                     }}
                     isDisabled={mode === "read"}
                     styles={{
@@ -192,6 +214,12 @@ const ContractorsSection = ({
                                     )) ||
                             null
                         }
+                        classNamePrefix="selectC"
+                        menuIsOpen={selectC.isOpen}
+                        openMenuOnClick
+                        onMenuOpen={selectC.open}
+                        onMenuClose={selectC.handleMenuClose}
+                        onFocus={selectC.open}
                         onChange={(selectedOption) => {
                             const newValue = selectedOption?.value || "";
 
@@ -200,6 +228,7 @@ const ContractorsSection = ({
                                 "contract_id",
                                 Number(newValue)
                             );
+                            selectC.close();
                         }}
                         isDisabled={
                             mode === "read" || localContracts.length == 0
@@ -218,6 +247,12 @@ const ContractorsSection = ({
                         placeholder="Выберите договор"
                         noOptionsMessage={() => "Совпадений нет"}
                         isValidNewOption={() => false}
+                        classNamePrefix="selectC"
+                        menuIsOpen={selectC.isOpen}
+                        openMenuOnClick
+                        onMenuOpen={selectC.open}
+                        onMenuClose={selectC.handleMenuClose}
+                        onFocus={selectC.open}
                         onChange={(selectedOption) => {
                             const newValue = selectedOption?.value || "";
 
@@ -226,6 +261,7 @@ const ContractorsSection = ({
                                 "contract_id",
                                 Number(newValue)
                             );
+                            selectC.close();
                         }}
                         isDisabled={
                             mode === "read" || localContracts.length == 0

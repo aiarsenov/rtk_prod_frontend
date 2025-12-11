@@ -818,7 +818,7 @@ const ReportWindow = ({
                         tabIndex={-1}
                         onKeyDown={(e) => {
                             if (
-                                (e.key === "Escape" || e.keyCode === 27) &&
+                                (e.key === "Escape" || e.key === 27) &&
                                 reportWindowsState &&
                                 !saveBeforeClose
                             ) {

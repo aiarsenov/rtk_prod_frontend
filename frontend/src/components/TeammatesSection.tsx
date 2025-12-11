@@ -1,3 +1,5 @@
+import { useControlledSelect } from "../hooks/useControlledSelect.js";
+
 import CreatableSelect from "react-select/creatable";
 
 const TeammatesSection = ({
@@ -18,6 +20,10 @@ const TeammatesSection = ({
                 (item) => item.id === person?.physical_person_id
             ).name;
     }
+
+    // Список селекторов, которые не будут закрываться при повторном клике на поле ввода
+    const selectA = useControlledSelect("selectA");
+    const selectB = useControlledSelect("selectB");
 
     return (
         <li className="person-block">
@@ -79,12 +85,19 @@ const TeammatesSection = ({
                                     )) ||
                             null
                         }
+                        classNamePrefix="selectA"
+                        menuIsOpen={selectA.isOpen}
+                        openMenuOnClick
+                        onMenuOpen={selectA.open}
+                        onMenuClose={selectA.handleMenuClose}
+                        onFocus={selectA.open}
                         onChange={(selectedOption) => {
                             handleTeammateChange(
                                 index,
                                 "physical_person_id",
                                 selectedOption.value
                             );
+                            selectA.close();
                         }}
                         isDisabled={mode == "read"}
                     />
@@ -111,6 +124,12 @@ const TeammatesSection = ({
                                 )) ||
                         null
                     }
+                    classNamePrefix="selectB"
+                    menuIsOpen={selectB.isOpen}
+                    openMenuOnClick
+                    onMenuOpen={selectB.open}
+                    onMenuClose={selectB.handleMenuClose}
+                    onFocus={selectB.open}
                     onChange={(selectedOption) => {
                         if (mode === "read") return;
 
@@ -121,6 +140,7 @@ const TeammatesSection = ({
                             "role_id",
                             Number(newValue)
                         );
+                        selectB.close();
                     }}
                     isDisabled={mode === "read"}
                     styles={{
