@@ -8,6 +8,7 @@ import CustomSelect from "../CustomSelect/CustomSelect";
 import MultiSelect from "../MultiSelect/MultiSelect";
 import CreatableSelect from "react-select/creatable";
 import AutoResizeTextarea from "../AutoResizeTextarea";
+import CardMultiSelector from "../CardMultiSelector/CardMultiSelector";
 
 import SaleNewContragentWindow from "./SaleNewContragentWindow";
 import SaleServicesList from "./SaleServicesList";
@@ -704,7 +705,69 @@ const SaleCard = () => {
                                         />
                                     </div>
 
-                                    <CustomSelect
+                                    <CardMultiSelector
+                                        options={industries.filter(
+                                            (industry) =>
+                                                industry.value !==
+                                                cardDataCustom?.industries?.main
+                                        )}
+                                        onChange={(updated) => {
+                                            if (mode === "read") return;
+
+                                            // console.log(updated);
+                                            // console.log(
+                                            //     (industries?.length > 0 &&
+                                            //         industries
+                                            //             .filter((item) =>
+                                            //                 cardDataCustom.industries?.others.includes(
+                                            //                     item.value
+                                            //                 )
+                                            //             )
+                                            //             .map(
+                                            //                 (item) => item.value
+                                            //             )) ||
+                                            //         []
+                                            // );
+
+                                            setCardDataCustom({
+                                                ...cardDataCustom,
+                                                industries: {
+                                                    ...cardDataCustom.industries,
+                                                    others: updated.others,
+                                                },
+                                            });
+                                        }}
+                                        submit={() =>
+                                            updateCard(true, {
+                                                industries: {
+                                                    ...cardDataCustom.industries,
+                                                    others: cardDataCustom
+                                                        .industries.others,
+                                                },
+                                            })
+                                        }
+                                        selectedValues={
+                                            (industries?.length > 0 &&
+                                                industries
+                                                    .filter((item) =>
+                                                        cardDataCustom.industries?.others.includes(
+                                                            item.value
+                                                        )
+                                                    )
+                                                    .map(
+                                                        (item) => item.value
+                                                    )) ||
+                                            []
+                                        }
+                                        filedName="others"
+                                        popupTitle="Добавить дополнительные отрасли"
+                                        buttonTitle="Добавить дополнительную отрасль"
+                                        disabled={
+                                            mode == "read" || !availableToChange
+                                        }
+                                    />
+
+                                    {/* <CustomSelect
                                         type={"checkbox"}
                                         placeholder={
                                             mode === "edit"
@@ -755,7 +818,7 @@ const SaleCard = () => {
                                         isDisabled={
                                             mode == "read" || !availableToChange
                                         }
-                                    />
+                                    /> */}
                                 </div>
 
                                 <div className="card__general-info__block">

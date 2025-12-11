@@ -41,7 +41,11 @@ const CardMultiSelector = ({
             {selectedItems.length > 0 && (
                 <ul className="flex items-center gap-[10px] flex-wrap">
                     {selectedItems.map((item) => (
-                        <li className="form-field" key={item.value}>
+                        <li
+                            className="form-field"
+                            key={item.value}
+                            style={{ width: "fit-content" }}
+                        >
                             {item.label}
                         </li>
                     ))}
