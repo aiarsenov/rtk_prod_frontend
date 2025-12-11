@@ -134,7 +134,11 @@ const EmployeesStats = ({
                             employeeMetrics.positions_histogram?.[
                                 context.dataIndex
                             ];
-                        return `${item.name}: ${item.value} ${item.label}`;
+                        if (context.datasetIndex === 0) {
+                            return `${item.name}: ${item.previous_value}`;
+                        } else if (context.datasetIndex === 1) {
+                            return `${item.name}: ${item.value}`;
+                        }
                     },
                     title: () => "",
                 },
