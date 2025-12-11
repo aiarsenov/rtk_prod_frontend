@@ -787,8 +787,16 @@ const ReportWindow = ({
                 className={`bottom-sheet bottom-sheet_desk ${
                     reportWindowsState ? "active" : ""
                 }`}
-                onClick={() => {
-                    resetState();
+                onClick={(e) => {
+                    // Не закрываем редактор, если идет выделение содержимого мышью
+                    const selection = window.getSelection();
+                    if (
+                        selection &&
+                        selection.toString().length === 0 &&
+                        e.target === e.currentTarget
+                    ) {
+                        resetState();
+                    }
                 }}
             >
                 <div
