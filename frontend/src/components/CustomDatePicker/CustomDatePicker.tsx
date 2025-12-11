@@ -116,22 +116,20 @@ const CustomDatePicker = ({
             <DatePicker
                 minDate={minDate || MIN_DATE}
                 filterDate={(date) => date >= MIN_DATE}
-                onChange={(update) => {
-                    if (single) {
-                        const clickedDate = update as Date;
-                        // Если кликнули на уже выбранную дату, снимаем выбор
+                onSelect={(clickedDate) => {
+                    if (!single) return;
+                    if (!clickedDate) return;
 
-                        if (clickedDate < MIN_DATE) return;
+                    if (clickedDate < MIN_DATE) return;
 
-                        if (
-                            singleDate &&
-                            areDatesEqual(clickedDate, singleDate)
-                        ) {
-                            setSingleDate(null);
-                        } else {
-                            setSingleDate(clickedDate);
-                        }
+                    if (singleDate && areDatesEqual(clickedDate, singleDate)) {
+                        setSingleDate(null);
                     } else {
+                        setSingleDate(clickedDate);
+                    }
+                }}
+                onChange={(update) => {
+                    if (!single) {
                         setTempRange(update as [Date | null, Date | null]);
                     }
                 }}
