@@ -5,6 +5,7 @@ import formatMoney from "../../utils/formatMoney";
 import parseDate from "../../utils/parseDate";
 import buildQueryParams from "../../utils/buildQueryParams";
 import { useBodyScrollLock } from "../../hooks/useBodyScrollLock.js";
+import { useControlledSelect } from "../../hooks/useControlledSelect.js";
 import { ToastContainer, toast } from "react-toastify";
 
 import CreatableSelect from "react-select/creatable";
@@ -781,6 +782,12 @@ const ReportWindow = ({
         };
     }, [reportWindowsState, saveBeforeClose, resetState]);
 
+
+    // Список селекторов, которые не будут закрываться при повторном клике на поле ввода
+    const selectA = useControlledSelect("selectA");
+    const selectB = useControlledSelect("selectB");
+    const selectC = useControlledSelect("selectC");
+
     return !saveBeforeClose ? (
         <>
             <div
@@ -943,6 +950,18 @@ const ReportWindow = ({
                                                                     )) ||
                                                             null
                                                         }
+                                                        classNamePrefix="selectA"
+                                                        menuIsOpen={
+                                                            selectA.isOpen
+                                                        }
+                                                        openMenuOnClick
+                                                        onMenuOpen={
+                                                            selectA.open
+                                                        }
+                                                        onMenuClose={
+                                                            selectA.handleMenuClose
+                                                        }
+                                                        onFocus={selectA.open}
                                                         onChange={(
                                                             selectedOption
                                                         ) => {
@@ -957,6 +976,7 @@ const ReportWindow = ({
                                                                 newValue,
                                                                 "report_type_id"
                                                             );
+                                                            selectA.close();
                                                         }}
                                                         isDisabled={
                                                             mode == "read"
@@ -999,6 +1019,18 @@ const ReportWindow = ({
                                                             false
                                                         }
                                                         value={selectedValue}
+                                                        classNamePrefix="selectB"
+                                                        menuIsOpen={
+                                                            selectB.isOpen
+                                                        }
+                                                        openMenuOnClick
+                                                        onMenuOpen={
+                                                            selectB.open
+                                                        }
+                                                        onMenuClose={
+                                                            selectB.handleMenuClose
+                                                        }
+                                                        onFocus={selectB.open}
                                                         onChange={(
                                                             selectedOption
                                                         ) => {
@@ -1013,6 +1045,8 @@ const ReportWindow = ({
                                                                 newValue,
                                                                 "regularity"
                                                             );
+
+                                                            selectB.close();
                                                         }}
                                                         isDisabled={
                                                             mode === "read" ||
@@ -1157,6 +1191,14 @@ const ReportWindow = ({
                                                                 )) ||
                                                         null
                                                     }
+                                                    classNamePrefix="selectC"
+                                                    menuIsOpen={selectC.isOpen}
+                                                    openMenuOnClick
+                                                    onMenuOpen={selectC.open}
+                                                    onMenuClose={
+                                                        selectC.handleMenuClose
+                                                    }
+                                                    onFocus={selectC.open}
                                                     onChange={(
                                                         selectedOption
                                                     ) => {
@@ -1168,6 +1210,7 @@ const ReportWindow = ({
                                                             newValue,
                                                             "contract_id"
                                                         );
+                                                        selectC.close();
                                                     }}
                                                     isDisabled={mode === "read"}
                                                 />
