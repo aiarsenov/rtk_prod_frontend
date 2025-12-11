@@ -502,14 +502,6 @@ const SaleCard = () => {
     //     setAvailableToChange(!hasErrors);
     // }, [cardData]);
 
-    useEffect(() => {
-        console.log(cardDataCustom.creditors);
-    }, [cardDataCustom]);
-
-    useEffect(() => {
-        console.log(banks);
-    }, [banks]);
-
     return !isDataLoaded ? (
         <Loader />
     ) : (
@@ -862,53 +854,6 @@ const SaleCard = () => {
                                             mode == "read" || !availableToChange
                                         }
                                     />
-
-                                    {/* <CustomSelect
-                                        type={"checkbox"}
-                                        placeholder={
-                                            mode === "edit"
-                                                ? "Выбрать из списка"
-                                                : ""
-                                        }
-                                        options={banks}
-                                        selectedValues={(banks || [])
-                                            .filter((bank) =>
-                                                (
-                                                    cardDataCustom?.creditors ??
-                                                    []
-                                                ).some(
-                                                    (creditor) =>
-                                                        creditor.id ===
-                                                        bank.value
-                                                )
-                                            )
-                                            .map((bank) => bank.value)}
-                                        onChange={(values) => {
-                                            if (mode === "read") return;
-
-                                            const newArray = values.map(
-                                                (item) => item.value
-                                            );
-
-                                            console.log(newArray);
-
-                                            setCardDataCustom((prev) => ({
-                                                ...prev,
-                                                creditors: [
-                                                    ...(prev.creditors || []),
-                                                    ...newArray,
-                                                ],
-                                            }));
-
-                                            // updateCard(true, {
-                                            //     creditors: newArray,
-                                            // });
-                                        }}
-                                        mode={mode}
-                                        isDisabled={
-                                            mode == "read" || !availableToChange
-                                        }
-                                    /> */}
                                 </div>
 
                                 <div className="card__general-info__block">
