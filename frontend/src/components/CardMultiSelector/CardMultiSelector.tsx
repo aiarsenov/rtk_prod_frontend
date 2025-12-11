@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import AddButton from "../Buttons/AddButton";
 import Popup from "../Popup/Popup";
@@ -23,19 +23,44 @@ const CardMultiSelector = ({
     filedName: string;
 }) => {
     const [showWindow, setShowWindow] = useState(false);
+    const [selectedItems, setSelectedItems] = useState([]);
+    const [initialValues, setInitialValues] = useState([]);
+
+    useEffect(() => {
+        if (options.length > 0) {
+            setSelectedItems(
+                options.filter((option) =>
+                    selectedValues.includes(option.value)
+                )
+            );
+        }
+    }, [selectedValues, options]);
 
     return (
-        <div>
+        <div className="flex flex-col gap-[10px] items-start">
+            {selectedItems.length > 0 && (
+                <ul className="flex items-center gap-[10px] flex-wrap">
+                    {selectedItems.map((item) => (
+                        <li className="form-field" key={item.value}>
+                            {item.label}
+                        </li>
+                    ))}
+                </ul>
+            )}
+
             {!disabled && (
                 <AddButton
                     label={buttonLabel}
                     title={buttonTitle}
                     className={buttonClassName}
-                    onClick={() => setShowWindow(true)}
+                    onClick={() => {
+                        setInitialValues(selectedValues);
+                        setShowWindow(true);
+                    }}
                 />
             )}
 
-            {showWindow && (
+            {showWindow && !disabled && (
                 <Popup onClick={() => setShowWindow(false)} title={popupTitle}>
                     <div className="action-form__body">
                         <MultiSelect
@@ -50,13 +75,11 @@ const CardMultiSelector = ({
                         <button
                             type="button"
                             onClick={() => {
+                                onChange({
+                                    [filedName]: initialValues,
+                                });
+
                                 setShowWindow(false);
-                                // setNewServices((prev) => ({
-                                //     ...prev,
-                                //     report_type_id: services.map(
-                                //         (item) => item.id
-                                //     ),
-                                // }));
                             }}
                             className="cancel-button flex-[0_0_fit-content]"
                             title="Отменить добавление"
@@ -72,11 +95,6 @@ const CardMultiSelector = ({
                                 setShowWindow(false);
                             }}
                             title="Применить добавление"
-                            // disabled={
-                            //     newServices.report_type_id &&
-                            //     Object.keys(newServices.report_type_id)
-                            //         .length == 0
-                            // }
                         >
                             Добавить
                         </button>

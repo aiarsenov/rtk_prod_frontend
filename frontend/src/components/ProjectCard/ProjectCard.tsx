@@ -1111,8 +1111,6 @@ const ProjectCard = () => {
                                                 label: industry.name,
                                             }))}
                                         onChange={(updated) => {
-                                            console.log(updated);
-
                                             if (mode === "read") return;
 
                                             setOtherIndustries(updated.others);
