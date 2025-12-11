@@ -65,7 +65,16 @@ const CardMultiSelector = ({
             )}
 
             {showWindow && !disabled && (
-                <Popup onClick={() => setShowWindow(false)} title={popupTitle}>
+                <Popup
+                    onClick={() => {
+                        onChange({
+                            [filedName]: initialValues,
+                        });
+
+                        setShowWindow(false);
+                    }}
+                    title={popupTitle}
+                >
                     <div className="action-form__body">
                         <MultiSelect
                             options={options ?? []}

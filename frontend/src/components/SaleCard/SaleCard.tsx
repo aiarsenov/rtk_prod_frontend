@@ -380,8 +380,15 @@ const SaleCard = () => {
                 Accept: "application/json",
             });
 
-            setCardData(response.data);
-            setCardDataCustom(response.data);
+            const transformedData = {
+                ...response.data,
+                creditors: (response.data.creditors ?? []).map(
+                    (bank) => bank.id
+                ),
+            };
+
+            setCardData(transformedData);
+            setCardDataCustom(transformedData);
 
             await Promise.all([
                 fetchPhysicalpersons(),
@@ -418,8 +425,15 @@ const SaleCard = () => {
         postData("PATCH", `${URL}/${saleId}`, data)
             .then((response) => {
                 if (response?.ok) {
-                    setCardData(response);
-                    setCardDataCustom(response);
+                    const transformedData = {
+                        ...response,
+                        creditors: (response.creditors ?? []).map(
+                            (bank) => bank.id
+                        ),
+                    };
+
+                    setCardData(transformedData);
+                    setCardDataCustom(transformedData);
                     fetchServices();
                     // toast.dismiss(query);
 
@@ -487,6 +501,14 @@ const SaleCard = () => {
 
     //     setAvailableToChange(!hasErrors);
     // }, [cardData]);
+
+    useEffect(() => {
+        console.log(cardDataCustom.creditors);
+    }, [cardDataCustom]);
+
+    useEffect(() => {
+        console.log(banks);
+    }, [banks]);
 
     return !isDataLoaded ? (
         <Loader />
@@ -711,23 +733,21 @@ const SaleCard = () => {
                                                 industry.value !==
                                                 cardDataCustom?.industries?.main
                                         )}
+                                        selectedValues={
+                                            (industries?.length > 0 &&
+                                                industries
+                                                    .filter((item) =>
+                                                        cardDataCustom.industries?.others.includes(
+                                                            item.value
+                                                        )
+                                                    )
+                                                    .map(
+                                                        (item) => item.value
+                                                    )) ||
+                                            []
+                                        }
                                         onChange={(updated) => {
                                             if (mode === "read") return;
-
-                                            // console.log(updated);
-                                            // console.log(
-                                            //     (industries?.length > 0 &&
-                                            //         industries
-                                            //             .filter((item) =>
-                                            //                 cardDataCustom.industries?.others.includes(
-                                            //                     item.value
-                                            //                 )
-                                            //             )
-                                            //             .map(
-                                            //                 (item) => item.value
-                                            //             )) ||
-                                            //         []
-                                            // );
 
                                             setCardDataCustom({
                                                 ...cardDataCustom,
@@ -746,19 +766,6 @@ const SaleCard = () => {
                                                 },
                                             })
                                         }
-                                        selectedValues={
-                                            (industries?.length > 0 &&
-                                                industries
-                                                    .filter((item) =>
-                                                        cardDataCustom.industries?.others.includes(
-                                                            item.value
-                                                        )
-                                                    )
-                                                    .map(
-                                                        (item) => item.value
-                                                    )) ||
-                                            []
-                                        }
                                         filedName="others"
                                         popupTitle="Добавить дополнительные отрасли"
                                         buttonTitle="Добавить дополнительную отрасль"
@@ -766,59 +773,6 @@ const SaleCard = () => {
                                             mode == "read" || !availableToChange
                                         }
                                     />
-
-                                    {/* <CustomSelect
-                                        type={"checkbox"}
-                                        placeholder={
-                                            mode === "edit"
-                                                ? "Выбрать из списка"
-                                                : ""
-                                        }
-                                        options={industries.filter(
-                                            (industry) =>
-                                                industry.value !==
-                                                cardDataCustom?.industries?.main
-                                        )}
-                                        selectedValues={
-                                            (industries?.length > 0 &&
-                                                industries
-                                                    .filter((item) =>
-                                                        cardDataCustom.industries?.others.includes(
-                                                            item.value
-                                                        )
-                                                    )
-                                                    .map(
-                                                        (item) => item.value
-                                                    )) ||
-                                            []
-                                        }
-                                        onChange={(values) => {
-                                            if (mode === "read") return;
-
-                                            const newArray = values.map(
-                                                (item) => item.value
-                                            );
-
-                                            setCardDataCustom({
-                                                ...cardDataCustom,
-                                                industries: {
-                                                    ...cardDataCustom.industries,
-                                                    others: newArray,
-                                                },
-                                            });
-
-                                            updateCard(true, {
-                                                industries: {
-                                                    ...cardDataCustom.industries,
-                                                    others: newArray,
-                                                },
-                                            });
-                                        }}
-                                        mode={mode}
-                                        isDisabled={
-                                            mode == "read" || !availableToChange
-                                        }
-                                    /> */}
                                 </div>
 
                                 <div className="card__general-info__block">
@@ -882,7 +836,34 @@ const SaleCard = () => {
                                         <Hint message={"Банк"} />
                                     </div>
 
-                                    <CustomSelect
+                                    <CardMultiSelector
+                                        options={banks}
+                                        selectedValues={
+                                            cardDataCustom.creditors
+                                        }
+                                        onChange={(updated) => {
+                                            if (mode === "read") return;
+
+                                            setCardDataCustom((prev) => ({
+                                                ...prev,
+                                                creditors: updated.banks,
+                                            }));
+                                        }}
+                                        submit={() =>
+                                            updateCard(true, {
+                                                creditors:
+                                                    cardDataCustom.creditors,
+                                            })
+                                        }
+                                        filedName="banks"
+                                        popupTitle="Добавить банк"
+                                        buttonTitle="Добавить банк"
+                                        disabled={
+                                            mode == "read" || !availableToChange
+                                        }
+                                    />
+
+                                    {/* <CustomSelect
                                         type={"checkbox"}
                                         placeholder={
                                             mode === "edit"
@@ -909,6 +890,8 @@ const SaleCard = () => {
                                                 (item) => item.value
                                             );
 
+                                            console.log(newArray);
+
                                             setCardDataCustom((prev) => ({
                                                 ...prev,
                                                 creditors: [
@@ -917,15 +900,15 @@ const SaleCard = () => {
                                                 ],
                                             }));
 
-                                            updateCard(true, {
-                                                creditors: newArray,
-                                            });
+                                            // updateCard(true, {
+                                            //     creditors: newArray,
+                                            // });
                                         }}
                                         mode={mode}
                                         isDisabled={
                                             mode == "read" || !availableToChange
                                         }
-                                    />
+                                    /> */}
                                 </div>
 
                                 <div className="card__general-info__block">
