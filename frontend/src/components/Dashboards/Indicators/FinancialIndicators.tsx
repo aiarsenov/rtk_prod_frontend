@@ -450,24 +450,32 @@ const FinancialIndicators = ({
                                 />
                             </div>
 
-                            <div
-                                style={{
-                                    height:
-                                        (financialProfitListData1.labels
-                                            ?.length || 0) > 5
-                                            ? `${
-                                                  financialProfitListData1
-                                                      .labels.length * 60
-                                              }px`
-                                            : "300px",
-                                }}
-                            >
-                                <Bar
-                                    data={financialListData1}
-                                    options={horizontalOptions}
-                                />
-                            </div>
+                            {mergedList.length > 0 && (
+                                <div
+                                    style={{
+                                        height:
+                                            (financialProfitListData1.labels
+                                                ?.length || 0) > 5
+                                                ? `${
+                                                      financialProfitListData1
+                                                          .labels.length * 60
+                                                  }px`
+                                                : "300px",
+                                    }}
+                                >
+                                    <Bar
+                                        data={financialListData1}
+                                        options={horizontalOptions}
+                                    />
+                                </div>
+                            )}
                         </div>
+
+                        {mergedList.length <= 0 && (
+                            <span className="absolute inset-0 text-[#667085] flex items-center justify-center">
+                                нет данных
+                            </span>
+                        )}
 
                         <div className="flex flex-col">
                             <SortBtn
@@ -478,23 +486,25 @@ const FinancialIndicators = ({
                                 className={"text-left h-[40px]"}
                             />
 
-                            <div
-                                style={{
-                                    height:
-                                        (financialProfitListData1.labels
-                                            ?.length || 0) > 5
-                                            ? `${
-                                                  financialProfitListData1
-                                                      .labels.length * 60
-                                              }px`
-                                            : "300px",
-                                }}
-                            >
-                                <Bar
-                                    data={financialListData2}
-                                    options={horizontalOptionsNoLabels}
-                                />
-                            </div>
+                            {mergedList.length > 0 && (
+                                <div
+                                    style={{
+                                        height:
+                                            (financialProfitListData1.labels
+                                                ?.length || 0) > 5
+                                                ? `${
+                                                      financialProfitListData1
+                                                          .labels.length * 60
+                                                  }px`
+                                                : "300px",
+                                    }}
+                                >
+                                    <Bar
+                                        data={financialListData2}
+                                        options={horizontalOptionsNoLabels}
+                                    />
+                                </div>
+                            )}
                         </div>
 
                         <div className="flex flex-col">
@@ -506,23 +516,25 @@ const FinancialIndicators = ({
                                 className={"text-left h-[40px]"}
                             />
 
-                            <div
-                                style={{
-                                    height:
-                                        (financialProfitListData1.labels
-                                            ?.length || 0) > 5
-                                            ? `${
-                                                  financialProfitListData1
-                                                      .labels.length * 60
-                                              }px`
-                                            : "300px",
-                                }}
-                            >
-                                <Bar
-                                    data={financialProfitListData1}
-                                    options={horizontalOptionsNoLabels}
-                                />
-                            </div>
+                            {mergedList.length > 0 && (
+                                <div
+                                    style={{
+                                        height:
+                                            (financialProfitListData1.labels
+                                                ?.length || 0) > 5
+                                                ? `${
+                                                      financialProfitListData1
+                                                          .labels.length * 60
+                                                  }px`
+                                                : "300px",
+                                    }}
+                                >
+                                    <Bar
+                                        data={financialProfitListData1}
+                                        options={horizontalOptionsNoLabels}
+                                    />
+                                </div>
+                            )}
                         </div>
 
                         <div className="flex flex-col">
@@ -534,23 +546,25 @@ const FinancialIndicators = ({
                                 className={"text-left h-[40px]"}
                             />
 
-                            <div
-                                style={{
-                                    height:
-                                        (financialProfitListData1.labels
-                                            ?.length || 0) > 5
-                                            ? `${
-                                                  financialProfitListData1
-                                                      .labels.length * 60
-                                              }px`
-                                            : "300px",
-                                }}
-                            >
-                                <Bar
-                                    data={financialProfitListData2}
-                                    options={horizontalOptionsWithPercent}
-                                />
-                            </div>
+                            {mergedList.length > 0 && (
+                                <div
+                                    style={{
+                                        height:
+                                            (financialProfitListData1.labels
+                                                ?.length || 0) > 5
+                                                ? `${
+                                                      financialProfitListData1
+                                                          .labels.length * 60
+                                                  }px`
+                                                : "300px",
+                                    }}
+                                >
+                                    <Bar
+                                        data={financialProfitListData2}
+                                        options={horizontalOptionsWithPercent}
+                                    />
+                                </div>
+                            )}
                         </div>
                     </div>
                 )}

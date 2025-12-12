@@ -133,6 +133,7 @@
             grid-template-columns: minmax(410px, 30%) repeat(3, 300px);
 
             & > div {
+                position: relative;
                 min-height: 300px;
                 min-width: 300px;
             }
