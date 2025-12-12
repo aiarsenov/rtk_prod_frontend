@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import EmployeeMetrics from "./EmployeeMetrics";
 import EmployeeItem from "./EmployeeItem";
@@ -195,12 +195,16 @@ const EmployeesStats = ({
         },
     };
 
+    useEffect(() => {
+        console.log(employeeMetrics.positions_histogram);
+    }, [employeeMetrics]);
+
     return (
         <section className="indicators__employees">
             <h2 className="subtitle indicators__employees-title">Персонал</h2>
 
             <div className="dashboards__block">
-                <div className="indicators__employees-left">
+                <div className="indicators__employees-left relative">
                     <EmployeeMetrics {...employeeMetrics} />
 
                     <div className="flex items-start gap-[5px]">
@@ -226,24 +230,30 @@ const EmployeesStats = ({
                     </div>
 
                     <div className="h-[225px] overflow-auto">
-                        <div
-                            style={{
-                                minWidth: "600px",
-                                height:
-                                    (EmployeeMetricsData.labels?.length || 0) >
-                                    5
-                                        ? `${
-                                              EmployeeMetricsData.labels
-                                                  .length * 47
-                                          }px`
-                                        : "225px",
-                            }}
-                        >
-                            <Bar
-                                data={EmployeeMetricsData}
-                                options={horizontalOptions}
-                            />
-                        </div>
+                        {employeeMetrics.positions_histogram ? (
+                            <div
+                                style={{
+                                    minWidth: "600px",
+                                    height:
+                                        (EmployeeMetricsData.labels?.length ||
+                                            0) > 5
+                                            ? `${
+                                                  EmployeeMetricsData.labels
+                                                      .length * 47
+                                              }px`
+                                            : "225px",
+                                }}
+                            >
+                                <Bar
+                                    data={EmployeeMetricsData}
+                                    options={horizontalOptions}
+                                />
+                            </div>
+                        ) : (
+                            <span className="absolute inset-0 text-[#667085] flex items-center justify-center">
+                                нет данных
+                            </span>
+                        )}
                     </div>
                 </div>
 
