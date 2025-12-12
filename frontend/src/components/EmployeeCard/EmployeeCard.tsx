@@ -656,7 +656,9 @@ const EmployeeCard = () => {
 
                                     {cardDataCustom.is_staff && (
                                         <div>
-                                            <div className="form-label">Статус</div>
+                                            <div className="form-label">
+                                                Статус
+                                            </div>
 
                                             <CreatableSelect
                                                 options={STATUSES}
@@ -761,7 +763,7 @@ const EmployeeCard = () => {
                         <section className="card__aside-content">
                             <div className="employee-card__workload-summary">
                                 <h2 className="card__subtitle">
-                                    Свод по трудозатратам, часы
+                                    Свод по трудозатратам
                                 </h2>
 
                                 <div className="employee-card__workload-summary__header">
@@ -830,7 +832,13 @@ const EmployeeCard = () => {
                                     />
                                 </div>
 
-                                <div className="employee-card__workload-summary__body">
+                                <div className="employee-card__workload-summary__wrapper">
+                                    <div className="employee-card__workload-summary__head">
+                                        <span>Проект</span>
+                                        <span>Часы</span>
+                                        <span className="text-right">Доля</span>
+                                    </div>
+
                                     <EmployeeWorkloadSummary
                                         workloadSummaryMaxPercentage={
                                             workloadSummaryMaxPercentage
