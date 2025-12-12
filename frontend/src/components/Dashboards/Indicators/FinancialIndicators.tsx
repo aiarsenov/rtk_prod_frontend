@@ -375,7 +375,7 @@ const FinancialIndicators = ({
     };
 
     useEffect(() => {
-        if (mergedList.length > 0) {
+        if (mergedList) {
             setSortedMergetList(sortFinanceValues(mergedList, sortBy));
             setIsLoading(false);
         }
@@ -398,6 +398,8 @@ const FinancialIndicators = ({
                     }
                     return acc;
                 }, []);
+
+            console.log(merged);
 
             setMergetList(merged);
             setSortedMergetList(merged);
