@@ -61,7 +61,10 @@
             max-width: 250px;
             position: relative;
             z-index: 0;
-            
+
+            @media (min-width: $media-xxxl) {
+                max-width: 300px;
+            }
         }
 
         &-label-date {
