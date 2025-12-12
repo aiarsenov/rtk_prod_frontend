@@ -32,7 +32,7 @@ const ReferenceItem = ({
 
                 if (Array.isArray(value) && value.length > 0) {
                     return (
-                        <td className="min-w-[100px] max-w-[280px]" key={key}>
+                        <td className="min-w-[100px] max-w-[250px]" key={key}>
                             <table className="w-full">
                                 <tbody>
                                     {Array.isArray(value) ? (
@@ -57,7 +57,7 @@ const ReferenceItem = ({
                                         ))
                                     ) : (
                                         <tr>
-                                            <td className="min-w-[100px] max-w-[280px]">
+                                            <td className="min-w-[100px] max-w-[250px]">
                                                 —
                                             </td>
                                         </tr>
@@ -68,7 +68,7 @@ const ReferenceItem = ({
                     );
                 } else {
                     return (
-                        <td className="min-w-[100px] max-w-[280px]" key={key}>
+                        <td className="min-w-[100px] max-w-[250px]" key={key}>
                             {key === "type" || key === "position_id" ? (
                                 <select name={key} value={value || ""} disabled>
                                     {bookId === "management-report-types" ? (
