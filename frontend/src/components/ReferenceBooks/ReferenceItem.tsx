@@ -196,6 +196,7 @@ const ReferenceItem = ({
                                         data.projects_count > 0 ||
                                         data.employee_count > 0 ||
                                         data.employees_count > 0 ||
+                                        (bookId == "roles" && data.count > 0) ||
                                         data.total_employees_count > 0
                                     }
                                 >
