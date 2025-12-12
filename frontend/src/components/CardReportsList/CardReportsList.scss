@@ -149,6 +149,19 @@
         .management-reports__item__col {
             grid-column: -1 / 1;
 
+            div {
+                font-weight: 400;
+                font-size: 14px;
+                line-height: 150%;
+            }
+
+            span {
+                color: #667085;
+                font-weight: 400;
+                font-size: 12px;
+                line-height: 150%;
+            }
+
             @media (min-width: 560px) {
                 grid-column: unset;
             }

@@ -58,20 +58,20 @@ const CardManagementReportList = ({
                                         item.status?.toLowerCase() ===
                                             "завершён" ||
                                         item.status?.toLowerCase() ===
-                                            "утверждён"
+                                            "утверждён" ||
+                                        item.status?.toLowerCase() ===
+                                            "запланирован"
                                     ) {
-                                        statusClass =
-                                            "reports__list-item__status_completed completed";
+                                        statusClass = "status_active";
                                     } else if (
                                         item.status?.toLowerCase() ===
                                             "в процессе" ||
                                         item.status?.toLowerCase() ===
-                                            "запланирован" ||
-                                        item.status?.toLowerCase() ===
                                             "в работе"
                                     ) {
-                                        statusClass =
-                                            "reports__list-item__status_active active";
+                                        statusClass = "status_inprogress";
+                                    } else {
+                                        statusClass = "";
                                     }
 
                                     return (
@@ -105,12 +105,9 @@ const CardManagementReportList = ({
                                                 </div>
                                                 {item?.physical_person?.roles?.map(
                                                     (item) => (
-                                                        <div
-                                                            className="text-sm"
-                                                            key={item.id}
-                                                        >
+                                                        <span key={item.id}>
                                                             {item.name}
-                                                        </div>
+                                                        </span>
                                                     )
                                                 )}
                                             </div>

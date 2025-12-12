@@ -12,15 +12,17 @@ const ManagementReportListItem = ({ openEditor, reportData }: Props) => {
         reportData.status?.toLowerCase() === "завершен" ||
         reportData.status?.toLowerCase() === "утвержден" ||
         reportData.status?.toLowerCase() === "завершён" ||
-        reportData.status?.toLowerCase() === "утверждён"
+        reportData.status?.toLowerCase() === "утверждён" ||
+        reportData.status?.toLowerCase() === "запланирован"
     ) {
-        statusClass = "reports__list-item__status_completed completed";
+        statusClass = "status_active";
     } else if (
         reportData.status?.toLowerCase() === "в процессе" ||
-        reportData.status?.toLowerCase() === "запланирован" ||
         reportData.status?.toLowerCase() === "в работе"
     ) {
-        statusClass = "reports__list-item__status_active active";
+        statusClass = "status_inprogress";
+    } else {
+        statusClass = "";
     }
 
     return (

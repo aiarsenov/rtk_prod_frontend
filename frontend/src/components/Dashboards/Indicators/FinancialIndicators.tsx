@@ -399,8 +399,6 @@ const FinancialIndicators = ({
                     return acc;
                 }, []);
 
-            console.log(merged);
-
             setMergetList(merged);
             setSortedMergetList(merged);
         }

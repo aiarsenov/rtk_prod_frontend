@@ -81,7 +81,7 @@ const ManagementReportsTab = ({
                         style={{ gridTemplateColumns: "1fr 1fr 100px 60px" }}
                     >
                         <span>Месяц</span>
-                        <span>Рук</span>
+                        <span>Ответственный</span>
                         <span>Статус</span>
                         <span>Оценка</span>
                     </div>

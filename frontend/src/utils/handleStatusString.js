@@ -6,13 +6,18 @@ const handleStatusString = (status) => {
         status.toLowerCase() === "утвержден" ||
         status.toLowerCase() === "получено согласие"
     ) {
-        return "completed";
+        return "status_active";
+    } else if (
+        status.toLowerCase() === "в процессе" ||
+        status.toLowerCase() === "в работе"
+    ) {
+        return "status_inprogress";
     } else if (
         status.toLowerCase() === "получен отказ" ||
         status.toLowerCase() === "отменен" ||
         status.toLowerCase() === "отменён"
     ) {
-        return "canceled";
+        return "status_canceled";
     }
 };
 

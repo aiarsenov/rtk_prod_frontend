@@ -63,6 +63,8 @@ const ManagementItem = ({
                         value.toLowerCase() === "в процессе" ||
                         value.toLowerCase() === "в работе"
                     ) {
+                        statusClass = "registry-table__item-status_inprogress";
+                    } else {
                         statusClass = "registry-table__item-status_static";
                     }
                 }
