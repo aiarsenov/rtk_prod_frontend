@@ -15,7 +15,7 @@ const ReferenceBooksTheadItems = ({
         <>
             {COLUMNS[bookId].map(({ label, key, filter, options, hint }) => {
                 return (
-                    <th className="min-w-[100px]" rowSpan="2" key={key}>
+                    <th className="min-w-[80px]" rowSpan="2" key={key}>
                         <div className="registry-table__thead-item">
                             {filter ? (
                                 <>
