@@ -58,7 +58,8 @@
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
-            max-width: 130px;
+            // max-width: 130px;
+            max-width: 100%;
             position: relative;
             z-index: 0;
         }
@@ -107,8 +108,7 @@
         }
 
         th {
-            padding: 15px;
-            padding-left: 15px;
+            padding: 30px 15px 15px;
             position: relative;
             vertical-align: top;
             background: var(--color-white);

@@ -1,5 +1,6 @@
 import FilterButton from "../FilterButton";
 import MultiSelectWithSearch from "../MultiSelect/MultiSelectWithSearch";
+import Hint from "../Hint/Hint";
 
 const ReferenceBooksTheadItems = ({
     bookId,
@@ -12,7 +13,7 @@ const ReferenceBooksTheadItems = ({
 }) => {
     return (
         <>
-            {COLUMNS[bookId].map(({ label, key, filter, options }) => {
+            {COLUMNS[bookId].map(({ label, key, filter, options, hint }) => {
                 return (
                     <th className="min-w-[125px]" rowSpan="2" key={key}>
                         <div className="registry-table__thead-item">
@@ -20,9 +21,9 @@ const ReferenceBooksTheadItems = ({
                                 <>
                                     <div
                                         className="registry-table__thead-label"
-                                        style={{
-                                            maxWidth: "200px",
-                                        }}
+                                        // style={{
+                                        //     maxWidth: "200px",
+                                        // }}
                                     >
                                         {label}
                                     </div>
@@ -91,13 +92,17 @@ const ReferenceBooksTheadItems = ({
                                     )}
                                 </>
                             ) : (
-                                <div
-                                    className="registry-table__thead-label"
-                                    style={{
-                                        maxWidth: "200px",
-                                    }}
-                                >
-                                    {label}
+                                <div className="flex items-center gap-[5px]">
+                                    <div
+                                        className="registry-table__thead-label"
+                                        // style={{
+                                        //     maxWidth: "200px",
+                                        // }}
+                                    >
+                                        {label}
+                                    </div>
+
+                                    {hint && <Hint message="" />}
                                 </div>
                             )}
                         </div>

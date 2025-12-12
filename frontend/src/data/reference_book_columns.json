@@ -83,8 +83,8 @@
     ],
     "departments": [
         { "label": "Наименование", "key": "name" },
-        { "label": "Учитывать в численности и ФОТ", "key": "include_in_payroll" },
-        { "label": "Кол-во сотрудников в подразделении", "key": "total_employees_count" },
+        { "label": "Учитывать в численности и ФОТ", "key": "include_in_payroll", "hint": true },
+        { "label": "Кол-во сотрудников в подразделении", "key": "total_employees_count", "hint": true },
         { "label": "Последнее изменение", "key": "updated_at" },
         { "label": "Автор измнения", "key": "updated_by" }
     ]

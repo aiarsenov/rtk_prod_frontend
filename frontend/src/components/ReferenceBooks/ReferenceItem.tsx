@@ -171,6 +171,13 @@ const ReferenceItem = ({
                             bookId != "working-hours" && (
                                 <button
                                     onClick={() => {
+                                        if (
+                                            bookId == "departments" &&
+                                            data.total_employees_count > 0
+                                        ) {
+                                            return;
+                                        }
+
                                         if (data.projects_count) {
                                             if (data.projects_count < 1) {
                                                 handleOpenDeletePopup({
@@ -187,7 +194,8 @@ const ReferenceItem = ({
                                     title="Удалить элемент"
                                     disabled={
                                         data.projects_count > 0 ||
-                                        data.employee_count > 0
+                                        data.employee_count > 0 ||
+                                        data.total_employees_count > 0
                                     }
                                 >
                                     <svg

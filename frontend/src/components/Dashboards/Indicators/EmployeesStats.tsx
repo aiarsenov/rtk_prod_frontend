@@ -195,10 +195,6 @@ const EmployeesStats = ({
         },
     };
 
-    useEffect(() => {
-        console.log(employeeMetrics.positions_histogram);
-    }, [employeeMetrics]);
-
     return (
         <section className="indicators__employees">
             <h2 className="subtitle indicators__employees-title">Персонал</h2>
