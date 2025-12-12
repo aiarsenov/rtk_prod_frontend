@@ -21,9 +21,9 @@ const ReferenceBooksTheadItems = ({
                                 <>
                                     <div
                                         className="registry-table__thead-label"
-                                        style={{
-                                            maxWidth: "250px",
-                                        }}
+                                        // style={{
+                                        //     maxWidth: "250px",
+                                        // }}
                                     >
                                         {label}
                                     </div>
@@ -95,9 +95,9 @@ const ReferenceBooksTheadItems = ({
                                 <div className="flex items-center gap-[5px]">
                                     <div
                                         className="registry-table__thead-label"
-                                        style={{
-                                            maxWidth: "250px",
-                                        }}
+                                        // style={{
+                                        //     maxWidth: "250px",
+                                        // }}
                                     >
                                         {label}
                                     </div>
