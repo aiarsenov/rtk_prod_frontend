@@ -135,10 +135,20 @@ const ReferenceItem = ({
                                 }) || "—"
                             ) : key === "updated_by" ? (
                                 value?.name || "—"
+                            ) : key === "full_name" ? (
+                                <div className="hidden-group">
+                                    <div className="visible-text">
+                                        <div>{value?.toString() || "—"}</div>
+                                    </div>
+                                    <div className="hidden-text">
+                                        {value?.toString() || "—"}
+                                    </div>
+                                </div>
                             ) : (
                                 <div
                                     style={
-                                        bookId === "banks"
+                                        bookId === "banks" ||
+                                        key !== "full_name"
                                             ? {}
                                             : {
                                                   whiteSpace: "nowrap",
