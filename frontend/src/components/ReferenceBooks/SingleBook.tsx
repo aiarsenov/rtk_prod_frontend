@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 
 import getData from "../../utils/getData";
 import postData from "../../utils/postData";
+import { sortTextList } from "../../utils/sortTextList";
 
 import Loader from "../Loader";
 import Popup from "../Popup/Popup";
@@ -35,6 +36,9 @@ const SingleBook = () => {
 
     const [mode, setMode] = useState("edit");
 
+    const [sortBy, setSortBy] = useState({ key: "", action: "" });
+    const [sortedList, setSortedList] = useState([]);
+
     const [booksItems, setBooksItems] = useState([]);
     const [refBooksItems, setRefBooksItems] = useState([]);
     const [openFilter, setOpenFilter] = useState("");
@@ -43,7 +47,8 @@ const SingleBook = () => {
     const [listLength, setListLength] = useState(0);
 
     const [rolesAction, setRolesAction] = useState({ action: "", roleId: "" }); // Состояние генерации отчетов в справочнике Роли в проектах
-    const [managementReportTypeAction, setManagementReportTypeAction] = useState({ action: "", typeId: "" });
+    const [managementReportTypeAction, setManagementReportTypeAction] =
+        useState({ action: "", typeId: "" });
     const [isNewElem, setIsNewElem] = useState(false); // Попап добавления записи
     const [isEditElem, setIsEditElem] = useState(false); // Попап изменения записи
     const [isDeleteElem, setIsDeleteElem] = useState(false); // Попап удаления записи
@@ -1149,6 +1154,10 @@ const SingleBook = () => {
         return booksItems;
     }, [booksItems, bookId, filters]);
 
+    useEffect(() => {
+        setSortedList(sortTextList(filteredList, sortBy));
+    }, [sortBy, filteredList]);
+
     return (
         <main className="page reference-books">
             <ToastContainer containerId="singleBook" />
@@ -1258,13 +1267,15 @@ const SingleBook = () => {
                                         setFilters={setFilters}
                                         openFilter={openFilter}
                                         setOpenFilter={setOpenFilter}
+                                        sortBy={sortBy}
+                                        setSortBy={setSortBy}
                                     />
                                 </tr>
                             </thead>
 
                             <tbody className="registry-table__tbody">
-                                {filteredList?.length > 0 &&
-                                    filteredList.map((item) => {
+                                {sortedList?.length > 0 &&
+                                    sortedList.map((item) => {
                                         if (
                                             bookId === "creditor" ||
                                             bookId === "contragent" ||

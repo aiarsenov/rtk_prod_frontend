@@ -63,7 +63,7 @@
     ],
     "positions": [
         { "label": "Наименование", "key": "name", "is_sortable": true },
-        { "label": "Тип должности", "key": "type" },
+        { "label": "Тип должности", "key": "type", "hint": true },
         { "label": "Кол-во сотрудников", "key": "employees_count" },
         { "label": "Последнее изменение", "key": "updated_at" },
         { "label": "Автор измнения", "key": "updated_by" }
