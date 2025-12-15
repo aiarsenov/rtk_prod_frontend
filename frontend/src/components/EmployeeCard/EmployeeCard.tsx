@@ -65,8 +65,6 @@ const EmployeeCard = () => {
 
     const PhoneMask = "+{7} (000) 000 00 00";
 
-    // let query;
-
     // Текущая загрузка
     const getWorkload = () => {
         getData(
@@ -794,10 +792,9 @@ const EmployeeCard = () => {
                                                     ),
                                                 ];
 
-                                                console.log(dates);
-
                                                 setDateRange(dates);
                                             }}
+                                            shortMonthYear
                                             type="months"
                                             single={false}
                                         />

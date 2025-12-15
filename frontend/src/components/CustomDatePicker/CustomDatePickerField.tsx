@@ -6,6 +6,22 @@ import formatDateDMY from "../../utils/formatDateDMY";
 
 import "./CustomDatePicker.scss";
 
+// Форматируем месяца в тип Фев'25 - Ноя'25
+const formatShortMonthYear = (date) => {
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return "";
+
+    const month = new Intl.DateTimeFormat("ru-RU", {
+        month: "short",
+    })
+        .format(d)
+        .replace(".", "");
+
+    const year = d.getFullYear().toString().slice(-2);
+
+    return `${month.charAt(0).toUpperCase()}${month.slice(1)}'${year}`;
+};
+
 const CustomDatePickerField = ({
     className = "",
     type = "days",
@@ -20,6 +36,7 @@ const CustomDatePickerField = ({
         : "мм.гггг - мм.гггг",
     showMonthYear = false,
     onChange,
+    shortMonthYear,
     disabled,
     minDate,
 }: {
@@ -33,6 +50,7 @@ const CustomDatePickerField = ({
     onChange: () => void;
     showMonthYear: boolean;
     single: boolean;
+    shortMonthYear?: boolean;
     disabled: boolean;
 }) => {
     const [isOpen, setIsOpen] = useState("");
@@ -62,6 +80,15 @@ const CustomDatePickerField = ({
     };
 
     const displayValue = (() => {
+        if (shortMonthYear) {
+            if (startDate && endDate)
+                return `${formatShortMonthYear(
+                    startDate
+                )} - ${formatShortMonthYear(endDate)}`;
+            if (startDate) return formatShortMonthYear(startDate);
+            return "";
+        }
+
         if (showMonthYear) {
             if (startDate && endDate)
                 return `${formatMonthYear(startDate)} - ${formatMonthYear(
@@ -77,6 +104,7 @@ const CustomDatePickerField = ({
                 type
             )}`;
         if (startDate) return formatDateDMY(startDate, type);
+
         return formatted || "";
     })();
 
