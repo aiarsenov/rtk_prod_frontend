@@ -110,6 +110,7 @@ const ReportWindow = ({
     const [reportStatuses, setReportStatuses] = useState([]);
     const [regularityOptions, setRegularityOptions] = useState([]);
 
+    const [isDataChanged, setIsDataChanged] = useState(false); // Изменились ли данные отчета (для проверки перед закрытием)
     const [isDataLoaded, setIsDataLoaded] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [saveBeforeClose, setSaveBeforeClose] = useState(false);
@@ -234,6 +235,8 @@ const ReportWindow = ({
                         resetState();
                     })
                     .catch(() => {
+                        setSaveBeforeClose(false);
+                        // setReportWindowsState(true);
                         // Ошибка уже обработана в updateReport, не закрываем окно
                     });
             } else {
@@ -247,6 +250,8 @@ const ReportWindow = ({
                     });
             }
         } else {
+            setSaveBeforeClose(false);
+            // setReportWindowsState(true);
             toast.error(Object.values(newErrors).join("\n"), {
                 className: "toast-multiline",
                 isLoading: false,
@@ -334,6 +339,10 @@ const ReportWindow = ({
             ...prev,
             [name]: value,
         }));
+
+        if (!isDataChanged) {
+            setIsDataChanged(true);
+        }
     };
 
     // Добавление блока заказчика или кредитора
@@ -358,6 +367,9 @@ const ReportWindow = ({
             updatedPersons[index][key] = value;
             return { ...prev, responsible_persons: updatedPersons };
         });
+        if (!isDataChanged) {
+            setIsDataChanged(true);
+        }
     };
 
     // Обработка селектов подрядчиков
@@ -374,6 +386,9 @@ const ReportWindow = ({
             updatedContractors[index][key] = value;
             return { ...prev, contragents: updatedContractors };
         });
+        if (!isDataChanged) {
+            setIsDataChanged(true);
+        }
     };
 
     // Удаление сотрудника из teammates
@@ -389,6 +404,10 @@ const ReportWindow = ({
             updatedPersons.splice(index, 1);
             return { ...prev, responsible_persons: updatedPersons };
         });
+
+        if (!isDataChanged) {
+            setIsDataChanged(true);
+        }
     };
 
     // Удаление подрядчика из contractors
@@ -404,6 +423,10 @@ const ReportWindow = ({
             updatedContragents.splice(index, 1);
             return { ...prev, contragents: updatedContragents };
         });
+
+        if (!isDataChanged) {
+            setIsDataChanged(true);
+        }
     };
 
     // Выставление статуса отчета
@@ -615,6 +638,10 @@ const ReportWindow = ({
             setContractors(preFillReportData.contragents);
         }
 
+        if (!isDataChanged) {
+            setIsDataChanged(true);
+        }
+
         setAutoPrefillPopupState(false);
         setPreFillReportData({});
         setAutoPrefillMessage("");
@@ -627,7 +654,6 @@ const ReportWindow = ({
                 setReportData(response.data);
 
                 setTeammates(response.data.responsible_persons);
-
                 setContractors(response.data.contragents);
 
                 setIsLoading(false);
@@ -782,18 +808,18 @@ const ReportWindow = ({
         };
     }, [reportWindowsState, saveBeforeClose, resetState]);
 
-
     // Список селекторов, которые не будут закрываться при повторном клике на поле ввода
     const selectA = useControlledSelect("selectA");
     const selectB = useControlledSelect("selectB");
     const selectC = useControlledSelect("selectC");
 
-    return !saveBeforeClose ? (
+    return (
         <>
             <div
                 className={`bottom-sheet bottom-sheet_desk ${
                     reportWindowsState ? "active" : ""
                 }`}
+                style={{ display: saveBeforeClose ? "none" : "flex" }}
                 onClick={(e) => {
                     // Не закрываем редактор, если идет выделение содержимого мышью
                     const selection = window.getSelection();
@@ -802,7 +828,16 @@ const ReportWindow = ({
                         selection.toString().length === 0 &&
                         e.target === e.currentTarget
                     ) {
-                        resetState();
+                        if (mode === "read") {
+                            resetState();
+                        } else {
+                            if (isDataChanged) {
+                                // setReportWindowsState(false);
+                                setSaveBeforeClose(true);
+                            } else {
+                                resetState();
+                            }
+                        }
                     }
                 }}
             >
@@ -1081,15 +1116,20 @@ const ReportWindow = ({
                                                     value={
                                                         reportData.report_period
                                                     }
-                                                    onChange={(val) =>
+                                                    onChange={(val) => {
                                                         setReportData(
                                                             (prev) => ({
                                                                 ...prev,
                                                                 report_period:
                                                                     val,
                                                             })
-                                                        )
-                                                    }
+                                                        );
+                                                        if (!isDataChanged) {
+                                                            setIsDataChanged(
+                                                                true
+                                                            );
+                                                        }
+                                                    }}
                                                 />
                                             </div>
 
@@ -1135,15 +1175,22 @@ const ReportWindow = ({
                                                         value={
                                                             reportData.implementation_period
                                                         }
-                                                        onChange={(val) =>
+                                                        onChange={(val) => {
                                                             setReportData(
                                                                 (prev) => ({
                                                                     ...prev,
                                                                     implementation_period:
                                                                         val,
                                                                 })
-                                                            )
-                                                        }
+                                                            );
+                                                            if (
+                                                                !isDataChanged
+                                                            ) {
+                                                                setIsDataChanged(
+                                                                    true
+                                                                );
+                                                            }
+                                                        }}
                                                     />
                                                 </div>
                                             </div>
@@ -1260,15 +1307,23 @@ const ReportWindow = ({
                                                         value={
                                                             reportData.execution_period
                                                         }
-                                                        onChange={(val) =>
+                                                        onChange={(val) => {
                                                             setReportData(
                                                                 (prev) => ({
                                                                     ...prev,
                                                                     execution_period:
                                                                         val,
                                                                 })
-                                                            )
-                                                        }
+                                                            );
+
+                                                            if (
+                                                                !isDataChanged
+                                                            ) {
+                                                                setIsDataChanged(
+                                                                    true
+                                                                );
+                                                            }
+                                                        }}
                                                     />
                                                 </div>
                                             </div>
@@ -1329,15 +1384,23 @@ const ReportWindow = ({
                                                         value={
                                                             reportData.approval_date
                                                         }
-                                                        onChange={(val) =>
+                                                        onChange={(val) => {
                                                             setReportData(
                                                                 (prev) => ({
                                                                     ...prev,
                                                                     approval_date:
                                                                         val,
                                                                 })
-                                                            )
-                                                        }
+                                                            );
+
+                                                            if (
+                                                                !isDataChanged
+                                                            ) {
+                                                                setIsDataChanged(
+                                                                    true
+                                                                );
+                                                            }
+                                                        }}
                                                     />
 
                                                     {errorMessage !== "" && (
@@ -1482,70 +1545,71 @@ const ReportWindow = ({
                                         </div>
                                     )}
 
-                                    <div className="bottom-nav">
-                                        <div className="container">
-                                            {mode === "edit" ? (
-                                                <>
+                                    {!isLoading && isDataLoaded && (
+                                        <div className="bottom-nav">
+                                            <div className="container">
+                                                {mode === "edit" ? (
+                                                    <>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                // const newErrors =
+                                                                //     validateFields();
+
+                                                                //   if (
+                                                                //     Object.keys(
+                                                                //         newErrors
+                                                                //     ).length === 0
+                                                                // ) {
+
+                                                                if (
+                                                                    isDataChanged
+                                                                ) {
+                                                                    // setReportWindowsState(
+                                                                    //     false
+                                                                    // );
+                                                                    setSaveBeforeClose(
+                                                                        true
+                                                                    );
+                                                                } else {
+                                                                    resetState();
+                                                                }
+                                                            }}
+                                                            className="cancel-button"
+                                                            title="Отменить сохранение отчёта"
+                                                        >
+                                                            Отменить
+                                                        </button>
+
+                                                        <button
+                                                            type="button"
+                                                            className="action-button"
+                                                            onClick={() =>
+                                                                handleSave()
+                                                            }
+                                                            title="Сохранить отчёт"
+                                                        >
+                                                            Сохранить
+                                                        </button>
+                                                    </>
+                                                ) : (
                                                     <button
                                                         type="button"
                                                         onClick={() => {
-                                                            const newErrors =
-                                                                validateFields();
-
-                                                            if (
-                                                                Object.keys(
-                                                                    newErrors
-                                                                ).length === 0
-                                                            ) {
-                                                                setReportWindowsState(
-                                                                    false
-                                                                );
-                                                                setSaveBeforeClose(
-                                                                    true
-                                                                );
-                                                            } else {
-                                                                setReportId(
-                                                                    null
-                                                                );
-                                                                setReportWindowsState(
-                                                                    false
-                                                                );
-                                                            }
+                                                            resetState();
+                                                        }}
+                                                        style={{
+                                                            gridColumn: "1 /-1",
                                                         }}
                                                         className="cancel-button"
-                                                        title="Отменить сохранение отчёта"
+                                                        title="Закрыть отчёт"
                                                     >
-                                                        Отменить
+                                                        Закрыть
                                                     </button>
-
-                                                    <button
-                                                        type="button"
-                                                        className="action-button"
-                                                        onClick={() =>
-                                                            handleSave()
-                                                        }
-                                                        title="Сохранить отчёт"
-                                                    >
-                                                        Сохранить
-                                                    </button>
-                                                </>
-                                            ) : (
-                                                <button
-                                                    type="button"
-                                                    onClick={() => {
-                                                        resetState();
-                                                    }}
-                                                    style={{
-                                                        gridColumn: "1 /-1",
-                                                    }}
-                                                    className="cancel-button"
-                                                    title="Закрыть отчёт"
-                                                >
-                                                    Закрыть
-                                                </button>
-                                            )}
+                                                )}
+                                            </div>
                                         </div>
-                                    </div>
+                                    )}
                                 </div>
                             </div>
                         )}
@@ -1588,39 +1652,41 @@ const ReportWindow = ({
                     </div>
                 </Popup>
             )}
+
+            {saveBeforeClose && (
+                <Popup
+                    className="report-window-popup"
+                    onClick={() => resetState()}
+                    title={"Сохранить отчёт?"}
+                >
+                    <div className="action-form__body">
+                        <p>Иначе данные будут безвозвратно утеряны.</p>
+                    </div>
+
+                    <div className="action-form__footer">
+                        <div className="report-window-alert__actions">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    resetState();
+                                }}
+                                className="cancel-button"
+                            >
+                                Не сохранять
+                            </button>
+
+                            <button
+                                type="button"
+                                className="action-button"
+                                onClick={() => handleSave()}
+                            >
+                                Сохранить отчёт
+                            </button>
+                        </div>
+                    </div>
+                </Popup>
+            )}
         </>
-    ) : (
-        <Popup
-            className="report-window-popup"
-            onClick={() => resetState()}
-            title={"Сохранить отчёт?"}
-        >
-            <div className="action-form__body">
-                <p>Иначе данные будут безвозвратно утеряны.</p>
-            </div>
-
-            <div className="action-form__footer">
-                <div className="report-window-alert__actions">
-                    <button
-                        type="button"
-                        onClick={() => {
-                            resetState();
-                        }}
-                        className="cancel-button"
-                    >
-                        Не сохранять
-                    </button>
-
-                    <button
-                        type="button"
-                        className="action-button"
-                        onClick={() => handleSave()}
-                    >
-                        Сохранить отчёт
-                    </button>
-                </div>
-            </div>
-        </Popup>
     );
 };
 
