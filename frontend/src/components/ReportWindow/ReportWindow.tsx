@@ -231,27 +231,22 @@ const ReportWindow = ({
             if (reportId) {
                 updateReport(reportData, reportId)
                     .then(() => {
-                        // Закрываем окно только при успешном сохранении
                         resetState();
                     })
                     .catch(() => {
                         setSaveBeforeClose(false);
-                        // setReportWindowsState(true);
-                        // Ошибка уже обработана в updateReport, не закрываем окно
                     });
             } else {
                 sendReport(reportData)
                     .then(() => {
-                        // Закрываем окно только при успешном сохранении
                         resetState();
                     })
                     .catch(() => {
-                        // Ошибка уже обработана в sendReport, не закрываем окно
+                        setSaveBeforeClose(false);
                     });
             }
         } else {
             setSaveBeforeClose(false);
-            // setReportWindowsState(true);
             toast.error(Object.values(newErrors).join("\n"), {
                 className: "toast-multiline",
                 isLoading: false,
@@ -832,7 +827,6 @@ const ReportWindow = ({
                             resetState();
                         } else {
                             if (isDataChanged) {
-                                // setReportWindowsState(false);
                                 setSaveBeforeClose(true);
                             } else {
                                 resetState();
@@ -1553,21 +1547,9 @@ const ReportWindow = ({
                                                         <button
                                                             type="button"
                                                             onClick={() => {
-                                                                // const newErrors =
-                                                                //     validateFields();
-
-                                                                //   if (
-                                                                //     Object.keys(
-                                                                //         newErrors
-                                                                //     ).length === 0
-                                                                // ) {
-
                                                                 if (
                                                                     isDataChanged
                                                                 ) {
-                                                                    // setReportWindowsState(
-                                                                    //     false
-                                                                    // );
                                                                     setSaveBeforeClose(
                                                                         true
                                                                     );
