@@ -80,6 +80,7 @@ const CustomDatePickerField = ({
     };
 
     const displayValue = (() => {
+        // Фев'25 - Ноя'25
         if (shortMonthYear) {
             if (startDate && endDate)
                 return `${formatShortMonthYear(
@@ -89,6 +90,7 @@ const CustomDatePickerField = ({
             return "";
         }
 
+        // Февраль 2025 - Ноябрь 2025
         if (showMonthYear) {
             if (startDate && endDate)
                 return `${formatMonthYear(startDate)} - ${formatMonthYear(
