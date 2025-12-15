@@ -30,6 +30,16 @@ const STATUSES = [
     { value: "false", label: "Не работает" },
 ];
 
+// Получаем 3 последних завершенных месяца
+const getLastThreeFullMonthsRange = () => {
+    const now = new Date();
+
+    const end = new Date(now.getFullYear(), now.getMonth(), 0);
+    const start = new Date(end.getFullYear(), end.getMonth() - 2, 1);
+
+    return [start, end];
+};
+
 const EmployeeCard = () => {
     const { employeeId } = useParams();
     const navigate = useNavigate();
@@ -51,7 +61,7 @@ const EmployeeCard = () => {
     const [positions, setPositions] = useState([]);
     const [departments, setDepartments] = useState([]);
 
-    const [dateRange, setDateRange] = useState([null, null]);
+    const [dateRange, setDateRange] = useState(getLastThreeFullMonthsRange());
 
     const PhoneMask = "+{7} (000) 000 00 00";
 
@@ -85,7 +95,7 @@ const EmployeeCard = () => {
             { params: payload }
         ).then((response) => {
             if (response.status === 200) {
-                if (response.data.projects.length > 0) {
+                if (response.data.projects) {
                     setWorkloadSummary(
                         response.data.projects.sort(
                             (a, b) => b.total_hours - a.total_hours
@@ -783,6 +793,8 @@ const EmployeeCard = () => {
                                                         `${date_to[0]}-01`
                                                     ),
                                                 ];
+
+                                                console.log(dates);
 
                                                 setDateRange(dates);
                                             }}
