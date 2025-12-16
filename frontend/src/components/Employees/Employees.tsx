@@ -38,7 +38,7 @@ const Employees = () => {
     // Заполняем селектор сотрудников
     const nameOptions = useMemo(() => {
         const allNames = list
-            .map((item) => item.name)
+            .map((item) => item.full_name || item.name)
             .filter((name) => name !== null);
 
         return Array.from(new Set(allNames));
@@ -147,9 +147,10 @@ const Employees = () => {
 
     const filteredList = useMemo(() => {
         return sortedList.filter((item) => {
+            const itemFullName = item.full_name || item.name;
             return (
                 (filters.selectedNames.length === 0 ||
-                    filters.selectedNames.includes(item.name)) &&
+                    filters.selectedNames.includes(itemFullName)) &&
                 (filters.selectedPositions.length === 0 ||
                     filters.selectedPositions.includes(item?.position?.name)) &&
                 (filters.selectedDepartments.length === 0 ||
