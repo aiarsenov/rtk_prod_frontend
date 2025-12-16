@@ -488,9 +488,7 @@ const FinancialIndicators = ({
                                             <li>
                                                 <div className="hidden-group">
                                                     <div className="visible-text">
-                                                        <div className="w-full">
-                                                            {item.name}
-                                                        </div>
+                                                        {item.name}
                                                     </div>
                                                     <div className="hidden-text">
                                                         {item.name}
