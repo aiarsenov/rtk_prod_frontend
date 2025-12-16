@@ -661,6 +661,7 @@ const Indicators = () => {
                         </div>
 
                         <FinancialIndicators
+                            isLoading={isLoading}
                             isFinancialListLoaded={isFinancialListLoaded}
                             isFinancialProfitListLoaded={
                                 isFinancialProfitListLoaded

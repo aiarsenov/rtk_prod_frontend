@@ -39,6 +39,7 @@ const OPTIONS = [
 ];
 
 const FinancialIndicators = ({
+    isLoading,
     isFinancialListLoaded,
     isFinancialProfitListLoaded,
     financialList,
@@ -47,6 +48,7 @@ const FinancialIndicators = ({
     setFinancialListFilters,
     setFinancialProfitListFilters,
 }: {
+    isLoading: boolean;
     isFinancialListLoaded: boolean;
     isFinancialProfitListLoaded: boolean;
     financialList: { items: [] };
@@ -326,9 +328,9 @@ const FinancialIndicators = ({
     return (
         <div className="dashboards__block indicators__financial-indicators">
             <div className="relative">
-                {!isFinancialListLoaded && !isFinancialProfitListLoaded && (
-                    <Loader />
-                )}
+                {!isLoading &&
+                    !isFinancialListLoaded &&
+                    !isFinancialProfitListLoaded && <Loader />}
 
                 {sortedMergedList.length <= 0 &&
                     isFinancialListLoaded &&
