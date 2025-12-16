@@ -579,6 +579,9 @@ const ContragentCard = () => {
                                                 />
                                                 <label htmlFor="projectReports">
                                                     Отчёты проекта
+                                                    <span>
+                                                        {selectedReports.length}
+                                                    </span>
                                                 </label>
                                             </div>
                                             <div
@@ -606,6 +609,11 @@ const ContragentCard = () => {
                                                 />
                                                 <label htmlFor="managementReports">
                                                     Отчёты ответственных
+                                                    <span>
+                                                        {
+                                                            selectedManagerReports.length
+                                                        }
+                                                    </span>
                                                 </label>
                                             </div>
                                         </nav>
@@ -709,6 +717,9 @@ const ContragentCard = () => {
                                         />
                                         <label htmlFor="projectReports">
                                             Отчёты проекта
+                                            <span>
+                                                {selectedReports.length}
+                                            </span>
                                         </label>
                                     </div>
                                     <div
@@ -734,6 +745,9 @@ const ContragentCard = () => {
                                         />
                                         <label htmlFor="managementReports">
                                             Отчёты ответственного
+                                            <span>
+                                                {selectedManagerReports.length}
+                                            </span>
                                         </label>
                                     </div>
                                 </nav>

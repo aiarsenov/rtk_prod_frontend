@@ -674,6 +674,9 @@ const SupplierCard = () => {
                                             />
                                             <label htmlFor="projectReports">
                                                 Отчёты проекта
+                                                <span>
+                                                    {selectedReports.length}
+                                                </span>
                                             </label>
                                         </div>
                                         <div
@@ -701,6 +704,11 @@ const SupplierCard = () => {
                                             />
                                             <label htmlFor="managementReports">
                                                 Отчёты ответственных
+                                                <span>
+                                                    {
+                                                        selectedManagerReports.length
+                                                    }
+                                                </span>
                                             </label>
                                         </div>
                                     </nav>
@@ -797,6 +805,9 @@ const SupplierCard = () => {
                                         />
                                         <label htmlFor="projectReports">
                                             Отчёты проекта
+                                            <span>
+                                                {selectedReports.length}
+                                            </span>
                                         </label>
                                     </div>
                                     <div
@@ -822,6 +833,9 @@ const SupplierCard = () => {
                                         />
                                         <label htmlFor="managementReports">
                                             Отчёты ответственных
+                                            <span>
+                                                {selectedManagerReports.length}
+                                            </span>
                                         </label>
                                     </div>
                                 </nav>
