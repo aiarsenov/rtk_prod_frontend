@@ -65,37 +65,19 @@ const AdminUsers = () => {
             return;
         }
 
-        const toastId = toast.loading("Отправка приглашения...", {
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
-
         try {
             await postData("POST", `${API_URL}admin/users/invite`, {
                 physical_person_id: selectedEmployee,
                 email: inviteEmail,
             });
 
-            toast.dismiss(toastId);
-
-            // toast.update(toastId, {
-            //     render: "Приглашение успешно отправлено",
-            //     type: "success",
-            //     isLoading: false,
-            //     autoClose: 2000,
-            //     pauseOnFocusLoss: false,
-            //     pauseOnHover: false,
-            //     draggable: true,
-            // });
-
             setShowInviteModal(false);
             setSelectedEmployee(null);
             setInviteEmail("");
             loadUsers();
         } catch (err) {
-            toast.update(toastId, {
-                render: err.message || "Ошибка отправки приглашения",
-                type: "error",
-                isLoading: false,
+            toast.error(err.message || "Ошибка отправки приглашения", {
+                position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
                 autoClose: 3000,
                 pauseOnFocusLoss: false,
                 pauseOnHover: false,
@@ -110,32 +92,15 @@ const AdminUsers = () => {
             return;
         }
 
-        const toastId = toast.loading("Активация пользователя...", {
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
-
         try {
             await postData(
                 "PATCH",
                 `${API_URL}admin/users/${userId}/activate`
             );
-            toast.dismiss(toastId);
-
-            // toast.update(toastId, {
-            //     render: "Пользователь успешно активирован",
-            //     type: "success",
-            //     isLoading: false,
-            //     autoClose: 2000,
-            //     pauseOnFocusLoss: false,
-            //     pauseOnHover: false,
-            //     draggable: true,
-            // });
             loadUsers();
         } catch (err) {
-            toast.update(toastId, {
-                render: err.message || "Ошибка активации пользователя",
-                type: "error",
-                isLoading: false,
+            toast.error(err.message || "Ошибка активации пользователя", {
+                position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
                 autoClose: 3000,
                 pauseOnFocusLoss: false,
                 pauseOnHover: false,
@@ -149,40 +114,25 @@ const AdminUsers = () => {
             return;
         }
 
-        const toastId = toast.loading("Деактивация пользователя...", {
-            position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        });
-
         try {
             await postData(
                 "PATCH",
                 `${API_URL}admin/users/${userId}/deactivate`
             );
-            toast.dismiss(toastId);
-
-            // toast.update(toastId, {
-            //     render: "Пользователь успешно деактивирован",
-            //     type: "success",
-            //     isLoading: false,
-            //     autoClose: 2000,
-            //     pauseOnFocusLoss: false,
-            //     pauseOnHover: false,
-            //     draggable: true,
-            // });
             loadUsers();
         } catch (err) {
-            toast.update(toastId, {
-                render:
-                    err.status === 403
-                        ? "Нельзя деактивировать собственную учетную запись"
-                        : err.message || "Ошибка деактивации пользователя",
-                type: "error",
-                isLoading: false,
-                autoClose: 3000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                draggable: true,
-            });
+            toast.error(
+                err.status === 403
+                    ? "Нельзя деактивировать собственную учетную запись"
+                    : err.message || "Ошибка деактивации пользователя",
+                {
+                    position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+                    autoClose: 3000,
+                    pauseOnFocusLoss: false,
+                    pauseOnHover: false,
+                    draggable: true,
+                }
+            );
         }
     };
 
@@ -243,6 +193,50 @@ const AdminUsers = () => {
             loadUsers();
         } catch (err) {
             toast.error(err.message || "Ошибка удаления пользователя", {
+                position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+                autoClose: 3000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
+        }
+    };
+
+    const handleRemove2FA = async (userId) => {
+        if (!confirm("Вы уверены, что хотите удалить 2FA у пользователя?")) {
+            return;
+        }
+
+        try {
+            await postData(
+                "DELETE",
+                `${API_URL}admin/users/${userId}/2fa`
+            );
+            loadUsers();
+        } catch (err) {
+            toast.error(err.message || "Ошибка удаления 2FA", {
+                position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+                autoClose: 3000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                draggable: true,
+            });
+        }
+    };
+
+    const handleRequire2FA = async (userId) => {
+        if (!confirm("Вы уверены, что хотите установить требование 2FA для пользователя?")) {
+            return;
+        }
+
+        try {
+            await postData(
+                "POST",
+                `${API_URL}admin/users/${userId}/require-2fa`
+            );
+            loadUsers();
+        } catch (err) {
+            toast.error(err.message || "Ошибка установки требования 2FA", {
                 position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
                 autoClose: 3000,
                 pauseOnFocusLoss: false,
@@ -384,6 +378,31 @@ const AdminUsers = () => {
                                                         >
                                                             Активировать
                                                         </button>
+                                                    )}
+                                                    {user.keycloak_id && (
+                                                        <>
+                                                            {user.has_2fa ? (
+                                                                <button
+                                                                    className="admin-btn admin-btn--danger admin-btn--sm"
+                                                                    onClick={() =>
+                                                                        handleRemove2FA(user.id)
+                                                                    }
+                                                                    title="Удалить 2FA"
+                                                                >
+                                                                    🗑️ Удалить 2FA
+                                                                </button>
+                                                            ) : (
+                                                                <button
+                                                                    className="admin-btn admin-btn--primary admin-btn--sm"
+                                                                    onClick={() =>
+                                                                        handleRequire2FA(user.id)
+                                                                    }
+                                                                    title="Требовать 2FA"
+                                                                >
+                                                                    🔒 Требовать 2FA
+                                                                </button>
+                                                            )}
+                                                        </>
                                                     )}
                                                     <button
                                                         className="admin-btn admin-btn--danger admin-btn--sm"
