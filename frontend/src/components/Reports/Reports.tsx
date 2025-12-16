@@ -499,7 +499,7 @@ const Reports = () => {
     // Заполняем селектор Ответственных
     const managemenReponsiblePersontOptions = useMemo(() => {
         const allItems = managementList
-            .map((item) => item.physical_person?.name)
+            .map((item) => item.physical_person?.full_name || item.physical_person?.name)
             .filter((name) => name !== null);
 
         return Array.from(new Set(allItems));
