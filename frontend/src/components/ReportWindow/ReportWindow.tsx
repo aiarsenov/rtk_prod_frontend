@@ -1539,7 +1539,7 @@ const ReportWindow = ({
                                         </div>
                                     )}
 
-                                    {!isLoading && isDataLoaded && (
+                                    {isDataLoaded && (
                                         <div className="bottom-nav">
                                             <div className="container">
                                                 {mode === "edit" ? (
