@@ -186,6 +186,18 @@ const ProjectCard = () => {
         });
     };
 
+    // Получение отчетов ответственных
+    const getManagementReports = () => {
+        return getData(`${URL}/${projectId}/manager-reports`).then(
+            (response) => {
+                if (response.status == 200) {
+                    setManagementReports(response.data);
+                    setIsDataLoaded(true);
+                }
+            }
+        );
+    };
+
     // Получение команды проекта
     const getTeam = () => {
         return getData(
@@ -242,12 +254,13 @@ const ProjectCard = () => {
                 fetchContragents(),
                 fetchBanks(),
                 getReports(),
+                getManagementReports(),
                 getTeam(),
                 getServices(),
             ];
 
             if (!firstInit) {
-                getRevenue();
+                getRevenue("");
             }
 
             await Promise.all(tasks);
@@ -1413,6 +1426,9 @@ const ProjectCard = () => {
                                                 />
                                                 <label htmlFor="projectReports">
                                                     Отчёты проекта
+                                                    <span>
+                                                        {reports.length}
+                                                    </span>
                                                 </label>
                                             </div>
                                             <div
@@ -1440,6 +1456,11 @@ const ProjectCard = () => {
                                                 />
                                                 <label htmlFor="managementReports">
                                                     Отчёты ответственных
+                                                    <span>
+                                                        {
+                                                            managementReports.length
+                                                        }
+                                                    </span>
                                                 </label>
                                             </div>
                                         </nav>
@@ -1461,9 +1482,8 @@ const ProjectCard = () => {
                                             "managementReports" && (
                                             <ManagementReportsTab
                                                 showFullName={true}
-                                                projectId={projectId}
-                                                setManagementReports={
-                                                    setManagementReports
+                                                managementReports={
+                                                    managementReports
                                                 }
                                                 activeWindow={activeWindow}
                                                 setActiveWindow={
@@ -1570,6 +1590,7 @@ const ProjectCard = () => {
                                     />
                                     <label htmlFor="projectReports">
                                         Отчёты проекта
+                                        <span>{reports.length}</span>
                                     </label>
                                 </div>
                                 <div
@@ -1595,6 +1616,7 @@ const ProjectCard = () => {
                                     />
                                     <label htmlFor="managementReports">
                                         Отчёты ответственных
+                                        <span>{managementReports.length}</span>
                                     </label>
                                 </div>
                             </nav>
