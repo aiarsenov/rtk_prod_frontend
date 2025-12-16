@@ -68,31 +68,6 @@ const ContragentCard = () => {
     // let query;
 
     // Получение данных заказчика и его проекты
-    const fetchData = () => {
-        getData(`${URL}/${contragentId}`, {
-            Accept: "application/json",
-        })
-            .then((response) => {
-                if (response.status == 200) {
-                    setCardData(response.data);
-                    setCardDataCustom(response.data);
-                    setProjects(response.data.projects);
-
-                    setIsDataLoaded(true);
-                }
-            })
-            .catch((error) => {
-                if (error && error.status === 404) {
-                    navigate("/not-found", {
-                        state: {
-                            message: "Заказчик не найден",
-                            errorCode: 404,
-                            additionalInfo: "",
-                        },
-                    });
-                }
-            });
-    };
 
     // Получение ОСВ
     const getRevenue = (url) => {
@@ -105,7 +80,7 @@ const ContragentCard = () => {
 
     // Получение ключевых лиц
     const getResponsiblePesons = () => {
-        getData(`${URL}/${contragentId}/contacts`, {
+        return getData(`${URL}/${contragentId}/contacts`, {
             Accept: "application/json",
         }).then((response) => {
             if (response.status == 200) {
@@ -117,7 +92,7 @@ const ContragentCard = () => {
 
     // Получение списка отчетов
     const getContragentReports = () => {
-        getData(`${URL}/${contragentId}/reports`, {
+        return getData(`${URL}/${contragentId}/reports`, {
             Accept: "application/json",
         })
             .then((response) => {
@@ -133,7 +108,7 @@ const ContragentCard = () => {
     const getProjectsManagerReports = () => {
         setIsManagementReportsDataLoaded(false);
 
-        getData(`${URL}/${contragentId}/manager-reports`, {
+        return getData(`${URL}/${contragentId}/manager-reports`, {
             Accept: "application/json",
         }).then((response) => {
             if (response.status == 200) {
@@ -179,7 +154,7 @@ const ContragentCard = () => {
 
     // Получение договоров
     const getContracts = () => {
-        getData(
+        return getData(
             `${
                 import.meta.env.VITE_API_URL
             }contragents/${contragentId}/contracts`
@@ -273,13 +248,44 @@ const ContragentCard = () => {
         }
     };
 
+    const fetchData = async () => {
+        setIsDataLoaded(false);
+
+        try {
+            const response = await getData(`${URL}/${contragentId}`, {
+                Accept: "application/json",
+            });
+
+            if (response.status == 200) {
+                setCardData(response.data);
+                setCardDataCustom(response.data);
+                setProjects(response.data.projects);
+
+                await Promise.all([
+                    getResponsiblePesons(),
+                    getContracts(),
+                    getContragentReports(),
+                    getProjectsManagerReports(),
+                ]);
+
+                setIsDataLoaded(true);
+            }
+        } catch (error) {
+            if (error && error.status === 404) {
+                navigate("/not-found", {
+                    state: {
+                        message: "Заказчик не найден",
+                        errorCode: 404,
+                        additionalInfo: "",
+                    },
+                });
+            }
+        }
+    };
+
     useEffect(() => {
         if (contragentId) {
             fetchData();
-            getResponsiblePesons();
-            getContracts();
-            getContragentReports();
-            getProjectsManagerReports();
         }
     }, []);
 

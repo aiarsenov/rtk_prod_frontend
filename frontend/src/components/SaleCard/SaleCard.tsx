@@ -4,7 +4,7 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import getData from "../../utils/getData";
 import postData from "../../utils/postData";
 
-import CustomSelect from "../CustomSelect/CustomSelect";
+// import CustomSelect from "../CustomSelect/CustomSelect";
 import MultiSelect from "../MultiSelect/MultiSelect";
 import CreatableSelect from "react-select/creatable";
 import AutoResizeTextarea from "../AutoResizeTextarea";
@@ -80,7 +80,7 @@ const SaleCard = () => {
 
     // Получение сотрудников
     const fetchPhysicalpersons = () => {
-        getData(`${import.meta.env.VITE_API_URL}physical-persons`, {
+        return getData(`${import.meta.env.VITE_API_URL}physical-persons`, {
             Accept: "application/json",
         }).then((response) => {
             if (response?.status == 200) {
@@ -98,7 +98,7 @@ const SaleCard = () => {
 
     // Получение отраслей
     const fetchIndustries = () => {
-        getData(`${import.meta.env.VITE_API_URL}industries`, {
+        return getData(`${import.meta.env.VITE_API_URL}industries`, {
             Accept: "application/json",
         }).then((response) => {
             if (response?.status == 200) {
@@ -116,7 +116,7 @@ const SaleCard = () => {
 
     // Получение заказчика
     const fetchContragents = () => {
-        getData(`${import.meta.env.VITE_API_URL}contragents?all=true`, {
+        return getData(`${import.meta.env.VITE_API_URL}contragents?all=true`, {
             Accept: "application/json",
         }).then((response) => {
             if (response?.status == 200) {
@@ -134,23 +134,25 @@ const SaleCard = () => {
 
     // Получение банков
     const fetchBanks = () => {
-        getData(`${import.meta.env.VITE_API_URL}banks`).then((response) => {
-            if (response?.status == 200) {
-                if (response.data.data.length > 0) {
-                    setBanks(
-                        response.data.data.map((item) => ({
-                            value: item.id,
-                            label: item.name,
-                        }))
-                    );
+        return getData(`${import.meta.env.VITE_API_URL}banks`).then(
+            (response) => {
+                if (response?.status == 200) {
+                    if (response.data.data.length > 0) {
+                        setBanks(
+                            response.data.data.map((item) => ({
+                                value: item.id,
+                                label: item.name,
+                            }))
+                        );
+                    }
                 }
             }
-        });
+        );
     };
 
     // Получение услуг
     const fetchServices = () => {
-        getData(
+        return getData(
             `${
                 import.meta.env.VITE_API_URL
             }sales-funnel-projects/${saleId}/services`
@@ -158,16 +160,16 @@ const SaleCard = () => {
             if (response?.status == 200) {
                 setServices(response.data);
 
-                if (response.data.length > 0) {
-                    getStages();
-                }
+                // if (response.data.length > 0) {
+                //     getStages();
+                // }
             }
         });
     };
 
     // Получение источников
     const fetchSources = () => {
-        getData(`${import.meta.env.VITE_API_URL}request-sources`).then(
+        return getData(`${import.meta.env.VITE_API_URL}request-sources`).then(
             (response) => {
                 if (response?.status == 200) {
                     if (response?.data?.data?.length > 0) {
@@ -185,13 +187,79 @@ const SaleCard = () => {
 
     // Получение тупов отчетов
     const fetchReportTypes = () => {
-        getData(`${import.meta.env.VITE_API_URL}report-types`, {
+        return getData(`${import.meta.env.VITE_API_URL}report-types`, {
             Accept: "application/json",
         }).then((response) => {
             if (response.status == 200) {
                 setReportTypes(response.data.data);
             }
         });
+    };
+
+    // Получаем этапы в воронке продаж
+    const getStages = () => {
+        return getData(
+            `${
+                import.meta.env.VITE_API_URL
+            }sales-funnel-projects/${saleId}/stages`
+        ).then((response) => {
+            if (response?.status == 200) {
+                setSaleStages(response.data);
+
+                if (response.data.stages && response.data.stages.length > 0) {
+                    setSaleStatus(
+                        response.data.stages[response.data.stages.length - 1]
+                            .name
+                    );
+                } else {
+                    setSaleStatus(null);
+                }
+            }
+        });
+    };
+
+    // Получение карточки
+    const getCard = async () => {
+        setIsDataLoaded(false);
+
+        try {
+            const response = await getData(`${URL}/${saleId}`, {
+                Accept: "application/json",
+            });
+
+            const transformedData = {
+                ...response.data,
+                creditors: (response.data.creditors ?? []).map(
+                    (bank) => bank.id
+                ),
+            };
+
+            setCardData(transformedData);
+            setCardDataCustom(transformedData);
+
+            await Promise.all([
+                fetchPhysicalpersons(),
+                fetchIndustries(),
+                fetchContragents(),
+                fetchBanks(),
+                fetchSources(),
+                fetchReportTypes(),
+                fetchServices(),
+                getStages(),
+            ]);
+
+            setIsDataLoaded(true);
+        } catch (error) {
+            if (error && error.status === 404) {
+                navigate("/not-found", {
+                    state: {
+                        message: "Проект не найден",
+                        errorCode: 404,
+                        additionalInfo: "",
+                    },
+                });
+            }
+        }
     };
 
     // Прикрепляем услугу
@@ -228,6 +296,7 @@ const SaleCard = () => {
                     // });
                     setAddServices(false);
                     fetchServices();
+                    getStages();
                 }
             })
             .catch((error) => {
@@ -349,71 +418,6 @@ const SaleCard = () => {
         });
     };
 
-    // Получаем этапы в воронке продаж
-    const getStages = () => {
-        getData(
-            `${
-                import.meta.env.VITE_API_URL
-            }sales-funnel-projects/${saleId}/stages`
-        ).then((response) => {
-            if (response?.status == 200) {
-                setSaleStages(response.data);
-
-                if (response.data.stages && response.data.stages.length > 0) {
-                    setSaleStatus(
-                        response.data.stages[response.data.stages.length - 1]
-                            .name
-                    );
-                } else {
-                    setSaleStatus(null);
-                }
-            }
-        });
-    };
-
-    // Получение карточки
-    const getCard = async () => {
-        setIsDataLoaded(false);
-
-        try {
-            const response = await getData(`${URL}/${saleId}`, {
-                Accept: "application/json",
-            });
-
-            const transformedData = {
-                ...response.data,
-                creditors: (response.data.creditors ?? []).map(
-                    (bank) => bank.id
-                ),
-            };
-
-            setCardData(transformedData);
-            setCardDataCustom(transformedData);
-
-            await Promise.all([
-                fetchPhysicalpersons(),
-                fetchIndustries(),
-                fetchContragents(),
-                fetchBanks(),
-                fetchSources(),
-                fetchServices(),
-                fetchReportTypes(),
-            ]);
-
-            setIsDataLoaded(true);
-        } catch (error) {
-            if (error && error.status === 404) {
-                navigate("/not-found", {
-                    state: {
-                        message: "Проект не найден",
-                        errorCode: 404,
-                        additionalInfo: "",
-                    },
-                });
-            }
-        }
-    };
-
     // Обновление карточки
     const updateCard = async (showMessage = true, data = cardDataCustom) => {
         // query = toast.loading("Обновление", {
@@ -435,6 +439,7 @@ const SaleCard = () => {
                     setCardData(transformedData);
                     setCardDataCustom(transformedData);
                     fetchServices();
+                    getStages();
                     // toast.dismiss(query);
 
                     // if (showMessage) {
@@ -476,10 +481,6 @@ const SaleCard = () => {
         if (saleId) {
             getCard();
         }
-
-        if (services.length > 0) {
-            getStages();
-        }
     }, []);
 
     useEffect(() => {
@@ -492,15 +493,6 @@ const SaleCard = () => {
             setNewServices({ report_type_id: [] });
         }
     }, [services]);
-
-    // useEffect(() => {
-    // const hasErrors =
-    //     !cardData?.contragent_id ||
-    //     !cardData?.industries?.main ||
-    //     !cardData?.request_source_id;
-
-    //     setAvailableToChange(!hasErrors);
-    // }, [cardData]);
 
     return !isDataLoaded ? (
         <Loader />

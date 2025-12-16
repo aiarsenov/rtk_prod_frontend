@@ -67,7 +67,7 @@ const EmployeeCard = () => {
 
     // Текущая загрузка
     const getWorkload = () => {
-        getData(
+        return getData(
             `${
                 import.meta.env.VITE_API_URL
             }physical-persons/${employeeId}/workload`
@@ -189,41 +189,9 @@ const EmployeeCard = () => {
             });
     };
 
-    // Получаем сотрудника
-    const getEmployee = async () => {
-        setIsDataLoaded(false);
-
-        try {
-            const response = await getData(
-                `${import.meta.env.VITE_API_URL}physical-persons/${employeeId}`,
-                {
-                    Accept: "application/json",
-                }
-            );
-            if (response.status === 200) {
-                setCardData(response.data);
-                setCardDataCustom(response.data);
-            }
-
-            await Promise.all([getWorkload(), getPositions(), getTypes()]);
-
-            setIsDataLoaded(true);
-        } catch (error) {
-            if (error && error.status === 404) {
-                navigate("/not-found", {
-                    state: {
-                        message: "Сотрудник не найден",
-                        errorCode: 404,
-                        additionalInfo: "",
-                    },
-                });
-            }
-        }
-    };
-
     // Получаем типы отчетов
     const getTypes = () => {
-        getData(
+        return getData(
             `${import.meta.env.VITE_API_URL}report-types?with-count=true`
         ).then((response) => {
             if (response.status === 200) {
@@ -243,21 +211,23 @@ const EmployeeCard = () => {
 
     // Получаем список должностей
     const getPositions = () => {
-        getData(`${import.meta.env.VITE_API_URL}positions`).then((response) => {
-            if (response.status === 200) {
-                setPositions(
-                    response.data.data.map((item) => ({
-                        value: item.id,
-                        label: item.name,
-                    }))
-                );
+        return getData(`${import.meta.env.VITE_API_URL}positions`).then(
+            (response) => {
+                if (response.status === 200) {
+                    setPositions(
+                        response.data.data.map((item) => ({
+                            value: item.id,
+                            label: item.name,
+                        }))
+                    );
+                }
             }
-        });
+        );
     };
 
     // Получение списка подразделений
     const getDepartments = () => {
-        getData(`${import.meta.env.VITE_API_URL}departments`).then(
+        return getData(`${import.meta.env.VITE_API_URL}departments`).then(
             (response) => {
                 if (response.status == 200) {
                     setDepartments(
@@ -269,6 +239,43 @@ const EmployeeCard = () => {
                 }
             }
         );
+    };
+
+    // Получаем сотрудника
+    const getEmployee = async () => {
+        setIsDataLoaded(false);
+
+        try {
+            const response = await getData(
+                `${import.meta.env.VITE_API_URL}physical-persons/${employeeId}`,
+                {
+                    Accept: "application/json",
+                }
+            );
+            if (response.status === 200) {
+                setCardData(response.data);
+                setCardDataCustom(response.data);
+            }
+
+            await Promise.all([
+                getWorkload(),
+                getPositions(),
+                getTypes(),
+                getDepartments(),
+            ]);
+
+            setIsDataLoaded(true);
+        } catch (error) {
+            if (error && error.status === 404) {
+                navigate("/not-found", {
+                    state: {
+                        message: "Сотрудник не найден",
+                        errorCode: 404,
+                        additionalInfo: "",
+                    },
+                });
+            }
+        }
     };
 
     useEffect(() => {
@@ -289,8 +296,9 @@ const EmployeeCard = () => {
     }, [cardDataCustom?.is_staff]);
 
     useEffect(() => {
-        getDepartments();
-        getEmployee();
+        if (employeeId) {
+            getEmployee();
+        }
     }, []);
 
     return !isDataLoaded ? (

@@ -49,8 +49,7 @@ const SaleFunnelStages = ({
                     stageMetrics.stage_id
                 }/date`,
                 { stage_date: null, stage_instance_id: instance_id }
-            )
-            .then((response) => {
+            ).then((response) => {
                 if (response.ok) {
                     // toast.success(
                     //     response.message || "Дата этапа успешно очищена",
@@ -201,6 +200,7 @@ const SaleFunnelStages = ({
                         //             : "top-right",
                         // });
                         fetchServices();
+                        getStages();
                     }
                 } else {
                     toast.error(response.data.error || "Ошибка запроса", {
@@ -266,8 +266,8 @@ const SaleFunnelStages = ({
                 const stages = response.data.stages;
 
                 if (stages.length >= 2) {
-                    const newStage = stages[stages.length - 1]
-                    const previousStage = stages[stages.length - 2]
+                    const newStage = stages[stages.length - 1];
+                    const previousStage = stages[stages.length - 2];
                     const requiresValidation =
                         newStage.name?.toLowerCase() !== "получен запрос" &&
                         newStage.name?.toLowerCase() !== "проект отложен" &&
@@ -288,8 +288,8 @@ const SaleFunnelStages = ({
 
                         if (needsPrefill) {
                             // Предзаполняем метрики значениями из предыдущего этапа
-                            const metricsToPrefill = newStage.dynamic_metrics.map(
-                                (newMetric) => {
+                            const metricsToPrefill =
+                                newStage.dynamic_metrics.map((newMetric) => {
                                     const previousMetric =
                                         previousStage.dynamic_metrics.find(
                                             (pm) =>
@@ -300,27 +300,33 @@ const SaleFunnelStages = ({
                                     return {
                                         ...newMetric,
                                         current_value:
-                                            previousMetric?.current_value || null,
+                                            previousMetric?.current_value ||
+                                            null,
                                     };
-                                }
-                            );
+                                });
 
                             // Обновляем локальное состояние без сохранения на сервере
                             setSaleStages((prev) => {
-                                const updatedStages = prev.stages.map((stage) => {
-                                    if (stage.instance_id === newStage.instance_id) {
-                                        const updatedStage = {
-                                            ...stage,
-                                            dynamic_metrics: metricsToPrefill,
-                                        };
-                                        // Обновляем детализацию этапа для отображения предзаполненных значений
-                                        setTimeout(() => {
-                                            setStageMetrics(updatedStage);
-                                        }, 0);
-                                        return updatedStage;
+                                const updatedStages = prev.stages.map(
+                                    (stage) => {
+                                        if (
+                                            stage.instance_id ===
+                                            newStage.instance_id
+                                        ) {
+                                            const updatedStage = {
+                                                ...stage,
+                                                dynamic_metrics:
+                                                    metricsToPrefill,
+                                            };
+                                            // Обновляем детализацию этапа для отображения предзаполненных значений
+                                            setTimeout(() => {
+                                                setStageMetrics(updatedStage);
+                                            }, 0);
+                                            return updatedStage;
+                                        }
+                                        return stage;
                                     }
-                                    return stage;
-                                });
+                                );
 
                                 return { ...prev, stages: updatedStages };
                             });
@@ -357,12 +363,14 @@ const SaleFunnelStages = ({
                         !newStage.stage_date &&
                         previousStage.stage_date
                     ) {
-
                         let formattedDate;
                         if (previousStage.stage_date.includes("-")) {
-                            formattedDate = previousStage.stage_date.split("T")[0];
+                            formattedDate =
+                                previousStage.stage_date.split("T")[0];
                         } else {
-                            const previousDate = new Date(previousStage.stage_date);
+                            const previousDate = new Date(
+                                previousStage.stage_date
+                            );
                             formattedDate = `${previousDate.getFullYear()}-${String(
                                 previousDate.getMonth() + 1
                             ).padStart(2, "0")}-${String(
@@ -394,19 +402,22 @@ const SaleFunnelStages = ({
                                                 ) {
                                                     return {
                                                         ...stage,
-                                                        stage_date: formattedDate,
+                                                        stage_date:
+                                                            formattedDate,
                                                     };
                                                 }
                                                 return stage;
                                             }
                                         );
 
-                                        return { ...prev, stages: updatedStages };
+                                        return {
+                                            ...prev,
+                                            stages: updatedStages,
+                                        };
                                     });
                                 }
                             })
-                            .catch(() => {
-                            });
+                            .catch(() => {});
                     }
                 }
             }
@@ -452,6 +463,7 @@ const SaleFunnelStages = ({
                     }
 
                     fetchServices();
+                    getStages();
                 }
             })
             .catch((response) => {
@@ -481,17 +493,17 @@ const SaleFunnelStages = ({
             stage.name.toLowerCase() !== "подготовка кп"
         ) {
             // Получаем актуальное состояние этапа из локального состояния (может содержать предзаполненные значения)
-            const localStage = saleStages.stages?.find(
-                (s) => s.instance_id === stage.instance_id
-            ) || stage;
+            const localStage =
+                saleStages.stages?.find(
+                    (s) => s.instance_id === stage.instance_id
+                ) || stage;
 
             // Проверяем, есть ли заполненные значения (включая предзаполненные)
             const hasValues =
                 localStage.dynamic_metrics?.length > 0 &&
                 localStage.dynamic_metrics?.every(
                     (item) =>
-                        item.current_value !== null &&
-                        item.current_value !== ""
+                        item.current_value !== null && item.current_value !== ""
                 );
 
             if (hasValues) {

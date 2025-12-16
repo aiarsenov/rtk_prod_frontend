@@ -92,7 +92,7 @@ const SupplierCard = () => {
 
     // Получение договоров
     const getContracts = () => {
-        getData(
+        return getData(
             `${import.meta.env.VITE_API_URL}contragents/${supplierId}/contracts`
         ).then((response) => {
             if (response?.status == 200) {
@@ -106,7 +106,7 @@ const SupplierCard = () => {
         setIsReportsDataLoaded(false);
         setReportName("");
 
-        getData(`${URL}/${supplierId}/reports`, {
+        return getData(`${URL}/${supplierId}/reports`, {
             Accept: "application/json",
         })
             .then((response) => {
@@ -122,7 +122,7 @@ const SupplierCard = () => {
     const getProjectsManagerReports = () => {
         setIsManagementReportsDataLoaded(false);
 
-        getData(`${URL}/${supplierId}/manager-reports`, {
+        return getData(`${URL}/${supplierId}/manager-reports`, {
             Accept: "application/json",
         }).then((response) => {
             if (response.status == 200) {
@@ -134,28 +134,37 @@ const SupplierCard = () => {
     };
 
     // Получаем подрядчика и его проекты
-    const fetchData = () => {
-        getData(`${URL}/${supplierId}`, {
-            Accept: "application/json",
-        })
-            .then((response) => {
-                setCardData(response.data);
-                setCardDataCustom(response.data);
-                setProjects(response.data.projects);
-                setResponsiblePersons(response.data.contacts);
-                setIsDataLoaded(true);
-            })
-            .catch((error) => {
-                if (error && error.status === 404) {
-                    navigate("/not-found", {
-                        state: {
-                            message: "Подрядчик не найден",
-                            errorCode: 404,
-                            additionalInfo: "",
-                        },
-                    });
-                }
+    const fetchData = async () => {
+        setIsDataLoaded(false);
+
+        try {
+            const response = await getData(`${URL}/${supplierId}`, {
+                Accept: "application/json",
             });
+
+            setCardData(response.data);
+            setCardDataCustom(response.data);
+            setProjects(response.data.projects);
+            setResponsiblePersons(response.data.contacts);
+
+            await Promise.all([
+                getProjectsReports(),
+                getProjectsManagerReports(),
+                getContracts(),
+            ]);
+
+            setIsDataLoaded(true);
+        } catch (error) {
+            if (error && error.status === 404) {
+                navigate("/not-found", {
+                    state: {
+                        message: "Подрядчик не найден",
+                        errorCode: 404,
+                        additionalInfo: "",
+                    },
+                });
+            }
+        }
     };
 
     // Обновление данных карточки
@@ -337,9 +346,6 @@ const SupplierCard = () => {
     useEffect(() => {
         if (supplierId) {
             fetchData();
-            getProjectsReports();
-            getProjectsManagerReports();
-            getContracts();
         }
     }, []);
 

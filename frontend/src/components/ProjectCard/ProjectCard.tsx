@@ -110,7 +110,7 @@ const ProjectCard = () => {
 
     // Получение отраслей
     const fetchIndustries = () => {
-        getData(`${import.meta.env.VITE_API_URL}industries`, {
+        return getData(`${import.meta.env.VITE_API_URL}industries`, {
             Accept: "application/json",
         }).then((response) => {
             if (response?.status == 200) {
@@ -121,7 +121,7 @@ const ProjectCard = () => {
 
     // Получение заказчика
     const fetchContragents = () => {
-        getData(`${import.meta.env.VITE_API_URL}contragents?all=true`, {
+        return getData(`${import.meta.env.VITE_API_URL}contragents?all=true`, {
             Accept: "application/json",
         }).then((response) => {
             if (response?.status == 200) {
@@ -139,11 +139,13 @@ const ProjectCard = () => {
 
     // Получение банков
     const fetchBanks = () => {
-        getData(`${import.meta.env.VITE_API_URL}banks`).then((response) => {
-            if (response?.status == 200) {
-                setBanks(response.data.data);
+        return getData(`${import.meta.env.VITE_API_URL}banks`).then(
+            (response) => {
+                if (response?.status == 200) {
+                    setBanks(response.data.data);
+                }
             }
-        });
+        );
     };
 
     // Получение договоров
@@ -175,7 +177,7 @@ const ProjectCard = () => {
 
     // Получение отчётов
     const getReports = () => {
-        getData(
+        return getData(
             `${import.meta.env.VITE_API_URL}projects/${projectId}/reports`
         ).then((response) => {
             if (response?.status == 200) {
@@ -186,7 +188,7 @@ const ProjectCard = () => {
 
     // Получение команды проекта
     const getTeam = () => {
-        getData(
+        return getData(
             `${import.meta.env.VITE_API_URL}projects/${projectId}/team`
         ).then((response) => {
             if (response.status == 200) {
@@ -197,7 +199,7 @@ const ProjectCard = () => {
 
     // Получение услуг проекта
     const getServices = () => {
-        getData(
+        return getData(
             `${import.meta.env.VITE_API_URL}reports/${projectId}/services`
         ).then((response) => {
             if (response?.status == 200) {
@@ -832,12 +834,6 @@ const ProjectCard = () => {
     }, [otherIndustries]);
 
     useEffect(() => {
-        if (projectId) {
-            getCard();
-        }
-    }, []);
-
-    useEffect(() => {
         if (projectData?.contragent_id) {
             setAvailableToChange(true);
             fetchContracts();
@@ -846,6 +842,12 @@ const ProjectCard = () => {
             setAvailableToChange(false);
         }
     }, [projectData?.contragent_id]);
+
+    useEffect(() => {
+        if (projectId) {
+            getCard();
+        }
+    }, []);
 
     useBodyScrollLock(activeWindow || addCustomer || addCreditor); // Блокируем экран при открытии попапа или редактора отчета
 
