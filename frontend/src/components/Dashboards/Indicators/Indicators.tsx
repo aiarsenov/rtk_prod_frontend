@@ -66,6 +66,10 @@ const Indicators = () => {
     const [completedReports, setCompletedReports] = useState([]); // Завершенные отчеты
     const [projectManagerReports, setProjectManagerReports] = useState([]); // Отчеты руководителей проектов
 
+    const [isFinancialListLoaded, setIsFinancialListLoaded] = useState(false);
+    const [isFinancialProfitListLoaded, setIsFinancialProfitListLoaded] =
+        useState(false);
+
     const [financialListFilters, setFinancialListFilters] = useState({
         type: ["project"],
         metric: ["revenue"],
@@ -404,6 +408,8 @@ const Indicators = () => {
 
     // Ключевые финансовые показатели - левый блок
     const getFinancialList = () => {
+        setIsFinancialListLoaded(false);
+
         const query = {
             ...financialListFilters,
             ...mainFilters,
@@ -418,12 +424,15 @@ const Indicators = () => {
         ).then((response) => {
             if (response?.status == 200) {
                 setFinancialList(response.data);
+                setIsFinancialListLoaded(true);
             }
         });
     };
 
     // Ключевые финансовые показатели - правый блок
     const getFinancialProfitList = () => {
+        setIsFinancialProfitListLoaded(false);
+
         const query = {
             ...financialProfitListFilters,
             ...mainFilters,
@@ -438,6 +447,7 @@ const Indicators = () => {
         ).then((response) => {
             if (response?.status == 200) {
                 setFinancialProfitList(response.data);
+                setIsFinancialProfitListLoaded(true);
             }
         });
     };
@@ -651,6 +661,10 @@ const Indicators = () => {
                         </div>
 
                         <FinancialIndicators
+                            isFinancialListLoaded={isFinancialListLoaded}
+                            isFinancialProfitListLoaded={
+                                isFinancialProfitListLoaded
+                            }
                             financialList={financialList}
                             financialProfitList={financialProfitList}
                             financialListFilters={financialListFilters}

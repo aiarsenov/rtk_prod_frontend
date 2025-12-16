@@ -125,6 +125,7 @@
         }
 
         &__header {
+            padding-right: 10px;
             width: 100%;
             display: grid;
             align-items: center;
@@ -132,6 +133,7 @@
         }
 
         &__body {
+            padding-right: 5px;
             width: 100%;
             display: grid;
             align-items: start;
@@ -208,7 +210,7 @@
 
         .loader {
             position: absolute;
-            z-index: 1;
+            z-index: 2;
         }
     }
 
