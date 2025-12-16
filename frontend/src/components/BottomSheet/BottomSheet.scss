@@ -14,7 +14,7 @@
     visibility: hidden;
     opacity: 0;
     pointer-events: none;
-    transition: opacity var(--trans);
+    // transition: opacity var(--trans);
     z-index: -1;
 
     &:not(.bottom-sheet_desk) {

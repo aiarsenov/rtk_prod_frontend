@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
-import handleStatusString from "../../utils/handleStatusString";
 import AutoResizeTextarea from "../AutoResizeTextarea";
 import { useBodyScrollLock } from "../../hooks/useBodyScrollLock.js";
 
@@ -65,8 +64,7 @@ const ManagementReportEditor = ({
         const handleEscKey = (event: KeyboardEvent) => {
             if (
                 (event.key === "Escape" || event.key === 27) &&
-                editorState 
-                &&
+                editorState &&
                 !saveBeforeClose
             ) {
                 event.preventDefault();
@@ -190,9 +188,14 @@ const ManagementReportEditor = ({
 
                                     {managementReportData.status && (
                                         <div
-                                            className={`form-field form-field__status ${handleStatusString(
-                                                managementReportData.status
-                                            )}`}
+                                            className={`form-field form-field__status ${
+                                                managementReportData.status.toLowerCase() ===
+                                                    "утверждён" ||
+                                                managementReportData.status.toLowerCase() ===
+                                                    "в работе"
+                                                    ? "form-field__status_completed"
+                                                    : ""
+                                            }`}
                                         >
                                             <span></span>
                                             {managementReportData.status}
