@@ -129,14 +129,14 @@
             width: 100%;
             display: grid;
             align-items: center;
-            grid-template-columns: 160px repeat(4, 1fr);
+            grid-template-columns: 159px repeat(4, 1fr);
         }
 
         &__body {
             width: 100%;
             display: grid;
             align-items: start;
-            grid-template-columns: 160px repeat(4, 1fr);
+            grid-template-columns: 159px repeat(4, 1fr);
 
             & > div {
                 position: relative;
