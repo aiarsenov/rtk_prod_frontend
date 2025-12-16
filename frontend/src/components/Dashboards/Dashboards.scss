@@ -120,7 +120,6 @@
         &__wrapper {
             position: relative;
             height: 300px;
-            padding: 1px;
             overflow-x: auto;
             overflow-y: auto;
         }
@@ -141,7 +140,7 @@
             & > div {
                 position: relative;
                 min-height: 300px;
-                min-width: 300px;
+                min-width: 250px;
             }
         }
 
