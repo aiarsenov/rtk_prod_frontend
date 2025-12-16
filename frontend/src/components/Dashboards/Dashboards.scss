@@ -129,27 +129,80 @@
             width: 100%;
             display: grid;
             align-items: center;
-            grid-template-columns: minmax(410px, 30%) repeat(3, 300px);
-
-            @media (min-width: 1441px) {
-                grid-template-columns: minmax(410px, 32%) repeat(3, 1fr);
-            }
+            grid-template-columns: 160px repeat(4, 1fr);
         }
 
         &__body {
             width: 100%;
             display: grid;
-            align-items: center;
-            grid-template-columns: minmax(410px, 30%) repeat(3, 300px);
+            align-items: start;
+            grid-template-columns: 160px repeat(4, 1fr);
 
             & > div {
                 position: relative;
                 min-height: 300px;
                 min-width: 300px;
             }
+        }
 
-            @media (min-width: 1441px) {
-                grid-template-columns: minmax(410px, 32%) repeat(3, 1fr);
+        &__label-list {
+            padding-top: 9px;
+            padding-right: 5px;
+            display: flex;
+            flex-direction: column;
+
+            li {
+                padding: 22px 0;
+
+                .hidden-group {
+                    z-index: 1;
+                    position: relative;
+                    width: fit-content;
+
+                    &:hover {
+                        z-index: 10;
+
+                        .hidden-text {
+                            visibility: visible;
+                            opacity: 1;
+                            max-height: fit-content;
+                        }
+
+                        .visible-text {
+                            opacity: 0;
+                            visibility: hidden;
+                        }
+                    }
+
+                    .visible-text {
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        font-weight: 400;
+                        font-size: 14px;
+                        line-height: 100%;
+                        transition: opacity var(--trans);
+                    }
+
+                    .hidden-text {
+                        border-radius: 10px;
+                        position: absolute;
+                        left: -5px;
+                        top: -5px;
+                        z-index: 2;
+                        width: max-content;
+                        max-width: 400px;
+                        max-height: 0;
+                        overflow: hidden;
+                        opacity: 0;
+                        visibility: hidden;
+                        padding: 5px;
+                        transition: opacity var(--trans);
+                        background: var(--color-white);
+                        box-shadow: 0 6px 20px rgb(230 230 230);
+                        white-space: normal;
+                    }
+                }
             }
         }
 

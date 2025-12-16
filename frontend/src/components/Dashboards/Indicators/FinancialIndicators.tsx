@@ -98,7 +98,8 @@ const FinancialIndicators = ({
 
                 backgroundColor: "#FEDF89",
                 borderRadius: 5,
-                categoryPercentage: 0.1,
+                // categoryPercentage: 0.1,
+                maxBarThickness: 30,
                 barThickness: 30,
             },
         ],
@@ -115,9 +116,11 @@ const FinancialIndicators = ({
                         item.gross_profit?.value?.toString().replace(",", ".")
                     )
                 ),
+
                 backgroundColor: "#FEDF89",
                 borderRadius: 5,
-                categoryPercentage: 0.1,
+                // categoryPercentage: 0.1,
+                maxBarThickness: 30,
                 barThickness: 30,
             },
         ],
@@ -134,99 +137,101 @@ const FinancialIndicators = ({
                         item.gross_margin?.value?.toString().replace(",", ".")
                     )
                 ),
+
                 backgroundColor: "#FEDF89",
                 borderRadius: 5,
-                categoryPercentage: 0.1,
+                // categoryPercentage: 0.1,
+                maxBarThickness: 30,
                 barThickness: 30,
             },
         ],
     };
 
-    const horizontalOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        animation: false,
-        indexAxis: "y",
-        plugins: {
-            legend: {
-                display: false,
-            },
-            title: {
-                display: false,
-                text: "",
-            },
-            datalabels: {
-                anchor: "end",
-                align: "right",
-                offset: 8,
-                color: "#002033",
-                clip: false,
-                formatter: (value) => {
-                    if (!Number.isFinite(value)) return "";
+    // const horizontalOptions = {
+    //     responsive: true,
+    //     maintainAspectRatio: false,
+    //     animation: false,
+    //     indexAxis: "y",
+    //     plugins: {
+    //         legend: {
+    //             display: false,
+    //         },
+    //         title: {
+    //             display: false,
+    //             text: "",
+    //         },
+    //         datalabels: {
+    //             anchor: "end",
+    //             align: "right",
+    //             offset: 8,
+    //             color: "#002033",
+    //             clip: false,
+    //             formatter: (value) => {
+    //                 if (!Number.isFinite(value)) return "";
 
-                    return value.toFixed(2).toString().replace(".", ",");
-                },
-            },
-            tooltip: {
-                enabled: false,
-            },
-        },
-        scales: {
-            y: {
-                position: "left",
-                ticks: {
-                    color: "#002033",
-                    font: { size: 14 },
-                    padding: 0,
-                    crossAlign: "far",
-                    autoSkip: false,
-                    maxRotation: 0,
-                    callback: function (value) {
-                        const LABEL_WIDTH = 32;
+    //                 return value.toFixed(2).toString().replace(".", ",");
+    //             },
+    //         },
+    //         tooltip: {
+    //             enabled: false,
+    //         },
+    //     },
+    //     scales: {
+    //         y: {
+    //             position: "left",
+    //             ticks: {
+    //                 color: "#002033",
+    //                 font: { size: 14 },
+    //                 padding: 0,
+    //                 crossAlign: "far",
+    //                 autoSkip: false,
+    //                 maxRotation: 0,
+    //                 callback: function (value) {
+    //                     const LABEL_WIDTH = 32;
 
-                        let label = this.getLabelForValue(value);
+    //                     let label = this.getLabelForValue(value);
 
-                        if (label.length > LABEL_WIDTH) {
-                            label = label.slice(0, LABEL_WIDTH - 1) + "…";
-                        }
+    //                     if (label.length > LABEL_WIDTH) {
+    //                         label = label.slice(0, LABEL_WIDTH - 1) + "…";
+    //                     }
 
-                        const spaces = "\u00A0".repeat(
-                            LABEL_WIDTH - label.length
-                        );
+    //                     const spaces = "\u00A0".repeat(
+    //                         LABEL_WIDTH - label.length
+    //                     );
 
-                        return label + spaces;
-                    },
-                },
+    //                     return label + spaces;
+    //                 },
+    //             },
 
-                grid: {
-                    drawBorder: false,
-                    drawTicks: false,
-                    lineWidth: 1,
-                    color: "#E4E7EC",
-                },
-                border: {
-                    dash: [3, 3],
-                    display: false,
-                },
-                barPercentage: 0.7,
-                categoryPercentage: 0.8,
-            },
-            x: {
-                ticks: {
-                    display: false,
-                },
-                grid: {
-                    drawTicks: false,
-                    display: false,
-                },
-                border: { display: false },
-                afterDataLimits: (axis) => {
-                    const max = axis.max ?? 0;
-                    axis.max = max * 1.15;
-                },
-            },
-        },
-    };
+    //             grid: {
+    //                 drawBorder: false,
+    //                 drawTicks: false,
+    //                 lineWidth: 1,
+    //                 color: "#E4E7EC",
+    //             },
+    //             border: {
+    //                 dash: [3, 3],
+    //                 display: false,
+    //             },
+    //             barPercentage: 0.7,
+    //             categoryPercentage: 0.8,
+    //         },
+    //         x: {
+    //             ticks: {
+    //                 display: false,
+    //             },
+    //             grid: {
+    //                 drawTicks: false,
+    //                 display: false,
+    //             },
+    //             border: { display: false },
+    //             afterDataLimits: (axis) => {
+    //                 const max = axis.max ?? 0;
+    //                 axis.max = max * 1.15;
+    //             },
+    //         },
+    //     },
+    // };
 
     const horizontalOptionsNoLabels = {
         responsive: true,
@@ -409,44 +414,46 @@ const FinancialIndicators = ({
                     <Loader />
                 ) : (
                     <>
+                        {sortedMergedList.length <= 0 && (
+                            <span className="absolute inset-0 text-[#667085] flex items-center justify-center">
+                                нет данных
+                            </span>
+                        )}
+
                         <div className="indicators__financial-indicators__header">
-                            <div className="flex items-center gap-[40px]">
-                                <Select
-                                    className="form-select-extend w-[120px]"
-                                    options={OPTIONS}
-                                    placeholder="Выбрать"
-                                    value={OPTIONS.find(
-                                        (opt) =>
-                                            opt.value ===
-                                            (financialListFilters?.type?.[0] ||
-                                                "project")
-                                    )}
-                                    onChange={(evt) => {
-                                        setMergetList([]);
-                                        setSortedMergetList([]);
-                                        setIsLoading(true);
+                            <Select
+                                className="form-select-extend w-[120px]"
+                                options={OPTIONS}
+                                placeholder="Выбрать"
+                                value={OPTIONS.find(
+                                    (opt) =>
+                                        opt.value ===
+                                        (financialListFilters?.type?.[0] ||
+                                            "project")
+                                )}
+                                onChange={(evt) => {
+                                    setMergetList([]);
+                                    setSortedMergetList([]);
+                                    setIsLoading(true);
 
-                                        setFinancialListFilters((prev) => ({
-                                            ...prev,
-                                            type: [evt.value],
-                                        }));
-                                        setFinancialProfitListFilters(
-                                            (prev) => ({
-                                                ...prev,
-                                                type: [evt.value],
-                                            })
-                                        );
-                                    }}
-                                />
+                                    setFinancialListFilters((prev) => ({
+                                        ...prev,
+                                        type: [evt.value],
+                                    }));
+                                    setFinancialProfitListFilters((prev) => ({
+                                        ...prev,
+                                        type: [evt.value],
+                                    }));
+                                }}
+                            />
 
-                                <SortBtn
-                                    label="Поступления, млн руб."
-                                    value="receipts.value"
-                                    sortBy={sortBy}
-                                    setSortBy={setSortBy}
-                                    className="h-[40px]"
-                                />
-                            </div>
+                            <SortBtn
+                                label="Поступления, млн руб."
+                                value="receipts.value"
+                                sortBy={sortBy}
+                                setSortBy={setSortBy}
+                                className="h-[40px]"
+                            />
 
                             <SortBtn
                                 label={"Выручка, млн руб."}
@@ -472,115 +479,112 @@ const FinancialIndicators = ({
                                 className={"text-left h-[40px]"}
                             />
                         </div>
+
                         <div className="indicators__financial-indicators__wrapper">
                             <div className="indicators__financial-indicators__body">
-                                <div className="flex flex-col">
-                                    {mergedList.length > 0 && (
-                                        <div
-                                            style={{
-                                                height:
-                                                    (financialProfitListData1
-                                                        .labels?.length || 0) >
-                                                    5
-                                                        ? `${
-                                                              financialProfitListData1
-                                                                  .labels
-                                                                  .length * 60
-                                                          }px`
-                                                        : "300px",
-                                            }}
-                                        >
-                                            <Bar
-                                                data={financialListData1}
-                                                options={horizontalOptions}
-                                            />
-                                        </div>
-                                    )}
-                                </div>
+                                <ul className="indicators__financial-indicators__label-list">
+                                    {sortedMergedList.length > 0 &&
+                                        sortedMergedList.map((item) => (
+                                            <li>
+                                                <div className="hidden-group">
+                                                    <div className="visible-text">
+                                                        <div className="w-full">
+                                                            {item.name}
+                                                        </div>
+                                                    </div>
+                                                    <div className="hidden-text">
+                                                        {item.name}
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        ))}
+                                </ul>
 
-                                {mergedList.length <= 0 && (
-                                    <span className="absolute inset-0 text-[#667085] flex items-center justify-center">
-                                        нет данных
-                                    </span>
+                                {sortedMergedList.length > 0 && (
+                                    <div
+                                        style={{
+                                            height:
+                                                (financialProfitListData1.labels
+                                                    ?.length || 0) > 5
+                                                    ? `${
+                                                          financialProfitListData1
+                                                              .labels.length *
+                                                          60
+                                                      }px`
+                                                    : "300px",
+                                        }}
+                                    >
+                                        <Bar
+                                            data={financialListData1}
+                                            options={horizontalOptionsNoLabels}
+                                        />
+                                    </div>
                                 )}
 
-                                <div className="flex flex-col">
-                                    {mergedList.length > 0 && (
-                                        <div
-                                            style={{
-                                                height:
-                                                    (financialProfitListData1
-                                                        .labels?.length || 0) >
-                                                    5
-                                                        ? `${
-                                                              financialProfitListData1
-                                                                  .labels
-                                                                  .length * 60
-                                                          }px`
-                                                        : "300px",
-                                            }}
-                                        >
-                                            <Bar
-                                                data={financialListData2}
-                                                options={
-                                                    horizontalOptionsNoLabels
-                                                }
-                                            />
-                                        </div>
-                                    )}
-                                </div>
+                                {sortedMergedList.length > 0 && (
+                                    <div
+                                        style={{
+                                            height:
+                                                (financialProfitListData1.labels
+                                                    ?.length || 0) > 5
+                                                    ? `${
+                                                          financialProfitListData1
+                                                              .labels.length *
+                                                          60
+                                                      }px`
+                                                    : "300px",
+                                        }}
+                                    >
+                                        <Bar
+                                            data={financialListData2}
+                                            options={horizontalOptionsNoLabels}
+                                        />
+                                    </div>
+                                )}
 
-                                <div className="flex flex-col">
-                                    {mergedList.length > 0 && (
-                                        <div
-                                            style={{
-                                                height:
-                                                    (financialProfitListData1
-                                                        .labels?.length || 0) >
-                                                    5
-                                                        ? `${
-                                                              financialProfitListData1
-                                                                  .labels
-                                                                  .length * 60
-                                                          }px`
-                                                        : "300px",
-                                            }}
-                                        >
-                                            <Bar
-                                                data={financialProfitListData1}
-                                                options={
-                                                    horizontalOptionsNoLabels
-                                                }
-                                            />
-                                        </div>
-                                    )}
-                                </div>
+                                {sortedMergedList.length > 0 && (
+                                    <div
+                                        style={{
+                                            height:
+                                                (financialProfitListData1.labels
+                                                    ?.length || 0) > 5
+                                                    ? `${
+                                                          financialProfitListData1
+                                                              .labels.length *
+                                                          60
+                                                      }px`
+                                                    : "300px",
+                                        }}
+                                    >
+                                        <Bar
+                                            data={financialProfitListData1}
+                                            options={horizontalOptionsNoLabels}
+                                        />
+                                    </div>
+                                )}
 
-                                <div className="flex flex-col">
-                                    {mergedList.length > 0 && (
-                                        <div
-                                            style={{
-                                                height:
-                                                    (financialProfitListData1
-                                                        .labels?.length || 0) >
-                                                    5
-                                                        ? `${
-                                                              financialProfitListData1
-                                                                  .labels
-                                                                  .length * 60
-                                                          }px`
-                                                        : "300px",
-                                            }}
-                                        >
-                                            <Bar
-                                                data={financialProfitListData2}
-                                                options={
-                                                    horizontalOptionsWithPercent
-                                                }
-                                            />
-                                        </div>
-                                    )}
-                                </div>
+                                {sortedMergedList.length > 0 && (
+                                    <div
+                                        style={{
+                                            height:
+                                                (financialProfitListData1.labels
+                                                    ?.length || 0) > 5
+                                                    ? `${
+                                                          financialProfitListData1
+                                                              .labels.length *
+                                                          60
+                                                      }px`
+                                                    : "300px",
+                                        }}
+                                    >
+                                        <Bar
+                                            data={financialProfitListData2}
+                                            options={
+                                                horizontalOptionsWithPercent
+                                            }
+                                        />
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </>
