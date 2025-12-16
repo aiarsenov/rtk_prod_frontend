@@ -327,178 +327,175 @@ const FinancialIndicators = ({
 
     return (
         <div className="dashboards__block indicators__financial-indicators">
-            <div className="relative">
-                {!isLoading &&
-                    !isFinancialListLoaded &&
-                    !isFinancialProfitListLoaded && <Loader />}
+            {!isLoading &&
+                !isFinancialListLoaded &&
+                !isFinancialProfitListLoaded && <Loader />}
 
-                {sortedMergedList.length <= 0 &&
-                    isFinancialListLoaded &&
-                    isFinancialProfitListLoaded && (
-                        <span className="absolute inset-0 text-[#667085] flex items-center justify-center">
-                            нет данных
-                        </span>
-                    )}
+            {sortedMergedList.length <= 0 &&
+                isFinancialListLoaded &&
+                isFinancialProfitListLoaded && (
+                    <span className="absolute inset-0 text-[#667085] flex items-center justify-center">
+                        нет данных
+                    </span>
+                )}
 
-                <div className="indicators__financial-indicators__header">
-                    <div>
-                        <Select
-                            className="form-select-extend w-[120px]"
-                            options={OPTIONS}
-                            placeholder="Выбрать"
-                            value={OPTIONS.find(
-                                (opt) =>
-                                    opt.value ===
-                                    (financialListFilters?.type?.[0] ||
-                                        "project")
-                            )}
-                            onChange={(evt) => {
-                                setMergetList([]);
-                                setSortedMergetList([]);
+            <div className="indicators__financial-indicators__header">
+                <div>
+                    <Select
+                        className="form-select-extend w-[140px]"
+                        options={OPTIONS}
+                        placeholder="Выбрать"
+                        value={OPTIONS.find(
+                            (opt) =>
+                                opt.value ===
+                                (financialListFilters?.type?.[0] || "project")
+                        )}
+                        onChange={(evt) => {
+                            setMergetList([]);
+                            setSortedMergetList([]);
 
-                                setFinancialListFilters((prev) => ({
-                                    ...prev,
-                                    type: [evt.value],
-                                }));
-                                setFinancialProfitListFilters((prev) => ({
-                                    ...prev,
-                                    type: [evt.value],
-                                }));
-                            }}
-                        />
-                    </div>
-
-                    <SortBtn
-                        label="Поступления, млн руб."
-                        value="receipts.value"
-                        sortBy={sortBy}
-                        setSortBy={setSortBy}
-                        className="h-[40px]"
-                    />
-
-                    <SortBtn
-                        label={"Выручка, млн руб."}
-                        value={"revenue.value"}
-                        sortBy={sortBy}
-                        setSortBy={setSortBy}
-                        className={"text-left h-[40px]"}
-                    />
-
-                    <SortBtn
-                        label={"Валовая прибыль, млн руб."}
-                        value={"gross_profit.value"}
-                        sortBy={sortBy}
-                        setSortBy={setSortBy}
-                        className={"text-left h-[40px]"}
-                    />
-
-                    <SortBtn
-                        label={"Валовая рентабельность"}
-                        value={"gross_margin.value"}
-                        sortBy={sortBy}
-                        setSortBy={setSortBy}
-                        className={"text-left h-[40px]"}
+                            setFinancialListFilters((prev) => ({
+                                ...prev,
+                                type: [evt.value],
+                            }));
+                            setFinancialProfitListFilters((prev) => ({
+                                ...prev,
+                                type: [evt.value],
+                            }));
+                        }}
                     />
                 </div>
 
-                <div className="indicators__financial-indicators__wrapper">
-                    <div className="indicators__financial-indicators__body">
-                        <ul className="indicators__financial-indicators__label-list">
-                            {sortedMergedList.length > 0 &&
-                                sortedMergedList.map((item) => (
-                                    <li>
-                                        <div className="hidden-group">
-                                            <div className="visible-text">
-                                                {item.name}
-                                            </div>
-                                            <div className="hidden-text">
-                                                {item.name}
-                                            </div>
+                <SortBtn
+                    label="Поступления, млн руб."
+                    value="receipts.value"
+                    sortBy={sortBy}
+                    setSortBy={setSortBy}
+                    className="h-[40px]"
+                />
+
+                <SortBtn
+                    label={"Выручка, млн руб."}
+                    value={"revenue.value"}
+                    sortBy={sortBy}
+                    setSortBy={setSortBy}
+                    className={"text-left h-[40px]"}
+                />
+
+                <SortBtn
+                    label={"Валовая прибыль, млн руб."}
+                    value={"gross_profit.value"}
+                    sortBy={sortBy}
+                    setSortBy={setSortBy}
+                    className={"text-left h-[40px]"}
+                />
+
+                <SortBtn
+                    label={"Валовая рентабельность"}
+                    value={"gross_margin.value"}
+                    sortBy={sortBy}
+                    setSortBy={setSortBy}
+                    className={"text-left h-[40px]"}
+                />
+            </div>
+
+            <div className="indicators__financial-indicators__wrapper">
+                <div className="indicators__financial-indicators__body">
+                    <ul className="indicators__financial-indicators__label-list">
+                        {sortedMergedList.length > 0 &&
+                            sortedMergedList.map((item) => (
+                                <li>
+                                    <div className="hidden-group">
+                                        <div className="visible-text">
+                                            {item.name}
                                         </div>
-                                    </li>
-                                ))}
-                        </ul>
+                                        <div className="hidden-text">
+                                            {item.name}
+                                        </div>
+                                    </div>
+                                </li>
+                            ))}
+                    </ul>
 
-                        {sortedMergedList.length > 0 && (
-                            <div
-                                style={{
-                                    height:
-                                        (financialProfitListData1.labels
-                                            ?.length || 0) > 5
-                                            ? `${
-                                                  financialProfitListData1
-                                                      .labels.length * 60
-                                              }px`
-                                            : "300px",
-                                }}
-                            >
-                                <Bar
-                                    data={financialListData1}
-                                    options={horizontalOptionsNoLabels}
-                                />
-                            </div>
-                        )}
+                    {sortedMergedList.length > 0 && (
+                        <div
+                            style={{
+                                height:
+                                    (financialProfitListData1.labels?.length ||
+                                        0) > 5
+                                        ? `${
+                                              financialProfitListData1.labels
+                                                  .length * 60
+                                          }px`
+                                        : "300px",
+                            }}
+                        >
+                            <Bar
+                                data={financialListData1}
+                                options={horizontalOptionsNoLabels}
+                            />
+                        </div>
+                    )}
 
-                        {sortedMergedList.length > 0 && (
-                            <div
-                                style={{
-                                    height:
-                                        (financialProfitListData1.labels
-                                            ?.length || 0) > 5
-                                            ? `${
-                                                  financialProfitListData1
-                                                      .labels.length * 60
-                                              }px`
-                                            : "300px",
-                                }}
-                            >
-                                <Bar
-                                    data={financialListData2}
-                                    options={horizontalOptionsNoLabels}
-                                />
-                            </div>
-                        )}
+                    {sortedMergedList.length > 0 && (
+                        <div
+                            style={{
+                                height:
+                                    (financialProfitListData1.labels?.length ||
+                                        0) > 5
+                                        ? `${
+                                              financialProfitListData1.labels
+                                                  .length * 60
+                                          }px`
+                                        : "300px",
+                            }}
+                        >
+                            <Bar
+                                data={financialListData2}
+                                options={horizontalOptionsNoLabels}
+                            />
+                        </div>
+                    )}
 
-                        {sortedMergedList.length > 0 && (
-                            <div
-                                style={{
-                                    height:
-                                        (financialProfitListData1.labels
-                                            ?.length || 0) > 5
-                                            ? `${
-                                                  financialProfitListData1
-                                                      .labels.length * 60
-                                              }px`
-                                            : "300px",
-                                }}
-                            >
-                                <Bar
-                                    data={financialProfitListData1}
-                                    options={horizontalOptionsNoLabels}
-                                />
-                            </div>
-                        )}
+                    {sortedMergedList.length > 0 && (
+                        <div
+                            style={{
+                                height:
+                                    (financialProfitListData1.labels?.length ||
+                                        0) > 5
+                                        ? `${
+                                              financialProfitListData1.labels
+                                                  .length * 60
+                                          }px`
+                                        : "300px",
+                            }}
+                        >
+                            <Bar
+                                data={financialProfitListData1}
+                                options={horizontalOptionsNoLabels}
+                            />
+                        </div>
+                    )}
 
-                        {sortedMergedList.length > 0 && (
-                            <div
-                                style={{
-                                    height:
-                                        (financialProfitListData1.labels
-                                            ?.length || 0) > 5
-                                            ? `${
-                                                  financialProfitListData1
-                                                      .labels.length * 60
-                                              }px`
-                                            : "300px",
-                                }}
-                            >
-                                <Bar
-                                    data={financialProfitListData2}
-                                    options={horizontalOptionsWithPercent}
-                                />
-                            </div>
-                        )}
-                    </div>
+                    {sortedMergedList.length > 0 && (
+                        <div
+                            style={{
+                                height:
+                                    (financialProfitListData1.labels?.length ||
+                                        0) > 5
+                                        ? `${
+                                              financialProfitListData1.labels
+                                                  .length * 60
+                                          }px`
+                                        : "300px",
+                            }}
+                        >
+                            <Bar
+                                data={financialProfitListData2}
+                                options={horizontalOptionsWithPercent}
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
