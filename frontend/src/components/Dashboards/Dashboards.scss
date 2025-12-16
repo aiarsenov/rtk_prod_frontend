@@ -130,6 +130,10 @@
             display: grid;
             align-items: center;
             grid-template-columns: 159px repeat(4, 1fr);
+
+            .sort-btn {
+                min-width: 250px;
+            }
         }
 
         &__body {
