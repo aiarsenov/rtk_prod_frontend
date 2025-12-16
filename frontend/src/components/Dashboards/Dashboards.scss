@@ -119,11 +119,21 @@
 
         &__wrapper {
             position: relative;
-            height: 350px;
+            height: 300px;
             padding: 1px;
             overflow-x: auto;
             overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
+        }
+
+        &__header {
+            width: 100%;
+            display: grid;
+            align-items: center;
+            grid-template-columns: minmax(410px, 30%) repeat(3, 300px);
+
+            @media (min-width: 1441px) {
+                grid-template-columns: minmax(410px, 32%) repeat(3, 1fr);
+            }
         }
 
         &__body {
@@ -139,7 +149,7 @@
             }
 
             @media (min-width: 1441px) {
-                grid-template-columns: minmax(410px, 30%) repeat(3, 1fr);
+                grid-template-columns: minmax(410px, 32%) repeat(3, 1fr);
             }
         }
 
