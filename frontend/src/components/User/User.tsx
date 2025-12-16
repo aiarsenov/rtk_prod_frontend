@@ -9,6 +9,18 @@ const getInitials = (value) => {
     return value && value != "" ? Array.from(value)[0] : "";
 };
 
+
+const getShortName = (fullName) => {
+    if (!fullName) return "";
+
+    const parts = fullName.trim().split(/\s+/);
+    if (parts.length >= 2) {
+        return `${parts[0]} ${parts[1]}`;
+    }
+
+    return parts[0] || "";
+};
+
 const User = () => {
     const user = useSelector((state) => state.user.data);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -49,6 +61,11 @@ const User = () => {
 
     if (!user) return null;
 
+    const shortName = getShortName(user.name);
+    const nameParts = shortName.split(/\s+/);
+    const firstNameInitial = getInitials(nameParts[0] || "");
+    const lastNameInitial = getInitials(nameParts[1] || "");
+
     return (
         user &&
         Object.keys(user).length > 0 && (
@@ -58,13 +75,11 @@ const User = () => {
                     onClick={toggleDropdown}
                     title="Открыть меню пользователя"
                 >
-                    <div className="user__photo">{`${getInitials(
-                        user.name
-                    )}${getInitials(user.family_name)}`}</div>
+                    <div className="user__photo">{`${firstNameInitial}${lastNameInitial}`}</div>
 
                     <div className="user__info">
                         <div>
-                            <b>{user.name}</b>
+                            <b>{shortName}</b>
                             <span>{user.email}</span>
                         </div>
 
