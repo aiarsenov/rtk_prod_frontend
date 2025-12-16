@@ -135,9 +135,9 @@ const EmployeesStats = ({
                                 context.dataIndex
                             ];
                         if (context.datasetIndex === 0) {
-                            return `${item.name}: ${item.previous_value}`;
+                            return `Прошлое значение: ${item.previous_value}`;
                         } else if (context.datasetIndex === 1) {
-                            return `${item.name}: ${item.value}`;
+                            return `Текущее значение: ${item.value}`;
                         }
                     },
                     title: () => "",
