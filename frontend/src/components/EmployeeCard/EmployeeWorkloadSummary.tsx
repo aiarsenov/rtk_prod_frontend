@@ -53,11 +53,14 @@ const EmployeeWorkloadSummary = ({
                                     </svg>
                                 </span>
 
-                                {item.total_hours}
+                                {item.total_hours?.toString().replace(".", ",")}
                             </div>
 
                             <div className="employee-card__workload-summary__list-item-percentage">
-                                {item.load_percentage}%
+                                {item.load_percentage
+                                    ?.toString()
+                                    .replace(".", ",")}
+                                %
                             </div>
                         </div>
 
