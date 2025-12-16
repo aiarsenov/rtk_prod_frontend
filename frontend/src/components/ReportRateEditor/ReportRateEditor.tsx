@@ -203,7 +203,7 @@ const ReportRateEditor = ({
                                                 reportRateData.status.toLowerCase() ===
                                                     "утверждён" ||
                                                 reportRateData.status.toLowerCase() ===
-                                                    "в процессе" ||
+                                                    "в работе" ||
                                                 isChanged
                                                     ? "form-field__status_completed"
                                                     : ""
@@ -211,7 +211,7 @@ const ReportRateEditor = ({
                                         >
                                             <span></span>
                                             {isChanged
-                                                ? "В процессе"
+                                                ? "В работе"
                                                 : reportRateData.status}
                                         </div>
                                     )}
