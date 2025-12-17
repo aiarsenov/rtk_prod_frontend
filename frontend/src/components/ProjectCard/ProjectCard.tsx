@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 
 import getData from "../../utils/getData";
@@ -44,18 +45,26 @@ import "react-datepicker/dist/react-datepicker.css";
 import { ToastContainer, toast } from "react-toastify";
 
 const ProjectCard = () => {
-    // let query;
+    const userPermitions = useSelector(
+        (state) => state.user?.data?.permissions
+    );
+
+    const mode = userPermitions?.projects || {
+        delete: "read",
+        edit: "read",
+        view: "read",
+    };
+
+    console.log(mode);
 
     const URL = `${import.meta.env.VITE_API_URL}projects`;
+
     const { projectId } = useParams();
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
     const [projectData, setProjectData] = useState({});
     const [projectDataCustom, setProjectDataCustom] = useState();
-
-    // const [mode, setMode] = useState(location.state?.mode || "read");
-    const [mode, setMode] = useState("edit");
 
     const [activeReportTab, setActiveReportTab] = useState("projectReports"); // Активная вкладка отчетов
     const [activeWindow, setActiveWindow] = useState(""); // Активное окно на мобилке (Отчеты или ОСВ)
@@ -80,7 +89,6 @@ const ProjectCard = () => {
     const [filteredCreditors, setFilteredCreditors] = useState([]); // Кредиторы активной вкладки
     const [addedBank, setAddedBank] = useState(null); // Банк добавленного кредитора в последний раз
 
-    // const autoFilterAppliedRef = useRef(false); // Флаг для отслеживания применения автоматической фильтрации
     const [customers, setCustomers] = useState([]); // Заказчики
 
     const [addCreditor, setAddCreditor] = useState(false); // Добавить кредитора
@@ -96,17 +104,6 @@ const ProjectCard = () => {
 
     const [revenue, setRevenue] = useState({}); // ОСВ
     const [period, setPeriod] = useState("current_year"); // Период ОСВ
-
-    // Фильтр кредиторов
-    // const handleFilterCreditors = (evt) => {
-    //     evt.target.value === ""
-    //         ? setFilteredCreditors(creditors)
-    //         : setFilteredCreditors(
-    //               creditors.filter(
-    //                   (lender) => +lender.creditor_id === +evt.target.value
-    //               )
-    //           );
-    // };
 
     // Получение отраслей
     const fetchIndustries = () => {
@@ -878,7 +875,7 @@ const ProjectCard = () => {
         <main className="page">
             <section
                 className={`card project-card ${
-                    mode === "read" ? "read-mode" : ""
+                    mode.edit === "full" ? "" : "read-mode"
                 }`}
             >
                 <div className="container card__container project-card__container">
@@ -892,14 +889,14 @@ const ProjectCard = () => {
                                     name="name"
                                     value={projectDataCustom?.name}
                                     onChange={(e) => {
-                                        if (mode === "read") return;
+                                        if (mode.edit !== "full") return;
                                         setProjectDataCustom((prev) => ({
                                             ...prev,
                                             name: e.target.value,
                                         }));
                                     }}
                                     onBlur={() => {
-                                        if (mode === "read") return;
+                                        if (mode.edit !== "full") return;
                                         if (
                                             projectData?.name !=
                                             projectDataCustom?.name
@@ -909,7 +906,7 @@ const ProjectCard = () => {
                                             });
                                         }
                                     }}
-                                    disabled={mode == "read"}
+                                    disabled={mode.edit !== "full"}
                                 />
 
                                 <span
@@ -957,7 +954,7 @@ const ProjectCard = () => {
                                         options={contragents}
                                         className="form-select-extend"
                                         placeholder={
-                                            mode === "edit"
+                                            mode.edit === "full"
                                                 ? "Выбрать из списка"
                                                 : ""
                                         }
@@ -975,7 +972,7 @@ const ProjectCard = () => {
                                             null
                                         }
                                         onChange={(selectedOption) => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
 
                                             const newValue =
                                                 selectedOption?.value || null;
@@ -988,7 +985,7 @@ const ProjectCard = () => {
                                                 contragent_id: newValue,
                                             });
                                         }}
-                                        isDisabled={mode == "read"}
+                                        isDisabled={mode.edit !== "full"}
                                         menuIsOpen={contragentMenuOpen}
                                         onMenuOpen={() => {
                                             if (!canChangeContragent) {
@@ -1043,7 +1040,7 @@ const ProjectCard = () => {
                                         }))}
                                         className="form-select-extend"
                                         placeholder={
-                                            mode === "edit"
+                                            mode.edit === "full"
                                                 ? "Выбрать из списка"
                                                 : ""
                                         }
@@ -1068,7 +1065,7 @@ const ProjectCard = () => {
                                             null
                                         }
                                         onChange={(selectedOption) => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
 
                                             const newValue =
                                                 +selectedOption?.value || null;
@@ -1089,7 +1086,8 @@ const ProjectCard = () => {
                                             });
                                         }}
                                         isDisabled={
-                                            mode == "read" || !availableToChange
+                                            mode.edit !== "full" ||
+                                            !availableToChange
                                         }
                                         styles={{
                                             input: (base) => ({
@@ -1124,7 +1122,7 @@ const ProjectCard = () => {
                                                 label: industry.name,
                                             }))}
                                         onChange={(updated) => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
 
                                             setOtherIndustries(updated.others);
                                         }}
@@ -1140,7 +1138,7 @@ const ProjectCard = () => {
                                         selectedValues={otherIndustries}
                                         popupTitle="Добавить дополнительные отрасли"
                                         buttonTitle="Добавить дополнительную отрасль"
-                                        disabled={mode === "read"}
+                                        disabled={mode.edit !== "full"}
                                     />
                                 </div>
 
@@ -1155,24 +1153,22 @@ const ProjectCard = () => {
                                     <AutoResizeTextarea
                                         className="form-textarea"
                                         placeholder={
-                                            mode === "edit"
+                                            mode.edit === "full"
                                                 ? "Например: создание производства заготовки с микрокристаллической структурой..."
                                                 : ""
                                         }
-                                        type="text"
-                                        name="description"
                                         value={
                                             projectDataCustom?.description || ""
                                         }
                                         onChange={(e) => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
                                             setProjectDataCustom((prev) => ({
                                                 ...prev,
                                                 description: e.target.value,
                                             }));
                                         }}
                                         onBlur={() => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
                                             if (
                                                 projectData?.description !=
                                                 projectDataCustom?.description
@@ -1184,7 +1180,8 @@ const ProjectCard = () => {
                                             }
                                         }}
                                         disabled={
-                                            mode == "read" || !availableToChange
+                                            mode.edit !== "full" ||
+                                            !availableToChange
                                         }
                                     />
                                 </div>
@@ -1198,7 +1195,7 @@ const ProjectCard = () => {
                                     <AutoResizeTextarea
                                         className="form-textarea"
                                         placeholder={
-                                            mode === "edit"
+                                            mode.edit === "full"
                                                 ? "Страна, город, область..."
                                                 : ""
                                         }
@@ -1207,14 +1204,14 @@ const ProjectCard = () => {
                                             projectDataCustom?.location || ""
                                         }
                                         onChange={(e) => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
                                             setProjectDataCustom((prev) => ({
                                                 ...prev,
                                                 location: e.target.value,
                                             }));
                                         }}
                                         onBlur={() => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
                                             if (
                                                 projectData?.location !=
                                                 projectDataCustom?.location
@@ -1226,7 +1223,8 @@ const ProjectCard = () => {
                                             }
                                         }}
                                         disabled={
-                                            mode == "read" || !availableToChange
+                                            mode.edit !== "full" ||
+                                            !availableToChange
                                         }
                                     />
                                 </div>
@@ -1240,21 +1238,23 @@ const ProjectCard = () => {
                                     <AutoResizeTextarea
                                         className="form-textarea"
                                         placeholder={
-                                            mode === "edit"
+                                            mode.edit === "full"
                                                 ? "Заполните ТЭП"
                                                 : ""
                                         }
                                         minHeight={31}
                                         value={projectDataCustom?.tep || ""}
                                         onChange={(e) => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
+
                                             setProjectDataCustom((prev) => ({
                                                 ...prev,
                                                 tep: e.target.value,
                                             }));
                                         }}
                                         onBlur={() => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
+
                                             if (
                                                 projectData?.tep !=
                                                 projectDataCustom?.tep
@@ -1265,7 +1265,8 @@ const ProjectCard = () => {
                                             }
                                         }}
                                         disabled={
-                                            mode == "read" || !availableToChange
+                                            mode.edit !== "full" ||
+                                            !availableToChange
                                         }
                                     />
                                 </div>
@@ -1306,7 +1307,7 @@ const ProjectCard = () => {
                                     )}
                                 </ul>
 
-                                {mode == "edit" && availableToChange && (
+                                {mode.edit === "full" && availableToChange && (
                                     <button
                                         type="button"
                                         className="button-add"
@@ -1494,28 +1495,29 @@ const ProjectCard = () => {
                                         )}
                                     </div>
 
-                                    {mode == "edit" && availableToChange && (
-                                        <div className="reports__footer">
-                                            {activeReportTab ==
-                                                "projectReports" && (
-                                                <button
-                                                    type="button"
-                                                    className="reports__add-btn"
-                                                    onClick={() =>
-                                                        setReportWindowsState(
-                                                            true
-                                                        )
-                                                    }
-                                                    title="Создать отчёт"
-                                                >
-                                                    Создать отчёт
-                                                </button>
-                                            )}
-                                        </div>
-                                    )}
+                                    {mode.edit === "full" &&
+                                        availableToChange && (
+                                            <div className="reports__footer">
+                                                {activeReportTab ==
+                                                    "projectReports" && (
+                                                    <button
+                                                        type="button"
+                                                        className="reports__add-btn"
+                                                        onClick={() =>
+                                                            setReportWindowsState(
+                                                                true
+                                                            )
+                                                        }
+                                                        title="Создать отчёт"
+                                                    >
+                                                        Создать отчёт
+                                                    </button>
+                                                )}
+                                            </div>
+                                        )}
                                 </div>
                             ) : (
-                                mode == "edit" &&
+                                mode.edit === "full" &&
                                 availableToChange &&
                                 activeReportTab == "projectReports" && (
                                     <button
@@ -1684,7 +1686,7 @@ const ProjectCard = () => {
             />
 
             <BottomNavCard className="project-card__bottom-nav">
-                {mode == "edit" && availableToChange && (
+                {mode.edit === "full" && availableToChange && (
                     <button
                         type="button"
                         className="button-add"

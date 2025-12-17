@@ -80,7 +80,7 @@ const ReportWindow = ({
     reportWindowsState: boolean;
     reportId: number;
     projectId: number;
-    mode: string;
+    mode: object;
 }) => {
     const [reportData, setReportData] = useState({
         report_status_id: "",
@@ -824,7 +824,7 @@ const ReportWindow = ({
                         selection.toString().length === 0 &&
                         e.target === e.currentTarget
                     ) {
-                        if (mode === "read") {
+                        if (mode.edit !== "full") {
                             resetState();
                         } else {
                             if (isDataChanged) {
@@ -863,7 +863,7 @@ const ReportWindow = ({
                         {reportWindowsState && (
                             <div
                                 className={`report-window form ${
-                                    mode === "read"
+                                    mode.edit !== "full"
                                         ? "report-window_read-mode read-mode"
                                         : ""
                                 }`}
@@ -949,7 +949,7 @@ const ReportWindow = ({
                                                         ]}
                                                         className="form-select-extend"
                                                         placeholder={
-                                                            mode === "edit"
+                                                            mode.edit === "full"
                                                                 ? "Выбрать тип"
                                                                 : ""
                                                         }
@@ -995,7 +995,10 @@ const ReportWindow = ({
                                                         onChange={(
                                                             selectedOption
                                                         ) => {
-                                                            if (mode === "read")
+                                                            if (
+                                                                mode.edit !==
+                                                                "full"
+                                                            )
                                                                 return;
 
                                                             const newValue =
@@ -1009,7 +1012,7 @@ const ReportWindow = ({
                                                             selectA.close();
                                                         }}
                                                         isDisabled={
-                                                            mode == "read"
+                                                            mode.edit !== "full"
                                                         }
                                                         styles={{
                                                             input: (base) => ({
@@ -1038,7 +1041,7 @@ const ReportWindow = ({
                                                         }
                                                         className="form-select-extend"
                                                         placeholder={
-                                                            mode === "edit"
+                                                            mode.edit === "full"
                                                                 ? "Регулярность"
                                                                 : ""
                                                         }
@@ -1064,7 +1067,10 @@ const ReportWindow = ({
                                                         onChange={(
                                                             selectedOption
                                                         ) => {
-                                                            if (mode === "read")
+                                                            if (
+                                                                mode.edit !==
+                                                                "full"
+                                                            )
                                                                 return;
 
                                                             const newValue =
@@ -1079,7 +1085,8 @@ const ReportWindow = ({
                                                             selectB.close();
                                                         }}
                                                         isDisabled={
-                                                            mode === "read" ||
+                                                            mode.edit !==
+                                                                "full" ||
                                                             reportData.is_regular ===
                                                                 false
                                                         }
@@ -1139,7 +1146,7 @@ const ReportWindow = ({
                                                         type="text"
                                                         className="form-field"
                                                         placeholder={`${
-                                                            mode === "read"
+                                                            mode.edit !== "full"
                                                                 ? ""
                                                                 : "0.0"
                                                         }`}
@@ -1154,7 +1161,7 @@ const ReportWindow = ({
                                                             )
                                                         }
                                                         disabled={
-                                                            mode === "read"
+                                                            mode.edit !== "full"
                                                         }
                                                     />
                                                 </div>
@@ -1207,7 +1214,7 @@ const ReportWindow = ({
                                                     }
                                                     className="form-select-extend"
                                                     placeholder={`${
-                                                        mode === "read"
+                                                        mode.edit !== "full"
                                                             ? ""
                                                             : "Выберите договор"
                                                     }`}
@@ -1254,7 +1261,9 @@ const ReportWindow = ({
                                                         );
                                                         selectC.close();
                                                     }}
-                                                    isDisabled={mode === "read"}
+                                                    isDisabled={
+                                                        mode.edit !== "full"
+                                                    }
                                                 />
                                             </div>
 
@@ -1271,7 +1280,8 @@ const ReportWindow = ({
                                                             type="text"
                                                             className="form-field"
                                                             placeholder={`${
-                                                                mode === "read"
+                                                                mode.edit !==
+                                                                "full"
                                                                     ? ""
                                                                     : "0.0"
                                                             }`}
@@ -1285,7 +1295,8 @@ const ReportWindow = ({
                                                                 )
                                                             }
                                                             disabled={
-                                                                mode === "read"
+                                                                mode.edit !==
+                                                                "full"
                                                             }
                                                         />
                                                     </div>
@@ -1442,7 +1453,7 @@ const ReportWindow = ({
                                                     </ul>
                                                 )}
 
-                                                {mode === "edit" && (
+                                                {mode.edit === "full" && (
                                                     <button
                                                         type="button"
                                                         className="button-add"
@@ -1508,7 +1519,7 @@ const ReportWindow = ({
                                                     <div>Нет</div>
                                                 )}
 
-                                                {mode === "edit" && (
+                                                {mode.edit === "full" && (
                                                     <button
                                                         type="button"
                                                         className="button-add"
@@ -1540,7 +1551,7 @@ const ReportWindow = ({
                                         </div>
                                     )}
 
-                                    {isDataChanged && mode === "edit" && (
+                                    {isDataChanged && mode.edit === "full" && (
                                         <div className="bottom-nav">
                                             <div className="container">
                                                 <button
@@ -1568,7 +1579,7 @@ const ReportWindow = ({
                                         </div>
                                     )}
 
-                                    {mode === "read" && (
+                                    {mode.edit !== "full" && (
                                         <div className="bottom-nav">
                                             <div className="container">
                                                 <button

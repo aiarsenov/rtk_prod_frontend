@@ -13,7 +13,7 @@ const TeammatesSection = ({
 }) => {
     let name;
 
-    if (mode == "read") {
+    if (mode.edit !== "full") {
         name =
             physicalPersons.length > 0 &&
             physicalPersons.find(
@@ -30,7 +30,7 @@ const TeammatesSection = ({
             <div className="person-block__header">
                 <div className="person-block__title">Участник {index + 1}</div>
 
-                {mode === "edit" && (
+                {mode.delete === "full" && (
                     <button
                         className="delete-button"
                         title="Удалить участника"
@@ -54,7 +54,7 @@ const TeammatesSection = ({
             </div>
 
             <div className="person-block__body">
-                {mode === "read" ? (
+                {mode.edit !== "full" ? (
                     <div className="form-field" title={name}>
                         {name}
                     </div>
@@ -99,7 +99,7 @@ const TeammatesSection = ({
                             );
                             selectA.close();
                         }}
-                        isDisabled={mode == "read"}
+                        isDisabled={mode.edit !== "full"}
                     />
                 )}
 
@@ -109,7 +109,7 @@ const TeammatesSection = ({
                         value: item.id,
                     }))}
                     className="form-select-extend"
-                    placeholder={mode === "edit" ? "Выберите роль" : ""}
+                    placeholder={mode.edit === "full" ? "Выберите роль" : ""}
                     noOptionsMessage={() => "Совпадений нет"}
                     isValidNewOption={() => false}
                     defaultValue={
@@ -131,7 +131,7 @@ const TeammatesSection = ({
                     onMenuClose={selectB.handleMenuClose}
                     onFocus={selectB.open}
                     onChange={(selectedOption) => {
-                        if (mode === "read") return;
+                        if (mode.edit !== "full") return;
 
                         const newValue = selectedOption?.value || null;
 
@@ -142,7 +142,7 @@ const TeammatesSection = ({
                         );
                         selectB.close();
                     }}
-                    isDisabled={mode === "read"}
+                    isDisabled={mode.edit !== "full"}
                     styles={{
                         input: (base) => ({
                             ...base,

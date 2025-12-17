@@ -46,7 +46,7 @@ const RateSwitch = ({
                 className="rate-switch__button"
                 title="Поставить оценку Есть проблемы"
                 onClick={(evt) => {
-                    if (mode == "read") return;
+                    if (mode.edit !== "full") return;
                     evt.stopPropagation();
                     rateHandler(name, 0);
                 }}
@@ -56,7 +56,7 @@ const RateSwitch = ({
                 className="rate-switch__button"
                 title="Поставить оценку Есть сложности"
                 onClick={(evt) => {
-                    if (mode == "read") return;
+                    if (mode.edit !== "full") return;
                     evt.stopPropagation();
                     rateHandler(name, 1);
                 }}
@@ -66,7 +66,7 @@ const RateSwitch = ({
                 className="rate-switch__button"
                 title="Поставить оценку Проблем нет"
                 onClick={(evt) => {
-                    if (mode == "read") return;
+                    if (mode.edit !== "full") return;
                     evt.stopPropagation();
                     rateHandler(name, 2);
                 }}

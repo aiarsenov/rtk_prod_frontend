@@ -20,7 +20,7 @@ const ContractorsSection = ({
 
     let name;
 
-    if (mode == "read") {
+    if (mode.edit !== "full") {
         name =
             suppliers.length > 0 &&
             suppliers.find((item) => item.id === person?.contragent_id)
@@ -68,7 +68,7 @@ const ContractorsSection = ({
             <div className="person-block__header">
                 <div className="person-block__title">Подрядчик {index + 1}</div>
 
-                {mode === "edit" && (
+                {mode.delete === "full" && (
                     <button
                         className="delete-button"
                         title="Удалить подрядчика"
@@ -92,7 +92,7 @@ const ContractorsSection = ({
             </div>
 
             <div className="person-block__body">
-                {mode === "read" ? (
+                {mode.edit !== "full" ? (
                     <div className="form-field" title={name}>
                         {name}
                     </div>
@@ -133,7 +133,7 @@ const ContractorsSection = ({
                             handleContragentChange(selectedOption.value);
                             selectA.close();
                         }}
-                        isDisabled={mode == "read"}
+                        isDisabled={mode.edit !== "full"}
                     />
                 )}
 
@@ -143,7 +143,7 @@ const ContractorsSection = ({
                         value: item.id,
                     }))}
                     className="form-select-extend"
-                    placeholder={mode === "edit" ? "Выберите роль" : ""}
+                    placeholder={mode.edit === "full" ? "Выберите роль" : ""}
                     noOptionsMessage={() => "Совпадений нет"}
                     isValidNewOption={() => false}
                     defaultValue={
@@ -165,7 +165,7 @@ const ContractorsSection = ({
                     onMenuClose={selectB.handleMenuClose}
                     onFocus={selectB.open}
                     onChange={(selectedOption) => {
-                        if (mode === "read") return;
+                        if (mode.edit !== "full") return;
 
                         const newValue = selectedOption?.value || null;
 
@@ -176,7 +176,7 @@ const ContractorsSection = ({
                         );
                         selectB.close();
                     }}
-                    isDisabled={mode === "read"}
+                    isDisabled={mode.edit !== "full"}
                     styles={{
                         input: (base) => ({
                             ...base,
@@ -231,7 +231,7 @@ const ContractorsSection = ({
                             selectC.close();
                         }}
                         isDisabled={
-                            mode === "read" || localContracts.length == 0
+                            mode.edit !== "full" || localContracts.length == 0
                         }
                     />
                 ) : (
@@ -264,7 +264,7 @@ const ContractorsSection = ({
                             selectC.close();
                         }}
                         isDisabled={
-                            mode === "read" || localContracts.length == 0
+                            mode.edit !== "full" || localContracts.length == 0
                         }
                     />
                 )}

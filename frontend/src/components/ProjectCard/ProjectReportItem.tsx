@@ -50,7 +50,7 @@ const ProjectReportItem = ({
                 {status}
             </div>
 
-            {mode === "edit" && (
+            {mode.delete === "full" && (
                 <button
                     className="delete-button"
                     title="Удалить отчёт"

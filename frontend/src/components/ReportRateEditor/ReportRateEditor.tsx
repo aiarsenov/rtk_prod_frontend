@@ -122,7 +122,8 @@ const ReportRateEditor = ({
                 >
                     <div
                         className={`report-window report-rate-editor ${
-                            mode === "read" && "report-rate-editor_read-mode"
+                            mode.edit !== "full" &&
+                            "report-rate-editor_read-mode"
                         }`}
                     >
                         <div className="report-window__wrapper">
@@ -265,7 +266,9 @@ const ReportRateEditor = ({
                                     <textarea
                                         className="form-textarea h-[150px]"
                                         placeholder={
-                                            mode === "edit" ? "Описание" : ""
+                                            mode.edit === "full"
+                                                ? "Описание"
+                                                : ""
                                         }
                                         style={{ resize: "none" }}
                                         value={
@@ -277,7 +280,7 @@ const ReportRateEditor = ({
                                                 evt.target.value
                                             )
                                         }
-                                        disabled={mode === "read"}
+                                        disabled={mode.edit !== "full"}
                                     ></textarea>
                                 </div>
                             </div>
@@ -288,7 +291,7 @@ const ReportRateEditor = ({
                                 }`}
                             >
                                 <div className="container">
-                                    {mode === "edit" && (
+                                    {mode.edit === "full" && (
                                         <>
                                             <button
                                                 type="button"

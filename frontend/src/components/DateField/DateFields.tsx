@@ -4,12 +4,12 @@ import { IMaskInput } from "react-imask";
 import IMask from "imask";
 
 const DateFields = ({
-    mode = "edit",
+    mode,
     value = "",
     onChange,
     className,
 }: {
-    mode: string;
+    mode: object;
     value: string;
     onChange: () => void;
     className: string;
@@ -84,10 +84,10 @@ const DateFields = ({
                             dateToRef.current?.focus();
                         }
                     }}
-                    placeholder={`${mode === "read" ? "" : "дд.мм.гггг"}`}
+                    placeholder={`${mode.edit !== "full" ? "" : "дд.мм.гггг"}`}
                     className="h-full min-w-[5ch] max-w-[9ch]"
                     inputMode="numeric"
-                    disabled={mode === "read"}
+                    disabled={mode.edit !== "full"}
                 />
 
                 <span className="self-center text-gray-400 mr-[4px]">-</span>
@@ -112,10 +112,10 @@ const DateFields = ({
                             }
                         }
                     }}
-                    placeholder={`${mode === "read" ? "" : "дд.мм.гггг"}`}
+                    placeholder={`${mode.edit !== "full" ? "" : "дд.мм.гггг"}`}
                     className="h-full min-w-[5ch] max-w-[9ch]"
                     inputMode="numeric"
-                    disabled={mode === "read"}
+                    disabled={mode.edit !== "full"}
                 />
             </div>
 

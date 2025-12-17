@@ -26,7 +26,7 @@ const ExecutorBlock = ({ contanct, deleteBlock, mode, type }) => {
                 <span>{email}</span>
             </div>
 
-            {mode == "edit" && (
+            {mode.delete === "full" && (
                 <div className="project-card__executors-item__actions">
                     <button
                         className="project-card__executors-item__delete"

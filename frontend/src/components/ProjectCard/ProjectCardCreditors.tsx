@@ -21,8 +21,7 @@ const ProjectCardCreditors = ({
     const [matchedBanks, setMatchedBanks] = useState([]); // Закрепленные за карточкой банки для отображения вкладок
     const [activeBankId, setActiveBankId] = useState(null); // Выбранный банк
 
-
-    // Переключаем вкладку на банк на только добавленного кредитора 
+    // Переключаем вкладку на банк на только добавленного кредитора
     useEffect(() => {
         if (addedBank !== null) {
             const bankExists = matchedBanks.some(
@@ -123,7 +122,7 @@ const ProjectCardCreditors = ({
                 )}
             </ul>
 
-            {mode == "edit" && availableToChange && (
+            {mode.edit === "full" && availableToChange && (
                 <button
                     type="button"
                     className="button-add"
