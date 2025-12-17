@@ -19,7 +19,7 @@ const ProtectedRoute = ({
         const noAccessToAny = !hasAccessToAnySection(user);
         return (
             <AccessDenied
-                message={`У вас нет прав для просмотра раздела "${section}"`}
+                message="У вас нет прав для доступа в данный раздел."
                 noAccessToAnySection={noAccessToAny}
             />
         );

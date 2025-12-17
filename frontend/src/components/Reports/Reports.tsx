@@ -802,7 +802,7 @@ const Reports = () => {
 
     if (!hasAccess) {
         return (
-            <AccessDenied message="У вас нет прав для просмотра раздела отчетов" />
+            <AccessDenied message="У вас нет прав для доступа в данный раздел." />
         );
     }
 
@@ -880,11 +880,7 @@ const Reports = () => {
 
                     {!checkTabAccess() ? (
                         <AccessDenied
-                            message={
-                                activeTab === "projects"
-                                    ? "У вас нет прав для просмотра отчетов по проектам"
-                                    : "У вас нет прав для просмотра отчетов сотрудников"
-                            }
+                            message="У вас нет прав для доступа в данный раздел."
                         />
                     ) : (
                         <table className="registry-table table-auto w-full border-collapse">
