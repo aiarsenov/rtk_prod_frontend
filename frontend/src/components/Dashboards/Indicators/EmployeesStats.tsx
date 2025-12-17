@@ -78,7 +78,7 @@ const EmployeesStats = ({
                 borderWidth: { right: 2 },
                 borderRadius: 0,
                 barPercentage: 1,
-                categoryPercentage: 0.8,
+                // categoryPercentage: 0.8,
                 barThickness: 39,
                 datalabels: {
                     display: false,
