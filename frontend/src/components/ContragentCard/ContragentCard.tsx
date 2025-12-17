@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 
 import getData from "../../utils/getData";
@@ -29,14 +30,22 @@ import Loader from "../Loader.jsx";
 import "./ContragentCard.scss";
 
 const ContragentCard = () => {
+    const userPermitions = useSelector(
+        (state) => state.user?.data?.permissions
+    );
+
+    const mode = userPermitions?.customers || {
+        delete: "read",
+        edit: "read",
+        view: "read",
+    };
+
     const URL = `${import.meta.env.VITE_API_URL}contragents`;
     const { contragentId } = useParams();
     const navigate = useNavigate();
 
     const [cardData, setCardData] = useState({});
     const [cardDataCustom, setCardDataCustom] = useState({});
-
-    const [mode, setMode] = useState("edit");
 
     const [isReportsDataLoaded, setIsReportsDataLoaded] = useState(false);
     const [isManagementReportsDataLoaded, setIsManagementReportsDataLoaded] =
@@ -331,7 +340,7 @@ const ContragentCard = () => {
         <main className="page">
             <section
                 className={`card contragent-card ${
-                    mode === "read" ? "read-mode" : ""
+                    mode.edit !== "full" ? "read-mode" : ""
                 }`}
             >
                 <div className="container card__container contragent-card__container">
@@ -345,7 +354,7 @@ const ContragentCard = () => {
                                     name="program_name"
                                     value={cardDataCustom?.program_name || ""}
                                     onChange={(e) => {
-                                        if (mode === "read") return;
+                                        if (mode.edit !== "full") return;
 
                                         setCardDataCustom((prev) => ({
                                             ...prev,
@@ -353,7 +362,7 @@ const ContragentCard = () => {
                                         }));
                                     }}
                                     onBlur={() => {
-                                        if (mode === "read") return;
+                                        if (mode.edit !== "full") return;
                                         if (
                                             cardData?.program_name !=
                                             cardDataCustom?.program_name
@@ -364,7 +373,7 @@ const ContragentCard = () => {
                                             });
                                         }
                                     }}
-                                    disabled={mode == "read"}
+                                    disabled={mode.edit !== "full"}
                                 />
 
                                 <span
@@ -389,18 +398,16 @@ const ContragentCard = () => {
                                     <AutoResizeTextarea
                                         className="form-textarea"
                                         placeholder={
-                                            mode === "edit"
+                                            mode.edit === "full"
                                                 ? "Заполните описание"
                                                 : ""
                                         }
-                                        type="text"
-                                        name="description_short"
                                         value={
                                             cardDataCustom?.description_short ||
                                             ""
                                         }
                                         onChange={(e) => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
                                             setCardDataCustom((prev) => ({
                                                 ...prev,
                                                 description_short:
@@ -408,7 +415,7 @@ const ContragentCard = () => {
                                             }));
                                         }}
                                         onBlur={() => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
                                             if (
                                                 cardData?.description_short !=
                                                 cardDataCustom?.description_short
@@ -419,7 +426,7 @@ const ContragentCard = () => {
                                                 });
                                             }
                                         }}
-                                        disabled={mode == "read"}
+                                        disabled={mode.edit !== "full"}
                                     />
                                 </div>
 
@@ -431,7 +438,7 @@ const ContragentCard = () => {
                                     <AutoResizeTextarea
                                         className="form-textarea"
                                         placeholder={
-                                            mode === "edit"
+                                            mode.edit === "full"
                                                 ? "Заполните адрес центрального офиса"
                                                 : ""
                                         }
@@ -441,7 +448,7 @@ const ContragentCard = () => {
                                             ""
                                         }
                                         onChange={(e) => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
                                             setCardDataCustom((prev) => ({
                                                 ...prev,
                                                 head_office_address:
@@ -449,7 +456,7 @@ const ContragentCard = () => {
                                             }));
                                         }}
                                         onBlur={() => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
                                             if (
                                                 cardData?.head_office_address !=
                                                 cardDataCustom?.head_office_address
@@ -460,7 +467,7 @@ const ContragentCard = () => {
                                                 });
                                             }
                                         }}
-                                        disabled={mode == "read"}
+                                        disabled={mode.edit !== "full"}
                                     />
                                 </div>
 
@@ -473,7 +480,7 @@ const ContragentCard = () => {
                                         type="text"
                                         className="form-field"
                                         placeholder={
-                                            mode === "edit"
+                                            mode.edit === "full"
                                                 ? "Введите адрес сайта компании"
                                                 : ""
                                         }
@@ -483,14 +490,14 @@ const ContragentCard = () => {
                                             ""
                                         }
                                         onChange={(e) => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
                                             setCardDataCustom((prev) => ({
                                                 ...prev,
                                                 company_website: e.target.value,
                                             }));
                                         }}
                                         onBlur={() => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
                                             if (
                                                 cardData?.company_website !=
                                                 cardDataCustom?.company_website
@@ -501,7 +508,7 @@ const ContragentCard = () => {
                                                 });
                                             }
                                         }}
-                                        disabled={mode == "read"}
+                                        disabled={mode.edit !== "full"}
                                     />
                                 </div>
                             </section>
@@ -628,7 +635,6 @@ const ContragentCard = () => {
                                                 openReportEditor={
                                                     openReportEditor
                                                 }
-                                                mode={"read"}
                                             />
                                         )}
 
@@ -660,7 +666,11 @@ const ContragentCard = () => {
                         contracts={contracts}
                         reportId={reportId}
                         setReportId={setReportId}
-                        mode={"read"}
+                        mode={{
+                            delete: "read",
+                            edit: "read",
+                            view: "read",
+                        }}
                     />
                 </div>
 
