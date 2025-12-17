@@ -43,7 +43,7 @@ export const hasPermission = (user, section, permissionType = 'view', requiredSc
  * @returns {boolean}
  */
 export const isAdmin = (user) => {
-    return true;
+    return hasPermission(user, 'admin', 'view');
 };
 
 /**
