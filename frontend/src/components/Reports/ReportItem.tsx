@@ -9,6 +9,7 @@ type Column = {
 };
 
 type ReportItemProps = {
+    mode: object;
     columns: Column[];
     props: object;
     openReportEditor: () => void;
@@ -16,6 +17,7 @@ type ReportItemProps = {
 };
 
 const ReportItem = ({
+    mode,
     columns,
     props,
     openReportEditor,
@@ -194,6 +196,7 @@ const ReportItem = ({
                                 <div
                                     className="cursor-pointer"
                                     onClick={() => {
+                                        if (mode.view !== "full") return;
                                         openReportEditor(props);
                                     }}
                                 >

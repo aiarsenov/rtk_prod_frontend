@@ -55,8 +55,6 @@ const ProjectCard = () => {
         view: "read",
     };
 
-    console.log(mode);
-
     const URL = `${import.meta.env.VITE_API_URL}projects`;
 
     const { projectId } = useParams();

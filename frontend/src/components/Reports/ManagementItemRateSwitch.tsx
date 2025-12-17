@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import "../RateSwitch/RateSwitch.scss";
 
 interface RateSwitchProps {
+    mode: object;
     name: string;
     rateHandler: (name: string, value: string | number) => void;
     reportRateData: Record<string, number | undefined>;
@@ -25,6 +26,7 @@ const getRateClass = (rateValue: number | undefined): string => {
 };
 
 const ManagementItemRateSwitch = ({
+    mode,
     name,
     reportRateData,
     rateHandler,
@@ -44,6 +46,7 @@ const ManagementItemRateSwitch = ({
                 className="rate-switch__button"
                 title="Поставить оценку Есть проблемы"
                 onClick={(evt) => {
+                    if (mode.edit !== "full") return;
                     evt.stopPropagation();
                     rateHandler(reportRateData, 0);
                 }}
@@ -53,6 +56,7 @@ const ManagementItemRateSwitch = ({
                 className="rate-switch__button"
                 title="Поставить оценку Есть сложности"
                 onClick={(evt) => {
+                    if (mode.edit !== "full") return;
                     evt.stopPropagation();
                     rateHandler(reportRateData, 1);
                 }}
@@ -62,6 +66,7 @@ const ManagementItemRateSwitch = ({
                 className="rate-switch__button"
                 title="Поставить оценку Проблем нет"
                 onClick={(evt) => {
+                    if (mode.edit !== "full") return;
                     evt.stopPropagation();
                     rateHandler(reportRateData, 2);
                 }}

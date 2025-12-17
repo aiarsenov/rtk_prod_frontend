@@ -13,6 +13,7 @@ type Column = {
 };
 
 type ReportItemProps = {
+    mode: object;
     activeReportId?: number | null;
     columns: Column[];
     props: object;
@@ -22,6 +23,7 @@ type ReportItemProps = {
 };
 
 const ManagementItem = ({
+    mode,
     activeReportId,
     columns,
     props,
@@ -226,6 +228,7 @@ const ManagementItem = ({
                                     return (
                                         <div className="w-[80px]">
                                             <ManagementItemRateSwitch
+                                                mode={mode}
                                                 name={"general_assessment"}
                                                 rateHandler={
                                                     managementReportEditorHandler

@@ -24,8 +24,78 @@ import { ToastContainer, toast } from "react-toastify";
 
 import "./Reports.scss";
 
+const rateOptions = [
+    {
+        label: (
+            <span className="flex items-center gap-[5px]">
+                <span
+                    style={{
+                        display: "block",
+                        background: "var(--color-green-60)",
+                        width: "16px",
+                        height: "16px",
+                        borderRadius: "50%",
+                    }}
+                ></span>
+                Проблем нет
+            </span>
+        ),
+        value: 2,
+    },
+    {
+        label: (
+            <span className="flex items-center gap-[5px]">
+                <span
+                    style={{
+                        display: "block",
+                        background: "var(--color-orange-60)",
+                        width: "16px",
+                        height: "16px",
+                        borderRadius: "50%",
+                    }}
+                ></span>
+                Есть сложности
+            </span>
+        ),
+        value: 1,
+    },
+    {
+        label: (
+            <span className="flex items-center gap-[5px]">
+                <span
+                    style={{
+                        display: "block",
+                        background: "var(--color-red-60)",
+                        width: "16px",
+                        height: "16px",
+                        borderRadius: "50%",
+                    }}
+                ></span>
+                Есть проблемы
+            </span>
+        ),
+        value: 0,
+    },
+];
+
 const Reports = () => {
-    // let query;
+    const userPermitions = useSelector(
+        (state) => state.user?.data?.permissions
+    );
+
+    console.log(userPermitions);
+
+    const employeeMode = userPermitions?.employee_reports || {
+        delete: "read",
+        edit: "read",
+        view: "read",
+    };
+
+    const projectsMode = userPermitions?.project_reports || {
+        delete: "read",
+        edit: "read",
+        view: "read",
+    };
 
     const user = useSelector((state: any) => state.user.data);
     const REPORTS_URL = `${import.meta.env.VITE_API_URL}reports`;
@@ -514,60 +584,6 @@ const Reports = () => {
         return Array.from(new Set(allItems));
     }, [managementList]);
 
-    const rateOptions = [
-        {
-            label: (
-                <span className="flex items-center gap-[5px]">
-                    <span
-                        style={{
-                            display: "block",
-                            background: "var(--color-green-60)",
-                            width: "16px",
-                            height: "16px",
-                            borderRadius: "50%",
-                        }}
-                    ></span>
-                    Проблем нет
-                </span>
-            ),
-            value: 2,
-        },
-        {
-            label: (
-                <span className="flex items-center gap-[5px]">
-                    <span
-                        style={{
-                            display: "block",
-                            background: "var(--color-orange-60)",
-                            width: "16px",
-                            height: "16px",
-                            borderRadius: "50%",
-                        }}
-                    ></span>
-                    Есть сложности
-                </span>
-            ),
-            value: 1,
-        },
-        {
-            label: (
-                <span className="flex items-center gap-[5px]">
-                    <span
-                        style={{
-                            display: "block",
-                            background: "var(--color-red-60)",
-                            width: "16px",
-                            height: "16px",
-                            borderRadius: "50%",
-                        }}
-                    ></span>
-                    Есть проблемы
-                </span>
-            ),
-            value: 0,
-        },
-    ];
-
     const COLUMNS = [
         [
             {
@@ -879,9 +895,7 @@ const Reports = () => {
                     )}
 
                     {!checkTabAccess() ? (
-                        <AccessDenied
-                            message="У вас нет прав для доступа в данный раздел."
-                        />
+                        <AccessDenied message="У вас нет прав для доступа в данный раздел." />
                     ) : (
                         <table className="registry-table table-auto w-full border-collapse">
                             <thead className="registry-table__thead">
@@ -918,6 +932,7 @@ const Reports = () => {
                                     filteredProjectReports.length > 0 &&
                                     filteredProjectReports.map((item) => (
                                         <ReportItem
+                                            mode={projectsMode}
                                             key={item.id}
                                             columns={COLUMNS[0]}
                                             props={item}
@@ -932,6 +947,7 @@ const Reports = () => {
                                             key={item.id}
                                             columns={COLUMNS[1]}
                                             props={item}
+                                            mode={employeeMode}
                                             openManagementReportEditor={
                                                 openManagementReportEditor
                                             }
@@ -957,7 +973,11 @@ const Reports = () => {
                             reportId={reportId}
                             setReportId={setReportId}
                             reportName={reportName}
-                            mode={"read"}
+                            mode={{
+                                delete: "read",
+                                edit: "read",
+                                view: "read",
+                            }}
                         />
                     )}
 
@@ -968,7 +988,7 @@ const Reports = () => {
                                 reportData={reportData}
                                 closeEditor={closeRateReportEditor}
                                 updateReportDetails={updateReportDetails}
-                                mode={"edit"}
+                                mode={employeeMode}
                             />
 
                             <ManagementReportEditor
@@ -979,7 +999,7 @@ const Reports = () => {
                                 }
                                 updateReport={updateReport}
                                 closeEditor={closeManagementReportEditor}
-                                mode={"edit"}
+                                mode={employeeMode}
                             />
                         </>
                     )}
