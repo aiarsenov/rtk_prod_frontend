@@ -5,7 +5,7 @@ const SupplierItem = ({ props, columns }) => {
     const navigate = useNavigate();
 
     const handleRowClick = () => {
-        navigate(`/suppliers/${props.id}`, { state: { mode: "read" } });
+        navigate(`/suppliers/${props.id}`);
     };
 
     return (

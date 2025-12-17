@@ -8,7 +8,7 @@ import Switch from "../Switch/Switch";
 const ReferenceItem = ({
     data,
     columns,
-    mode = "read",
+    mode,
     bookId,
     handleOpenDeletePopup,
     handleOpenEditPopup,
@@ -123,7 +123,7 @@ const ReferenceItem = ({
                                         }
                                     }}
                                     disabled={
-                                        mode === "read" ||
+                                        mode.edit !== "full" ||
                                         (key === "is_project_leader" &&
                                             data.is_project_report_responsible ===
                                                 false)
@@ -165,68 +165,66 @@ const ReferenceItem = ({
                 }
             })}
 
-            {mode === "edit" && (
-                <td className="max-w-[70px]">
-                    <div className="registry-table__item-actions">
-                        {mode === "edit" && (
+            <td className="max-w-[70px]">
+                <div className="registry-table__item-actions">
+                    {mode.edit === "full" && (
+                        <button
+                            onClick={() => handleOpenEditPopup(data)}
+                            className="edit-button"
+                            title="Изменить элемент"
+                        ></button>
+                    )}
+
+                    {mode.delete === "full" &&
+                        bookId !== "report-types" &&
+                        bookId != "working-hours" && (
                             <button
-                                onClick={() => handleOpenEditPopup(data)}
-                                className="edit-button"
-                                title="Изменить элемент"
-                            ></button>
-                        )}
+                                onClick={() => {
+                                    if (
+                                        bookId == "departments" &&
+                                        data.total_employees_count > 0
+                                    ) {
+                                        return;
+                                    }
 
-                        {mode === "edit" &&
-                            bookId !== "report-types" &&
-                            bookId != "working-hours" && (
-                                <button
-                                    onClick={() => {
-                                        if (
-                                            bookId == "departments" &&
-                                            data.total_employees_count > 0
-                                        ) {
-                                            return;
-                                        }
-
-                                        if (data.projects_count) {
-                                            if (data.projects_count < 1) {
-                                                handleOpenDeletePopup({
-                                                    id: data.id,
-                                                });
-                                            }
-                                        } else {
+                                    if (data.projects_count) {
+                                        if (data.projects_count < 1) {
                                             handleOpenDeletePopup({
                                                 id: data.id,
                                             });
                                         }
-                                    }}
-                                    className="delete-button extended"
-                                    title="Удалить элемент"
-                                    disabled={
-                                        data.projects_count > 0 ||
-                                        data.employee_count > 0 ||
-                                        data.employees_count > 0 ||
-                                        (bookId == "roles" && data.count > 0) ||
-                                        data.total_employees_count > 0
+                                    } else {
+                                        handleOpenDeletePopup({
+                                            id: data.id,
+                                        });
                                     }
+                                }}
+                                className="delete-button extended"
+                                title="Удалить элемент"
+                                disabled={
+                                    data.projects_count > 0 ||
+                                    data.employee_count > 0 ||
+                                    data.employees_count > 0 ||
+                                    (bookId == "roles" && data.count > 0) ||
+                                    data.total_employees_count > 0
+                                }
+                            >
+                                <svg
+                                    width="20"
+                                    height="21"
+                                    viewBox="0 0 20 21"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
                                 >
-                                    <svg
-                                        width="20"
-                                        height="21"
-                                        viewBox="0 0 20 21"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            d="M5.833 8v9.166h8.333V8h1.667v10c0 .46-.373.833-.833.833H5A.833.833 0 014.166 18V8h1.667zm3.333 0v7.5H7.5V8h1.666zM12.5 8v7.5h-1.667V8H12.5zm0-5.833c.358 0 .677.229.79.57l.643 1.929h2.733v1.667H3.333V4.666h2.733l.643-1.93a.833.833 0 01.79-.57h5zm-.601 1.666H8.1l-.278.833h4.354l-.277-.833z"
-                                            fill="currentColor"
-                                        />
-                                    </svg>
-                                </button>
-                            )}
-                    </div>
-                </td>
-            )}
+                                    <path
+                                        d="M5.833 8v9.166h8.333V8h1.667v10c0 .46-.373.833-.833.833H5A.833.833 0 014.166 18V8h1.667zm3.333 0v7.5H7.5V8h1.666zM12.5 8v7.5h-1.667V8H12.5zm0-5.833c.358 0 .677.229.79.57l.643 1.929h2.733v1.667H3.333V4.666h2.733l.643-1.93a.833.833 0 01.79-.57h5zm-.601 1.666H8.1l-.278.833h4.354l-.277-.833z"
+                                        fill="currentColor"
+                                    />
+                                </svg>
+                            </button>
+                        )}
+                </div>
+            </td>
         </tr>
     );
 };

@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 import getData from "../../utils/getData";
@@ -24,6 +25,16 @@ import TITLES from "../../data/reference_book_titles.json";
 import EDITABLE_KEYS from "../../data/editable_keys.json";
 
 const SingleBook = () => {
+    const userPermitions = useSelector(
+        (state) => state.user?.data?.permissions
+    );
+
+    const mode = userPermitions?.dictionaries || {
+        delete: "read",
+        edit: "read",
+        view: "read",
+    };
+
     const { bookId } = useParams();
 
     const columns = bookId ? COLUMNS[bookId] : COLUMNS;
@@ -33,8 +44,6 @@ const SingleBook = () => {
         bookId === "creditor" || bookId === "contragent"
             ? `${import.meta.env.VITE_API_URL}responsible-persons/${bookId}`
             : `${import.meta.env.VITE_API_URL}${bookId ? bookId : "books"}`;
-
-    const [mode, setMode] = useState("edit");
 
     const [sortBy, setSortBy] = useState({ key: "", action: "" });
     const [sortedList, setSortedList] = useState([]);
@@ -170,14 +179,9 @@ const SingleBook = () => {
 
     // Изименение генерации отчетов
     const toggleRoleResponse = (action) => {
-        if (mode === "read") {
+        if (mode.edit !== "full") {
             return;
         }
-
-        // query = toast.loading("Обновление", {
-        //     containerId: "singleBook",
-        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        // });
 
         action.is_project_report_responsible = rolesAction.action === "true";
 
@@ -192,24 +196,7 @@ const SingleBook = () => {
                 if (response?.ok) {
                     setRolesAction({ action: "", roleId: "" });
                     getBooks();
-
-                    // toast.dismiss(query);
-
-                    // toast.update(query, {
-                    //     render: response.message || "Успех",
-                    //     type: "success",
-                    //     containerId: "singleBook",
-                    //     isLoading: false,
-                    //     autoClose: 1200,
-                    //     pauseOnFocusLoss: false,
-                    //     pauseOnHover: false,
-                    //     position:
-                    //         window.innerWidth >= 1440
-                    //             ? "bottom-right"
-                    //             : "top-right",
-                    // });
                 } else {
-                    // toast.dismiss(query);
                     toast.error(response.message || "Ошибка операции", {
                         isLoading: false,
                         autoClose: 2500,
@@ -224,7 +211,6 @@ const SingleBook = () => {
                 }
             })
             .catch((error) => {
-                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка операции", {
                     isLoading: false,
                     autoClose: 2500,
@@ -241,7 +227,7 @@ const SingleBook = () => {
 
     // Изменение генерации отчетов менеджмента
     const toggleManagementReportTypeResponse = (action) => {
-        if (mode === "read") {
+        if (mode.edit !== "full") {
             return;
         }
 
@@ -300,7 +286,7 @@ const SingleBook = () => {
 
     // Добавление записи
     const addNewElement = () => {
-        if (mode === "read") {
+        if (mode.edit !== "full") {
             return;
         }
 
@@ -318,38 +304,14 @@ const SingleBook = () => {
                 ? `${URL}/${updatedData.contragent_id}`
                 : URL;
 
-        // query = toast.loading("Обновление", {
-        //     containerId: "singleBook",
-        //     draggable: true,
-        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        // });
-
         postData("POST", newUrl, updatedData)
             .then((response) => {
                 if (response?.ok) {
-                    // toast.dismiss(query);
-
-                    // toast.update(query, {
-                    //     render: "Запись добавлена",
-                    //     type: "success",
-                    //     containerId: "singleBook",
-                    //     isLoading: false,
-                    //     autoClose: 1200,
-                    //     pauseOnFocusLoss: false,
-                    //     pauseOnHover: false,
-                    //     draggable: true,
-                    //     position:
-                    //         window.innerWidth >= 1440
-                    //             ? "bottom-right"
-                    //             : "top-right",
-                    // });
-
                     resetElemPopupState();
                     getBooks();
                 }
             })
             .catch((error) => {
-                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка добавления записи", {
                     isLoading: false,
                     autoClose: 2500,
@@ -367,43 +329,19 @@ const SingleBook = () => {
 
     // Изменение рабочих часов
     const editWokrHours = (data) => {
-        if (mode === "read") {
+        if (mode.edit !== "full") {
             return;
         }
 
         let updatedData = tempData;
         updatedData.hours = +data.hours;
 
-        // query = toast.loading("Сохранение", {
-        //     containerId: "singleBook",
-        //     draggable: true,
-        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        // });
-
         postData("PATCH", URL, { year: currentYear, hours: [updatedData] })
             .then((response) => {
                 if (response?.ok) {
                     resetElemPopupState();
                     getBooks();
-
-                    // toast.dismiss(query);
-
-                    // toast.update(query, {
-                    //     render: response.message || "Успешно сохранено",
-                    //     type: "success",
-                    //     containerId: "singleBook",
-                    //     isLoading: false,
-                    //     autoClose: 1200,
-                    //     pauseOnFocusLoss: false,
-                    //     pauseOnHover: false,
-                    //     draggable: true,
-                    //     position:
-                    //         window.innerWidth >= 1440
-                    //             ? "bottom-right"
-                    //             : "top-right",
-                    // });
                 } else {
-                    // toast.dismiss(query);
                     toast.error("Ошибка сохранения", {
                         isLoading: false,
                         autoClose: 2500,
@@ -419,7 +357,6 @@ const SingleBook = () => {
                 }
             })
             .catch((error) => {
-                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка сохранения", {
                     isLoading: false,
                     autoClose: 2500,
@@ -437,7 +374,7 @@ const SingleBook = () => {
 
     // Изменение записи
     const editElement = (updatedData, reloadList = true) => {
-        if (mode === "read") {
+        if (mode.edit !== "full") {
             return;
         }
 
@@ -478,12 +415,6 @@ const SingleBook = () => {
             }
         }
 
-        // query = toast.loading("Обновление", {
-        //     containerId: "singleBook",
-        //     draggable: true,
-        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        // });
-
         postData("PATCH", `${URL}/${data.id}`, data)
             .then((response) => {
                 if (response?.ok) {
@@ -492,29 +423,11 @@ const SingleBook = () => {
                     if (reloadList) {
                         getBooks();
                     }
-
-                    // toast.dismiss(query);
-
-                    // toast.update(query, {
-                    //     render: "Запись обновлена",
-                    //     type: "success",
-                    //     containerId: "singleBook",
-                    //     isLoading: false,
-                    //     autoClose: 1200,
-                    //     pauseOnFocusLoss: false,
-                    //     pauseOnHover: false,
-                    //     draggable: true,
-                    //     position:
-                    //         window.innerWidth >= 1440
-                    //             ? "bottom-right"
-                    //             : "top-right",
-                    // });
                 } else {
                     if (!reloadList) {
                         getBooks();
                     }
 
-                    // toast.dismiss(query);
                     toast.error("Ошибка обновления записи", {
                         isLoading: false,
                         autoClose: 2500,
@@ -534,7 +447,6 @@ const SingleBook = () => {
                     getBooks();
                 }
 
-                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка обновления записи", {
                     isLoading: false,
                     autoClose: 2500,
@@ -552,15 +464,9 @@ const SingleBook = () => {
 
     // Изменение контактов
     const editContragentAndCreditorContact = (data) => {
-        if (mode === "read") {
+        if (mode.edit !== "full") {
             return;
         }
-
-        // query = toast.loading("Обновление", {
-        //     containerId: "singleBook",
-        //     draggable: true,
-        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        // });
 
         postData(
             "PATCH",
@@ -573,25 +479,7 @@ const SingleBook = () => {
                 if (response?.ok) {
                     resetElemPopupState();
                     getBooks();
-
-                    // toast.dismiss(query);
-
-                    // toast.update(query, {
-                    //     render: "Контакт обновлен",
-                    //     type: "success",
-                    //     containerId: "singleBook",
-                    //     isLoading: false,
-                    //     autoClose: 1200,
-                    //     pauseOnFocusLoss: false,
-                    //     pauseOnHover: false,
-                    //     draggable: true,
-                    //     position:
-                    //         window.innerWidth >= 1440
-                    //             ? "bottom-right"
-                    //             : "top-right",
-                    // });
                 } else {
-                    // toast.dismiss(query);
                     toast.error("Ошибка обновления контакта", {
                         isLoading: false,
                         autoClose: 2500,
@@ -607,7 +495,6 @@ const SingleBook = () => {
                 }
             })
             .catch((error) => {
-                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка обновления контакта", {
                     isLoading: false,
                     autoClose: 2500,
@@ -625,15 +512,9 @@ const SingleBook = () => {
 
     // Изменение контакта подрядчика
     const editContactElem = (data) => {
-        if (mode === "read") {
+        if (mode.edit !== "full") {
             return;
         }
-
-        // query = toast.loading("Обновление", {
-        //     containerId: "singleBook",
-        //     draggable: true,
-        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        // });
 
         postData(
             "PATCH",
@@ -643,25 +524,7 @@ const SingleBook = () => {
             if (response?.ok) {
                 resetElemPopupState();
                 getBooks();
-
-                // toast.dismiss(query);
-
-                // toast.update(query, {
-                //     render: "Запись обновлена",
-                //     type: "success",
-                //     containerId: "singleBook",
-                //     isLoading: false,
-                //     autoClose: 1200,
-                //     pauseOnFocusLoss: false,
-                //     pauseOnHover: false,
-                //     draggable: true,
-                //     position:
-                //         window.innerWidth >= 1440
-                //             ? "bottom-right"
-                //             : "top-right",
-                // });
             } else {
-                // toast.dismiss(query);
                 toast.error("Ошибка обновления записи", {
                     isLoading: false,
                     autoClose: 2500,
@@ -680,15 +543,9 @@ const SingleBook = () => {
 
     // Удаление контакта подрядчика
     const deleteContactElem = (data) => {
-        if (mode === "read") {
+        if (mode.delete !== "full") {
             return;
         }
-
-        // query = toast.loading("Удаление", {
-        //     containerId: "singleBook",
-        //     draggable: true,
-        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        // });
 
         postData(
             "DELETE",
@@ -710,25 +567,7 @@ const SingleBook = () => {
                     })
                 );
                 resetElemPopupState();
-
-                // toast.dismiss(query);
-
-                // toast.update(query, {
-                //     render: "Контакт удален",
-                //     type: "success",
-                //     containerId: "singleBook",
-                //     isLoading: false,
-                //     autoClose: 1200,
-                //     pauseOnFocusLoss: false,
-                //     pauseOnHover: false,
-                //     draggable: true,
-                //     position:
-                //         window.innerWidth >= 1440
-                //             ? "bottom-right"
-                //             : "top-right",
-                // });
             } else {
-                // toast.dismiss(query);
                 toast.error("Ошибка удалении контакта", {
                     isLoading: false,
                     autoClose: 2500,
@@ -747,15 +586,9 @@ const SingleBook = () => {
 
     // Удаление контакта
     const deleteContact = (data) => {
-        if (mode === "read") {
+        if (mode.delete !== "full") {
             return;
         }
-
-        // query = toast.loading("Удаление", {
-        //     containerId: "singleBook",
-        //     draggable: true,
-        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        // });
 
         let url;
 
@@ -774,25 +607,7 @@ const SingleBook = () => {
                 if (response?.ok) {
                     getBooks();
                     resetElemPopupState();
-
-                    // toast.dismiss(query);
-
-                    // toast.update(query, {
-                    //     render: "Контакт удалена",
-                    //     type: "success",
-                    //     containerId: "singleBook",
-                    //     isLoading: false,
-                    //     autoClose: 1200,
-                    //     pauseOnFocusLoss: false,
-                    //     pauseOnHover: false,
-                    //     draggable: true,
-                    //     position:
-                    //         window.innerWidth >= 1440
-                    //             ? "bottom-right"
-                    //             : "top-right",
-                    // });
                 } else {
-                    // toast.dismiss(query);
                     toast.error("Ошибка удаления контакта", {
                         isLoading: false,
                         autoClose: 2500,
@@ -808,7 +623,6 @@ const SingleBook = () => {
                 }
             })
             .catch((error) => {
-                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка удаления контакта", {
                     isLoading: false,
                     autoClose: 2500,
@@ -826,15 +640,9 @@ const SingleBook = () => {
 
     // Удаление записи
     const deleteElement = (data) => {
-        if (mode === "read") {
+        if (mode.delete !== "full") {
             return;
         }
-
-        // query = toast.loading("Удаление", {
-        //     containerId: "singleBook",
-        //     draggable: true,
-        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        // });
 
         postData("DELETE", `${URL}/${data.id}`, {})
             .then((response) => {
@@ -847,25 +655,7 @@ const SingleBook = () => {
                     );
 
                     resetElemPopupState();
-
-                    // toast.dismiss(query);
-
-                    // toast.update(query, {
-                    //     render: "Запись удалена",
-                    //     type: "success",
-                    //     containerId: "singleBook",
-                    //     isLoading: false,
-                    //     autoClose: 1200,
-                    //     pauseOnFocusLoss: false,
-                    //     pauseOnHover: false,
-                    //     draggable: true,
-                    //     position:
-                    //         window.innerWidth >= 1440
-                    //             ? "bottom-right"
-                    //             : "top-right",
-                    // });
                 } else {
-                    // toast.dismiss(query);
                     toast.error("Ошибка удаления записи", {
                         isLoading: false,
                         autoClose: 2500,
@@ -881,7 +671,6 @@ const SingleBook = () => {
                 }
             })
             .catch((error) => {
-                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка удаления записи", {
                     isLoading: false,
                     autoClose: 2500,
@@ -971,7 +760,7 @@ const SingleBook = () => {
 
     // Обработка существующих полей справочника
     const handleSwitchChange = (evt, name, data) => {
-        if (mode === "read") {
+        if (mode.edit !== "full") {
             return;
         }
 
@@ -1107,12 +896,6 @@ const SingleBook = () => {
         }
     }, [currentYear]);
 
-    useEffect(() => {
-        if (mode == "read") {
-            setBooksItems(refBooksItems);
-        }
-    }, [mode]);
-
     const [filters, setFilters] = useState({
         selectedNames: [],
         selectedFullNames: [],
@@ -1207,7 +990,7 @@ const SingleBook = () => {
                     </div>
 
                     <div className="flex justify-end items-center gap-[20px] flex-grow">
-                        {mode === "edit" &&
+                        {mode.edit === "full" &&
                             bookId != "creditor" &&
                             bookId != "contragent" &&
                             bookId != "working-hours" &&
@@ -1324,7 +1107,7 @@ const SingleBook = () => {
                 )}
             </div>
 
-            {isNewElem && mode === "edit" && (
+            {isNewElem && mode.edit === "full" && (
                 <ReferenceNewElemForm
                     bookId={bookId}
                     popupFields={popupFields}
@@ -1336,7 +1119,7 @@ const SingleBook = () => {
                 />
             )}
 
-            {isEditElem && mode === "edit" && (
+            {isEditElem && mode.edit === "full" && (
                 <ReferenceEditElemForm
                     bookId={bookId}
                     popupFields={popupFields}
@@ -1354,7 +1137,7 @@ const SingleBook = () => {
             )}
 
             {isDeleteElem &&
-                mode === "edit" &&
+                mode.edit === "full" &&
                 bookId !== "management-report-types" && (
                     <ReferenceDeleteElemForm
                         bookId={bookId}
@@ -1367,7 +1150,7 @@ const SingleBook = () => {
                 )}
 
             {rolesAction.action != "" &&
-                mode === "edit" &&
+                mode.edit === "full" &&
                 bookId === "roles" && (
                     <Popup
                         onClick={() => {
@@ -1468,7 +1251,7 @@ const SingleBook = () => {
                 )}
 
             {managementReportTypeAction.action != "" &&
-                mode === "edit" &&
+                mode.edit === "full" &&
                 bookId === "management-report-types" && (
                     <Popup
                         onClick={() => {

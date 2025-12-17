@@ -15,7 +15,7 @@ const ContragentItem = ({
     const navigate = useNavigate();
 
     const handleRowClick = () => {
-        navigate(`/contragents/${props.id}`, { state: { mode: "read" } });
+        navigate(`/contragents/${props.id}`);
     };
 
     return (

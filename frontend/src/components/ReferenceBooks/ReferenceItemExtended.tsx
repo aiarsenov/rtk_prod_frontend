@@ -10,7 +10,7 @@ const ReferenceItemExtended = ({
     handleOpenEditPopup,
     handleOpenDeletePopup,
 }: {
-    mode: string;
+    mode: object;
     data: object;
     bookId: string;
     handleOpenEditPopup: () => void;
@@ -225,8 +225,8 @@ const ReferenceItemExtended = ({
                                 onMouseLeave={() => setHoveredIndex(null)}
                             >
                                 <td className="relative">
-                                    {mode === "edit" && (
-                                        <div className="registry-table__item-actions registry-table__item-actions_col">
+                                    <div className="registry-table__item-actions registry-table__item-actions_col">
+                                        {mode.edit === "full" && (
                                             <button
                                                 onClick={() => {
                                                     if (
@@ -252,7 +252,9 @@ const ReferenceItemExtended = ({
                                                 className="edit-button"
                                                 title="Изменить контакт"
                                             ></button>
+                                        )}
 
+                                        {mode.delete === "full" && (
                                             <button
                                                 onClick={() => {
                                                     if (
@@ -285,8 +287,8 @@ const ReferenceItemExtended = ({
                                                     />
                                                 </svg>
                                             </button>
-                                        </div>
-                                    )}
+                                        )}
+                                    </div>
                                 </td>
                             </tr>
                         ))}
