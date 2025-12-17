@@ -79,11 +79,11 @@ const EmployeesStats = ({
                 borderRadius: 0,
                 barPercentage: 1,
                 barThickness:
-                    employeeFilters.metric_type[0] === "headcount" ? 38.5 : 39,
+                    employeeFilters.metric_type[0] === "headcount" ? 38 : 39,
                 maxBarThickness:
-                    employeeFilters.metric_type[0] === "headcount" ? 38.5 : 39,
+                    employeeFilters.metric_type[0] === "headcount" ? 38 : 39,
                 minBarThickness:
-                    employeeFilters.metric_type[0] === "headcount" ? 38.5 : 39,
+                    employeeFilters.metric_type[0] === "headcount" ? 38 : 39,
                 datalabels: {
                     display: false,
                 },
