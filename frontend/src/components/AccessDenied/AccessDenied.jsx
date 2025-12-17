@@ -1,4 +1,14 @@
-const AccessDenied = ({ message }) => {
+import PropTypes from "prop-types";
+
+const AccessDenied = ({ message, noAccessToAnySection = false }) => {
+    const displayMessage = noAccessToAnySection
+        ? "У вас нет прав для доступа ни в один раздел сервиса."
+        : message || "У вас нет прав для просмотра этого раздела";
+
+    const displayHint = noAccessToAnySection
+        ? "Обратитесь к администратору для получения доступа."
+        : "Обратитесь к администратору системы для получения доступа";
+
     return (
         <div className="access-denied">
             <div className="access-denied__icon">
@@ -16,20 +26,15 @@ const AccessDenied = ({ message }) => {
                 </svg>
             </div>
             <h2 className="access-denied__title">Доступ запрещен</h2>
-            <p className="access-denied__message">
-                {message || "У вас нет прав для просмотра этого раздела"}
-            </p>
-            <p className="access-denied__hint">
-                Обратитесь к администратору системы для получения доступа
-            </p>
+            <p className="access-denied__message">{displayMessage}</p>
+            <p className="access-denied__hint">{displayHint}</p>
         </div>
     );
 };
 
+AccessDenied.propTypes = {
+    message: PropTypes.string,
+    noAccessToAnySection: PropTypes.bool,
+};
+
 export default AccessDenied;
-
-
-
-
-
-

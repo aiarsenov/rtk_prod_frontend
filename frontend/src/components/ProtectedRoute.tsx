@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { hasPermission } from "../utils/permissions";
+import { hasPermission, hasAccessToAnySection } from "../utils/permissions";
 import AccessDenied from "./AccessDenied/AccessDenied";
 
 interface ProtectedRouteProps {
@@ -16,9 +16,11 @@ const ProtectedRoute = ({
     const user = useSelector((state: any) => state.user.data);
 
     if (!hasPermission(user, section, permissionType)) {
+        const noAccessToAny = !hasAccessToAnySection(user);
         return (
             <AccessDenied
                 message={`У вас нет прав для просмотра раздела "${section}"`}
+                noAccessToAnySection={noAccessToAny}
             />
         );
     }

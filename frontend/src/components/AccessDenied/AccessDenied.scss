@@ -7,7 +7,7 @@
     justify-content: center;
     padding: 60px 20px;
     text-align: center;
-    min-height: 400px;
+    min-height: calc(100vh - 80px);
 
     &__icon {
         width: 64px;
@@ -36,9 +36,3 @@
         max-width: 500px;
     }
 }
-
-
-
-
-
-

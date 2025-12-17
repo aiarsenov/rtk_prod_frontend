@@ -100,3 +100,20 @@ export const ACCESS_LEVELS = {
     FULL: 'full',
     LIMITED: 'limited',
 };
+
+/**
+ * Проверяет, есть ли у пользователя доступ хотя бы к одному разделу
+ */
+export const hasAccessToAnySection = (user) => {
+    if (import.meta.env.MODE === "development") {
+        return true;
+    }
+
+    if (!user?.permissions) return false;
+
+    const sections = Object.keys(user.permissions);
+    return sections.some(section => {
+        const viewAccess = user.permissions[section]?.view;
+        return viewAccess === 'limited' || viewAccess === 'full';
+    });
+};
