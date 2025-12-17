@@ -327,10 +327,6 @@ const FinancialIndicators = ({
 
     return (
         <div className="dashboards__block indicators__financial-indicators">
-            {!isLoading &&
-                !isFinancialListLoaded &&
-                !isFinancialProfitListLoaded && <Loader />}
-
             {sortedMergedList.length <= 0 &&
                 isFinancialListLoaded &&
                 isFinancialProfitListLoaded && (
@@ -402,106 +398,108 @@ const FinancialIndicators = ({
 
             <div className="indicators__financial-indicators__body">
                 {!isLoading &&
-                    isFinancialListLoaded &&
-                    isFinancialProfitListLoaded && (
-                        <>
-                            <ul className="indicators__financial-indicators__label-list">
-                                {sortedMergedList.length > 0 &&
-                                    sortedMergedList.map((item) => (
-                                        <li>
-                                            <div className="hidden-group">
-                                                <div className="visible-text">
-                                                    {item.name}
-                                                </div>
-                                                <div className="hidden-text">
-                                                    {item.name}
-                                                </div>
+                isFinancialListLoaded &&
+                isFinancialProfitListLoaded ? (
+                    <>
+                        <ul className="indicators__financial-indicators__label-list">
+                            {sortedMergedList.length > 0 &&
+                                sortedMergedList.map((item) => (
+                                    <li>
+                                        <div className="hidden-group">
+                                            <div className="visible-text">
+                                                {item.name}
                                             </div>
-                                        </li>
-                                    ))}
-                            </ul>
+                                            <div className="hidden-text">
+                                                {item.name}
+                                            </div>
+                                        </div>
+                                    </li>
+                                ))}
+                        </ul>
 
-                            {sortedMergedList.length > 0 && (
-                                <div
-                                    style={{
-                                        height:
-                                            (financialProfitListData1.labels
-                                                ?.length || 0) > 5
-                                                ? `${
-                                                      financialProfitListData1
-                                                          .labels.length * 60
-                                                  }px`
-                                                : "300px",
-                                    }}
-                                >
-                                    <Bar
-                                        data={financialListData1}
-                                        options={horizontalOptionsNoLabels}
-                                    />
-                                </div>
-                            )}
+                        {sortedMergedList.length > 0 && (
+                            <div
+                                style={{
+                                    height:
+                                        (financialProfitListData1.labels
+                                            ?.length || 0) > 5
+                                            ? `${
+                                                  financialProfitListData1
+                                                      .labels.length * 60
+                                              }px`
+                                            : "300px",
+                                }}
+                            >
+                                <Bar
+                                    data={financialListData1}
+                                    options={horizontalOptionsNoLabels}
+                                />
+                            </div>
+                        )}
 
-                            {sortedMergedList.length > 0 && (
-                                <div
-                                    style={{
-                                        height:
-                                            (financialProfitListData1.labels
-                                                ?.length || 0) > 5
-                                                ? `${
-                                                      financialProfitListData1
-                                                          .labels.length * 60
-                                                  }px`
-                                                : "300px",
-                                    }}
-                                >
-                                    <Bar
-                                        data={financialListData2}
-                                        options={horizontalOptionsNoLabels}
-                                    />
-                                </div>
-                            )}
+                        {sortedMergedList.length > 0 && (
+                            <div
+                                style={{
+                                    height:
+                                        (financialProfitListData1.labels
+                                            ?.length || 0) > 5
+                                            ? `${
+                                                  financialProfitListData1
+                                                      .labels.length * 60
+                                              }px`
+                                            : "300px",
+                                }}
+                            >
+                                <Bar
+                                    data={financialListData2}
+                                    options={horizontalOptionsNoLabels}
+                                />
+                            </div>
+                        )}
 
-                            {sortedMergedList.length > 0 && (
-                                <div
-                                    style={{
-                                        height:
-                                            (financialProfitListData1.labels
-                                                ?.length || 0) > 5
-                                                ? `${
-                                                      financialProfitListData1
-                                                          .labels.length * 60
-                                                  }px`
-                                                : "300px",
-                                    }}
-                                >
-                                    <Bar
-                                        data={financialProfitListData1}
-                                        options={horizontalOptionsNoLabels}
-                                    />
-                                </div>
-                            )}
+                        {sortedMergedList.length > 0 && (
+                            <div
+                                style={{
+                                    height:
+                                        (financialProfitListData1.labels
+                                            ?.length || 0) > 5
+                                            ? `${
+                                                  financialProfitListData1
+                                                      .labels.length * 60
+                                              }px`
+                                            : "300px",
+                                }}
+                            >
+                                <Bar
+                                    data={financialProfitListData1}
+                                    options={horizontalOptionsNoLabels}
+                                />
+                            </div>
+                        )}
 
-                            {sortedMergedList.length > 0 && (
-                                <div
-                                    style={{
-                                        height:
-                                            (financialProfitListData1.labels
-                                                ?.length || 0) > 5
-                                                ? `${
-                                                      financialProfitListData1
-                                                          .labels.length * 60
-                                                  }px`
-                                                : "300px",
-                                    }}
-                                >
-                                    <Bar
-                                        data={financialProfitListData2}
-                                        options={horizontalOptionsWithPercent}
-                                    />
-                                </div>
-                            )}
-                        </>
-                    )}
+                        {sortedMergedList.length > 0 && (
+                            <div
+                                style={{
+                                    height:
+                                        (financialProfitListData1.labels
+                                            ?.length || 0) > 5
+                                            ? `${
+                                                  financialProfitListData1
+                                                      .labels.length * 60
+                                              }px`
+                                            : "300px",
+                                }}
+                            >
+                                <Bar
+                                    data={financialProfitListData2}
+                                    options={horizontalOptionsWithPercent}
+                                />
+                            </div>
+                        )}
+                    </>
+                ) : (
+                    <Loader />
+                )}
             </div>
         </div>
     );
