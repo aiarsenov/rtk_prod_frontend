@@ -6,11 +6,13 @@ const SaleServicesList = ({
     deleteService,
 }: {
     services: object[];
-    mode: string;
+    mode: object;
     deleteService: () => void;
 }) => {
     // Функция для проверки, равно ли значение нулю
-    const isZeroPercent = (value: string | number | null | undefined): boolean => {
+    const isZeroPercent = (
+        value: string | number | null | undefined
+    ): boolean => {
         if (!value) return true;
 
         // Если это число
@@ -19,9 +21,7 @@ const SaleServicesList = ({
         }
 
         // Если это строка, убираем знак процента и пробелы, парсим число
-        const numericValue = parseFloat(
-            String(value).replace(/%/g, "").trim()
-        );
+        const numericValue = parseFloat(String(value).replace(/%/g, "").trim());
 
         return !isNaN(numericValue) && numericValue === 0;
     };
@@ -39,7 +39,9 @@ const SaleServicesList = ({
                             <div className="services__list-item-row">
                                 <div className="services__list-item-cost">
                                     {item.cost_change_percent &&
-                                        !isZeroPercent(item.cost_change_percent) && (
+                                        !isZeroPercent(
+                                            item.cost_change_percent
+                                        ) && (
                                             <div
                                                 className={`services__list-item-percent ${getColorBySign(
                                                     item.cost_change_percent,
@@ -54,7 +56,7 @@ const SaleServicesList = ({
                                     {item.cost}
                                 </div>
 
-                                {mode === "read" ? (
+                                {mode.delete !== "full" ? (
                                     <div className="w-[20px] h-[20px]"></div>
                                 ) : (
                                     <button

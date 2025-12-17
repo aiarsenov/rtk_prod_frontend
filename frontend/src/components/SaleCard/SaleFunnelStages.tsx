@@ -18,6 +18,8 @@ const SaleFunnelStages = ({
     fetchServices,
     setSaleStages,
     mode,
+}: {
+    mode: object;
 }) => {
     const [popupState, setPopupState] = useState(false);
     const [resumableStages, setResumableStages] = useState([]);

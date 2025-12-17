@@ -49,6 +49,9 @@ const SaleStageDetails = ({ stage, mode, updateStageDetails }) => {
                                                     ) || ""
                                                 }
                                                 onChange={(evt) => {
+                                                    if (mode.edit !== "full")
+                                                        return;
+
                                                     const newValue =
                                                         evt.target.value;
 
@@ -69,7 +72,8 @@ const SaleStageDetails = ({ stage, mode, updateStageDetails }) => {
                                                     }));
                                                 }}
                                                 onBlur={() => {
-                                                    if (mode === "read") return;
+                                                    if (mode.edit !== "full")
+                                                        return;
 
                                                     const originalMetric =
                                                         stage?.dynamic_metrics?.find(
@@ -89,7 +93,7 @@ const SaleStageDetails = ({ stage, mode, updateStageDetails }) => {
                                                         );
                                                     }
                                                 }}
-                                                disabled={mode == "read"}
+                                                disabled={mode.edit !== "full"}
                                             />
                                         </div>
                                     ))}
@@ -136,23 +140,27 @@ const SaleStageDetails = ({ stage, mode, updateStageDetails }) => {
                 <AutoResizeTextarea
                     className="form-textarea"
                     placeholder={
-                        mode == "edit" ? "Ваш комментарий по этапу продажи" : ""
+                        mode.edit === "full"
+                            ? "Ваш комментарий по этапу продажи"
+                            : ""
                     }
                     style={{ resize: "none" }}
                     value={stageData?.comment || ""}
                     onChange={(evt) => {
+                        if (mode.edit !== "full") return;
+
                         setStageData((prev) => ({
                             ...prev,
                             comment: evt.target.value,
                         }));
                     }}
                     onBlur={() => {
-                        if (mode === "read") return;
+                        if (mode.edit !== "full") return;
                         if (stage?.comment != stageData?.comment) {
                             updateStageDetails(stageData, false);
                         }
                     }}
-                    disabled={mode == "read"}
+                    disabled={mode.edit !== "full"}
                 />
             </div>
         </div>

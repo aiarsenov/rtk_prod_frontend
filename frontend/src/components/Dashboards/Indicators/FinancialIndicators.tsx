@@ -404,7 +404,7 @@ const FinancialIndicators = ({
                         <ul className="indicators__financial-indicators__label-list">
                             {sortedMergedList.length > 0 &&
                                 sortedMergedList.map((item) => (
-                                    <li>
+                                    <li key={item.id}>
                                         <div className="hidden-group">
                                             <div className="visible-text">
                                                 {item.name}

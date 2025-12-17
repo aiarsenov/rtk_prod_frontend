@@ -17,6 +17,8 @@ const SaleFunnelItem = ({
     updateStageDetails,
     hasNextStage,
     mode,
+}: {
+    mode: object;
 }) => {
     const [activeStage, setActiveStage] = useState(isLast || null);
 
@@ -93,10 +95,12 @@ const SaleFunnelItem = ({
                     <CustomDatePickerField
                         value={stage.stage_date || ""}
                         onChange={(updated) => {
+                            if (mode.edit !== "full") return;
+
                             handleStageDate(updated, stage.instance_id);
                         }}
                         minDate={maxPrevDate}
-                        disabled={!isLast}
+                        disabled={mode.edit !== "full" && !isLast}
                         single={true}
                     />
 
@@ -113,6 +117,7 @@ const SaleFunnelItem = ({
                                 className="rate-switch__button"
                                 title="Отказ от участия"
                                 onClick={(evt) => {
+                                    if (mode.edit !== "full") return;
                                     evt.stopPropagation();
 
                                     handleStage(
@@ -128,6 +133,7 @@ const SaleFunnelItem = ({
                                 className="rate-switch__button"
                                 title="Отложить проект"
                                 onClick={(evt) => {
+                                    if (mode.edit !== "full") return;
                                     evt.stopPropagation();
 
                                     handleStage(
@@ -143,6 +149,7 @@ const SaleFunnelItem = ({
                                 className="rate-switch__button"
                                 title="Принять"
                                 onClick={(evt) => {
+                                    if (mode.edit !== "full") return;
                                     evt.stopPropagation();
 
                                     handleStage(

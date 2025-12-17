@@ -83,8 +83,6 @@ const Reports = () => {
         (state) => state.user?.data?.permissions
     );
 
-    console.log(userPermitions);
-
     const employeeMode = userPermitions?.employee_reports || {
         delete: "read",
         edit: "read",

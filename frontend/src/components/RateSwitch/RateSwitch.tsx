@@ -6,7 +6,7 @@ interface RateSwitchProps {
     name: string;
     rateHandler: (name: string, value: string | number) => void;
     reportRateData: Record<string, number | undefined>;
-    mode: string;
+    mode: object;
 }
 
 const getRateClass = (rateValue: number | undefined): string => {

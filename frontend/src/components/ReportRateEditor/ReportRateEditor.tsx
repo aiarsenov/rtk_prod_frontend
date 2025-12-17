@@ -12,7 +12,7 @@ type Props = {
     updateReportDetails?: (report: object, action: string) => void;
     rateEditorState: boolean;
     reportData: object;
-    mode: string;
+    mode: object;
 };
 
 const RATE_LABELS = [

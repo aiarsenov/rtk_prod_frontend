@@ -126,7 +126,11 @@ const ManagerReports = ({ selectedFilters }: { selectedFilters: object }) => {
                 managementReportData={managementReportData}
                 setManagementReportData={setManagementReportData}
                 closeEditor={closeManagementReportEditor}
-                mode={"read"}
+                mode={{
+                    delete: "read",
+                    edit: "read",
+                    view: "read",
+                }}
             />
         </div>
     );

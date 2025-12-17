@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useParams, useNavigate } from "react-router-dom";
 
 import getData from "../../utils/getData";
 import postData from "../../utils/postData";
@@ -40,13 +41,19 @@ const handleStatusClass = (status) => {
 };
 
 const SaleCard = () => {
+    const userPermitions = useSelector(
+        (state) => state.user?.data?.permissions
+    );
+
+    const mode = userPermitions?.sales || {
+        delete: "read",
+        edit: "read",
+        view: "read",
+    };
+
     const URL = `${import.meta.env.VITE_API_URL}sales-funnel-projects`;
-    // const location = useLocation();
     const { saleId } = useParams();
     const navigate = useNavigate();
-
-    // const [mode, setMode] = useState(location.state?.mode || "read");
-    const [mode, setMode] = useState("edit");
 
     const [isDataLoaded, setIsDataLoaded] = useState(false);
     const [availableToChange, setAvailableToChange] = useState(true); // Можем ли мы вносить изменения в проект (до закрепления заказчика)
@@ -500,7 +507,7 @@ const SaleCard = () => {
         <main className="page">
             <section
                 className={`card sale-card ${
-                    mode === "read" ? "read-mode" : ""
+                    mode.edit !== "full" ? "read-mode" : ""
                 }`}
             >
                 <div className="container card__container sale-card__container">
@@ -514,14 +521,14 @@ const SaleCard = () => {
                                     name="name"
                                     value={cardDataCustom?.name}
                                     onChange={(e) => {
-                                        if (mode === "read") return;
+                                        if (mode.edit !== "full") return;
                                         setCardDataCustom((prev) => ({
                                             ...prev,
                                             name: e.target.value,
                                         }));
                                     }}
                                     onBlur={() => {
-                                        if (mode === "read") return;
+                                        if (mode.edit !== "full") return;
                                         if (
                                             cardData?.name !=
                                             cardDataCustom?.name
@@ -531,7 +538,7 @@ const SaleCard = () => {
                                             });
                                         }
                                     }}
-                                    disabled={mode == "read"}
+                                    disabled={mode.edit !== "full"}
                                 />
 
                                 {saleStatus && (
@@ -562,7 +569,7 @@ const SaleCard = () => {
                                     )}
                                 </ul>
 
-                                {mode == "edit" && (
+                                {mode.edit === "full" && (
                                     <button
                                         type="button"
                                         className="button-add"
@@ -609,7 +616,7 @@ const SaleCard = () => {
                                     mode={mode}
                                 />
 
-                                {mode == "edit" && availableToChange && (
+                                {mode.edit === "full" && availableToChange && (
                                     <button
                                         type="button"
                                         className="button-add"
@@ -650,7 +657,7 @@ const SaleCard = () => {
                                         options={industries}
                                         className="form-select-extend"
                                         placeholder={
-                                            mode === "edit"
+                                            mode.edit === "full"
                                                 ? "Выбрать из списка"
                                                 : ""
                                         }
@@ -670,7 +677,7 @@ const SaleCard = () => {
                                             null
                                         }
                                         onChange={(selectedOption) => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
 
                                             const newValue =
                                                 selectedOption?.value || null;
@@ -690,7 +697,7 @@ const SaleCard = () => {
                                                 },
                                             });
                                         }}
-                                        isDisabled={mode == "read"}
+                                        isDisabled={mode.edit !== "full"}
                                         styles={{
                                             input: (base) => ({
                                                 ...base,
@@ -731,7 +738,7 @@ const SaleCard = () => {
                                             []
                                         }
                                         onChange={(updated) => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
 
                                             setCardDataCustom({
                                                 ...cardDataCustom,
@@ -754,7 +761,8 @@ const SaleCard = () => {
                                         popupTitle="Добавить дополнительные отрасли"
                                         buttonTitle="Добавить дополнительную отрасль"
                                         disabled={
-                                            mode == "read" || !availableToChange
+                                            mode.edit !== "full" ||
+                                            !availableToChange
                                         }
                                     />
                                 </div>
@@ -769,7 +777,7 @@ const SaleCard = () => {
                                         options={sources}
                                         className="form-select-extend"
                                         placeholder={
-                                            mode === "edit"
+                                            mode.edit === "full"
                                                 ? "Выбрать из списка"
                                                 : ""
                                         }
@@ -788,7 +796,7 @@ const SaleCard = () => {
                                             []
                                         }
                                         onChange={(selectedOption) => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
 
                                             const newValue =
                                                 selectedOption?.value || null;
@@ -801,7 +809,7 @@ const SaleCard = () => {
                                                 request_source_id: newValue,
                                             });
                                         }}
-                                        isDisabled={mode == "read"}
+                                        isDisabled={mode.edit !== "full"}
                                         styles={{
                                             input: (base) => ({
                                                 ...base,
@@ -826,7 +834,7 @@ const SaleCard = () => {
                                             cardDataCustom.creditors
                                         }
                                         onChange={(updated) => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
 
                                             setCardDataCustom((prev) => ({
                                                 ...prev,
@@ -843,7 +851,8 @@ const SaleCard = () => {
                                         popupTitle="Добавить банк"
                                         buttonTitle="Добавить банк"
                                         disabled={
-                                            mode == "read" || !availableToChange
+                                            mode.edit !== "full" ||
+                                            !availableToChange
                                         }
                                     />
                                 </div>
@@ -857,7 +866,7 @@ const SaleCard = () => {
                                         options={physicalPersons}
                                         className="form-select-extend"
                                         placeholder={
-                                            mode === "edit"
+                                            mode.edit === "full"
                                                 ? "Выбрать из списка"
                                                 : ""
                                         }
@@ -876,7 +885,7 @@ const SaleCard = () => {
                                             []
                                         }
                                         onChange={(selectedOption) => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
 
                                             const newValue =
                                                 selectedOption?.value || null;
@@ -890,7 +899,8 @@ const SaleCard = () => {
                                             });
                                         }}
                                         isDisabled={
-                                            mode == "read" || !availableToChange
+                                            mode.edit !== "full" ||
+                                            !availableToChange
                                         }
                                         styles={{
                                             input: (base) => ({
@@ -915,18 +925,17 @@ const SaleCard = () => {
                                     <AutoResizeTextarea
                                         className="form-textarea"
                                         placeholder={
-                                            mode === "edit"
+                                            mode.edit === "full"
                                                 ? "Например: создание производства заготовки с микрокристаллической структурой..."
                                                 : ""
                                         }
-                                        type="text"
-                                        name="description"
                                         value={
                                             cardDataCustom?.short_description ||
                                             ""
                                         }
                                         onChange={(e) => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
+
                                             setCardDataCustom((prev) => ({
                                                 ...prev,
                                                 short_description:
@@ -934,7 +943,8 @@ const SaleCard = () => {
                                             }));
                                         }}
                                         onBlur={() => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
+
                                             if (
                                                 cardData?.short_description !=
                                                 cardDataCustom?.short_description
@@ -946,7 +956,8 @@ const SaleCard = () => {
                                             }
                                         }}
                                         disabled={
-                                            mode == "read" || !availableToChange
+                                            mode.edit !== "full" ||
+                                            !availableToChange
                                         }
                                     />
                                 </div>
@@ -960,20 +971,22 @@ const SaleCard = () => {
                                     <AutoResizeTextarea
                                         className="form-textarea form-textarea_single-line"
                                         placeholder={
-                                            mode === "edit"
+                                            mode.edit === "full"
                                                 ? "Страна, город, область..."
                                                 : ""
                                         }
                                         value={cardDataCustom?.location || ""}
                                         onChange={(e) => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
+
                                             setCardDataCustom((prev) => ({
                                                 ...prev,
                                                 location: e.target.value,
                                             }));
                                         }}
                                         onBlur={() => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
+
                                             if (
                                                 cardData?.location !=
                                                 cardDataCustom?.location
@@ -985,7 +998,8 @@ const SaleCard = () => {
                                             }
                                         }}
                                         disabled={
-                                            mode == "read" || !availableToChange
+                                            mode.edit !== "full" ||
+                                            !availableToChange
                                         }
                                         minHeight={40}
                                     />
@@ -1000,20 +1014,22 @@ const SaleCard = () => {
                                     <AutoResizeTextarea
                                         className="form-textarea form-textarea_single-line"
                                         placeholder={
-                                            mode === "edit"
+                                            mode.edit === "full"
                                                 ? "Заполните ТЭП"
                                                 : ""
                                         }
                                         value={cardDataCustom?.tep || ""}
                                         onChange={(e) => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
+
                                             setCardDataCustom((prev) => ({
                                                 ...prev,
                                                 tep: e.target.value,
                                             }));
                                         }}
                                         onBlur={() => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
+
                                             if (
                                                 cardData?.tep !=
                                                 cardDataCustom?.tep
@@ -1024,7 +1040,8 @@ const SaleCard = () => {
                                             }
                                         }}
                                         disabled={
-                                            mode == "read" || !availableToChange
+                                            mode.edit !== "full" ||
+                                            !availableToChange
                                         }
                                         minHeight={40}
                                     />

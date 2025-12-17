@@ -32,7 +32,7 @@ const ManagementReportEditor = ({
     setManagementReportData: React.Dispatch<React.SetStateAction<boolean>>;
     closeEditor: () => void;
     updateReport: () => void;
-    mode: string;
+    mode: object;
 }) => {
     const [currentTab, setCurrentTab] = useState("status_summary");
     const [saveBeforeClose, setSaveBeforeClose] = useState(false);
@@ -117,7 +117,8 @@ const ManagementReportEditor = ({
                 >
                     <div
                         className={`report-window report-rate-editor ${
-                            mode === "read" && "report-rate-editor_read-mode"
+                            mode.edit !== "full" &&
+                            "report-rate-editor_read-mode"
                         }`}
                     >
                         <div className="report-window__wrapper">
@@ -209,7 +210,7 @@ const ManagementReportEditor = ({
                                     <AutoResizeTextarea
                                         className="form-textarea"
                                         placeholder={
-                                            mode == "read"
+                                            mode.edit !== "full"
                                                 ? ""
                                                 : "Добавьте описание"
                                         }
@@ -220,7 +221,7 @@ const ManagementReportEditor = ({
                                         onChange={(e) => {
                                             handleTextArea(e, currentTab);
                                         }}
-                                        disabled={mode == "read"}
+                                        disabled={mode.edit !== "full"}
                                     />
                                 </div>
                             </div>
@@ -231,7 +232,7 @@ const ManagementReportEditor = ({
                                 }`}
                             >
                                 <div className="container">
-                                    {mode === "edit" && (
+                                    {mode.edit === "full" && (
                                         <>
                                             <button
                                                 type="button"

@@ -83,7 +83,6 @@ const rateOptions = [
     },
 ];
 
-
 const ProjectManagerReports = ({
     projectManagerReports,
 }: {
@@ -286,7 +285,11 @@ const ProjectManagerReports = ({
                 rateEditorState={rateEditorState}
                 reportData={reportData}
                 closeEditor={closeRateReportEditor}
-                mode={"read"}
+                mode={{
+                    delete: "read",
+                    edit: "read",
+                    view: "read",
+                }}
             />
         </div>
     );
