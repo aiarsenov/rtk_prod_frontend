@@ -48,7 +48,7 @@ const EmployeesStats = ({
     setEmployeeFilters,
 }: {
     employeeMetrics: EmployeeMetrics;
-    employeeFilters: { metric_type: [] };
+    employeeFilters: { metric_type: ["headcount"] };
     setEmployeeFilters: React.Dispatch<React.SetStateAction<object>>;
 }) => {
     const [activeTab, setActiveTab] = useState("employee_new");
@@ -78,9 +78,12 @@ const EmployeesStats = ({
                 borderWidth: { right: 2 },
                 borderRadius: 0,
                 barPercentage: 1,
-                barThickness: 38.5,
-                maxBarThickness: 38.5,
-                minBarThickness: 38.5,
+                barThickness:
+                    employeeFilters.metric_type[0] === "headcount" ? 38.5 : 39,
+                maxBarThickness:
+                    employeeFilters.metric_type[0] === "headcount" ? 38.5 : 39,
+                minBarThickness:
+                    employeeFilters.metric_type[0] === "headcount" ? 38.5 : 39,
                 datalabels: {
                     display: false,
                 },
@@ -176,8 +179,6 @@ const EmployeesStats = ({
                     dash: [3, 3],
                     display: false,
                 },
-                // barPercentage: 0.7,
-                // categoryPercentage: 0.8,
             },
 
             x: {
