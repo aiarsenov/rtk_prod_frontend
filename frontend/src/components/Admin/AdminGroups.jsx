@@ -1179,6 +1179,11 @@ const AdminGroups = () => {
                                                                             permType
                                                                         ] === 1;
                                                                     const scopeKey = `${sectionKey}_${permType}`;
+                                                                    const permissionKey = `${sectionKey}_${permType}`;
+                                                                    const isChecked =
+                                                                        !!selectedPermissions[
+                                                                            permissionKey
+                                                                        ];
                                                                     const currentScope =
                                                                         permissionScopes[
                                                                             scopeKey
@@ -1207,6 +1212,7 @@ const AdminGroups = () => {
                                                                                         )
                                                                                     }
                                                                                     className="scope-select"
+                                                                                    disabled={!isChecked}
                                                                                     onClick={(
                                                                                         e
                                                                                     ) =>
