@@ -31,7 +31,7 @@ const ProjectItem = ({
     const navigate = useNavigate();
 
     const handleRowClick = () => {
-        navigate(`/projects/${props.id}`, { state: { mode: "read" } });
+        navigate(`/projects/${props.id}`);
     };
 
     return (
@@ -294,7 +294,7 @@ const ProjectItem = ({
                 }
             })}
             <td className="w-[24px] h-[20px]">
-                {mode === "edit" && (
+                {mode.delete === "full" && (
                     <button
                         className="delete-button"
                         title="Удалить проект"

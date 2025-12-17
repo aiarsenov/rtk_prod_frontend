@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import getData from "../../utils/getData";
@@ -21,10 +22,19 @@ import Loader from "../Loader";
 import AccessDenied from "../AccessDenied/AccessDenied";
 
 const Projects = () => {
+    const userPermitions = useSelector(
+        (state) => state.user?.data?.permissions
+    );
+
+    const mode = userPermitions?.projects || {
+        delete: "read",
+        edit: "read",
+        view: "read",
+    };
+
     const URL = `${import.meta.env.VITE_API_URL}projects`;
     const navigate = useNavigate();
 
-    const [mode, setMode] = useState("edit");
     const [sortBy, setSortBy] = useState({ key: "", action: "" });
 
     const [reportWindowsState, setReportWindowsState] = useState(false); // Редактор отчёта
@@ -200,9 +210,7 @@ const Projects = () => {
     const createProject = () => {
         postData("POST", URL, { name: newProjectName }).then((response) => {
             if (response.ok) {
-                navigate(`/projects/${response.id}`, {
-                    state: { mode: "edit" },
-                });
+                navigate(`/projects/${response.id}`);
             }
         });
     };
@@ -290,7 +298,7 @@ const Projects = () => {
                     </h1>
 
                     <div className="flex items-center gap-6">
-                        {mode === "edit" && (
+                        {mode.edit === "full" && (
                             <button
                                 type="button"
                                 className="button-active"
@@ -502,7 +510,11 @@ const Projects = () => {
                     reportId={reportId}
                     setReportId={setReportId}
                     reportName={reportName}
-                    mode={"read"}
+                    mode={{
+                        delete: "read",
+                        edit: "read",
+                        view: "read",
+                    }}
                 />
 
                 {popupState && (
