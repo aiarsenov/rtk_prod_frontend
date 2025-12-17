@@ -80,6 +80,7 @@ const EmployeesStats = ({
                 barPercentage: 1,
                 // categoryPercentage: 0.8,
                 barThickness: 39,
+                maxBarThickness: 39,
                 datalabels: {
                     display: false,
                 },
@@ -94,6 +95,7 @@ const EmployeesStats = ({
                 backgroundColor: "#BDB4FE",
                 borderRadius: 5,
                 barThickness: 20,
+                maxBarThickness: 20,
                 // categoryPercentage: 1,
                 barPercentage: 1,
                 order: 1,
