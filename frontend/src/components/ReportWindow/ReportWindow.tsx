@@ -267,6 +267,7 @@ const ReportWindow = ({
         setReportWindowsState(false);
         setSaveBeforeClose(false);
         setIsDataLoaded(false);
+        setIsDataChanged(false);
         setIsLoading(true);
         setReportId(null);
 
@@ -774,8 +775,6 @@ const ReportWindow = ({
         }
     }, [reportWindowsState]);
 
-    useBodyScrollLock(reportWindowsState);
-
     // Обработчик ESC для закрытия панели детализации отчета
     useEffect(() => {
         const handleEscKey = (event: KeyboardEvent) => {
@@ -802,6 +801,8 @@ const ReportWindow = ({
             window.removeEventListener("keydown", handleEscKey, true);
         };
     }, [reportWindowsState, saveBeforeClose, resetState]);
+
+    useBodyScrollLock(reportWindowsState); // Блокируем прокрутку страницы при открытии
 
     // Список селекторов, которые не будут закрываться при повторном клике на поле ввода
     const selectA = useControlledSelect("selectA");
@@ -1539,56 +1540,50 @@ const ReportWindow = ({
                                         </div>
                                     )}
 
-                                    {isDataLoaded && (
+                                    {isDataChanged && mode === "edit" && (
                                         <div className="bottom-nav">
                                             <div className="container">
-                                                {mode === "edit" ? (
-                                                    <>
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => {
-                                                                if (
-                                                                    isDataChanged
-                                                                ) {
-                                                                    setSaveBeforeClose(
-                                                                        true
-                                                                    );
-                                                                } else {
-                                                                    resetState();
-                                                                }
-                                                            }}
-                                                            className="cancel-button"
-                                                            title="Отменить сохранение отчёта"
-                                                        >
-                                                            Отменить
-                                                        </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setSaveBeforeClose(
+                                                            true
+                                                        );
+                                                    }}
+                                                    className="cancel-button"
+                                                    title="Отменить сохранение отчёта"
+                                                >
+                                                    Отменить
+                                                </button>
 
-                                                        <button
-                                                            type="button"
-                                                            className="action-button"
-                                                            onClick={() =>
-                                                                handleSave()
-                                                            }
-                                                            title="Сохранить отчёт"
-                                                        >
-                                                            Сохранить
-                                                        </button>
-                                                    </>
-                                                ) : (
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => {
-                                                            resetState();
-                                                        }}
-                                                        style={{
-                                                            gridColumn: "1 /-1",
-                                                        }}
-                                                        className="cancel-button"
-                                                        title="Закрыть отчёт"
-                                                    >
-                                                        Закрыть
-                                                    </button>
-                                                )}
+                                                <button
+                                                    type="button"
+                                                    className="action-button"
+                                                    onClick={() => handleSave()}
+                                                    title="Сохранить отчёт"
+                                                >
+                                                    Сохранить
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {mode === "read" && (
+                                        <div className="bottom-nav">
+                                            <div className="container">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        resetState();
+                                                    }}
+                                                    style={{
+                                                        gridColumn: "1 /-1",
+                                                    }}
+                                                    className="cancel-button"
+                                                    title="Закрыть отчёт"
+                                                >
+                                                    Закрыть
+                                                </button>
                                             </div>
                                         </div>
                                     )}
