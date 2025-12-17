@@ -7,17 +7,31 @@ import AccessDenied from "../AccessDenied/AccessDenied";
 import "../AccessDenied/AccessDenied.scss";
 
 const SECTIONS = {
-    main: "Главная",
-    admin: "Администрирование",
+    main: "Ключевые показатели",
+    project_reports: "Отчёты проектов",
+    employee_reports: "Отчёты сотрудников",
     projects: "Проекты",
-    project_reports: "Отчеты по проектам",
-    employee_reports: "Отчеты по сотрудникам",
     sales: "Продажи",
     customers: "Заказчики",
-    contractors: "Подрядчики",
     employees: "Сотрудники",
+    contractors: "Подрядчики",
     dictionaries: "Справочники",
+    admin: "Администрирование",
 };
+
+// Порядок отображения разделов
+const SECTIONS_ORDER = [
+    "main",
+    "project_reports",
+    "employee_reports",
+    "projects",
+    "sales",
+    "customers",
+    "employees",
+    "contractors",
+    "dictionaries",
+    "admin",
+];
 
 const PERMISSION_TYPES = {
     view: "Просмотр",
@@ -1102,11 +1116,10 @@ const AdminGroups = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {Object.entries(SECTIONS).map(
-                                                ([
-                                                    sectionKey,
-                                                    sectionLabel,
-                                                ]) => {
+                                            {SECTIONS_ORDER.map(
+                                                (sectionKey) => {
+                                                    const sectionLabel =
+                                                        SECTIONS[sectionKey];
                                                     const matrix =
                                                         PERMISSION_MATRIX[
                                                             sectionKey
