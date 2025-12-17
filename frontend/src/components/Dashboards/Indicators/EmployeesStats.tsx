@@ -78,9 +78,9 @@ const EmployeesStats = ({
                 borderWidth: { right: 2 },
                 borderRadius: 0,
                 barPercentage: 1,
-                barThickness: 39,
-                maxBarThickness: 39,
-                minBarThickness: 39,
+                barThickness: 38.5,
+                maxBarThickness: 38.5,
+                minBarThickness: 38.5,
                 datalabels: {
                     display: false,
                 },
