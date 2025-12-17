@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import getData from "../../utils/getData";
@@ -17,10 +18,18 @@ import CustomDatePicker from "../CustomDatePicker/CustomDatePicker";
 import TheadSortButton from "../TheadSortButton/TheadSortButton";
 
 const Sales = () => {
+    const userPermitions = useSelector(
+        (state) => state.user?.data?.permissions
+    );
+
+    const mode = userPermitions?.sales || {
+        delete: "read",
+        edit: "read",
+        view: "read",
+    };
+
     const URL = `${import.meta.env.VITE_API_URL}sales-funnel-projects`;
     const navigate = useNavigate();
-
-    const [mode, setMode] = useState("edit");
 
     const [isLoading, setIsLoading] = useState(true);
     const [popupState, setPopupState] = useState(false);
@@ -184,9 +193,7 @@ const Sales = () => {
     const createProject = () => {
         postData("POST", URL, { name: newProjectName }).then((response) => {
             if (response) {
-                navigate(`/sales/${response.id}`, {
-                    state: { mode: "edit" },
-                });
+                navigate(`/sales/${response.id}`);
             }
         });
     };
@@ -281,7 +288,7 @@ const Sales = () => {
                     </h1>
 
                     <div className="flex items-center gap-6">
-                        {mode === "edit" && (
+                        {mode.edit === "full" && (
                             <button
                                 type="button"
                                 className="button-active"

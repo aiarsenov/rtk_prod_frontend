@@ -178,7 +178,7 @@ const SalesItem = ({ props, columns, deleteProject, mode }) => {
             })}
 
             <td className="w-[24px] h-[20px]">
-                {mode === "edit" && (
+                {mode.delete === "full" && (
                     <button
                         className="delete-button"
                         title="Удалить проект"
