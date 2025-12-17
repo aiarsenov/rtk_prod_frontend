@@ -1046,14 +1046,7 @@ const AdminGroups = () => {
                                                 <th
                                                     rowSpan="2"
                                                     className="checkbox-header"
-                                                >
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={areAllRowsSelected}
-                                                        onChange={handleSelectAllRows}
-                                                        className="row-checkbox"
-                                                    />
-                                                </th>
+                                                ></th>
                                             </tr>
                                             <tr>
                                                 <th className="subheader">
@@ -1252,11 +1245,20 @@ const AdminGroups = () => {
                                                     )
                                                 )}
 
-                                                {/* Пустые ячейки для "Ширина прав" + последний столбец */}
+                                                {/* Пустые ячейки для "Ширина прав" */}
                                                 <td className="empty-cell"></td>
                                                 <td className="empty-cell"></td>
                                                 <td className="empty-cell"></td>
-                                                <td className="empty-cell"></td>
+
+                                                {/* Чекбокс для выделения всех строк */}
+                                                <td className="mass-checkbox-cell">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={areAllRowsSelected}
+                                                        onChange={handleSelectAllRows}
+                                                        className="row-checkbox"
+                                                    />
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
