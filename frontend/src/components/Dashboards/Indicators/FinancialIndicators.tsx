@@ -81,8 +81,9 @@ const FinancialIndicators = ({
                 ),
                 backgroundColor: "#FEDF89",
                 borderRadius: 5,
-                maxBarThickness: 30,
                 barThickness: 30,
+                maxBarThickness: 30,
+                minBarThickness: 30,
             },
         ],
     };
@@ -101,8 +102,9 @@ const FinancialIndicators = ({
 
                 backgroundColor: "#FEDF89",
                 borderRadius: 5,
-                maxBarThickness: 30,
                 barThickness: 30,
+                maxBarThickness: 30,
+                minBarThickness: 30,
             },
         ],
     };
@@ -121,8 +123,9 @@ const FinancialIndicators = ({
 
                 backgroundColor: "#FEDF89",
                 borderRadius: 5,
-                maxBarThickness: 30,
                 barThickness: 30,
+                maxBarThickness: 30,
+                minBarThickness: 30,
             },
         ],
     };
@@ -141,8 +144,9 @@ const FinancialIndicators = ({
 
                 backgroundColor: "#FEDF89",
                 borderRadius: 5,
-                maxBarThickness: 30,
                 barThickness: 30,
+                maxBarThickness: 30,
+                minBarThickness: 30,
             },
         ],
     };
