@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 
 import getData from "../../utils/getData";
@@ -29,11 +30,19 @@ import AutoResizeTextarea from "../AutoResizeTextarea";
 import Loader from "../Loader.jsx";
 
 const SupplierCard = () => {
+    const userPermitions = useSelector(
+        (state) => state.user?.data?.permissions
+    );
+
+    const mode = userPermitions?.contractors || {
+        delete: "read",
+        edit: "read",
+        view: "read",
+    };
+
     const URL = `${import.meta.env.VITE_API_URL}suppliers`;
     const { supplierId } = useParams();
     const navigate = useNavigate();
-
-    const [mode, setMode] = useState("edit");
 
     const [isReportsDataLoaded, setIsReportsDataLoaded] = useState(false);
     const [isManagementReportsDataLoaded, setIsManagementReportsDataLoaded] =
@@ -384,19 +393,13 @@ const SupplierCard = () => {
         }
     }, [width]);
 
-    useEffect(() => {
-        if (mode === "read") {
-            setAddRespPerson(false);
-        }
-    }, [mode]);
-
     return !isDataLoaded ? (
         <Loader />
     ) : (
         <main className="page">
             <section
                 className={`card supplier-card ${
-                    mode === "read" ? "read-mode" : ""
+                    mode.edit !== "full" ? "read-mode" : ""
                 }`}
             >
                 <div className="container card__container supplier-card__container">
@@ -434,7 +437,7 @@ const SupplierCard = () => {
                                     <AutoResizeTextarea
                                         className="form-textarea"
                                         placeholder={
-                                            mode === "edit"
+                                            mode.edit === "full"
                                                 ? "Заполните описание"
                                                 : ""
                                         }
@@ -445,7 +448,7 @@ const SupplierCard = () => {
                                             ""
                                         }
                                         onChange={(e) => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
                                             setCardDataCustom((prev) => ({
                                                 ...prev,
                                                 description_short:
@@ -453,7 +456,7 @@ const SupplierCard = () => {
                                             }));
                                         }}
                                         onBlur={() => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
                                             if (
                                                 cardData?.description_short !=
                                                 cardDataCustom?.description_short
@@ -464,7 +467,7 @@ const SupplierCard = () => {
                                                 });
                                             }
                                         }}
-                                        disabled={mode == "read"}
+                                        disabled={mode.edit !== "full"}
                                     />
                                 </div>
 
@@ -476,18 +479,16 @@ const SupplierCard = () => {
                                     <AutoResizeTextarea
                                         className="form-textarea"
                                         placeholder={
-                                            mode === "edit"
+                                            mode.edit === "full"
                                                 ? "Заполните адрес центрального офиса"
                                                 : ""
                                         }
-                                        type="text"
-                                        name="head_office_address"
                                         value={
                                             cardDataCustom?.head_office_address ||
                                             ""
                                         }
                                         onChange={(e) => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
                                             setCardDataCustom((prev) => ({
                                                 ...prev,
                                                 head_office_address:
@@ -495,7 +496,7 @@ const SupplierCard = () => {
                                             }));
                                         }}
                                         onBlur={() => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
                                             if (
                                                 cardData?.head_office_address !=
                                                 cardDataCustom?.head_office_address
@@ -506,7 +507,7 @@ const SupplierCard = () => {
                                                 });
                                             }
                                         }}
-                                        disabled={mode == "read"}
+                                        disabled={mode.edit !== "full"}
                                     />
                                 </div>
 
@@ -519,7 +520,7 @@ const SupplierCard = () => {
                                         type="text"
                                         className="form-field"
                                         placeholder={
-                                            mode === "edit"
+                                            mode.edit === "full"
                                                 ? "Введите адрес сайта компании"
                                                 : ""
                                         }
@@ -529,14 +530,14 @@ const SupplierCard = () => {
                                             ""
                                         }
                                         onChange={(e) => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
                                             setCardDataCustom((prev) => ({
                                                 ...prev,
                                                 company_website: e.target.value,
                                             }));
                                         }}
                                         onBlur={() => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
                                             if (
                                                 cardData?.company_website !=
                                                 cardDataCustom?.company_website
@@ -547,7 +548,7 @@ const SupplierCard = () => {
                                                 });
                                             }
                                         }}
-                                        disabled={mode == "read"}
+                                        disabled={mode.edit !== "full"}
                                     />
                                 </div>
                             </section>
@@ -591,7 +592,7 @@ const SupplierCard = () => {
                                     )}
                                 </ul>
 
-                                {mode == "edit" && (
+                                {mode.edit === "full" && (
                                     <button
                                         type="button"
                                         className="button-add"
@@ -718,7 +719,6 @@ const SupplierCard = () => {
                                             isDataLoaded={isReportsDataLoaded}
                                             reports={selectedReports}
                                             openReportEditor={openReportEditor}
-                                            mode={"read"}
                                         />
                                     )}
 
@@ -748,7 +748,11 @@ const SupplierCard = () => {
                         contracts={contracts}
                         reportId={reportId}
                         setReportId={setReportId}
-                        mode={"read"}
+                        mode={{
+                            delete: "read",
+                            edit: "read",
+                            view: "read",
+                        }}
                     />
                 </div>
 
@@ -845,7 +849,6 @@ const SupplierCard = () => {
                                         isDataLoaded={isReportsDataLoaded}
                                         reports={selectedReports}
                                         openReportEditor={openReportEditor}
-                                        mode={"read"}
                                     />
                                 )}
 
