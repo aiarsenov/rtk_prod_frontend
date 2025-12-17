@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 
 import getData from "../../utils/getData";
@@ -41,10 +42,19 @@ const getLastThreeFullMonthsRange = () => {
 };
 
 const EmployeeCard = () => {
+    const userPermitions = useSelector(
+        (state) => state.user?.data?.permissions
+    );
+
+    const mode = userPermitions?.employees || {
+        delete: "read",
+        edit: "read",
+        view: "read",
+    };
+
     const { employeeId } = useParams();
     const navigate = useNavigate();
 
-    const [mode, setMode] = useState("edit");
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
     const [cardData, setCardData] = useState({});
@@ -307,7 +317,7 @@ const EmployeeCard = () => {
         <main className="page">
             <section
                 className={`card employee-card ${
-                    mode === "read" ? "read-mode" : ""
+                    mode.edit !== "full" ? "read-mode" : ""
                 }`}
             >
                 <div className="container card__container project-card__container">
@@ -354,7 +364,7 @@ const EmployeeCard = () => {
                                             type="tel"
                                             inputMode="tel"
                                             placeholder={
-                                                mode === "edit"
+                                                mode.edit === "full"
                                                     ? "+7 999 999 99 99"
                                                     : ""
                                             }
@@ -363,7 +373,8 @@ const EmployeeCard = () => {
                                                 ""
                                             }
                                             onAccept={(value) => {
-                                                if (mode === "read") return;
+                                                if (mode.edit !== "full")
+                                                    return;
 
                                                 setCardDataCustom((prev) => ({
                                                     ...prev,
@@ -371,7 +382,8 @@ const EmployeeCard = () => {
                                                 }));
                                             }}
                                             onBlur={() => {
-                                                if (mode === "read") return;
+                                                if (mode.edit !== "full")
+                                                    return;
                                                 if (
                                                     cardData?.phone_number !=
                                                     cardDataCustom?.phone_number
@@ -382,7 +394,7 @@ const EmployeeCard = () => {
                                                     });
                                                 }
                                             }}
-                                            disabled={mode == "read"}
+                                            disabled={mode.edit !== "full"}
                                         />
                                     </div>
 
@@ -393,13 +405,14 @@ const EmployeeCard = () => {
                                             className="form-field"
                                             type="email"
                                             placeholder={
-                                                mode === "edit"
+                                                mode.edit === "full"
                                                     ? "mail@mail.ru"
                                                     : ""
                                             }
                                             value={cardDataCustom.email || ""}
                                             onChange={(e) => {
-                                                if (mode === "read") return;
+                                                if (mode.edit !== "full")
+                                                    return;
 
                                                 setCardDataCustom((prev) => ({
                                                     ...prev,
@@ -407,7 +420,8 @@ const EmployeeCard = () => {
                                                 }));
                                             }}
                                             onBlur={() => {
-                                                if (mode === "read") return;
+                                                if (mode.edit !== "full")
+                                                    return;
                                                 if (
                                                     cardData?.email !=
                                                     cardDataCustom?.email
@@ -417,7 +431,7 @@ const EmployeeCard = () => {
                                                     });
                                                 }
                                             }}
-                                            disabled={mode == "read"}
+                                            disabled={mode.edit !== "full"}
                                         />
                                     </div>
                                 </div>
@@ -433,6 +447,9 @@ const EmployeeCard = () => {
                                                 cardDataCustom.employment_date
                                             }
                                             onChange={(updated) => {
+                                                if (mode.edit !== "full")
+                                                    return;
+
                                                 setCardDataCustom((prev) => ({
                                                     ...prev,
                                                     employment_date:
@@ -449,7 +466,7 @@ const EmployeeCard = () => {
                                                 });
                                             }}
                                             disabled={
-                                                mode === "read" ||
+                                                mode.edit !== "full" ||
                                                 !cardDataCustom.is_staff
                                             }
                                             single={true}
@@ -468,6 +485,9 @@ const EmployeeCard = () => {
                                                     : cardDataCustom.dismissal_date
                                             }
                                             onChange={(updated) => {
+                                                if (mode.edit !== "full")
+                                                    return;
+
                                                 setCardDataCustom((prev) => ({
                                                     ...prev,
                                                     dismissal_date:
@@ -484,7 +504,7 @@ const EmployeeCard = () => {
                                                 });
                                             }}
                                             disabled={
-                                                mode === "read" ||
+                                                mode.edit !== "full" ||
                                                 cardDataCustom?.is_active ||
                                                 !cardDataCustom.is_staff
                                             }
@@ -510,7 +530,7 @@ const EmployeeCard = () => {
                                             options={departments}
                                             className="form-select-extend"
                                             placeholder={
-                                                mode === "edit"
+                                                mode.edit === "full"
                                                     ? "Выбрать из списка"
                                                     : ""
                                             }
@@ -528,7 +548,8 @@ const EmployeeCard = () => {
                                                 null
                                             }
                                             onChange={(selectedOption) => {
-                                                if (mode === "read") return;
+                                                if (mode.edit !== "full")
+                                                    return;
 
                                                 const newValue =
                                                     +selectedOption?.value ||
@@ -543,7 +564,7 @@ const EmployeeCard = () => {
                                                     department_id: newValue,
                                                 });
                                             }}
-                                            isDisabled={mode == "read"}
+                                            isDisabled={mode.edit !== "full"}
                                             styles={{
                                                 input: (base) => ({
                                                     ...base,
@@ -563,7 +584,7 @@ const EmployeeCard = () => {
                                             options={TYPES}
                                             className="form-select-extend"
                                             placeholder={
-                                                mode === "edit"
+                                                mode.edit === "full"
                                                     ? "Выбрать из списка"
                                                     : ""
                                             }
@@ -583,7 +604,8 @@ const EmployeeCard = () => {
                                                 null
                                             }
                                             onChange={(selectedOption) => {
-                                                if (mode === "read") return;
+                                                if (mode.edit !== "full")
+                                                    return;
 
                                                 const newValue =
                                                     selectedOption?.value ||
@@ -600,7 +622,7 @@ const EmployeeCard = () => {
                                                         JSON.parse(newValue),
                                                 });
                                             }}
-                                            isDisabled={mode == "read"}
+                                            isDisabled={mode.edit !== "full"}
                                             styles={{
                                                 input: (base) => ({
                                                     ...base,
@@ -624,7 +646,7 @@ const EmployeeCard = () => {
                                             options={positions}
                                             className="form-select-extend"
                                             placeholder={
-                                                mode === "edit"
+                                                mode.edit === "full"
                                                     ? "Выбрать из списка"
                                                     : ""
                                             }
@@ -642,7 +664,8 @@ const EmployeeCard = () => {
                                                 null
                                             }
                                             onChange={(selectedOption) => {
-                                                if (mode === "read") return;
+                                                if (mode.edit !== "full")
+                                                    return;
 
                                                 const newValue =
                                                     +selectedOption?.value ||
@@ -657,7 +680,7 @@ const EmployeeCard = () => {
                                                     position_id: newValue,
                                                 });
                                             }}
-                                            isDisabled={mode == "read"}
+                                            isDisabled={mode.edit !== "full"}
                                             styles={{
                                                 input: (base) => ({
                                                     ...base,
@@ -680,7 +703,7 @@ const EmployeeCard = () => {
                                                 options={STATUSES}
                                                 className="form-select-extend"
                                                 placeholder={
-                                                    mode === "edit"
+                                                    mode.edit === "full"
                                                         ? "Выбрать из списка"
                                                         : ""
                                                 }
@@ -700,7 +723,8 @@ const EmployeeCard = () => {
                                                     null
                                                 }
                                                 onChange={(selectedOption) => {
-                                                    if (mode === "read") return;
+                                                    if (mode.edit !== "full")
+                                                        return;
 
                                                     const newValue =
                                                         selectedOption?.value ||
@@ -742,7 +766,9 @@ const EmployeeCard = () => {
                                                         });
                                                     }
                                                 }}
-                                                isDisabled={mode == "read"}
+                                                isDisabled={
+                                                    mode.edit !== "full"
+                                                }
                                                 styles={{
                                                     input: (base) => ({
                                                         ...base,
@@ -812,7 +838,7 @@ const EmployeeCard = () => {
                                         options={reportTypes}
                                         className="form-select-extend"
                                         placeholder={
-                                            mode === "edit"
+                                            mode.edit === "full"
                                                 ? "Выбрать из списка"
                                                 : ""
                                         }
@@ -830,7 +856,7 @@ const EmployeeCard = () => {
                                             ""
                                         }
                                         onChange={(selectedOption) => {
-                                            if (mode === "read") return;
+                                            if (mode.edit !== "full") return;
 
                                             const newValue =
                                                 +selectedOption?.value || "";

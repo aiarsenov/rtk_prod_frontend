@@ -13,7 +13,7 @@ const EmployeePersonalWorkloadItem = ({
     setPersonalWorkload,
 }: {
     props: Props;
-    mode: string;
+    mode: object;
     setWorkloads: React.Dispatch<React.SetStateAction<[]>>;
     setPersonalWorkload: React.Dispatch<React.SetStateAction<[]>>;
 }) => {
@@ -42,6 +42,8 @@ const EmployeePersonalWorkloadItem = ({
                     min="0"
                     value={props.load_percentage ?? ""}
                     onChange={(evt) => {
+                        if (mode.edit !== "full") return;
+                        
                         const raw = evt.target.value;
 
                         // Если после пустое, то сохраняем пустую строку
@@ -113,7 +115,7 @@ const EmployeePersonalWorkloadItem = ({
                             });
                         }
                     }}
-                    disabled={mode == "read"}
+                    disabled={mode.edit !== "full"}
                 />
                 <span className="symbol">%</span>
             </div>

@@ -25,7 +25,7 @@ const EmployeePersonalWorkloadList = ({
     totalWorkload: number | string;
     setWorkloads: React.Dispatch<React.SetStateAction<[]>>;
     updateLoadPercentage: () => void;
-    mode: string;
+    mode: object;
 }) => {
     // Проверяем, изменились ли трудозатраты
     const isWorkloadChanged = (a: any[], b: any[]) => {
@@ -95,6 +95,8 @@ const EmployeePersonalWorkloadList = ({
                                                   ""
                                         }
                                         onChange={(e) => {
+                                            if (mode.edit !== "full") return;
+
                                             const raw = e.target.value;
 
                                             if (raw === "") {
@@ -118,7 +120,7 @@ const EmployeePersonalWorkloadList = ({
                                                 }));
                                             }
                                         }}
-                                        disabled={mode == "read"}
+                                        disabled={mode.edit !== "full"}
                                     />
                                     <span className="symbol">%</span>
                                 </div>

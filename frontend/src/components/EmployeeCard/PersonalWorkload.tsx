@@ -21,12 +21,10 @@ const PersonalWorkload = ({
     employeeId,
     getWorkloadSummary,
 }: {
-    mode: string;
+    mode: object;
     employeeId: number;
     getWorkloadSummary: () => void;
 }) => {
-    // let query;
-
     const [personalWorkload, setPersonalWorkload] = useState({
         other_workload: 0,
     });
