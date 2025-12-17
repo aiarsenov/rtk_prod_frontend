@@ -116,20 +116,21 @@
 
     &__financial-indicators {
         max-width: 100%;
+        position: relative;
+        overflow-x: auto;
 
-        &__wrapper {
-            position: relative;
-            height: 300px;
-            overflow-x: auto;
-            overflow-y: auto;
+        &__header,
+        &__body {
+            padding-right: 10px;
+            display: grid;
+            align-items: center;
+            grid-template-columns: 159px repeat(4, 1fr);
+            min-width: 1160px;
         }
 
         &__header {
             padding-right: 10px;
-            width: 100%;
-            display: grid;
-            align-items: center;
-            grid-template-columns: 159px repeat(4, 1fr);
+            margin-bottom: 10px;
 
             .sort-btn {
                 min-width: 250px;
@@ -137,11 +138,9 @@
         }
 
         &__body {
-            padding-right: 10px;
-            width: 100%;
-            display: grid;
-            align-items: start;
-            grid-template-columns: 159px repeat(4, 1fr);
+            height: 300px;
+            overflow-y: auto;
+            overflow-x: hidden;
 
             & > div {
                 position: relative;
