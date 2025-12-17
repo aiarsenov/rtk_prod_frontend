@@ -471,8 +471,25 @@ const AdminGroups = () => {
         setSelectedSections(newSelectedSections);
     };
 
-    // Обработчик массового чекбокса внизу для типа права
-    // Отмечает/снимает чекбоксы только у ОТМЕЧЕННЫХ строк
+    // Обработчик чекбокса в заголовке для выделения всех строк
+    const handleSelectAllRows = () => {
+        const allSections = new Set(SECTIONS_ORDER);
+        const allSelected = SECTIONS_ORDER.every((section) =>
+            selectedSections.has(section)
+        );
+
+        if (allSelected) {
+            // Если все выделены - снимаем выделение со всех
+            setSelectedSections(new Set());
+        } else {
+            // Если не все выделены - выделяем все
+            setSelectedSections(allSections);
+        }
+    };
+
+    const areAllRowsSelected = SECTIONS_ORDER.every((section) =>
+        selectedSections.has(section)
+    );
     const handleMassPermissionCheckboxChange = (permissionType) => {
         const newPermissions = { ...selectedPermissions };
         const newScopes = { ...permissionScopes };
@@ -521,28 +538,10 @@ const AdminGroups = () => {
                 "DELETE",
                 `${API_URL}admin/permission-groups/${groupId}/permissions/${permissionId}`
             );
-            // toast.dismiss(toastId);
 
-            // toast.update(toastId, {
-            //     render: "Право успешно удалено",
-            //     type: "success",
-            //     isLoading: false,
-            //     autoClose: 2000,
-            //     pauseOnFocusLoss: false,
-            //     pauseOnHover: false,
-            //     draggable: true,
-            // });
             loadGroups();
         } catch (err) {
-            // toast.update(toastId, {
-            //     render: err.message || "Ошибка удаления права",
-            //     type: "error",
-            //     isLoading: false,
-            //     autoClose: 3000,
-            //     pauseOnFocusLoss: false,
-            //     pauseOnHover: false,
-            //     draggable: true,
-            // });
+
 
             toast.error(err.message || "Ошибка удаления права", {
                 isLoading: false,
@@ -564,9 +563,7 @@ const AdminGroups = () => {
             return;
         }
 
-        // const toastId = toast.loading("Добавление пользователей...", {
-        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        // });
+
 
         try {
             await postData(
@@ -577,31 +574,11 @@ const AdminGroups = () => {
                 }
             );
 
-            // toast.dismiss(toastId);
-
-            // toast.update(toastId, {
-            //     render: "Пользователи успешно добавлены",
-            //     type: "success",
-            //     isLoading: false,
-            //     autoClose: 2000,
-            //     pauseOnFocusLoss: false,
-            //     pauseOnHover: false,
-            //     draggable: true,
-            // });
 
             setShowAddUserModal(false);
             setSelectedUsers([]);
             loadGroups();
         } catch (err) {
-            // toast.update(toastId, {
-            //     render: err.message || "Ошибка добавления пользователей",
-            //     type: "error",
-            //     isLoading: false,
-            //     autoClose: 3000,
-            //     pauseOnFocusLoss: false,
-            //     pauseOnHover: false,
-            //     draggable: true,
-            // });
 
             toast.error(err.message || "Ошибка добавления пользователей", {
                 isLoading: false,
@@ -615,14 +592,10 @@ const AdminGroups = () => {
         }
     };
 
-    const handleRemoveUser = async (groupId, userId) => {ƒ
+    const handleRemoveUser = async (groupId, userId) => {
         if (!confirm("Удалить пользователя из группы?")) {
             return;
         }
-
-        // const toastId = toast.loading("Удаление пользователя...", {
-        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        // });
 
         try {
             await postData(
@@ -630,16 +603,6 @@ const AdminGroups = () => {
                 `${API_URL}admin/permission-groups/${groupId}/users/${userId}`
             );
 
-            // toast.dismiss(toastId);
-            // toast.update(toastId, {
-            //     render: "Пользователь успешно удален из группы",
-            //     type: "success",
-            //     isLoading: false,
-            //     autoClose: 2000,
-            //     pauseOnFocusLoss: false,
-            //     pauseOnHover: false,
-            //     draggable: true,
-            // });
             loadGroups();
         } catch (err) {
             toast.error(err.message || "Ошибка удаления пользователя", {
@@ -651,15 +614,6 @@ const AdminGroups = () => {
                     window.innerWidth >= 1440 ? "bottom-right" : "top-right",
             });
 
-            // toast.update(toastId, {
-            //     render: err.message || "Ошибка удаления пользователя",
-            //     type: "error",
-            //     isLoading: false,
-            //     autoClose: 3000,
-            //     pauseOnFocusLoss: false,
-            //     pauseOnHover: false,
-            //     draggable: true,
-            // });
         }
     };
 
@@ -1092,7 +1046,14 @@ const AdminGroups = () => {
                                                 <th
                                                     rowSpan="2"
                                                     className="checkbox-header"
-                                                ></th>
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={areAllRowsSelected}
+                                                        onChange={handleSelectAllRows}
+                                                        className="row-checkbox"
+                                                    />
+                                                </th>
                                             </tr>
                                             <tr>
                                                 <th className="subheader">
