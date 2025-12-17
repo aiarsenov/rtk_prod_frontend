@@ -78,10 +78,9 @@ const EmployeesStats = ({
                 borderWidth: { right: 2 },
                 borderRadius: 0,
                 barPercentage: 1,
-                // categoryPercentage: 0.8,
-                barThickness: 38,
-                maxBarThickness: 38,
-                minBarThickness: 38,
+                barThickness: 39,
+                maxBarThickness: 39,
+                minBarThickness: 39,
                 datalabels: {
                     display: false,
                 },
@@ -98,7 +97,6 @@ const EmployeesStats = ({
                 barThickness: 20,
                 maxBarThickness: 20,
                 minBarThickness: 20,
-                // categoryPercentage: 1,
                 barPercentage: 1,
                 order: 1,
             },
@@ -110,6 +108,7 @@ const EmployeesStats = ({
         responsive: true,
         maintainAspectRatio: false,
         animation: false,
+        normalized: true,
         plugins: {
             legend: {
                 display: false,
@@ -177,8 +176,8 @@ const EmployeesStats = ({
                     dash: [3, 3],
                     display: false,
                 },
-                barPercentage: 0.7,
-                categoryPercentage: 0.8,
+                // barPercentage: 0.7,
+                // categoryPercentage: 0.8,
             },
 
             x: {
