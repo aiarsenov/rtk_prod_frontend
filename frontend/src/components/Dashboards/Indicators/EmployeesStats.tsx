@@ -94,7 +94,7 @@ const EmployeesStats = ({
                 backgroundColor: "#BDB4FE",
                 borderRadius: 5,
                 barThickness: 20,
-                categoryPercentage: 1,
+                // categoryPercentage: 1,
                 barPercentage: 1,
                 order: 1,
             },
