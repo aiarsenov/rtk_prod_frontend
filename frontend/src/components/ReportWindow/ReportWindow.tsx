@@ -8,11 +8,14 @@ import { useBodyScrollLock } from "../../hooks/useBodyScrollLock.js";
 import { useControlledSelect } from "../../hooks/useControlledSelect.js";
 import { ToastContainer, toast } from "react-toastify";
 
-import CreatableSelect from "react-select/creatable";
-import TeammatesSection from "../TeammatesSection";
-import ContractorsSection from "../ContractorsSection";
 import DateFields from "../DateField/DateFields";
 import DateField from "../DateField/DateField";
+import AutoResizeTextarea from "../AutoResizeTextarea";
+import CreatableSelect from "react-select/creatable";
+
+import TeammatesSection from "../TeammatesSection";
+import ContractorsSection from "../ContractorsSection";
+
 import Loader from "../Loader";
 import Popup from "../Popup/Popup";
 
@@ -1106,6 +1109,38 @@ const ReportWindow = ({
                                                         }}
                                                     />
                                                 </div>
+                                            </div>
+
+                                            <div className="report-window__field">
+                                                <label className="form-label">
+                                                    Заметка
+                                                </label>
+
+                                                <AutoResizeTextarea
+                                                    className="form-textarea"
+                                                    placeholder={
+                                                        mode.edit === "full"
+                                                            ? "Текст заметки"
+                                                            : ""
+                                                    }
+                                                    value={
+                                                        reportData?.note || ""
+                                                    }
+                                                    onChange={(e) => {
+                                                        if (
+                                                            mode.edit !== "full"
+                                                        )
+                                                            return;
+
+                                                        handleInputChange(
+                                                            e,
+                                                            "note"
+                                                        );
+                                                    }}
+                                                    disabled={
+                                                        mode.edit !== "full"
+                                                    }
+                                                />
                                             </div>
 
                                             <div className="report-window__field">

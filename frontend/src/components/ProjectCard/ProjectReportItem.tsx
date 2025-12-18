@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import Hint from "../Hint/Hint";
 
 const ProjectReportItem = ({
     id,
@@ -37,7 +37,10 @@ const ProjectReportItem = ({
             }}
         >
             <div className="reports__list-item__col">
-                <div>{report_period_code}</div>
+                <div className="flex items-start gap-1">
+                    {report_period_code}
+                    <Hint type="alert" message="report_period_codereport_period_codereport_period_code report_period_codereport_period_codereport_period_codereport_period_codereport_period_codereport_period_codereport_period_code" />
+                </div>
                 <span>{report_period}</span>
             </div>
 
