@@ -89,6 +89,9 @@ const EmployeesStats = ({
                 },
                 borderSkipped: false,
                 order: 2,
+                tooltip: {
+                    enabled: false,
+                },
             },
             {
                 label: "",
@@ -136,14 +139,62 @@ const EmployeesStats = ({
                 displayColors: false,
                 callbacks: {
                     label: (context) => {
-                        const item =
-                            employeeMetrics.positions_histogram?.[
-                                context.dataIndex
+                        const index = context.dataIndex;
+                        const datasetIndex = context.datasetIndex;
+
+                        const currentDataset = context.chart.data.datasets[1];
+                        const previousDataset = context.chart.data.datasets[0];
+
+                        const currentValue = parseFloat(
+                            currentDataset.data[index]
+                        );
+                        const previousValue = parseFloat(
+                            previousDataset.data[index]
+                        );
+
+                        const suffix = (() => {
+                            switch (employeeFilters.metric_type[0]) {
+                                case "headcount":
+                                    return "чел.";
+                                case "gross_salary":
+                                    return "млн руб.";
+                                case "average_salary":
+                                    return "тыс. руб.";
+                                default:
+                                    return "";
+                            }
+                        })();
+
+                        const formatValue = (val) => {
+                            if (isNaN(val)) return val;
+                            return val.toFixed(2).replace(".", ",");
+                        };
+
+                        // Если значения равны — показываем оба
+                        if (currentValue === previousValue) {
+                            return [
+                                `Прошлое значение: ${formatValue(
+                                    previousValue
+                                )} ${suffix}`,
+                                `Текущее значение: ${formatValue(
+                                    currentValue
+                                )} ${suffix}`,
                             ];
-                        if (context.datasetIndex === 0) {
-                            return `Прошлое значение: ${item.previous_value}`;
-                        } else if (context.datasetIndex === 1) {
-                            return `Текущее значение: ${item.value}`;
+                        }
+
+                        // Иначе показываем только то, на что навели
+                        if (datasetIndex === 0) {
+                            return [
+                                `Прошлое значение: ${formatValue(
+                                    previousValue
+                                )} ${suffix}`,
+                            ];
+                        } else {
+                            return [
+                                `Текущее значение: ${formatValue(
+                                    currentValue
+                                )} ${suffix}`,
+                            ];
                         }
                     },
                     title: () => "",
