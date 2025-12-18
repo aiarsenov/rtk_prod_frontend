@@ -606,6 +606,7 @@ const ReportWindow = ({
         }
     };
 
+    // Автозаполнение полей
     const setPrefillData = () => {
         // Добавляем основные данные
         setReportData((prev) => ({

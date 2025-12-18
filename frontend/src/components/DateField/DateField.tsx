@@ -1,5 +1,6 @@
 import { IMaskInput } from "react-imask";
 import IMask from "imask";
+import { useRef } from "react";
 
 const DateField = ({
     mode = "edit",
@@ -12,6 +13,17 @@ const DateField = ({
     onChange: () => void;
     className: string;
 }) => {
+    const isFirstRender = useRef(true);
+
+    const handleAccept = (val: string) => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
+
+        onChange(val);
+    };
+
     return (
         <IMaskInput
             mask={Date}
@@ -23,7 +35,7 @@ const DateField = ({
             lazy={true}
             autofix={true}
             value={value}
-            onAccept={(val) => onChange?.(val)}
+            onAccept={handleAccept}
             placeholder={`${mode === "read" ? "" : "дд.мм.гггг"}`}
             className={className}
             inputMode="numeric"
