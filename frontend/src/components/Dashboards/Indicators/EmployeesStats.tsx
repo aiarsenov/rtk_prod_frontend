@@ -170,19 +170,6 @@ const EmployeesStats = ({
                             return val.toFixed(2).replace(".", ",");
                         };
 
-                        // Если значения равны — показываем оба
-                        // if (currentValue === previousValue) {
-                        //     return [
-                        //         `Прошлое значение: ${formatValue(
-                        //             previousValue
-                        //         )} ${suffix}`,
-                        //         `Текущее значение: ${formatValue(
-                        //             currentValue
-                        //         )} ${suffix}`,
-                        //     ];
-                        // }
-
-                        // Иначе показываем только то, на что навели
                         if (datasetIndex === 0) {
                             return [
                                 `Прошлое значение: ${formatValue(
