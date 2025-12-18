@@ -709,7 +709,7 @@ const SaleFunnelStages = ({
                             >
                                 {stage.name}
 
-                                {showCancelButton && (
+                                {showCancelButton && mode.edit === "full" && (
                                     <button
                                         className="cancel-button"
                                         type="button"
@@ -740,7 +740,8 @@ const SaleFunnelStages = ({
                         );
                     })}
 
-                {saleStages.stages &&
+                {mode.edit === "full" &&
+                saleStages.stages &&
                 (saleStages.stages[
                     saleStages.stages?.length - 1
                 ]?.name?.toLowerCase() === "отказ от участия" ||

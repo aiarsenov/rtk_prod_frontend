@@ -100,7 +100,7 @@ const SaleFunnelItem = ({
                             handleStageDate(updated, stage.instance_id);
                         }}
                         minDate={maxPrevDate}
-                        disabled={mode.edit !== "full" && !isLast}
+                        disabled={mode.edit !== "full" || !isLast}
                         single={true}
                     />
 
