@@ -372,7 +372,6 @@ const AdminGroups = ({ mode }) => {
         setSelectedSections(newSelectedSections);
     };
 
-    // Обработчик чекбокса в заголовке для выделения всех строк
     const handleSelectAllRows = () => {
         const allSections = new Set(SECTIONS_ORDER);
         const allSelected = SECTIONS_ORDER.every((section) =>
@@ -380,10 +379,24 @@ const AdminGroups = ({ mode }) => {
         );
 
         if (allSelected) {
-            // Если все выделены - снимаем выделение со всех
             setSelectedSections(new Set());
         } else {
-            // Если не все выделены - выделяем все
+            const newPermissions = { ...selectedPermissions };
+            const newScopes = { ...permissionScopes };
+
+            SECTIONS_ORDER.forEach((section) => {
+                ["view", "edit", "delete"].forEach((permType) => {
+                    const matrix = PERMISSION_MATRIX[section] || {};
+                    if (matrix[permType] === 1) {
+                        const key = `${section}_${permType}`;
+                        delete newPermissions[key];
+                        delete newScopes[key];
+                    }
+                });
+            });
+
+            setSelectedPermissions(newPermissions);
+            setPermissionScopes(newScopes);
             setSelectedSections(allSections);
         }
     };
@@ -392,6 +405,10 @@ const AdminGroups = ({ mode }) => {
         selectedSections.has(section)
     );
     const handleMassPermissionCheckboxChange = (permissionType) => {
+        if (areAllRowsSelected) {
+            setSelectedSections(new Set());
+        }
+
         const newPermissions = { ...selectedPermissions };
         const newScopes = { ...permissionScopes };
         let allCheckedInSelectedSections = true;
@@ -423,6 +440,29 @@ const AdminGroups = ({ mode }) => {
 
         setSelectedPermissions(newPermissions);
         setPermissionScopes(newScopes);
+    };
+
+    const isMassCheckboxChecked = (permissionType) => {
+        if (areAllRowsSelected) {
+            return false;
+        }
+
+        if (selectedSections.size === 0) {
+            return false;
+        }
+
+        let allChecked = true;
+        selectedSections.forEach((section) => {
+            const matrix = PERMISSION_MATRIX[section] || {};
+            if (matrix[permissionType] === 1) {
+                const key = `${section}_${permissionType}`;
+                if (!selectedPermissions[key]) {
+                    allChecked = false;
+                }
+            }
+        });
+
+        return allChecked;
     };
 
     const handleDeletePermission = async (groupId, permissionId) => {
@@ -1142,6 +1182,7 @@ const AdminGroups = ({ mode }) => {
                                                         >
                                                             <input
                                                                 type="checkbox"
+                                                                checked={isMassCheckboxChecked(permType)}
                                                                 onChange={() =>
                                                                     handleMassPermissionCheckboxChange(
                                                                         permType
