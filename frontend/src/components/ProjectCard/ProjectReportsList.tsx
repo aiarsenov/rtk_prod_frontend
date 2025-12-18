@@ -33,7 +33,7 @@ const ProjectReportsList = ({
         <>
             <div className="card-reports-list__header project-card-reports-list__header">
                 <span>Отчёт</span>
-                <span>Период вып.</span>
+                <span>Период выполнения</span>
                 <span>Статус</span>
             </div>
 
