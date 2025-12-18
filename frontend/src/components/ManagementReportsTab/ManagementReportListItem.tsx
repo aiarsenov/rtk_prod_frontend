@@ -36,11 +36,9 @@ const ManagementReportListItem = ({ openEditor, reportData }: Props) => {
             </div>
 
             <div className="management-reports__item__col">
-                <p>{reportData?.physical_person?.name}</p>
+                <div>{reportData?.physical_person?.name}</div>
                 {reportData?.physical_person?.roles?.map((item) => (
-                    <div className="text-sm" key={item.id}>
-                        {item.name}
-                    </div>
+                    <span key={item.id}>{item.name}</span>
                 ))}
             </div>
 

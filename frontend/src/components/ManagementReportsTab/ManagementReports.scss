@@ -47,13 +47,21 @@
     }
 
     &__col {
-        > p {
+        div {
             font-weight: 400;
             font-size: 14px;
             display: -webkit-box;
             -webkit-box-orient: vertical;
             -webkit-line-clamp: 2;
             overflow: hidden;
+        }
+
+        span {
+            display: block;
+            color: #667085;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 150%;
         }
     }
 }
