@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { useBodyScrollLock } from "../../hooks/useBodyScrollLock.js";
 import { useWindowWidth } from "../../hooks/useWindowWidth.js";
@@ -46,6 +46,25 @@ const ManagementReportsTab = ({
         }
     }, [width]);
 
+    const ref = useRef<HTMLUListElement>(null);
+    const [hasScroll, setHasScroll] = useState(false);
+
+    useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+
+        const checkScroll = () => {
+            setHasScroll(el.scrollHeight > el.clientHeight);
+        };
+
+        checkScroll();
+
+        const resizeObserver = new ResizeObserver(checkScroll);
+        resizeObserver.observe(el);
+
+        return () => resizeObserver.disconnect();
+    }, []);
+
     return (
         <div className="relative min-h-[50px]">
             <div
@@ -58,7 +77,12 @@ const ManagementReportsTab = ({
                 <span>Оценка</span>
             </div>
 
-            <ul className="reports__list management-reports__list">
+            <ul
+                className={`management-reports__list reports__list ${
+                    hasScroll ? "list--scroll" : ""
+                }`}
+                ref={ref}
+            >
                 {managementReports.length > 0 &&
                     managementReports.map((item) => (
                         <ManagementReportListItem

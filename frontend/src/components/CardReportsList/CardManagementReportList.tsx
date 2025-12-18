@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { useBodyScrollLock } from "../../hooks/useBodyScrollLock.js";
 
@@ -30,6 +30,25 @@ const CardManagementReportList = ({
         setRateEditorState(false);
     };
 
+    const ref = useRef<HTMLUListElement>(null);
+    const [hasScroll, setHasScroll] = useState(false);
+
+    useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+
+        const checkScroll = () => {
+            setHasScroll(el.scrollHeight > el.clientHeight);
+        };
+
+        checkScroll();
+
+        const resizeObserver = new ResizeObserver(checkScroll);
+        resizeObserver.observe(el);
+
+        return () => resizeObserver.disconnect();
+    }, []);
+
     useBodyScrollLock(rateEditorState); // Блокируем экран при открытии редактора отчета
 
     return (
@@ -47,7 +66,12 @@ const CardManagementReportList = ({
                             <span>Оценка</span>
                         </div>
 
-                        <ul className="reports__list">
+                        <ul
+                            className={`reports__list ${
+                                hasScroll ? "list--scroll" : ""
+                            }`}
+                            ref={ref}
+                        >
                             {managerReports.length > 0 &&
                                 managerReports.map((item) => {
                                     if (
@@ -105,7 +129,10 @@ const CardManagementReportList = ({
                                                 </div>
                                                 {item?.physical_person?.roles?.map(
                                                     (item) => (
-                                                        <span key={item.id} className="block">
+                                                        <span
+                                                            key={item.id}
+                                                            className="block"
+                                                        >
                                                             {item.name}
                                                         </span>
                                                     )

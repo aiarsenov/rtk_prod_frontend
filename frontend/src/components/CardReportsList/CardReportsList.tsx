@@ -1,3 +1,5 @@
+import { useState, useEffect, useRef } from "react";
+
 import "./CardReportsList.scss";
 
 import Loader from "../Loader";
@@ -13,6 +15,25 @@ const CardReportsList = ({
 }) => {
     let statusClass;
 
+    const ref = useRef<HTMLUListElement>(null);
+    const [hasScroll, setHasScroll] = useState(false);
+
+    useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+
+        const checkScroll = () => {
+            setHasScroll(el.scrollHeight > el.clientHeight);
+        };
+
+        checkScroll();
+
+        const resizeObserver = new ResizeObserver(checkScroll);
+        resizeObserver.observe(el);
+
+        return () => resizeObserver.disconnect();
+    }, []);
+
     return (
         <div className="card-reports-list">
             {!isDataLoaded && <Loader />}
@@ -26,7 +47,10 @@ const CardReportsList = ({
                 <span>Статус</span>
             </div>
 
-            <ul className="reports__list">
+            <ul
+                className={`reports__list ${hasScroll ? "list--scroll" : ""}`}
+                ref={ref}
+            >
                 {reports &&
                     reports.length > 0 &&
                     reports.map((item) => {

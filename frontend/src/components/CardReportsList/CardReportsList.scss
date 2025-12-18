@@ -30,6 +30,12 @@
         }
     }
 
+    .reports__list:not(.list--scroll) {
+        li {
+            padding: 20px 28px 20px 20px;
+        }
+    }
+
     &__item {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -113,6 +119,12 @@
         @media (min-width: $media-xxl) {
             margin: 0;
             grid-template-columns: 1fr 80px 1fr 17% 80px;
+        }
+    }
+
+    .reports__list:not(.list--scroll) {
+        li {
+            padding: 20px 28px 20px 20px;
         }
     }
 

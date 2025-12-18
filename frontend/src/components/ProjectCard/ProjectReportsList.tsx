@@ -1,3 +1,5 @@
+import { useState, useEffect, useRef } from "react";
+
 import Loader from "../Loader";
 import ProjectReportItem from "./ProjectReportItem";
 
@@ -8,6 +10,25 @@ const ProjectReportsList = ({
     mode,
     isDataLoaded,
 }) => {
+    const ref = useRef<HTMLUListElement>(null);
+    const [hasScroll, setHasScroll] = useState(false);
+
+    useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+
+        const checkScroll = () => {
+            setHasScroll(el.scrollHeight > el.clientHeight);
+        };
+
+        checkScroll();
+
+        const resizeObserver = new ResizeObserver(checkScroll);
+        resizeObserver.observe(el);
+
+        return () => resizeObserver.disconnect();
+    }, []);
+
     return (
         <>
             <div className="card-reports-list__header project-card-reports-list__header">
@@ -16,7 +37,10 @@ const ProjectReportsList = ({
                 <span>Статус</span>
             </div>
 
-            <ul className="reports__list">
+            <ul
+                className={`reports__list ${hasScroll ? "list--scroll" : ""}`}
+                ref={ref}
+            >
                 {!isDataLoaded && <Loader />}
 
                 {reports.map((report) => (

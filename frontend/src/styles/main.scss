@@ -451,6 +451,12 @@ body {
             min-height: auto;
             flex-grow: none;
         }
+
+        .reports__list:not(.list--scroll) {
+            li {
+                padding: 20px 28px 20px 20px;
+            }
+        }
     }
 
     &__footer {
