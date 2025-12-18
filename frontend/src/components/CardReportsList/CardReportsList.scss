@@ -12,7 +12,7 @@
         font-size: 14px;
         line-height: 120%;
         color: var(--color-gray-70);
-        padding: 0 20px 20px;
+        padding: 0 28px 20px 20px;
         border-bottom: 1px solid var(--color-gray-30);
         margin-bottom: 20px;
 
@@ -21,7 +21,7 @@
         }
 
         @media (min-width: $media-xxl) {
-            padding: 0 20px 20px;
+            padding: 0 28px 20px 20px;
             margin: 0;
         }
 
