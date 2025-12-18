@@ -105,7 +105,7 @@ const CardManagementReportList = ({
                                                 </div>
                                                 {item?.physical_person?.roles?.map(
                                                     (item) => (
-                                                        <span key={item.id}>
+                                                        <span key={item.id} className="block">
                                                             {item.name}
                                                         </span>
                                                     )
