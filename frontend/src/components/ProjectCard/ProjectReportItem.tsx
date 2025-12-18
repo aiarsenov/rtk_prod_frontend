@@ -40,7 +40,10 @@ const ProjectReportItem = ({
             <div className="reports__list-item__col">
                 <div className="flex items-start gap-1">
                     {report_period_code}
-                    <Hint type="alert" position="right" message={note} />
+
+                    {note && (
+                        <Hint type="alert" position="right" message={note} />
+                    )}
                 </div>
                 <span>{report_period}</span>
             </div>
