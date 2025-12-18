@@ -9,6 +9,7 @@ const ProjectReportItem = ({
     execution_period,
     openReportEditor,
     deleteReport,
+    note,
     mode,
 }) => {
     let statusClass;
@@ -39,11 +40,7 @@ const ProjectReportItem = ({
             <div className="reports__list-item__col">
                 <div className="flex items-start gap-1">
                     {report_period_code}
-                    <Hint
-                        type="alert"
-                        position="right"
-                        message="report_period_codereport_period_codereport_period_code report_period_codereport_period_codereport_period_codereport_period_codereport_period_codereport_period_codereport_period_code"
-                    />
+                    <Hint type="alert" position="right" message={note} />
                 </div>
                 <span>{report_period}</span>
             </div>
