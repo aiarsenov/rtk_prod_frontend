@@ -11,6 +11,16 @@ const Admin = () => {
     const [activeTab, setActiveTab] = useState("users");
     const user = useSelector((state) => state.user.data);
 
+    const userPermitions = useSelector(
+        (state) => state.user?.data?.permissions
+    );
+
+    const mode = userPermitions?.admin || {
+        delete: "read",
+        edit: "read",
+        view: "read",
+    };
+
     // Если нет прав на управление пользователями - показываем заглушку
     if (!isAdmin(user)) {
         return (
@@ -50,8 +60,8 @@ const Admin = () => {
                     </div>
 
                     <div className="admin-tabs__content">
-                        {activeTab === "users" && <AdminUsers />}
-                        {activeTab === "groups" && <AdminGroups />}
+                        {activeTab === "users" && <AdminUsers mode={mode} />}
+                        {activeTab === "groups" && <AdminGroups mode={mode} />}
                     </div>
                 </div>
             </div>

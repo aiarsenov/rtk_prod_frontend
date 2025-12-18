@@ -99,7 +99,7 @@ const PERMISSION_MATRIX = {
     },
 };
 
-const AdminGroups = () => {
+const AdminGroups = ({ mode }) => {
     const [groups, setGroups] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -140,7 +140,6 @@ const AdminGroups = () => {
     useEffect(() => {
         loadGroups();
         loadAllUsers();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const loadGroups = async () => {
@@ -181,43 +180,17 @@ const AdminGroups = () => {
             return;
         }
 
-        // const toastId = toast.loading("Создание группы...", {
-        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        // });
-
         try {
             await postData("POST", `${API_URL}admin/permission-groups`, {
                 name: newGroupName,
                 description: newGroupDescription,
             });
 
-            // toast.dismiss(toastId);
-
-            // toast.update(toastId, {
-            //     render: "Группа успешно создана",
-            //     type: "success",
-            //     isLoading: false,
-            //     autoClose: 2000,
-            //     pauseOnFocusLoss: false,
-            //     pauseOnHover: false,
-            //     draggable: true,
-            // });
-
             setShowCreateModal(false);
             setNewGroupName("");
             setNewGroupDescription("");
             loadGroups();
         } catch (err) {
-            // toast.update(toastId, {
-            //     render: err.message || "Ошибка создания группы",
-            //     type: "error",
-            //     isLoading: false,
-            //     autoClose: 3000,
-            //     pauseOnFocusLoss: false,
-            //     pauseOnHover: false,
-            //     draggable: true,
-            // });
-
             toast.error(err.message || "Ошибка создания группы", {
                 isLoading: false,
                 autoClose: 3000,
@@ -246,10 +219,6 @@ const AdminGroups = () => {
             return;
         }
 
-        // const toastId = toast.loading("Обновление группы...", {
-        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        // });
-
         try {
             await postData(
                 "PUT",
@@ -260,33 +229,11 @@ const AdminGroups = () => {
                 }
             );
 
-            // toast.dismiss(toastId);
-
-            // toast.update(toastId, {
-            //     render: "Группа успешно обновлена",
-            //     type: "success",
-            //     isLoading: false,
-            //     autoClose: 2000,
-            //     pauseOnFocusLoss: false,
-            //     pauseOnHover: false,
-            //     draggable: true,
-            // });
-
             setShowEditModal(false);
             setEditGroupName("");
             setEditGroupDescription("");
             loadGroups();
         } catch (err) {
-            // toast.update(toastId, {
-            //     render: err.message || "Ошибка обновления группы",
-            //     type: "error",
-            //     isLoading: false,
-            //     autoClose: 3000,
-            //     pauseOnFocusLoss: false,
-            //     pauseOnHover: false,
-            //     draggable: true,
-            // });
-
             toast.error(err.message || "Ошибка обновления группы", {
                 isLoading: false,
                 autoClose: 3000,
@@ -304,26 +251,11 @@ const AdminGroups = () => {
             return;
         }
 
-        // const toastId = toast.loading("Удаление группы...", {
-        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        // });
-
         try {
             await postData(
                 "DELETE",
                 `${API_URL}admin/permission-groups/${groupId}`
             );
-            // toast.dismiss(toastId);
-
-            // toast.update(toastId, {
-            //     render: "Группа успешно удалена",
-            //     type: "success",
-            //     isLoading: false,
-            //     autoClose: 2000,
-            //     pauseOnFocusLoss: false,
-            //     pauseOnHover: false,
-            //     draggable: true,
-            // });
 
             loadGroups();
         } catch (err) {
@@ -335,16 +267,6 @@ const AdminGroups = () => {
                 position:
                     window.innerWidth >= 1440 ? "bottom-right" : "top-right",
             });
-
-            // toast.update(toastId, {
-            //     render: err.message || "Ошибка удаления группы",
-            //     type: "error",
-            //     isLoading: false,
-            //     autoClose: 3000,
-            //     pauseOnFocusLoss: false,
-            //     pauseOnHover: false,
-            //     draggable: true,
-            // });
         }
     };
 
@@ -374,10 +296,6 @@ const AdminGroups = () => {
             return;
         }
 
-        // const toastId = toast.loading("Сохранение прав...", {
-        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        // });
-
         try {
             // Удаляем все существующие права группы
             if (
@@ -402,29 +320,12 @@ const AdminGroups = () => {
                 );
             }
 
-            // toast.dismiss(toastId);
-            toast.success("Права успешно обновлены", {
-                position:
-                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-                autoClose: 2000,
-            });
-
             setShowAddPermissionModal(false);
             setSelectedPermissions({});
             setPermissionScopes({});
             setSelectedSections(new Set());
             loadGroups();
         } catch (err) {
-            // toast.update(toastId, {
-            //     render: err.message || "Ошибка сохранения прав",
-            //     type: "error",
-            //     isLoading: false,
-            //     autoClose: 3000,
-            //     pauseOnFocusLoss: false,
-            //     pauseOnHover: false,
-            //     draggable: true,
-            // });
-
             toast.error(err.message || "Ошибка сохранения прав", {
                 isLoading: false,
                 autoClose: 3000,
@@ -529,10 +430,6 @@ const AdminGroups = () => {
             return;
         }
 
-        // const toastId = toast.loading("Удаление права...", {
-        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        // });
-
         try {
             await postData(
                 "DELETE",
@@ -541,8 +438,6 @@ const AdminGroups = () => {
 
             loadGroups();
         } catch (err) {
-
-
             toast.error(err.message || "Ошибка удаления права", {
                 isLoading: false,
                 autoClose: 3000,
@@ -563,8 +458,6 @@ const AdminGroups = () => {
             return;
         }
 
-
-
         try {
             await postData(
                 "POST",
@@ -574,12 +467,10 @@ const AdminGroups = () => {
                 }
             );
 
-
             setShowAddUserModal(false);
             setSelectedUsers([]);
             loadGroups();
         } catch (err) {
-
             toast.error(err.message || "Ошибка добавления пользователей", {
                 isLoading: false,
                 autoClose: 3000,
@@ -613,7 +504,6 @@ const AdminGroups = () => {
                 position:
                     window.innerWidth >= 1440 ? "bottom-right" : "top-right",
             });
-
         }
     };
 
@@ -644,12 +534,15 @@ const AdminGroups = () => {
                         Всего групп: {groups.length}
                     </div>
                 </div>
-                <button
-                    className="admin-btn admin-btn--primary"
-                    onClick={() => setShowCreateModal(true)}
-                >
-                    Создать группу
-                </button>
+
+                {mode.edit === "full" && (
+                    <button
+                        className="admin-btn admin-btn--primary"
+                        onClick={() => setShowCreateModal(true)}
+                    >
+                        Создать группу
+                    </button>
+                )}
             </div>
 
             {groups.length === 0 ? (
@@ -676,22 +569,27 @@ const AdminGroups = () => {
                                 </div>
                                 {!group.is_system && (
                                     <div className="flex gap-2">
-                                        <button
-                                            className="admin-btn admin-btn--secondary"
-                                            onClick={() =>
-                                                handleEditGroup(group)
-                                            }
-                                        >
-                                            Редактировать
-                                        </button>
-                                        <button
-                                            className="admin-btn admin-btn--danger"
-                                            onClick={() =>
-                                                handleDeleteGroup(group.id)
-                                            }
-                                        >
-                                            Удалить
-                                        </button>
+                                        {mode.edit === "full" && (
+                                            <button
+                                                className="admin-btn admin-btn--secondary"
+                                                onClick={() =>
+                                                    handleEditGroup(group)
+                                                }
+                                            >
+                                                Редактировать
+                                            </button>
+                                        )}
+
+                                        {mode.delete === "full" && (
+                                            <button
+                                                className="admin-btn admin-btn--danger"
+                                                onClick={() =>
+                                                    handleDeleteGroup(group.id)
+                                                }
+                                            >
+                                                Удалить
+                                            </button>
+                                        )}
                                     </div>
                                 )}
                             </div>
@@ -699,47 +597,52 @@ const AdminGroups = () => {
                             <div className="admin-group-card__permissions">
                                 <div className="flex justify-between items-center mb-2">
                                     <h4>Права доступа</h4>
-                                    {!group.is_system && (
-                                        <button
-                                            className="admin-btn admin-btn--secondary"
-                                            onClick={() => {
-                                                setSelectedGroup(group);
+                                    {!group.is_system &&
+                                        mode.delete === "full" && (
+                                            <button
+                                                className="admin-btn admin-btn--secondary"
+                                                onClick={() => {
+                                                    setSelectedGroup(group);
 
-                                                // Предзаполняем существующие права группы
-                                                const existingPermissions = {};
-                                                const existingScopes = {};
+                                                    // Предзаполняем существующие права группы
+                                                    const existingPermissions =
+                                                        {};
+                                                    const existingScopes = {};
 
-                                                if (
-                                                    group.permissions &&
-                                                    group.permissions.length > 0
-                                                ) {
-                                                    group.permissions.forEach(
-                                                        (perm) => {
-                                                            const key = `${perm.section}_${perm.permission_type}`;
-                                                            existingPermissions[
-                                                                key
-                                                            ] = true;
-                                                            existingScopes[
-                                                                key
-                                                            ] =
-                                                                perm.scope ||
-                                                                "full";
-                                                        }
+                                                    if (
+                                                        group.permissions &&
+                                                        group.permissions
+                                                            .length > 0
+                                                    ) {
+                                                        group.permissions.forEach(
+                                                            (perm) => {
+                                                                const key = `${perm.section}_${perm.permission_type}`;
+                                                                existingPermissions[
+                                                                    key
+                                                                ] = true;
+                                                                existingScopes[
+                                                                    key
+                                                                ] =
+                                                                    perm.scope ||
+                                                                    "full";
+                                                            }
+                                                        );
+                                                    }
+
+                                                    setSelectedPermissions(
+                                                        existingPermissions
                                                     );
-                                                }
-
-                                                setSelectedPermissions(
-                                                    existingPermissions
-                                                );
-                                                setPermissionScopes(
-                                                    existingScopes
-                                                );
-                                                setShowAddPermissionModal(true);
-                                            }}
-                                        >
-                                            Редактировать права
-                                        </button>
-                                    )}
+                                                    setPermissionScopes(
+                                                        existingScopes
+                                                    );
+                                                    setShowAddPermissionModal(
+                                                        true
+                                                    );
+                                                }}
+                                            >
+                                                Редактировать права
+                                            </button>
+                                        )}
                                 </div>
                                 {group.permissions &&
                                 group.permissions.length > 0 ? (
@@ -759,18 +662,19 @@ const AdminGroups = () => {
                                                 {SCOPES[perm.scope] ||
                                                     perm.scope}
                                                 )
-                                                {!group.is_system && (
-                                                    <button
-                                                        onClick={() =>
-                                                            handleDeletePermission(
-                                                                group.id,
-                                                                perm.id
-                                                            )
-                                                        }
-                                                    >
-                                                        ×
-                                                    </button>
-                                                )}
+                                                {!group.is_system &&
+                                                    mode.delete === "full" && (
+                                                        <button
+                                                            onClick={() =>
+                                                                handleDeletePermission(
+                                                                    group.id,
+                                                                    perm.id
+                                                                )
+                                                            }
+                                                        >
+                                                            ×
+                                                        </button>
+                                                    )}
                                             </div>
                                         ))}
                                     </div>
@@ -789,18 +693,19 @@ const AdminGroups = () => {
                                             ({group.users?.length || 0})
                                         </span>
                                     </h4>
-                                    {!group.is_system && (
-                                        <button
-                                            className="admin-btn admin-btn--secondary"
-                                            onClick={() => {
-                                                setSelectedGroup(group);
-                                                setSelectedUsers([]);
-                                                setShowAddUserModal(true);
-                                            }}
-                                        >
-                                            Добавить пользователя
-                                        </button>
-                                    )}
+                                    {!group.is_system &&
+                                        mode.edit === "full" && (
+                                            <button
+                                                className="admin-btn admin-btn--secondary"
+                                                onClick={() => {
+                                                    setSelectedGroup(group);
+                                                    setSelectedUsers([]);
+                                                    setShowAddUserModal(true);
+                                                }}
+                                            >
+                                                Добавить пользователя
+                                            </button>
+                                        )}
                                 </div>
                                 {group.users && group.users.length > 0 ? (
                                     <div className="user-list">
@@ -810,18 +715,19 @@ const AdminGroups = () => {
                                                 className="user-tag"
                                             >
                                                 {user.name || user.email}
-                                                {!group.is_system && (
-                                                    <button
-                                                        onClick={() =>
-                                                            handleRemoveUser(
-                                                                group.id,
-                                                                user.id
-                                                            )
-                                                        }
-                                                    >
-                                                        ×
-                                                    </button>
-                                                )}
+                                                {!group.is_system &&
+                                                    mode.delete === "full" && (
+                                                        <button
+                                                            onClick={() =>
+                                                                handleRemoveUser(
+                                                                    group.id,
+                                                                    user.id
+                                                                )
+                                                            }
+                                                        >
+                                                            ×
+                                                        </button>
+                                                    )}
                                             </div>
                                         ))}
                                     </div>
@@ -1179,7 +1085,9 @@ const AdminGroups = () => {
                                                                                         )
                                                                                     }
                                                                                     className="scope-select"
-                                                                                    disabled={!isChecked}
+                                                                                    disabled={
+                                                                                        !isChecked
+                                                                                    }
                                                                                     onClick={(
                                                                                         e
                                                                                     ) =>
@@ -1254,8 +1162,12 @@ const AdminGroups = () => {
                                                 <td className="mass-checkbox-cell">
                                                     <input
                                                         type="checkbox"
-                                                        checked={areAllRowsSelected}
-                                                        onChange={handleSelectAllRows}
+                                                        checked={
+                                                            areAllRowsSelected
+                                                        }
+                                                        onChange={
+                                                            handleSelectAllRows
+                                                        }
                                                         className="row-checkbox"
                                                     />
                                                 </td>
