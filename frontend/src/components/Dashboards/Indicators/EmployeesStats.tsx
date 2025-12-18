@@ -171,16 +171,16 @@ const EmployeesStats = ({
                         };
 
                         // Если значения равны — показываем оба
-                        if (currentValue === previousValue) {
-                            return [
-                                `Прошлое значение: ${formatValue(
-                                    previousValue
-                                )} ${suffix}`,
-                                `Текущее значение: ${formatValue(
-                                    currentValue
-                                )} ${suffix}`,
-                            ];
-                        }
+                        // if (currentValue === previousValue) {
+                        //     return [
+                        //         `Прошлое значение: ${formatValue(
+                        //             previousValue
+                        //         )} ${suffix}`,
+                        //         `Текущее значение: ${formatValue(
+                        //             currentValue
+                        //         )} ${suffix}`,
+                        //     ];
+                        // }
 
                         // Иначе показываем только то, на что навели
                         if (datasetIndex === 0) {
