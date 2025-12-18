@@ -8,6 +8,12 @@ function AutoResizeTextarea({
     placeholder,
     className,
     minHeight = 78,
+}: {
+    disabled?: boolean;
+    onBlur?: () => void;
+    placeholder: string;
+    className?: string;
+    minHeight?: number;
 }) {
     const textareaRef = useRef(null);
 

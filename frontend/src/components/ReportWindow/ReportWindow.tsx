@@ -1123,6 +1123,7 @@ const ReportWindow = ({
                                                             ? "Текст заметки"
                                                             : ""
                                                     }
+                                                    minHeight={31}
                                                     value={
                                                         reportData?.note || ""
                                                     }

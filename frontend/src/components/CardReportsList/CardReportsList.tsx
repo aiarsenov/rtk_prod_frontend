@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 
 import "./CardReportsList.scss";
 
+import Hint from "../Hint/Hint";
 import Loader from "../Loader";
 
 const CardReportsList = ({
@@ -82,8 +83,18 @@ const CardReportsList = ({
                                     openReportEditor(item.id);
                                 }}
                             >
-                                <div className="reports__list-item__col reports__list-item__col-name">
-                                    <div>{item.project_name}</div>
+                                <div className="reports__list-item__col">
+                                    <div className="flex items-start gap-1">
+                                        <div className="reports__list-item__col-name">
+                                            {item.project_name}
+                                        </div>
+
+                                        <Hint
+                                            type="alert"
+                                            position="right"
+                                            message={item.note || "Заметок нет"}
+                                        />
+                                    </div>
                                     <span
                                         style={{
                                             overflow: "hidden",

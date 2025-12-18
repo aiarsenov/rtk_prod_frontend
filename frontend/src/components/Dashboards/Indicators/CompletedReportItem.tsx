@@ -1,3 +1,5 @@
+import Hint from "../../Hint/Hint";
+
 interface Project {
     name: string;
     contragent: string;
@@ -9,6 +11,7 @@ const CompletedReportItem = ({
     id,
     report_period_code,
     days,
+    note,
     execution_period,
     report_period,
     openReportEditor,
@@ -18,6 +21,7 @@ const CompletedReportItem = ({
     id: number;
     report_period_code: string;
     days: string;
+    note: string;
     execution_period: string;
     report_period: string;
     openReportEditor: (args: {
@@ -44,7 +48,15 @@ const CompletedReportItem = ({
                     activeReportId === id ? "active" : ""
                 }`}
             >
-                <div>{project.name}</div>
+                <div className="flex items-start gap-1">
+                    {project.name}
+
+                    <Hint
+                        type="alert"
+                        position="right"
+                        message={note || "Заметок нет"}
+                    />
+                </div>
                 <span>{project.industries[0]}</span>
             </div>
 

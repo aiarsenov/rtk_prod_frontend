@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import formatDateShortYear from "../../utils/formatDateShortYear";
 
+import Hint from "../Hint/Hint";
+
 type Column = {
     label: string;
     key: string;
@@ -201,9 +203,19 @@ const ReportItem = ({
                                     }}
                                 >
                                     <div
-                                        className={isActive ? "font-bold" : ""}
+                                        className={`flex items-start gap-1 ${
+                                            isActive ? "font-bold" : ""
+                                        }`}
                                     >
                                         {value?.toString() || "—"}
+
+                                        <Hint
+                                            type="alert"
+                                            position="right"
+                                            message={
+                                                props?.note || "Заметок нет"
+                                            }
+                                        />
                                     </div>
 
                                     <span className="min-w-[120px] text-[#98A2B3] whitespace-nowrap">

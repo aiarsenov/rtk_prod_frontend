@@ -83,7 +83,8 @@
             left: calc(100% + 10px);
             text-align: left;
             max-width: 280px;
-            min-width: 0;
+            width: fit-content;
+            min-width: 50px;
             transform: none;
             overflow-y: auto;
             max-height: 120px;
