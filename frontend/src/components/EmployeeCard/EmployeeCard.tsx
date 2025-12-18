@@ -208,7 +208,7 @@ const EmployeeCard = () => {
                 setReportTypes([
                     {
                         value: "",
-                        label: "Тип отчётов",
+                        label: "Все типы отчётов",
                     },
                     ...response.data.data.map((item) => ({
                         value: item.id,
