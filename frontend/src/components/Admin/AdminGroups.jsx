@@ -379,24 +379,12 @@ const AdminGroups = ({ mode }) => {
         );
 
         if (allSelected) {
+            // Если все выделены - снимаем выделение со всех
             setSelectedSections(new Set());
         } else {
-            const newPermissions = { ...selectedPermissions };
-            const newScopes = { ...permissionScopes };
-
-            SECTIONS_ORDER.forEach((section) => {
-                ["view", "edit", "delete"].forEach((permType) => {
-                    const matrix = PERMISSION_MATRIX[section] || {};
-                    if (matrix[permType] === 1) {
-                        const key = `${section}_${permType}`;
-                        delete newPermissions[key];
-                        delete newScopes[key];
-                    }
-                });
-            });
-
-            setSelectedPermissions(newPermissions);
-            setPermissionScopes(newScopes);
+            // Если не все выделены - выделяем все строки
+            // При выделении всех строк массовые чекбоксы должны быть неотмечены
+            // (это обеспечивается через isMassCheckboxChecked, который вернет false при areAllRowsSelected = true)
             setSelectedSections(allSections);
         }
     };
@@ -405,8 +393,17 @@ const AdminGroups = ({ mode }) => {
         selectedSections.has(section)
     );
     const handleMassPermissionCheckboxChange = (permissionType) => {
+        // Если все строки выделены, снимаем выделение со всех строк
+        // чтобы массовые чекбоксы работали только с отмеченными строками
+        let currentSelectedSections = selectedSections;
         if (areAllRowsSelected) {
-            setSelectedSections(new Set());
+            currentSelectedSections = new Set();
+            setSelectedSections(currentSelectedSections);
+        }
+
+        // Если нет отмеченных строк, ничего не делаем
+        if (currentSelectedSections.size === 0) {
+            return;
         }
 
         const newPermissions = { ...selectedPermissions };
@@ -414,7 +411,7 @@ const AdminGroups = ({ mode }) => {
         let allCheckedInSelectedSections = true;
 
         // Проверяем, все ли чекбоксы данного типа выбраны у отмеченных строк
-        selectedSections.forEach((section) => {
+        currentSelectedSections.forEach((section) => {
             const matrix = PERMISSION_MATRIX[section] || {};
             if (matrix[permissionType] === 1) {
                 const key = `${section}_${permissionType}`;
@@ -425,7 +422,7 @@ const AdminGroups = ({ mode }) => {
         });
 
         // Если все выбраны у отмеченных строк - снимаем, иначе отмечаем
-        selectedSections.forEach((section) => {
+        currentSelectedSections.forEach((section) => {
             const matrix = PERMISSION_MATRIX[section] || {};
             if (matrix[permissionType] === 1) {
                 const key = `${section}_${permissionType}`;
