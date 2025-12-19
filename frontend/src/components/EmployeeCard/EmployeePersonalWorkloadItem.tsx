@@ -23,8 +23,17 @@ const EmployeePersonalWorkloadItem = ({
     return (
         <li className="employee-card__personal-workload__list-item">
             <div className="employee-card__personal-workload__list-item__name">
+                <strong>{props?.project_name}</strong>
+
+                <span>
+                    {props?.industry_names[0].length > 0 &&
+                        props?.industry_names[0]}
+                </span>
+            </div>
+
+            <div className="employee-card__personal-workload__list-item__period">
                 <div className="flex items-start gap-1">
-                    <strong>{props?.project_name}</strong>
+                    <strong>{props?.report_period_code}</strong>
 
                     {props.note && (
                         <Hint
@@ -35,14 +44,6 @@ const EmployeePersonalWorkloadItem = ({
                     )}
                 </div>
 
-                <span>
-                    {props?.industry_names[0].length > 0 &&
-                        props?.industry_names[0]}
-                </span>
-            </div>
-
-            <div className="employee-card__personal-workload__list-item__period">
-                <strong>{props?.report_period_code}</strong>
                 <span>{props?.execution_period_code}</span>
             </div>
 

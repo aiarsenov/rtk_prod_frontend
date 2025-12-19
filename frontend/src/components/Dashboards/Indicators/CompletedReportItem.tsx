@@ -48,18 +48,18 @@ const CompletedReportItem = ({
                     activeReportId === id ? "active" : ""
                 }`}
             >
+                <div>{project.name}</div>
+                <span>{project.industries[0]}</span>
+            </div>
+
+            <div className="reports__list-item__col">
                 <div className="flex items-start gap-1">
-                    {project.name}
+                    {report_period_code}
 
                     {note && (
                         <Hint type="alert" position="right" message={note} />
                     )}
                 </div>
-                <span>{project.industries[0]}</span>
-            </div>
-
-            <div className="reports__list-item__col">
-                <div>{report_period_code}</div>
                 <span>{report_period}</span>
             </div>
 
