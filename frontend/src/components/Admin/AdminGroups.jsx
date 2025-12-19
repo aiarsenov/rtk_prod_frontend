@@ -297,28 +297,12 @@ const AdminGroups = ({ mode }) => {
         }
 
         try {
-            // Удаляем все существующие права группы
-            if (
-                selectedGroup.permissions &&
-                selectedGroup.permissions.length > 0
-            ) {
-                for (const existingPerm of selectedGroup.permissions) {
-                    await postData(
-                        "DELETE",
-                        `${API_URL}admin/permission-groups/${selectedGroup.id}/permissions/${existingPerm.id}`,
-                        {}
-                    );
-                }
-            }
-
-            // Добавляем новые выбранные права
-            for (const permission of permissions) {
-                await postData(
-                    "POST",
-                    `${API_URL}admin/permission-groups/${selectedGroup.id}/permissions`,
-                    permission
-                );
-            }
+            // Отправляем все права одним запросом
+            await postData(
+                "PUT",
+                `${API_URL}admin/permission-groups/${selectedGroup.id}/permissions`,
+                { permissions }
+            );
 
             setShowAddPermissionModal(false);
             setSelectedPermissions({});
