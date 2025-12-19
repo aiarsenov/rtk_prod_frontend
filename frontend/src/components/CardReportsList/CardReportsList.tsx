@@ -89,11 +89,13 @@ const CardReportsList = ({
                                             {item.project_name}
                                         </div>
 
-                                        <Hint
-                                            type="alert"
-                                            position="right"
-                                            message={item.note || "Заметок нет"}
-                                        />
+                                        {item.note && (
+                                            <Hint
+                                                type="alert"
+                                                position="right"
+                                                message={item.note}
+                                            />
+                                        )}
                                     </div>
                                     <span
                                         style={{

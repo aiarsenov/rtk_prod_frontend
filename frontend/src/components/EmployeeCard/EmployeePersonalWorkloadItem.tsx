@@ -26,11 +26,13 @@ const EmployeePersonalWorkloadItem = ({
                 <div className="flex items-start gap-1">
                     <strong>{props?.project_name}</strong>
 
-                    <Hint
-                        type="alert"
-                        position="right"
-                        message={props.note || "Заметок нет"}
-                    />
+                    {props.note && (
+                        <Hint
+                            type="alert"
+                            position="right"
+                            message={props.note}
+                        />
+                    )}
                 </div>
 
                 <span>

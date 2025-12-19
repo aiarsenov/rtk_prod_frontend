@@ -15,7 +15,8 @@ const formatShortMonthYear = (date) => {
         month: "short",
     })
         .format(d)
-        .replace(".", "");
+        .replace(".", "")
+        .substring(0, 3);
 
     const year = d.getFullYear().toString().slice(-2);
 

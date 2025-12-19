@@ -51,11 +51,9 @@ const CompletedReportItem = ({
                 <div className="flex items-start gap-1">
                     {project.name}
 
-                    <Hint
-                        type="alert"
-                        position="right"
-                        message={note || "Заметок нет"}
-                    />
+                    {note && (
+                        <Hint type="alert" position="right" message={note} />
+                    )}
                 </div>
                 <span>{project.industries[0]}</span>
             </div>
