@@ -205,7 +205,7 @@ const DateFields = ({
         };
     }, []);
 
-    // Копирование диапазона в буфер обмена
+    // Копирование диапазона в буфер обмена (useCallback для стабильности)
     const copyToClipboard = useCallback(async () => {
         if (!value) return;
 
@@ -358,13 +358,30 @@ const DateFields = ({
         }
     };
 
+    // Альтернативный подход: обработка копирования через onCopy событие
+    const handleCopy = (e: React.ClipboardEvent) => {
+        // Если выделен текст, позволяем стандартное поведение
+        const input = e.target as HTMLInputElement;
+        const selectionStart = input.selectionStart;
+        const selectionEnd = input.selectionEnd;
+
+        // Если нет выделения (или выделен весь текст), копируем значение
+        if (
+            selectionStart === selectionEnd ||
+            (selectionStart === 0 && selectionEnd === input.value.length)
+        ) {
+            e.preventDefault();
+            copyToClipboard();
+        }
+        // В противном случае - стандартное поведение браузера
+    };
+
     return (
         <div className="grid gap-1 form-fields">
             <div className={`${className}`}>
                 <IMaskInput
                     ref={inputRef}
                     {...maskOptions}
-                    // Используем displayValue вместо value
                     value={displayValue}
                     onAccept={(val: string) => {
                         handleChange(val);
@@ -376,6 +393,7 @@ const DateFields = ({
                     inputMode="numeric"
                     disabled={mode.edit !== "full"}
                     onKeyDown={handleKeyDown}
+                    onCopy={handleCopy} // Добавляем обработчик onCopy
                     onFocus={() => {
                         // При фокусе, если есть дефис, ставим курсор после дефиса
                         if (displayValue.includes(" - ")) {
