@@ -462,6 +462,68 @@ const AdminGroups = ({ mode }) => {
         return allChecked;
     };
 
+    const getMassScopeValue = (permissionType) => {
+        if (areAllRowsSelected) {
+            return "";
+        }
+
+        if (selectedSections.size === 0) {
+            return "";
+        }
+
+        let firstScope = null;
+        let hasCheckedPermissions = false;
+
+        selectedSections.forEach((section) => {
+            const matrix = PERMISSION_MATRIX[section] || {};
+            if (matrix[permissionType] === 1) {
+                const key = `${section}_${permissionType}`;
+                if (selectedPermissions[key]) {
+                    hasCheckedPermissions = true;
+                    const scope = permissionScopes[key] || "full";
+                    if (firstScope === null) {
+                        firstScope = scope;
+                    } else if (firstScope !== scope) {
+                        firstScope = "";
+                    }
+                }
+            }
+        });
+
+        if (!hasCheckedPermissions) {
+            return "";
+        }
+
+        return firstScope || "";
+    };
+
+    const handleMassScopeChange = (permissionType, scope) => {
+        let currentSelectedSections = selectedSections;
+        if (areAllRowsSelected) {
+            currentSelectedSections = new Set();
+            setSelectedSections(currentSelectedSections);
+        }
+
+        if (currentSelectedSections.size === 0) {
+            return;
+        }
+
+        const newScopes = { ...permissionScopes };
+
+        currentSelectedSections.forEach((section) => {
+            const matrix = PERMISSION_MATRIX[section] || {};
+            if (matrix[permissionType] === 1) {
+                const key = `${section}_${permissionType}`;
+                // Применяем только если чекбокс права отмечен
+                if (selectedPermissions[key]) {
+                    newScopes[key] = scope;
+                }
+            }
+        });
+
+        setPermissionScopes(newScopes);
+    };
+
     const handleDeletePermission = async (groupId, permissionId) => {
         if (!confirm("Удалить это право?")) {
             return;
@@ -1191,10 +1253,45 @@ const AdminGroups = ({ mode }) => {
                                                     )
                                                 )}
 
-                                                {/* Пустые ячейки для "Ширина прав" */}
-                                                <td className="empty-cell"></td>
-                                                <td className="empty-cell"></td>
-                                                <td className="empty-cell"></td>
+                                                {/* Массовые селекты для "Ширина прав" */}
+                                                {["view", "edit", "delete"].map(
+                                                    (permType) => {
+                                                        const massScopeValue = getMassScopeValue(permType);
+                                                        const isMassCheckboxCheckedForType = isMassCheckboxChecked(permType);
+
+                                                        return (
+                                                            <td
+                                                                key={`mass_scope_${permType}`}
+                                                                className="scope-cell"
+                                                            >
+                                                                <select
+                                                                    value={massScopeValue}
+                                                                    onChange={(e) =>
+                                                                        handleMassScopeChange(
+                                                                            permType,
+                                                                            e.target.value
+                                                                        )
+                                                                    }
+                                                                    className="scope-select"
+                                                                    disabled={!isMassCheckboxCheckedForType || selectedSections.size === 0}
+                                                                    onClick={(e) =>
+                                                                        e.stopPropagation()
+                                                                    }
+                                                                >
+                                                                    <option value="">
+                                                                        —
+                                                                    </option>
+                                                                    <option value="full">
+                                                                        Полная
+                                                                    </option>
+                                                                    <option value="limited">
+                                                                        Ограниченная
+                                                                    </option>
+                                                                </select>
+                                                            </td>
+                                                        );
+                                                    }
+                                                )}
 
                                                 {/* Чекбокс для выделения всех строк */}
                                                 <td className="mass-checkbox-cell">
