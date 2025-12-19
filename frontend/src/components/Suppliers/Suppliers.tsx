@@ -171,24 +171,142 @@ const Suppliers = () => {
 
                     <table className="registry-table table-auto w-full border-collapse">
                         <thead className="registry-table__thead">
-                            <tr>
-                                {COLUMNS.map(
-                                    ({
-                                        label,
-                                        key,
-                                        filter,
-                                        options,
-                                        is_sortable,
-                                    }) => {
-                                        return (
-                                            <th
-                                                className="min-w-[125px]"
-                                                rowSpan="2"
-                                                key={key}
-                                            >
-                                                <div className="registry-table__thead-item">
-                                                    {filter ? (
-                                                        <>
+                            {!isLoading && (
+                                <tr>
+                                    {COLUMNS.map(
+                                        ({
+                                            label,
+                                            key,
+                                            filter,
+                                            options,
+                                            is_sortable,
+                                        }) => {
+                                            return (
+                                                <th
+                                                    className="min-w-[125px]"
+                                                    rowSpan="2"
+                                                    key={key}
+                                                >
+                                                    <div className="registry-table__thead-item">
+                                                        {filter ? (
+                                                            <>
+                                                                <div
+                                                                    className="registry-table__thead-label"
+                                                                    style={{
+                                                                        maxWidth:
+                                                                            "200px",
+                                                                    }}
+                                                                >
+                                                                    {label}
+                                                                </div>
+
+                                                                {filters[filter]
+                                                                    .length >
+                                                                    0 && (
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => {
+                                                                            setFilters(
+                                                                                (
+                                                                                    prev
+                                                                                ) => ({
+                                                                                    ...prev,
+                                                                                    [filter]:
+                                                                                        [],
+                                                                                })
+                                                                            );
+                                                                        }}
+                                                                    >
+                                                                        <svg
+                                                                            width="16"
+                                                                            height="16"
+                                                                            viewBox="0 0 16 16"
+                                                                            fill="none"
+                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                        >
+                                                                            <path
+                                                                                d="M9.06 8l3.713 3.712-1.06 1.06L8 9.06l-3.712 3.713-1.061-1.06L6.939 8 3.227 4.287l1.06-1.06L8 6.939l3.712-3.712 1.061 1.06L9.061 8z"
+                                                                                fill="#000"
+                                                                            />
+                                                                        </svg>
+                                                                    </button>
+                                                                )}
+
+                                                                {options.length >
+                                                                    0 &&
+                                                                    options.some(
+                                                                        (val) =>
+                                                                            val !==
+                                                                            undefined
+                                                                    ) && (
+                                                                        <FilterButton
+                                                                            label={
+                                                                                label
+                                                                            }
+                                                                            key={
+                                                                                key
+                                                                            }
+                                                                            filterKey={
+                                                                                key
+                                                                            }
+                                                                            openFilter={
+                                                                                openFilter
+                                                                            }
+                                                                            setOpenFilter={
+                                                                                setOpenFilter
+                                                                            }
+                                                                        />
+                                                                    )}
+
+                                                                {openFilter ===
+                                                                    key && (
+                                                                    <MultiSelectWithSearch
+                                                                        options={
+                                                                            options.length >
+                                                                            0
+                                                                                ? options.map(
+                                                                                      (
+                                                                                          name
+                                                                                      ) => ({
+                                                                                          value: name,
+                                                                                          label: name,
+                                                                                      })
+                                                                                  )
+                                                                                : []
+                                                                        }
+                                                                        selectedValues={
+                                                                            filters[
+                                                                                filter
+                                                                            ]
+                                                                        }
+                                                                        onChange={(
+                                                                            updated
+                                                                        ) =>
+                                                                            setFilters(
+                                                                                (
+                                                                                    prev
+                                                                                ) => ({
+                                                                                    ...prev,
+                                                                                    ...updated,
+                                                                                })
+                                                                            )
+                                                                        }
+                                                                        fieldName={
+                                                                            filter
+                                                                        }
+                                                                        close={
+                                                                            setOpenFilter
+                                                                        }
+                                                                        filterNoSearch={
+                                                                            key ===
+                                                                                "roles" ||
+                                                                            key ===
+                                                                                "status"
+                                                                        }
+                                                                    />
+                                                                )}
+                                                            </>
+                                                        ) : (
                                                             <div
                                                                 className="registry-table__thead-label"
                                                                 style={{
@@ -198,140 +316,25 @@ const Suppliers = () => {
                                                             >
                                                                 {label}
                                                             </div>
+                                                        )}
 
-                                                            {filters[filter]
-                                                                .length > 0 && (
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() => {
-                                                                        setFilters(
-                                                                            (
-                                                                                prev
-                                                                            ) => ({
-                                                                                ...prev,
-                                                                                [filter]:
-                                                                                    [],
-                                                                            })
-                                                                        );
-                                                                    }}
-                                                                >
-                                                                    <svg
-                                                                        width="16"
-                                                                        height="16"
-                                                                        viewBox="0 0 16 16"
-                                                                        fill="none"
-                                                                        xmlns="http://www.w3.org/2000/svg"
-                                                                    >
-                                                                        <path
-                                                                            d="M9.06 8l3.713 3.712-1.06 1.06L8 9.06l-3.712 3.713-1.061-1.06L6.939 8 3.227 4.287l1.06-1.06L8 6.939l3.712-3.712 1.061 1.06L9.061 8z"
-                                                                            fill="#000"
-                                                                        />
-                                                                    </svg>
-                                                                </button>
-                                                            )}
-
-                                                            {options.length >
-                                                                0 &&
-                                                                options.some(
-                                                                    (val) =>
-                                                                        val !==
-                                                                        undefined
-                                                                ) && (
-                                                                    <FilterButton
-                                                                        label={
-                                                                            label
-                                                                        }
-                                                                        key={
-                                                                            key
-                                                                        }
-                                                                        filterKey={
-                                                                            key
-                                                                        }
-                                                                        openFilter={
-                                                                            openFilter
-                                                                        }
-                                                                        setOpenFilter={
-                                                                            setOpenFilter
-                                                                        }
-                                                                    />
-                                                                )}
-
-                                                            {openFilter ===
-                                                                key && (
-                                                                <MultiSelectWithSearch
-                                                                    options={
-                                                                        options.length >
-                                                                        0
-                                                                            ? options.map(
-                                                                                  (
-                                                                                      name
-                                                                                  ) => ({
-                                                                                      value: name,
-                                                                                      label: name,
-                                                                                  })
-                                                                              )
-                                                                            : []
-                                                                    }
-                                                                    selectedValues={
-                                                                        filters[
-                                                                            filter
-                                                                        ]
-                                                                    }
-                                                                    onChange={(
-                                                                        updated
-                                                                    ) =>
-                                                                        setFilters(
-                                                                            (
-                                                                                prev
-                                                                            ) => ({
-                                                                                ...prev,
-                                                                                ...updated,
-                                                                            })
-                                                                        )
-                                                                    }
-                                                                    fieldName={
-                                                                        filter
-                                                                    }
-                                                                    close={
-                                                                        setOpenFilter
-                                                                    }
-                                                                    filterNoSearch={
-                                                                        key ===
-                                                                        "roles" ||
-                                                                        key ===
-                                                                        "status"
-                                                                    }
-                                                                />
-                                                            )}
-                                                        </>
-                                                    ) : (
-                                                        <div
-                                                            className="registry-table__thead-label"
-                                                            style={{
-                                                                maxWidth:
-                                                                    "200px",
-                                                            }}
-                                                        >
-                                                            {label}
-                                                        </div>
-                                                    )}
-
-                                                    {is_sortable && (
-                                                        <TheadSortButton
-                                                            label={label}
-                                                            value={key}
-                                                            sortBy={sortBy}
-                                                            setSortBy={
-                                                                setSortBy
-                                                            }
-                                                        />
-                                                    )}
-                                                </div>
-                                            </th>
-                                        );
-                                    }
-                                )}
-                            </tr>
+                                                        {is_sortable && (
+                                                            <TheadSortButton
+                                                                label={label}
+                                                                value={key}
+                                                                sortBy={sortBy}
+                                                                setSortBy={
+                                                                    setSortBy
+                                                                }
+                                                            />
+                                                        )}
+                                                    </div>
+                                                </th>
+                                            );
+                                        }
+                                    )}
+                                </tr>
+                            )}
                         </thead>
 
                         <tbody className="registry-table__tbody">
