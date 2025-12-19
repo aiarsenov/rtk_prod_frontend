@@ -1121,7 +1121,7 @@ const ReportWindow = ({
                                                     placeholder={
                                                         mode.edit === "full"
                                                             ? "Текст заметки"
-                                                            : ""
+                                                            : "—"
                                                     }
                                                     minHeight={31}
                                                     value={
@@ -1151,7 +1151,7 @@ const ReportWindow = ({
 
                                                 <DateFields
                                                     mode={mode}
-                                                    className={"form-field"}
+                                                    className="form-field"
                                                     value={
                                                         reportData.report_period
                                                     }

@@ -35,7 +35,8 @@
         }
 
         .form-field,
-        .form-select:disabled {
+        .form-select:disabled,
+        .form-textarea {
             background-color: transparent;
         }
     }
