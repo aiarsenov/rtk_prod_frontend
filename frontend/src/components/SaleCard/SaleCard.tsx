@@ -402,9 +402,9 @@ const SaleCard = () => {
                 (item) => item.stage_date
             );
 
-            setSaleStatus(
-                stagesWithDate[stagesWithDate.length - 1].name || null
-            );
+            stagesWithDate.length > 0
+                ? setSaleStatus(stagesWithDate[stagesWithDate.length - 1].name)
+                : setSaleStatus(null);
         } else {
             setSaleStatus(null);
         }
