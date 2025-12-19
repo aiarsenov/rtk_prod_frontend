@@ -303,12 +303,6 @@ const Reports = () => {
 
     // Обновляем  отчёт менеджмента
     const updateReport = (extendReportData, action) => {
-        // query = toast.loading("Обновление", {
-        //     containerId: "report",
-        //     draggable: true,
-        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        // });
-
         extendReportData.action = action;
 
         return postData(
@@ -320,28 +314,11 @@ const Reports = () => {
         )
             .then((response) => {
                 if (response?.ok) {
-                    // toast.dismiss(query);
-                    // toast.update(query, {
-                    //     render: "Данные обновлены",
-                    //     type: "success",
-                    //     containerId: "report",
-                    //     isLoading: false,
-                    //     autoClose: 1200,
-                    //     pauseOnFocusLoss: false,
-                    //     pauseOnHover: false,
-                    //     draggable: true,
-                    //     position:
-                    //         window.innerWidth >= 1440
-                    //             ? "bottom-right"
-                    //             : "top-right",
-                    // });
-
                     getManagementReports();
                     // Закрываем модальное окно только после успешного сохранения
                     setManagementEditorState(false);
                     return response;
                 } else {
-                    // toast.dismiss(query);
                     toast.error("Ошибка обновления данных", {
                         containerId: "report",
                         isLoading: false,
@@ -358,7 +335,6 @@ const Reports = () => {
                 }
             })
             .catch((error) => {
-                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка при обновлении", {
                     containerId: "report",
                     isLoading: false,
@@ -377,12 +353,6 @@ const Reports = () => {
 
     // Обновляем отчет с оценками
     const updateReportDetails = (report, action) => {
-        // query = toast.loading("Обновление", {
-        //     containerId: "report",
-        //     draggable: true,
-        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        // });
-
         report.action = action;
 
         return postData(
@@ -409,27 +379,9 @@ const Reports = () => {
                         return updatedList;
                     });
 
-                    // toast.dismiss(query);
-
-                    // toast.update(query, {
-                    //     render: "Данные обновлены",
-                    //     type: "success",
-                    //     containerId: "report",
-                    //     isLoading: false,
-                    //     autoClose: 1200,
-                    //     pauseOnFocusLoss: false,
-                    //     pauseOnHover: false,
-                    //     draggable: true,
-                    //     position:
-                    //         window.innerWidth >= 1440
-                    //             ? "bottom-right"
-                    //             : "top-right",
-                    // });
-                    // Закрываем модальное окно только после успешного сохранения
                     closeRateReportEditor();
                     return response;
                 } else {
-                    // toast.dismiss(query);
                     toast.error("Ошибка обновления данных", {
                         containerId: "report",
                         isLoading: false,
@@ -446,7 +398,6 @@ const Reports = () => {
                 }
             })
             .catch((error) => {
-                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка обновления данных", {
                     containerId: "report",
                     isLoading: false,
@@ -776,9 +727,7 @@ const Reports = () => {
     useEffect(() => {
         try {
             localStorage.setItem("reportsActiveTab", activeTab);
-        } catch (error) {
-            // console.error("Ошибка при сохранении активной вкладки:", error);
-        }
+        } catch (error) {}
     }, [activeTab]);
 
     useEffect(() => {
@@ -811,7 +760,6 @@ const Reports = () => {
                 }
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     if (!hasAccess) {
@@ -897,26 +845,28 @@ const Reports = () => {
                     ) : (
                         <table className="registry-table table-auto w-full border-collapse">
                             <thead className="registry-table__thead">
-                                <TheadRow
-                                    columns={COLUMNS}
-                                    activeTab={activeTab}
-                                    projectReportsFilters={
-                                        projectReportsFilters
-                                    }
-                                    managementReportsFilters={
-                                        managementReportsFilters
-                                    }
-                                    setProjectReportsFilters={
-                                        setProjectReportsFilters
-                                    }
-                                    setManagementReportsFilters={
-                                        setManagementReportsFilters
-                                    }
-                                    sortBy={sortBy}
-                                    setSortBy={setSortBy}
-                                    openFilter={openFilter}
-                                    setOpenFilter={setOpenFilter}
-                                />
+                                {!isLoading && (
+                                    <TheadRow
+                                        columns={COLUMNS}
+                                        activeTab={activeTab}
+                                        projectReportsFilters={
+                                            projectReportsFilters
+                                        }
+                                        managementReportsFilters={
+                                            managementReportsFilters
+                                        }
+                                        setProjectReportsFilters={
+                                            setProjectReportsFilters
+                                        }
+                                        setManagementReportsFilters={
+                                            setManagementReportsFilters
+                                        }
+                                        sortBy={sortBy}
+                                        setSortBy={setSortBy}
+                                        openFilter={openFilter}
+                                        setOpenFilter={setOpenFilter}
+                                    />
+                                )}
                             </thead>
 
                             <tbody className="registry-table__tbody">
