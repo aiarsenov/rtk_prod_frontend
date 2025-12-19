@@ -3,131 +3,6 @@ import isValidDateFormat from "../../utils/isValidDateFormat";
 import { IMaskInput } from "react-imask";
 import IMask from "imask";
 
-// const DateFields = ({
-//     mode,
-//     value = "",
-//     onChange,
-//     className,
-// }: {
-//     mode: object;
-//     value: string;
-//     onChange: () => void;
-//     className: string;
-// }) => {
-//     const dateFromRef = useRef(null);
-//     const dateToRef = useRef(null);
-
-//     const [errorMessage, setErrorMessage] = useState("");
-
-//     // Преобразуем входящую строку в объект
-//     const period = useMemo(() => {
-//         if (value) {
-//             const [from = "", to = ""] = value.split(" - ");
-//             return { date_from: from, date_to: to };
-//         }
-//     }, [value]);
-
-//     const handleChange = (field, val) => {
-//         const newPeriod = { ...period, [field]: val };
-//         const newValue =
-//             newPeriod.date_from && newPeriod.date_to
-//                 ? `${newPeriod.date_from} - ${newPeriod.date_to}`
-//                 : `${newPeriod.date_from}${
-//                       newPeriod.date_to ? " - " + newPeriod.date_to : ""
-//                   }`;
-
-//         onChange?.(newValue);
-
-//         if (
-//             newPeriod?.date_from?.length === 10 &&
-//             newPeriod?.date_to?.length === 10 &&
-//             isValidDateFormat(newPeriod.date_from) &&
-//             isValidDateFormat(newPeriod.date_to)
-//         ) {
-//             const from = new Date(
-//                 newPeriod.date_from.split(".").reverse().join("-")
-//             );
-//             const to = new Date(
-//                 newPeriod.date_to.split(".").reverse().join("-")
-//             );
-
-//             if (from <= to) {
-//                 setErrorMessage("");
-//             } else {
-//                 setErrorMessage("Дата окончания не может раньше даты начала");
-//             }
-//         }
-//     };
-
-//     return (
-//         <div className="grid gap-1 form-fields">
-//             <div className={`${className}`}>
-//                 <IMaskInput
-//                     inputRef={dateFromRef}
-//                     mask={Date}
-//                     pattern="d.`m.`Y"
-//                     blocks={{
-//                         d: { mask: IMask.MaskedRange, from: 1, to: 31 },
-//                         m: { mask: IMask.MaskedRange, from: 1, to: 12 },
-//                         Y: { mask: IMask.MaskedRange, from: 1900, to: 2099 },
-//                     }}
-//                     lazy={true}
-//                     autofix={true}
-//                     value={period?.date_from}
-//                     onAccept={(val, maskRef) => {
-//                         if (maskRef.el.input?.matches(":focus")) {
-//                             handleChange("date_from", val);
-//                         }
-//                     }}
-//                     onComplete={(val, maskRef) => {
-//                         if (maskRef.el.input?.matches(":focus")) {
-//                             dateToRef.current?.focus();
-//                         }
-//                     }}
-//                     placeholder={`${mode.edit !== "full" ? "" : "дд.мм.гггг"}`}
-//                     className="h-full min-w-[5ch] max-w-[9ch]"
-//                     inputMode="numeric"
-//                     disabled={mode.edit !== "full"}
-//                 />
-
-//                 <span className="self-center text-gray-400 mr-[4px]">-</span>
-
-//                 <IMaskInput
-//                     inputRef={dateToRef}
-//                     mask={Date}
-//                     pattern="d.`m.`Y"
-//                     blocks={{
-//                         d: { mask: IMask.MaskedRange, from: 1, to: 31 },
-//                         m: { mask: IMask.MaskedRange, from: 1, to: 12 },
-//                         Y: { mask: IMask.MaskedRange, from: 1900, to: 2099 },
-//                     }}
-//                     lazy={true}
-//                     autofix={true}
-//                     value={period?.date_to}
-//                     onAccept={(val, maskRef) => {
-//                         if (maskRef.el.input?.matches(":focus")) {
-//                             handleChange("date_to", val);
-//                             if (val == "") {
-//                                 dateFromRef.current?.focus();
-//                             }
-//                         }
-//                     }}
-//                     placeholder={`${mode.edit !== "full" ? "" : "дд.мм.гггг"}`}
-//                     className="h-full min-w-[5ch] max-w-[9ch]"
-//                     inputMode="numeric"
-//                     disabled={mode.edit !== "full"}
-//                 />
-//             </div>
-
-//             {errorMessage !== "" && (
-//                 <span className="text-red-400 top-[100%] text-sm">
-//                     {errorMessage}
-//                 </span>
-//             )}
-//         </div>
-//     );
-// };
-
 const DateFields = ({
     mode,
     value = "",
@@ -330,10 +205,7 @@ const DateFields = ({
             (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "c";
 
         if (isCopyCommand) {
-            // Позволяем событию bubble up для обработки браузером
-            // Но также выполняем нашу функцию копирования
             copyToClipboard();
-            // Не preventDefault(), чтобы браузер тоже мог обработать копирование
             return;
         }
 
@@ -347,18 +219,15 @@ const DateFields = ({
 
                 // Если нет выделения текста (курсор просто мигает)
                 if (selectionStart === selectionEnd) {
-                    // Удаляем весь диапазон
                     onChange?.("");
                     setDisplayValue("");
                     e.preventDefault();
                 }
-                // Если есть выделение текста - оставляем стандартное поведение
             }
             return;
         }
     };
 
-    // Альтернативный подход: обработка копирования через onCopy событие
     const handleCopy = (e: React.ClipboardEvent) => {
         // Если выделен текст, позволяем стандартное поведение
         const input = e.target as HTMLInputElement;
@@ -373,7 +242,6 @@ const DateFields = ({
             e.preventDefault();
             copyToClipboard();
         }
-        // В противном случае - стандартное поведение браузера
     };
 
     return (
@@ -421,3 +289,128 @@ const DateFields = ({
 };
 
 export default DateFields;
+
+// const DateFields = ({
+//     mode,
+//     value = "",
+//     onChange,
+//     className,
+// }: {
+//     mode: object;
+//     value: string;
+//     onChange: () => void;
+//     className: string;
+// }) => {
+//     const dateFromRef = useRef(null);
+//     const dateToRef = useRef(null);
+
+//     const [errorMessage, setErrorMessage] = useState("");
+
+//     // Преобразуем входящую строку в объект
+//     const period = useMemo(() => {
+//         if (value) {
+//             const [from = "", to = ""] = value.split(" - ");
+//             return { date_from: from, date_to: to };
+//         }
+//     }, [value]);
+
+//     const handleChange = (field, val) => {
+//         const newPeriod = { ...period, [field]: val };
+//         const newValue =
+//             newPeriod.date_from && newPeriod.date_to
+//                 ? `${newPeriod.date_from} - ${newPeriod.date_to}`
+//                 : `${newPeriod.date_from}${
+//                       newPeriod.date_to ? " - " + newPeriod.date_to : ""
+//                   }`;
+
+//         onChange?.(newValue);
+
+//         if (
+//             newPeriod?.date_from?.length === 10 &&
+//             newPeriod?.date_to?.length === 10 &&
+//             isValidDateFormat(newPeriod.date_from) &&
+//             isValidDateFormat(newPeriod.date_to)
+//         ) {
+//             const from = new Date(
+//                 newPeriod.date_from.split(".").reverse().join("-")
+//             );
+//             const to = new Date(
+//                 newPeriod.date_to.split(".").reverse().join("-")
+//             );
+
+//             if (from <= to) {
+//                 setErrorMessage("");
+//             } else {
+//                 setErrorMessage("Дата окончания не может раньше даты начала");
+//             }
+//         }
+//     };
+
+//     return (
+//         <div className="grid gap-1 form-fields">
+//             <div className={`${className}`}>
+//                 <IMaskInput
+//                     inputRef={dateFromRef}
+//                     mask={Date}
+//                     pattern="d.`m.`Y"
+//                     blocks={{
+//                         d: { mask: IMask.MaskedRange, from: 1, to: 31 },
+//                         m: { mask: IMask.MaskedRange, from: 1, to: 12 },
+//                         Y: { mask: IMask.MaskedRange, from: 1900, to: 2099 },
+//                     }}
+//                     lazy={true}
+//                     autofix={true}
+//                     value={period?.date_from}
+//                     onAccept={(val, maskRef) => {
+//                         if (maskRef.el.input?.matches(":focus")) {
+//                             handleChange("date_from", val);
+//                         }
+//                     }}
+//                     onComplete={(val, maskRef) => {
+//                         if (maskRef.el.input?.matches(":focus")) {
+//                             dateToRef.current?.focus();
+//                         }
+//                     }}
+//                     placeholder={`${mode.edit !== "full" ? "" : "дд.мм.гггг"}`}
+//                     className="h-full min-w-[5ch] max-w-[9ch]"
+//                     inputMode="numeric"
+//                     disabled={mode.edit !== "full"}
+//                 />
+
+//                 <span className="self-center text-gray-400 mr-[4px]">-</span>
+
+//                 <IMaskInput
+//                     inputRef={dateToRef}
+//                     mask={Date}
+//                     pattern="d.`m.`Y"
+//                     blocks={{
+//                         d: { mask: IMask.MaskedRange, from: 1, to: 31 },
+//                         m: { mask: IMask.MaskedRange, from: 1, to: 12 },
+//                         Y: { mask: IMask.MaskedRange, from: 1900, to: 2099 },
+//                     }}
+//                     lazy={true}
+//                     autofix={true}
+//                     value={period?.date_to}
+//                     onAccept={(val, maskRef) => {
+//                         if (maskRef.el.input?.matches(":focus")) {
+//                             handleChange("date_to", val);
+//                             if (val == "") {
+//                                 dateFromRef.current?.focus();
+//                             }
+//                         }
+//                     }}
+//                     placeholder={`${mode.edit !== "full" ? "" : "дд.мм.гггг"}`}
+//                     className="h-full min-w-[5ch] max-w-[9ch]"
+//                     inputMode="numeric"
+//                     disabled={mode.edit !== "full"}
+//                 />
+//             </div>
+
+//             {errorMessage !== "" && (
+//                 <span className="text-red-400 top-[100%] text-sm">
+//                     {errorMessage}
+//                 </span>
+//             )}
+//         </div>
+//     );
+// };
