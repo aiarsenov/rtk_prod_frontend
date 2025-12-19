@@ -23,7 +23,6 @@ export default defineConfig(() => {
                             console.log("proxy error", err);
                         });
                         proxy.on("proxyReq", (proxyReq, req, _res) => {
-                            // Передаем оригинальный Origin от браузера через специальный заголовок
                             if (req.headers.origin) {
                                 proxyReq.setHeader("X-Original-Origin", req.headers.origin);
                                 proxyReq.setHeader("Origin", req.headers.origin);
@@ -43,6 +42,11 @@ export default defineConfig(() => {
                             }
                         });
                     },
+                },
+                "/monitoring": {
+                    target: "http://127.0.0.1:8000",
+                    changeOrigin: true,
+                    secure: false,
                 },
             },
         },
