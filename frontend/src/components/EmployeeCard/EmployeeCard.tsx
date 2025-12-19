@@ -882,12 +882,18 @@ const EmployeeCard = () => {
                                         <span className="text-right">Доля</span>
                                     </div>
 
-                                    <EmployeeWorkloadSummary
-                                        workloadSummaryMaxPercentage={
-                                            workloadSummaryMaxPercentage
-                                        }
-                                        workloadSummary={workloadSummary}
-                                    />
+                                    {workloadSummary.length > 0 ? (
+                                        <EmployeeWorkloadSummary
+                                            workloadSummaryMaxPercentage={
+                                                workloadSummaryMaxPercentage
+                                            }
+                                            workloadSummary={workloadSummary}
+                                        />
+                                    ) : (
+                                        <span className="text-[#667085] block text-center py-3">
+                                            нет данных
+                                        </span>
+                                    )}
                                 </div>
                             </div>
 
