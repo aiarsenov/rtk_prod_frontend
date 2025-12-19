@@ -206,7 +206,7 @@ const DateFields = ({
     }, []);
 
     // Копирование диапазона в буфер обмена
-    const copyToClipboard = async () => {
+    const copyToClipboard = useCallback(async () => {
         if (!value) return;
 
         try {
@@ -220,7 +220,7 @@ const DateFields = ({
             document.execCommand("copy");
             document.body.removeChild(textArea);
         }
-    };
+    }, [value]);
 
     const handleChange = (val: string) => {
         let cleanValue = val;
@@ -325,10 +325,15 @@ const DateFields = ({
 
     // Обработчик клавиш
     const handleKeyDown = (e: React.KeyboardEvent) => {
-        // Ctrl+C / Cmd+C - копировать диапазон
-        if ((e.ctrlKey || e.metaKey) && e.key === "c") {
-            e.preventDefault();
+        // Проверяем Ctrl+C (Windows/Linux) или Cmd+C (Mac)
+        const isCopyCommand =
+            (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "c";
+
+        if (isCopyCommand) {
+            // Позволяем событию bubble up для обработки браузером
+            // Но также выполняем нашу функцию копирования
             copyToClipboard();
+            // Не preventDefault(), чтобы браузер тоже мог обработать копирование
             return;
         }
 
