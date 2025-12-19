@@ -209,13 +209,13 @@ const ReportItem = ({
                                     >
                                         {value?.toString() || "—"}
 
-                                        <Hint
-                                            type="alert"
-                                            position="right"
-                                            message={
-                                                props?.note || "Заметок нет"
-                                            }
-                                        />
+                                        {props?.note && (
+                                            <Hint
+                                                type="alert"
+                                                position="right"
+                                                message={props?.note}
+                                            />
+                                        )}
                                     </div>
 
                                     <span className="min-w-[120px] text-[#98A2B3] whitespace-nowrap">
