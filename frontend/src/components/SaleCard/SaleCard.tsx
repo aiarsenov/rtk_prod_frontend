@@ -380,12 +380,6 @@ const SaleCard = () => {
     };
 
     useEffect(() => {
-        if (saleId) {
-            getCard();
-        }
-    }, []);
-
-    useEffect(() => {
         if (services.length > 0) {
             setNewServices((prev) => ({
                 ...prev,
@@ -396,6 +390,7 @@ const SaleCard = () => {
         }
     }, [services]);
 
+    // Задаем статус в названии карточки
     useEffect(() => {
         if (saleStages?.stages && saleStages?.stages?.length > 0) {
             const stagesWithDate = saleStages?.stages?.filter(
@@ -409,6 +404,12 @@ const SaleCard = () => {
             setSaleStatus(null);
         }
     }, [saleStages]);
+
+    useEffect(() => {
+        if (saleId) {
+            getCard();
+        }
+    }, []);
 
     return !isDataLoaded ? (
         <Loader />

@@ -6,6 +6,7 @@ import getData from "../../utils/getData";
 import postData from "../../utils/postData";
 import buildQueryParams from "../../utils/buildQueryParams";
 import { sortList } from "../../utils/sortList";
+import { sortDateList } from "../../utils/sortDateList";
 
 import SalesItem from "./SalesItem";
 import Popup from "../Popup/Popup";
@@ -141,6 +142,7 @@ const Sales = () => {
             date: "range",
             dateValue: requestDateQuery,
             setFunc: setRequestDateQuery,
+            is_sortable: true,
         },
         {
             label: "Источник",
@@ -155,6 +157,7 @@ const Sales = () => {
             dateValue: statusDate,
             options: statusDateOptions,
             setFunc: setStatusDate,
+            is_sortable: true,
         },
         {
             label: "Статус",
@@ -267,6 +270,12 @@ const Sales = () => {
                 isInDateRange
             );
         });
+
+        if (sortBy.key === "status_date" || sortBy.key === "request_date") {
+            filtered = sortDateList(filtered, sortBy);
+        } else {
+            filtered = sortList(filtered, sortBy);
+        }
 
         filtered = sortList(filtered, sortBy);
 
@@ -604,6 +613,20 @@ const Sales = () => {
                                                                                         updated
                                                                                     );
                                                                                 }}
+                                                                            />
+                                                                        )}
+
+                                                                        {is_sortable && (
+                                                                            <TheadSortButton
+                                                                                value={
+                                                                                    key as any
+                                                                                }
+                                                                                sortBy={
+                                                                                    sortBy as any
+                                                                                }
+                                                                                setSortBy={
+                                                                                    setSortBy as any
+                                                                                }
                                                                             />
                                                                         )}
                                                                     </>
