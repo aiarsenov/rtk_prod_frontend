@@ -41,9 +41,9 @@ const OPTIONS = [
 function getChartPadding(length: number): number | undefined {
     switch (length) {
         case 1:
-            return 62;
+            return 72;
         case 2:
-            return 52;
+            return 62;
         case 3:
             return 42;
         case 4:
