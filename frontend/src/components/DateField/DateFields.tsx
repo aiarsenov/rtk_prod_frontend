@@ -1,4 +1,4 @@
-import { useRef, useMemo, useState } from "react";
+import { useRef, useMemo, useState, useEffect } from "react";
 import isValidDateFormat from "../../utils/isValidDateFormat";
 import { IMaskInput } from "react-imask";
 import IMask from "imask";
@@ -141,6 +141,19 @@ const DateFields = ({
 }) => {
     const [errorMessage, setErrorMessage] = useState("");
     const inputRef = useRef(null);
+    const [displayValue, setDisplayValue] = useState("");
+
+    // Инициализируем displayValue при первом рендере
+    useEffect(() => {
+        setDisplayValue(formatValueForMask(value));
+    }, []);
+
+    // Обновляем displayValue при изменении value извне
+    useEffect(() => {
+        if (value !== displayValue.replace(/ - $/, "")) {
+            setDisplayValue(formatValueForMask(value));
+        }
+    }, [value]);
 
     const maskOptions = useMemo(() => {
         return {
@@ -240,11 +253,18 @@ const DateFields = ({
             }
         }
 
-        onChange?.(cleanValue.trim());
+        // Обновляем displayValue
+        setDisplayValue(cleanValue.trim());
+
+        // Вызываем onChange только если значение действительно изменилось
+        const trimmedValue = cleanValue.trim();
+        if (trimmedValue !== value && trimmedValue !== value + " - ") {
+            onChange?.(trimmedValue);
+        }
 
         // Валидация
-        if (cleanValue && cleanValue.includes(" - ")) {
-            const [from, to] = cleanValue.split(" - ");
+        if (trimmedValue && trimmedValue.includes(" - ")) {
+            const [from, to] = trimmedValue.split(" - ");
 
             const isFromComplete = from?.match(/^\d{2}\.\d{2}\.\d{4}$/);
             const isToComplete = to?.match(/^\d{2}\.\d{2}\.\d{4}$/);
@@ -324,6 +344,7 @@ const DateFields = ({
                 if (selectionStart === selectionEnd) {
                     // Удаляем весь диапазон
                     onChange?.("");
+                    setDisplayValue("");
                     e.preventDefault();
                 }
                 // Если есть выделение текста - оставляем стандартное поведение
@@ -338,7 +359,8 @@ const DateFields = ({
                 <IMaskInput
                     ref={inputRef}
                     {...maskOptions}
-                    value={formatValueForMask(value)}
+                    // Используем displayValue вместо value
+                    value={displayValue}
                     onAccept={(val: string) => {
                         handleChange(val);
                     }}
@@ -351,11 +373,12 @@ const DateFields = ({
                     onKeyDown={handleKeyDown}
                     onFocus={() => {
                         // При фокусе, если есть дефис, ставим курсор после дефиса
-                        if (value.includes(" - ")) {
+                        if (displayValue.includes(" - ")) {
                             setTimeout(() => {
                                 const input = inputRef.current as any;
                                 if (input && input.el) {
-                                    const cursorPos = value.indexOf(" - ") + 3;
+                                    const cursorPos =
+                                        displayValue.indexOf(" - ") + 3;
                                     input.el.setSelectionRange(
                                         cursorPos,
                                         cursorPos

@@ -1156,6 +1156,10 @@ const ReportWindow = ({
                                                         reportData.report_period
                                                     }
                                                     onChange={(val) => {
+                                                        console.log(
+                                                            "Отчетный период"
+                                                        );
+
                                                         setReportData(
                                                             (prev) => ({
                                                                 ...prev,
@@ -1215,6 +1219,9 @@ const ReportWindow = ({
                                                             reportData.implementation_period
                                                         }
                                                         onChange={(val) => {
+                                                            console.log(
+                                                                "Период реализации"
+                                                            );
                                                             setReportData(
                                                                 (prev) => ({
                                                                     ...prev,
@@ -1351,6 +1358,9 @@ const ReportWindow = ({
                                                             reportData.execution_period
                                                         }
                                                         onChange={(val) => {
+                                                            console.log(
+                                                                "Период выполнения"
+                                                            );
                                                             setReportData(
                                                                 (prev) => ({
                                                                     ...prev,
