@@ -299,8 +299,8 @@ const AdminGroups = ({ mode }) => {
         try {
             // Отправляем все права одним запросом
             await postData(
-                "PUT",
-                `${API_URL}admin/permission-groups/${selectedGroup.id}/permissions`,
+                "POST",
+                `${API_URL}admin/permission-groups/${selectedGroup.id}/permissions/sync`,
                 { permissions }
             );
 
