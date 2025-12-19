@@ -55,7 +55,6 @@ const SaleCard = () => {
     const navigate = useNavigate();
 
     const [isDataLoaded, setIsDataLoaded] = useState(false);
-    const [availableToChange, setAvailableToChange] = useState(true); // Можем ли мы вносить изменения в проект (до закрепления заказчика)
 
     const [saleStatus, setSaleStatus] = useState(null); // Статус продажи
 
@@ -81,8 +80,6 @@ const SaleCard = () => {
     const [saleStages, setSaleStages] = useState([]);
 
     const [newServices, setNewServices] = useState({ report_type_id: [] });
-
-    // let query;
 
     // Получение сотрудников
     const fetchPhysicalpersons = () => {
@@ -165,10 +162,6 @@ const SaleCard = () => {
         ).then((response) => {
             if (response?.status == 200) {
                 setServices(response.data);
-
-                // if (response.data.length > 0) {
-                //     getStages();
-                // }
             }
         });
     };
@@ -211,15 +204,6 @@ const SaleCard = () => {
         ).then((response) => {
             if (response?.status == 200) {
                 setSaleStages(response.data);
-
-                if (response.data.stages && response.data.stages.length > 0) {
-                    setSaleStatus(
-                        response.data.stages[response.data.stages.length - 1]
-                            .name
-                    );
-                } else {
-                    setSaleStatus(null);
-                }
             }
         });
     };
@@ -270,12 +254,6 @@ const SaleCard = () => {
 
     // Прикрепляем услугу
     const sendService = () => {
-        // query = toast.loading("Обновление", {
-        //     containerId: "toastContainer",
-        //     draggable: true,
-        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        // });
-
         postData(
             "POST",
             `${
@@ -285,21 +263,6 @@ const SaleCard = () => {
         )
             .then((response) => {
                 if (response?.ok) {
-                    // toast.dismiss(query);
-                    // toast.update(query, {
-                    //     render: response.message,
-                    //     type: "success",
-                    //     containerId: "toastContainer",
-                    //     isLoading: false,
-                    //     autoClose: 1200,
-                    //     pauseOnFocusLoss: false,
-                    //     pauseOnHover: false,
-                    //     draggable: true,
-                    //     position:
-                    //         window.innerWidth >= 1440
-                    //             ? "bottom-right"
-                    //             : "top-right",
-                    // });
                     setAddServices(false);
                     fetchServices();
                     getStages();
@@ -328,12 +291,6 @@ const SaleCard = () => {
 
     // Удалить услугу
     const deleteService = (id) => {
-        // query = toast.loading("Обновление", {
-        //     containerId: "toastContainer",
-        //     draggable: true,
-        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        // });
-
         postData(
             "DELETE",
             `${
@@ -342,21 +299,6 @@ const SaleCard = () => {
             {}
         ).then((response) => {
             if (response?.ok) {
-                // toast.dismiss(query);
-                // toast.update(query, {
-                //     render: response.message,
-                //     type: "success",
-                //     containerId: "toastContainer",
-                //     isLoading: false,
-                //     autoClose: 1200,
-                //     pauseOnFocusLoss: false,
-                //     pauseOnHover: false,
-                //     draggable: true,
-                //     position:
-                //         window.innerWidth >= 1440
-                //             ? "bottom-right"
-                //             : "top-right",
-                // });
                 fetchServices();
                 getStages();
             }
@@ -365,37 +307,15 @@ const SaleCard = () => {
 
     // Обновление заказчика
     const updateContragent = async (showMessage = true, data) => {
-        // query = toast.loading("Обновление", {
-        //     containerId: "toastContainer",
-        //     draggable: true,
-        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        // });
-
         try {
             const response = await postData("PATCH", `${URL}/${saleId}`, data);
-            if (response?.ok && showMessage) {
-                // toast.update(query, {
-                //     render: "Проект успешно обновлен",
-                //     type: "success",
-                //     containerId: "toastContainer",
-                //     isLoading: false,
-                //     autoClose: 1200,
-                //     pauseOnFocusLoss: false,
-                //     pauseOnHover: false,
-                //     draggable: true,
-                //     position:
-                //         window.innerWidth >= 1440
-                //             ? "bottom-right"
-                //             : "top-right",
-                // });
-            }
-            // toast.dismiss(query);
+            // if (response?.ok && showMessage) {
+            // }
             setCardData(response);
             setCardDataCustom(response);
 
             return response;
         } catch (error) {
-            // toast.dismiss(query);
             toast.error("Ошибка при обновлении проекта", {
                 containerId: "toastContainer",
                 isLoading: false,
@@ -426,12 +346,6 @@ const SaleCard = () => {
 
     // Обновление карточки
     const updateCard = async (showMessage = true, data = cardDataCustom) => {
-        // query = toast.loading("Обновление", {
-        //     containerId: "toastContainer",
-        //     draggable: true,
-        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        // });
-
         postData("PATCH", `${URL}/${saleId}`, data)
             .then((response) => {
                 if (response?.ok) {
@@ -446,24 +360,6 @@ const SaleCard = () => {
                     setCardDataCustom(transformedData);
                     fetchServices();
                     getStages();
-                    // toast.dismiss(query);
-
-                    // if (showMessage) {
-                    //     toast.update(query, {
-                    //         render: "Проект успешно обновлен",
-                    //         type: "success",
-                    //         containerId: "toastContainer",
-                    //         isLoading: false,
-                    //         autoClose: 1200,
-                    //         pauseOnFocusLoss: false,
-                    //         pauseOnHover: false,
-                    //         draggable: true,
-                    //         position:
-                    //             window.innerWidth >= 1440
-                    //                 ? "bottom-right"
-                    //                 : "top-right",
-                    //     });
-                    // }
                 }
             })
             .catch((error) => {
@@ -499,6 +395,18 @@ const SaleCard = () => {
             setNewServices({ report_type_id: [] });
         }
     }, [services]);
+
+    useEffect(() => {
+        if (saleStages?.stages && saleStages?.stages?.length > 0) {
+            const stagesWithDate = saleStages?.stages?.filter(
+                (item) => item.stage_date
+            );
+
+            setSaleStatus(stagesWithDate[stagesWithDate.length - 1].name);
+        } else {
+            setSaleStatus(null);
+        }
+    }, [saleStages]);
 
     return !isDataLoaded ? (
         <Loader />
@@ -615,7 +523,7 @@ const SaleCard = () => {
                                     mode={mode}
                                 />
 
-                                {mode.edit === "full" && availableToChange && (
+                                {mode.edit === "full" && (
                                     <button
                                         type="button"
                                         className="button-add"
@@ -759,10 +667,7 @@ const SaleCard = () => {
                                         filedName="others"
                                         popupTitle="Добавить дополнительные отрасли"
                                         buttonTitle="Добавить дополнительную отрасль"
-                                        disabled={
-                                            mode.edit !== "full" ||
-                                            !availableToChange
-                                        }
+                                        disabled={mode.edit !== "full"}
                                     />
                                 </div>
 
@@ -849,10 +754,7 @@ const SaleCard = () => {
                                         filedName="banks"
                                         popupTitle="Добавить банк"
                                         buttonTitle="Добавить банк"
-                                        disabled={
-                                            mode.edit !== "full" ||
-                                            !availableToChange
-                                        }
+                                        disabled={mode.edit !== "full"}
                                     />
                                 </div>
 
@@ -897,10 +799,7 @@ const SaleCard = () => {
                                                 responsible_person_id: newValue,
                                             });
                                         }}
-                                        isDisabled={
-                                            mode.edit !== "full" ||
-                                            !availableToChange
-                                        }
+                                        isDisabled={mode.edit !== "full"}
                                         styles={{
                                             input: (base) => ({
                                                 ...base,
@@ -954,10 +853,7 @@ const SaleCard = () => {
                                                 });
                                             }
                                         }}
-                                        disabled={
-                                            mode.edit !== "full" ||
-                                            !availableToChange
-                                        }
+                                        disabled={mode.edit !== "full"}
                                     />
                                 </div>
 
@@ -996,10 +892,7 @@ const SaleCard = () => {
                                                 });
                                             }
                                         }}
-                                        disabled={
-                                            mode.edit !== "full" ||
-                                            !availableToChange
-                                        }
+                                        disabled={mode.edit !== "full"}
                                         minHeight={40}
                                     />
                                 </div>
@@ -1038,10 +931,7 @@ const SaleCard = () => {
                                                 });
                                             }
                                         }}
-                                        disabled={
-                                            mode.edit !== "full" ||
-                                            !availableToChange
-                                        }
+                                        disabled={mode.edit !== "full"}
                                         minHeight={40}
                                     />
                                 </div>
