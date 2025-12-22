@@ -19,8 +19,7 @@ const Admin = () => {
     const [activeTab, setActiveTab] = useState("users");
     const [showInviteModal, setShowInviteModal] = useState(false);
     const [availableEmployees, setAvailableEmployees] = useState([]);
-    const [selectedEmployee, setSelectedEmployee] = useState(null);
-    const [inviteEmail, setInviteEmail] = useState("");
+    const [selectedEmployees, setSelectedEmployees] = useState([]);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [accessDenied, setAccessDenied] = useState(false);
@@ -76,24 +75,15 @@ const Admin = () => {
         e.preventDefault();
         setError("");
 
-        if (!selectedEmployee || !inviteEmail) {
-            setError("Выберите сотрудника и укажите email");
-            return;
-        }
-
         try {
             await postData(
                 "POST",
                 `${import.meta.env.VITE_API_URL}admin/users/invite`,
-                {
-                    physical_person_id: selectedEmployee,
-                    email: inviteEmail,
-                }
+                { invitations: selectedEmployees }
             );
 
             setShowInviteModal(false);
-            setSelectedEmployee(null);
-            setInviteEmail("");
+            setSelectedEmployees([]);
             loadUsers();
         } catch (err) {
             toast.error(err.message || "Ошибка отправки приглашения", {
@@ -108,18 +98,7 @@ const Admin = () => {
         }
     };
 
-    const handleEmployeeSelect = (e) => {
-        const employeeId = parseInt(e.target.value);
-        setSelectedEmployee(employeeId);
-
-        const employee = availableEmployees.find(
-            (emp) => emp.id === employeeId
-        );
-        if (employee) {
-            setInviteEmail(employee.email || "");
-        }
-    };
-
+    // Открываем попап добавления пользователей после получения списка
     const handleInviteClick = async () => {
         await fetchAvailableEmployees();
         setShowInviteModal(true);
@@ -130,6 +109,10 @@ const Admin = () => {
             loadUsers();
         }
     }, [activeTab]);
+
+    useEffect(() => {
+        console.log(selectedEmployees);
+    }, [selectedEmployees]);
 
     // Если нет прав на управление пользователями - показываем заглушку
     if (!isAdmin(user)) {
@@ -250,19 +233,6 @@ const Admin = () => {
                                 </div>
 
                                 <div className="admin-form__users-list">
-                                    {/* <select
-                                    className="admin-form__select"
-                                    value={selectedEmployee || ""}
-                                    onChange={handleEmployeeSelect}
-                                    required
-                                >
-                                    {availableEmployees.map((emp) => (
-                                        <option key={emp.id} value={emp.id}>
-                                            {emp.name} ({emp.email})
-                                        </option>
-                                    ))}
-                                </select> */}
-
                                     {availableEmployees.length > 0 &&
                                         availableEmployees.map((item) => (
                                             <label
@@ -279,6 +249,50 @@ const Admin = () => {
                                                     type="checkbox"
                                                     name={item.name}
                                                     id={item.id}
+                                                    checked={selectedEmployees.some(
+                                                        (emp) =>
+                                                            emp.physical_person_id ===
+                                                            item.id
+                                                    )}
+                                                    onChange={(e) => {
+                                                        const checked =
+                                                            e.target.checked;
+
+                                                        setSelectedEmployees(
+                                                            (prev) => {
+                                                                if (checked) {
+                                                                    const exists =
+                                                                        prev.some(
+                                                                            (
+                                                                                emp
+                                                                            ) =>
+                                                                                emp.physical_person_id ===
+                                                                                item.id
+                                                                        );
+
+                                                                    if (exists)
+                                                                        return prev;
+
+                                                                    return [
+                                                                        ...prev,
+                                                                        {
+                                                                            physical_person_id:
+                                                                                item.id,
+                                                                            email: item.email,
+                                                                            resend: false,
+                                                                        },
+                                                                    ];
+                                                                }
+
+                                                                // ➖ убираем при снятии галочки
+                                                                return prev.filter(
+                                                                    (emp) =>
+                                                                        emp.physical_person_id !==
+                                                                        item.id
+                                                                );
+                                                            }
+                                                        );
+                                                    }}
                                                 />
                                                 <div className="checkbox"></div>
                                             </label>

@@ -49,7 +49,7 @@ const SingleBook = () => {
     const [sortedList, setSortedList] = useState([]);
 
     const [booksItems, setBooksItems] = useState([]);
-    const [refBooksItems, setRefBooksItems] = useState([]);
+    // const [refBooksItems, setRefBooksItems] = useState([]);
     const [openFilter, setOpenFilter] = useState("");
 
     const [isLoading, setIsLoading] = useState(true);
@@ -248,11 +248,11 @@ const SingleBook = () => {
                             (item) => item.id !== typeIdToRemove
                         )
                     );
-                    setRefBooksItems((prevBooksItems) =>
-                        prevBooksItems.filter(
-                            (item) => item.id !== typeIdToRemove
-                        )
-                    );
+                    // setRefBooksItems((prevBooksItems) =>
+                    //     prevBooksItems.filter(
+                    //         (item) => item.id !== typeIdToRemove
+                    //     )
+                    // );
 
                     getBooks();
                 } else {
@@ -650,9 +650,9 @@ const SingleBook = () => {
                     setBooksItems((booksItems) =>
                         booksItems.filter((item) => item.id !== data.id)
                     );
-                    setRefBooksItems((booksItems) =>
-                        booksItems.filter((item) => item.id !== data.id)
-                    );
+                    // setRefBooksItems((booksItems) =>
+                    //     booksItems.filter((item) => item.id !== data.id)
+                    // );
 
                     resetElemPopupState();
                 } else {
@@ -852,7 +852,7 @@ const SingleBook = () => {
             .then((response) => {
                 if (response.status == 200) {
                     setBooksItems(response.data.data);
-                    setRefBooksItems(response.data.data);
+                    // setRefBooksItems(response.data.data);
                 }
             })
             .finally(() => setIsLoading(false));
