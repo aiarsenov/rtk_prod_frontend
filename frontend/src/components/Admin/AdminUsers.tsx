@@ -1,7 +1,6 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect } from "react";
 import { toast } from "react-toastify";
 
-import getData from "../../utils/getData";
 import postData from "../../utils/postData";
 
 import Loader from "../Loader";
@@ -9,95 +8,17 @@ import AccessDenied from "../AccessDenied/AccessDenied";
 
 import "../AccessDenied/AccessDenied.scss";
 
-const AdminUsers = ({ mode }) => {
-    const [users, setUsers] = useState([]);
-    const [availableEmployees, setAvailableEmployees] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [showInviteModal, setShowInviteModal] = useState(false);
-    const [selectedEmployee, setSelectedEmployee] = useState(null);
-    const [inviteEmail, setInviteEmail] = useState("");
-    const [error, setError] = useState("");
-    const [accessDenied, setAccessDenied] = useState(false);
-
-    const API_URL = import.meta.env.VITE_API_URL;
-
-    const loadUsers = useCallback(async () => {
-        try {
-            setIsLoading(true);
-            setAccessDenied(false);
-            const response = await getData(`${API_URL}admin/users`);
-            if (response.status === 200) {
-                setUsers(response.data.data || []);
-            }
-        } catch (err) {
-            console.error("Ошибка загрузки пользователей:", err);
-            if (err.status === 403) {
-                setAccessDenied(true);
-            }
-        } finally {
-            setIsLoading(false);
-        }
-    }, [API_URL]);
-
-    useEffect(() => {
-        loadUsers();
-    }, [loadUsers]);
-
-    const loadAvailableEmployees = async () => {
-        try {
-            const response = await getData(`${API_URL}admin/users/available`);
-            if (response.status === 200) {
-                setAvailableEmployees(response.data || []);
-            }
-        } catch (err) {
-            console.error("Ошибка загрузки сотрудников:", err);
-        }
-    };
-
-    const handleInviteClick = async () => {
-        await loadAvailableEmployees();
-        setShowInviteModal(true);
-    };
-
-    const handleInviteSubmit = async (e) => {
-        e.preventDefault();
-        setError("");
-
-        if (!selectedEmployee || !inviteEmail) {
-            setError("Выберите сотрудника и укажите email");
-            return;
-        }
-
-        try {
-            await postData("POST", `${API_URL}admin/users/invite`, {
-                physical_person_id: selectedEmployee,
-                email: inviteEmail,
-            });
-
-            setShowInviteModal(false);
-            setSelectedEmployee(null);
-            setInviteEmail("");
-            loadUsers();
-        } catch (err) {
-            toast.error(err.message || "Ошибка отправки приглашения", {
-                position:
-                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-                autoClose: 3000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                draggable: true,
-            });
-            setError(err.message || "Ошибка отправки приглашения");
-        }
-    };
-
+const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
     const handleActivate = async (userId) => {
         if (!confirm("Вы уверены, что хотите активировать пользователя?")) {
             return;
         }
 
         try {
-            await postData("PATCH", `${API_URL}admin/users/${userId}/activate`);
+            await postData(
+                "PATCH",
+                `${import.meta.env.VITE_API_URL}admin/users/${userId}/activate`
+            );
             loadUsers();
         } catch (err) {
             toast.error(err.message || "Ошибка активации пользователя", {
@@ -119,7 +40,9 @@ const AdminUsers = ({ mode }) => {
         try {
             await postData(
                 "PATCH",
-                `${API_URL}admin/users/${userId}/deactivate`
+                `${
+                    import.meta.env.VITE_API_URL
+                }admin/users/${userId}/deactivate`
             );
             loadUsers();
         } catch (err) {
@@ -151,7 +74,9 @@ const AdminUsers = ({ mode }) => {
         try {
             await postData(
                 "POST",
-                `${API_URL}admin/users/invitations/${invitationId}/resend`
+                `${
+                    import.meta.env.VITE_API_URL
+                }admin/users/invitations/${invitationId}/resend`
             );
             loadUsers();
         } catch (err) {
@@ -179,7 +104,9 @@ const AdminUsers = ({ mode }) => {
         try {
             await postData(
                 "DELETE",
-                `${API_URL}admin/users/invitations/${invitationId}`
+                `${
+                    import.meta.env.VITE_API_URL
+                }admin/users/invitations/${invitationId}`
             );
             loadUsers();
         } catch (err) {
@@ -204,7 +131,10 @@ const AdminUsers = ({ mode }) => {
         }
 
         try {
-            await postData("DELETE", `${API_URL}admin/users/${userId}`);
+            await postData(
+                "DELETE",
+                `${import.meta.env.VITE_API_URL}admin/users/${userId}`
+            );
             loadUsers();
         } catch (err) {
             toast.error(err.message || "Ошибка удаления пользователя", {
@@ -224,7 +154,10 @@ const AdminUsers = ({ mode }) => {
         }
 
         try {
-            await postData("DELETE", `${API_URL}admin/users/${userId}/2fa`);
+            await postData(
+                "DELETE",
+                `${import.meta.env.VITE_API_URL}admin/users/${userId}/2fa`
+            );
             loadUsers();
         } catch (err) {
             toast.error(err.message || "Ошибка удаления 2FA", {
@@ -250,7 +183,9 @@ const AdminUsers = ({ mode }) => {
         try {
             await postData(
                 "POST",
-                `${API_URL}admin/users/${userId}/require-2fa`
+                `${
+                    import.meta.env.VITE_API_URL
+                }admin/users/${userId}/require-2fa`
             );
             loadUsers();
         } catch (err) {
@@ -265,20 +200,8 @@ const AdminUsers = ({ mode }) => {
         }
     };
 
-    const handleEmployeeSelect = (e) => {
-        const employeeId = parseInt(e.target.value);
-        setSelectedEmployee(employeeId);
-
-        const employee = availableEmployees.find(
-            (emp) => emp.id === employeeId
-        );
-        if (employee) {
-            setInviteEmail(employee.email || "");
-        }
-    };
-
     if (isLoading) {
-        return <Loader />;
+        return <Loader absolute={true} />;
     }
 
     if (accessDenied) {
@@ -289,24 +212,12 @@ const AdminUsers = ({ mode }) => {
 
     return (
         <div className="admin-users">
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold">Список пользователей</h2>
-                {mode.edit === "full" && (
-                    <button
-                        className="admin-btn admin-btn--primary"
-                        onClick={handleInviteClick}
-                    >
-                        Пригласить сотрудника
-                    </button>
-                )}
-            </div>
-
             {users.length === 0 ? (
                 <div className="admin-empty">Нет пользователей</div>
             ) : (
                 <div className="overflow-x-auto">
-                    <table className="admin-table">
-                        <thead>
+                    <table className="registry-table table-auto w-full border-collapse">
+                        <thead className="registry-table__thead">
                             <tr>
                                 <th>ID</th>
                                 <th>Имя</th>
@@ -319,9 +230,13 @@ const AdminUsers = ({ mode }) => {
                                     ))}
                             </tr>
                         </thead>
-                        <tbody>
+
+                        <tbody className="registry-table__tbody">
                             {users.map((user) => (
-                                <tr key={user.id}>
+                                <tr
+                                    className="registry-table__item transition text-base text-left"
+                                    key={user.id}
+                                >
                                     <td>
                                         {user.type === "invitation"
                                             ? "—"
@@ -474,87 +389,6 @@ const AdminUsers = ({ mode }) => {
                             ))}
                         </tbody>
                     </table>
-                </div>
-            )}
-
-            {showInviteModal && (
-                <div
-                    className="admin-modal"
-                    onClick={() => setShowInviteModal(false)}
-                >
-                    <div
-                        className="admin-modal__content"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <div className="admin-modal__header">
-                            <h2>Пригласить сотрудника</h2>
-                        </div>
-                        <form onSubmit={handleInviteSubmit}>
-                            <div className="admin-modal__body">
-                                <div className="admin-form">
-                                    <div className="admin-form__group">
-                                        <label className="admin-form__label">
-                                            Сотрудник
-                                        </label>
-                                        <select
-                                            className="admin-form__select"
-                                            value={selectedEmployee || ""}
-                                            onChange={handleEmployeeSelect}
-                                            required
-                                        >
-                                            <option value="">
-                                                Выберите сотрудника
-                                            </option>
-                                            {availableEmployees.map((emp) => (
-                                                <option
-                                                    key={emp.id}
-                                                    value={emp.id}
-                                                >
-                                                    {emp.name} ({emp.email})
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-
-                                    <div className="admin-form__group">
-                                        <label className="admin-form__label">
-                                            Email
-                                        </label>
-                                        <input
-                                            type="email"
-                                            className="admin-form__input"
-                                            value={inviteEmail}
-                                            onChange={(e) =>
-                                                setInviteEmail(e.target.value)
-                                            }
-                                            required
-                                        />
-                                    </div>
-
-                                    {error && (
-                                        <div className="admin-form__error">
-                                            {error}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                            <div className="admin-modal__footer">
-                                <button
-                                    type="button"
-                                    className="admin-btn admin-btn--secondary"
-                                    onClick={() => setShowInviteModal(false)}
-                                >
-                                    Отмена
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="admin-btn admin-btn--primary"
-                                >
-                                    Отправить приглашение
-                                </button>
-                            </div>
-                        </form>
-                    </div>
                 </div>
             )}
         </div>

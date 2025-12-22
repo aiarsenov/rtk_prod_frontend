@@ -14,7 +14,7 @@ const AddButton = ({
             type="button"
             className={`button-add ${className}`}
             onClick={onClick}
-            title={title}
+            title={title || label}
         >
             {label}
 

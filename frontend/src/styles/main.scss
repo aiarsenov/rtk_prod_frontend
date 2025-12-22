@@ -243,8 +243,8 @@ body {
     transition: all 0.15s ease-in-out;
 }
 
-.loader.transparent {
-    background: transparent;
+.loader.absolute {
+    position: absolute;
 }
 
 .loader__icon {

@@ -1,37 +1,10 @@
 @use "../../styles/media-breakpoints" as *;
 
-.admin-tabs {
-    &__header {
+.admin {
+    &__container {
         display: flex;
-        gap: 4px;
-        border-bottom: 2px solid var(--color-gray-30);
-        margin-bottom: 20px;
-    }
-
-    &__tab {
-        padding: 12px 24px;
-        font-size: 16px;
-        font-weight: 500;
-        color: var(--color-gray-70);
-        background: transparent;
-        border: none;
-        border-bottom: 2px solid transparent;
-        margin-bottom: -2px;
-        cursor: pointer;
-        transition: all 0.2s ease-in-out;
-
-        &:hover {
-            color: var(--color-gray-100);
-        }
-
-        &.active {
-            color: var(--color-blue-80);
-            border-bottom-color: var(--color-blue-80);
-        }
-    }
-
-    &__content {
-        padding: 20px 0;
+        flex-direction: column;
+        flex-grow: 1;
     }
 }
 
@@ -487,7 +460,7 @@
                 }
 
                 &::before {
-                    content: '';
+                    content: "";
                     position: absolute;
                     top: -2px;
                     left: 0;
