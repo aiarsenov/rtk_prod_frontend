@@ -253,6 +253,7 @@ const AdminUserItem = ({
                                 <DeleteButton
                                     onLick={() => handleDeleteUser(user.id)}
                                     title="Удалить пользователя из системы"
+                                    isDisabled={mode.delete !== "full"}
                                 />
                             )}
                         </>
