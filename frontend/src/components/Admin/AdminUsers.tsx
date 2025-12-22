@@ -234,6 +234,7 @@ const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
                         <tbody className="registry-table__tbody">
                             {users.map((user) => (
                                 <AdminUserItem
+                                    key={user.id}
                                     user={user}
                                     mode={mode}
                                     handleResendInvitation={

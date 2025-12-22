@@ -12,13 +12,13 @@ const AdminUserItem = ({
     handleDeleteUser,
 }) => {
     return (
-        <tr
-            className="registry-table__item transition text-base text-left"
-            key={user.id}
-        >
+        <tr className="registry-table__item transition text-base text-left">
             <td>{user.type === "invitation" ? "—" : user.id}</td>
+
             <td>{user.name || "—"}</td>
+
             <td>{user.email || "—"}</td>
+
             <td>
                 <span
                     className={`admin-badge ${
@@ -36,6 +36,7 @@ const AdminUserItem = ({
                         : "Неактивен"}
                 </span>
             </td>
+
             <td>
                 {user.status === "invited"
                     ? user.invited_at
@@ -45,6 +46,7 @@ const AdminUserItem = ({
                     ? new Date(user.last_login_at).toLocaleString("ru-RU")
                     : "—"}
             </td>
+
             <td>
                 <div className="admin-actions">
                     {user.status === "invited" ? (
@@ -142,7 +144,7 @@ const AdminUserItem = ({
                                             </span>
 
                                             <div className="button-hint__message">
-                                                Деактивировать <br />{" "}
+                                                Деактивировать <br />
                                                 пользователя
                                             </div>
                                         </button>

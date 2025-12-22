@@ -1,15 +1,16 @@
 import { useState, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 
-import { isAdmin } from "../../utils/permissions";
 import getData from "../../utils/getData";
 import postData from "../../utils/postData";
+import { isAdmin } from "../../utils/permissions";
 import { toast } from "react-toastify";
 
-import ActiveButton from "../Buttons/ActiveButton";
+import AccessDenied from "../AccessDenied/AccessDenied";
 import AdminUsers from "./AdminUsers";
 import AdminGroups from "./AdminGroups";
-import AccessDenied from "../AccessDenied/AccessDenied";
+import ActiveButton from "../Buttons/ActiveButton";
+import Popup from "../Popup/Popup";
 
 import "../AccessDenied/AccessDenied.scss";
 import "./Admin.scss";
@@ -36,8 +37,6 @@ const Admin = () => {
         edit: "read",
         view: "read",
     };
-
-    const API_URL = import.meta.env.VITE_API_URL;
 
     const loadUsers = useCallback(async () => {
         try {
@@ -188,7 +187,7 @@ const Admin = () => {
                     {mode.edit === "full" && (
                         <ActiveButton
                             className="ml-auto"
-                            label="Пригласить сотрудника"
+                            label="Добавить пользователей"
                             onClick={handleInviteClick}
                             isDisabled={isLoading}
                         />
@@ -211,84 +210,104 @@ const Admin = () => {
             </div>
 
             {showInviteModal && (
-                <div
-                    className="admin-modal"
+                <Popup
                     onClick={() => setShowInviteModal(false)}
+                    title="Добавить пользователей"
                 >
-                    <div
-                        className="admin-modal__content"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <div className="admin-modal__header">
-                            <h2>Пригласить сотрудника</h2>
-                        </div>
-                        <form onSubmit={handleInviteSubmit}>
-                            <div className="admin-modal__body">
-                                <div className="admin-form">
-                                    <div className="admin-form__group">
-                                        <label className="admin-form__label">
-                                            Сотрудник
-                                        </label>
-                                        <select
-                                            className="admin-form__select"
-                                            value={selectedEmployee || ""}
-                                            onChange={handleEmployeeSelect}
-                                            required
-                                        >
-                                            <option value="">
-                                                Выберите сотрудника
-                                            </option>
-                                            {availableEmployees.map((emp) => (
-                                                <option
-                                                    key={emp.id}
-                                                    value={emp.id}
-                                                >
-                                                    {emp.name} ({emp.email})
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
+                    <form>
+                        <div className="admin-form">
+                            <div className="admin-form__users">
+                                <div className="multi-select__actions">
+                                    <button
+                                        className="multi-select__selectall-button"
+                                        type="button"
+                                        title="Выбрать всех пользователей"
+                                    >
+                                        Выбрать все
+                                    </button>
 
-                                    <div className="admin-form__group">
-                                        <label className="admin-form__label">
-                                            Email
-                                        </label>
-                                        <input
-                                            type="email"
-                                            className="admin-form__input"
-                                            value={inviteEmail}
-                                            onChange={(e) =>
-                                                setInviteEmail(e.target.value)
-                                            }
-                                            required
-                                        />
-                                    </div>
+                                    <button
+                                        className="multi-select__reset-button"
+                                        type="button"
+                                        title="Сбрось выбор"
+                                    >
+                                        <span>
+                                            <svg
+                                                width="12"
+                                                height="13"
+                                                viewBox="0 0 12 13"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    d="M7.06 6.5l2.652 2.652-1.06 1.06L6 7.561l-2.652 2.651-1.06-1.06L4.939 6.5 2.288 3.848l1.06-1.06L6 5.439l2.652-2.651 1.06 1.06L7.061 6.5z"
+                                                    fill="#0078D2"
+                                                ></path>
+                                            </svg>
+                                        </span>
+                                        Сбросить
+                                    </button>
+                                </div>
 
-                                    {error && (
-                                        <div className="admin-form__error">
-                                            {error}
-                                        </div>
-                                    )}
+                                <div className="admin-form__users-list">
+                                    {/* <select
+                                    className="admin-form__select"
+                                    value={selectedEmployee || ""}
+                                    onChange={handleEmployeeSelect}
+                                    required
+                                >
+                                    {availableEmployees.map((emp) => (
+                                        <option key={emp.id} value={emp.id}>
+                                            {emp.name} ({emp.email})
+                                        </option>
+                                    ))}
+                                </select> */}
+
+                                    {availableEmployees.length > 0 &&
+                                        availableEmployees.map((item) => (
+                                            <label
+                                                className="form-checkbox"
+                                                key={item.key}
+                                                htmlFor={item.id}
+                                            >
+                                                <div>
+                                                    {item.name}
+                                                    <span>{item.email}</span>
+                                                </div>
+
+                                                <input
+                                                    type="checkbox"
+                                                    name={item.name}
+                                                    id={item.id}
+                                                />
+                                                <div className="checkbox"></div>
+                                            </label>
+                                        ))}
                                 </div>
                             </div>
-                            <div className="admin-modal__footer">
-                                <button
-                                    type="button"
-                                    className="admin-btn admin-btn--secondary"
-                                    onClick={() => setShowInviteModal(false)}
-                                >
-                                    Отмена
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="admin-btn admin-btn--primary"
-                                >
-                                    Отправить приглашение
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                        </div>
+
+                        <div className="action-form__footer">
+                            <button
+                                type="button"
+                                className="cancel-button"
+                                onClick={() => setShowInviteModal(false)}
+                                title="Отменить приглашение"
+                            >
+                                Отмена
+                            </button>
+
+                            <button
+                                type="button"
+                                className="action-button"
+                                title="Отправить приглашение пользователям"
+                                onClick={handleInviteSubmit}
+                            >
+                                Добавить
+                            </button>
+                        </div>
+                    </form>
+                </Popup>
             )}
         </main>
     );
