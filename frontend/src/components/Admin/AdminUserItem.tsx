@@ -51,7 +51,7 @@ const AdminUserItem = ({
                         mode.edit === "full" && (
                             <>
                                 <button
-                                    className="button-add"
+                                    className="button-add button-hint"
                                     onClick={() =>
                                         handleResendInvitation(
                                             user.invitation_id
@@ -74,9 +74,13 @@ const AdminUserItem = ({
                                             strokeLinejoin="round"
                                         />
                                     </svg>
+
+                                    <div className="button-hint__message">
+                                        Повторно отправить <br /> приглашение
+                                    </div>
                                 </button>
                                 <button
-                                    className="delete-button extended"
+                                    className="delete-button extended button-hint"
                                     onClick={() =>
                                         handleCancelInvitation(
                                             user.invitation_id
@@ -99,6 +103,11 @@ const AdminUserItem = ({
                                             strokeLinejoin="round"
                                         />
                                     </svg>
+
+                                    <div className="button-hint__message">
+                                        Отозвать
+                                        <br /> приглашение
+                                    </div>
                                 </button>
                             </>
                         )
@@ -108,7 +117,7 @@ const AdminUserItem = ({
                                 <>
                                     {user.is_active ? (
                                         <button
-                                            className="delete-button extended"
+                                            className="delete-button extended button-hint"
                                             onClick={() =>
                                                 handleDeactivate(user.id)
                                             }
@@ -131,10 +140,15 @@ const AdminUserItem = ({
                                                     />
                                                 </svg>
                                             </span>
+
+                                            <div className="button-hint__message">
+                                                Деактивировать <br />{" "}
+                                                пользователя
+                                            </div>
                                         </button>
                                     ) : (
                                         <button
-                                            className="second-add-button"
+                                            className="second-add-button button-hint"
                                             onClick={() =>
                                                 handleActivate(user.id)
                                             }
@@ -157,13 +171,17 @@ const AdminUserItem = ({
                                                     />
                                                 </svg>
                                             </span>
+
+                                            <div className="button-hint__message">
+                                                Активировать <br /> пользователя
+                                            </div>
                                         </button>
                                     )}
                                     {user.keycloak_id && (
                                         <>
                                             {user.has_2fa ? (
                                                 <button
-                                                    className="delete-button extended"
+                                                    className="delete-button extended button-hint"
                                                     onClick={() =>
                                                         handleRemove2FA(user.id)
                                                     }
@@ -186,10 +204,14 @@ const AdminUserItem = ({
                                                             />
                                                         </svg>
                                                     </span>
+
+                                                    <div className="button-hint__message">
+                                                        Удалить 2FA
+                                                    </div>
                                                 </button>
                                             ) : (
                                                 <button
-                                                    className="button-add"
+                                                    className="button-add button-hint"
                                                     onClick={() =>
                                                         handleRequire2FA(
                                                             user.id
@@ -214,6 +236,10 @@ const AdminUserItem = ({
                                                             />
                                                         </svg>
                                                     </span>
+
+                                                    <div className="button-hint__message">
+                                                        Требовать 2FA
+                                                    </div>
                                                 </button>
                                             )}
                                         </>

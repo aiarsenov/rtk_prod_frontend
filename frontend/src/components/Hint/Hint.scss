@@ -37,6 +37,7 @@
         min-width: fit-content;
         max-width: 275px;
         z-index: 2;
+        pointer-events: none;
     }
 
     &:hover {
