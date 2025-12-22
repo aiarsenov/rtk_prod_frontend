@@ -1,8 +1,8 @@
-import { useEffect } from "react";
 import { toast } from "react-toastify";
 
 import postData from "../../utils/postData";
 
+import AdminUserItem from "./AdminUserItem";
 import Loader from "../Loader";
 import AccessDenied from "../AccessDenied/AccessDenied";
 
@@ -233,159 +233,21 @@ const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
 
                         <tbody className="registry-table__tbody">
                             {users.map((user) => (
-                                <tr
-                                    className="registry-table__item transition text-base text-left"
-                                    key={user.id}
-                                >
-                                    <td>
-                                        {user.type === "invitation"
-                                            ? "—"
-                                            : user.id}
-                                    </td>
-                                    <td>{user.name || "—"}</td>
-                                    <td>{user.email || "—"}</td>
-                                    <td>
-                                        <span
-                                            className={`admin-badge ${
-                                                user.status === "invited"
-                                                    ? "admin-badge--warning"
-                                                    : user.is_active
-                                                    ? "admin-badge--active"
-                                                    : "admin-badge--inactive"
-                                            }`}
-                                        >
-                                            {user.status === "invited"
-                                                ? "Приглашен"
-                                                : user.is_active
-                                                ? "Активен"
-                                                : "Неактивен"}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        {user.status === "invited"
-                                            ? user.invited_at
-                                                ? new Date(
-                                                      user.invited_at
-                                                  ).toLocaleString("ru-RU")
-                                                : "—"
-                                            : user.last_login_at
-                                            ? new Date(
-                                                  user.last_login_at
-                                              ).toLocaleString("ru-RU")
-                                            : "—"}
-                                    </td>
-                                    <td>
-                                        <div className="admin-actions">
-                                            {user.status === "invited" ? (
-                                                mode.edit === "full" && (
-                                                    <>
-                                                        <button
-                                                            className="admin-btn admin-btn--primary admin-btn--sm"
-                                                            onClick={() =>
-                                                                handleResendInvitation(
-                                                                    user.invitation_id
-                                                                )
-                                                            }
-                                                            title="Повторно отправить приглашение"
-                                                        >
-                                                            Отправить повторно
-                                                        </button>
-                                                        <button
-                                                            className="admin-btn admin-btn--danger admin-btn--sm"
-                                                            onClick={() =>
-                                                                handleCancelInvitation(
-                                                                    user.invitation_id
-                                                                )
-                                                            }
-                                                            title="Отозвать приглашение"
-                                                        >
-                                                            Отозвать
-                                                        </button>
-                                                    </>
-                                                )
-                                            ) : (
-                                                <>
-                                                    {mode.edit === "full" && (
-                                                        <>
-                                                            {user.is_active ? (
-                                                                <button
-                                                                    className="admin-btn admin-btn--danger admin-btn--sm"
-                                                                    onClick={() =>
-                                                                        handleDeactivate(
-                                                                            user.id
-                                                                        )
-                                                                    }
-                                                                    title="Деактивировать пользователя"
-                                                                >
-                                                                    Деактивировать
-                                                                </button>
-                                                            ) : (
-                                                                <button
-                                                                    className="admin-btn admin-btn--success admin-btn--sm"
-                                                                    onClick={() =>
-                                                                        handleActivate(
-                                                                            user.id
-                                                                        )
-                                                                    }
-                                                                    title="Активировать пользователя"
-                                                                >
-                                                                    Активировать
-                                                                </button>
-                                                            )}
-                                                            {user.keycloak_id && (
-                                                                <>
-                                                                    {user.has_2fa ? (
-                                                                        <button
-                                                                            className="admin-btn admin-btn--danger admin-btn--sm"
-                                                                            onClick={() =>
-                                                                                handleRemove2FA(
-                                                                                    user.id
-                                                                                )
-                                                                            }
-                                                                            title="Удалить 2FA"
-                                                                        >
-                                                                            🗑️
-                                                                            Удалить
-                                                                            2FA
-                                                                        </button>
-                                                                    ) : (
-                                                                        <button
-                                                                            className="admin-btn admin-btn--primary admin-btn--sm"
-                                                                            onClick={() =>
-                                                                                handleRequire2FA(
-                                                                                    user.id
-                                                                                )
-                                                                            }
-                                                                            title="Требовать 2FA"
-                                                                        >
-                                                                            🔒
-                                                                            Требовать
-                                                                            2FA
-                                                                        </button>
-                                                                    )}
-                                                                </>
-                                                            )}
-                                                        </>
-                                                    )}
-
-                                                    {mode.delete === "full" && (
-                                                        <button
-                                                            className="admin-btn admin-btn--danger admin-btn--sm"
-                                                            onClick={() =>
-                                                                handleDeleteUser(
-                                                                    user.id
-                                                                )
-                                                            }
-                                                            title="Удалить пользователя из системы"
-                                                        >
-                                                            Удалить
-                                                        </button>
-                                                    )}
-                                                </>
-                                            )}
-                                        </div>
-                                    </td>
-                                </tr>
+                                <AdminUserItem
+                                    user={user}
+                                    mode={mode}
+                                    handleResendInvitation={
+                                        handleResendInvitation
+                                    }
+                                    handleCancelInvitation={
+                                        handleCancelInvitation
+                                    }
+                                    handleDeactivate={handleDeactivate}
+                                    handleActivate={handleActivate}
+                                    handleRemove2FA={handleRemove2FA}
+                                    handleRequire2FA={handleRequire2FA}
+                                    handleDeleteUser={handleDeleteUser}
+                                />
                             ))}
                         </tbody>
                     </table>

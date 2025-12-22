@@ -100,6 +100,16 @@
         justify-content: center;
     }
 
+    &.full-state {
+        height: auto;
+        padding: 2px 12px;
+        flex: 0 0 fit-content;
+        width: fit-content;
+        gap: 8px;
+        color: var(--color-red-70);
+        transition: color var(--trans);
+    }
+
     &:disabled {
         background: transparent;
         opacity: 0.6;
@@ -166,4 +176,19 @@
     background: var(--color-white) url("../assets/icons/edit.svg") center
         no-repeat;
     transition: opacity var(--trans);
+}
+
+.second-add-button {
+    gap: 8px;
+    width: fit-content;
+    flex: 0 0 fit-content;
+    border: 1px solid var(--color-green-40);
+    background: var(--color-green-30);
+    color: var(--color-green-80);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 12px;
+    transition: color var(--trans), background var(--trans);
 }

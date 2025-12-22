@@ -6,6 +6,20 @@
         flex-direction: column;
         flex-grow: 1;
     }
+
+    .registry-table__item .delete-button {
+        opacity: 1;
+    }
+
+    .registry-table__item .button-add {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        height: 28px;
+        width: 28px;
+        flex: 0 0 28px;
+    }
 }
 
 .admin-table {
@@ -51,9 +65,10 @@
 }
 
 .admin-actions {
+    gap: 10px;
     display: flex;
-    gap: 8px;
     align-items: center;
+    justify-content: flex-end;
 }
 
 .admin-btn {
