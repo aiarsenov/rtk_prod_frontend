@@ -569,12 +569,13 @@ const AdminGroups = ({ mode, isLoading, loadGroups, groups }) => {
                             {groups.map((item) => (
                                 <AdminGroupItem
                                     key={item.id}
-                                    PERMISSION_TYPES={PERMISSION_TYPES}
-                                    SCOPES={SCOPES}
                                     item={item}
                                     mode={mode}
                                     handleEditGroup={handleEditGroup}
                                     handleDeleteGroup={handleDeleteGroup}
+                                    setSelectedGroup={setSelectedGroup}
+                                    setSelectedUsers={setSelectedUsers}
+                                    setShowAddUserModal={setShowAddUserModal}
                                 />
                             ))}
                         </tbody>

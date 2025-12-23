@@ -1,20 +1,32 @@
 const AddButton = ({
-    label = 'Добавить',
+    label = "Добавить",
     title,
     className,
     onClick,
+    hint,
+    isDisabled,
 }: {
     label?: string;
     title?: string;
     className?: string;
+    isDisabled?: boolean;
+    hint?: boolean;
     onClick?: () => void;
 }) => {
     return (
         <button
             type="button"
-            className={`button-add ${className}`}
-            onClick={onClick}
+            className={`button-add ${className} ${className} ${
+                hint ? "button-hint " : ""
+            }`}
+            onClick={() => {
+                if (isDisabled) {
+                    return;
+                }
+                onClick();
+            }}
             title={title || label}
+            disabled={isDisabled}
         >
             {label}
 
@@ -32,6 +44,10 @@ const AddButton = ({
                     ></path>
                 </svg>
             </span>
+
+            {hint && (
+                <div className="button-hint__message">{title || label}</div>
+            )}
         </button>
     );
 };

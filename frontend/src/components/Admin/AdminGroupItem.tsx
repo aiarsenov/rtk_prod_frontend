@@ -3,14 +3,16 @@ import { ru } from "date-fns/locale";
 
 import EditButton from "../Buttons/EditButton";
 import DeleteButton from "../Buttons/DeleteButton";
+import AddButton from "../Buttons/AddButton";
 
 const AdminGroupItem = ({
-    PERMISSION_TYPES,
-    SCOPES,
     item,
     mode,
     handleEditGroup,
     handleDeleteGroup,
+    setSelectedGroup,
+    setSelectedUsers,
+    setShowAddUserModal,
 }) => {
     return (
         <tr className="registry-table__item transition text-base text-left">
@@ -40,6 +42,20 @@ const AdminGroupItem = ({
                 <div className="admin-actions">
                     {!item.is_system && (
                         <div className="flex gap-2">
+                            {!item.is_system && mode.edit === "full" && (
+                                <AddButton
+                                    label=""
+                                    className="button-hint--left"
+                                    title="Добавить пользователя"
+                                    hint={true}
+                                    onClick={() => {
+                                        setSelectedGroup(item);
+                                        setSelectedUsers([]);
+                                        setShowAddUserModal(true);
+                                    }}
+                                />
+                            )}
+
                             {mode.edit === "full" && (
                                 <EditButton
                                     title="Редактировать группу"
