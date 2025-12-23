@@ -8,8 +8,6 @@ import AdminUserItem from "./AdminUserItem";
 import Loader from "../Loader";
 import AccessDenied from "../AccessDenied/AccessDenied";
 
-import "../AccessDenied/AccessDenied.scss";
-
 const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
     const [alert, setAlert] = useState({
         isOpen: false,

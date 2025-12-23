@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+
 import getData from "../../utils/getData";
 import postData from "../../utils/postData";
+
 import Loader from "../Loader";
 import AccessDenied from "../AccessDenied/AccessDenied";
-import "../AccessDenied/AccessDenied.scss";
 
 const SECTIONS = {
     main: "Ключевые показатели",
@@ -99,10 +100,10 @@ const PERMISSION_MATRIX = {
     },
 };
 
-const AdminGroups = ({ mode }) => {
-    const [groups, setGroups] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [showCreateModal, setShowCreateModal] = useState(false);
+const AdminGroups = ({ mode, isLoading, loadGroups, groups }) => {
+    // const [groups, setGroups] = useState([]);
+    // const [isLoading, setIsLoading] = useState(true);
+    // const [showCreateModal, setShowCreateModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [showAddPermissionModal, setShowAddPermissionModal] = useState(false);
     const [showAddUserModal, setShowAddUserModal] = useState(false);
@@ -111,8 +112,8 @@ const AdminGroups = ({ mode }) => {
     const [accessDenied, setAccessDenied] = useState(false);
 
     // Форма создания группы
-    const [newGroupName, setNewGroupName] = useState("");
-    const [newGroupDescription, setNewGroupDescription] = useState("");
+    // const [newGroupName, setNewGroupName] = useState("");
+    // const [newGroupDescription, setNewGroupDescription] = useState("");
 
     // Форма редактирования группы
     const [editGroupName, setEditGroupName] = useState("");
@@ -138,27 +139,26 @@ const AdminGroups = ({ mode }) => {
     const API_URL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
-        loadGroups();
         loadAllUsers();
     }, []);
 
-    const loadGroups = async () => {
-        try {
-            setIsLoading(true);
-            setAccessDenied(false);
-            const response = await getData(`${API_URL}admin/permission-groups`);
-            if (response.status === 200) {
-                setGroups(response.data || []);
-            }
-        } catch (err) {
-            console.error("Ошибка загрузки групп:", err);
-            if (err.status === 403) {
-                setAccessDenied(true);
-            }
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    // const loadGroups = async () => {
+    //     try {
+    //         setIsLoading(true);
+    //         setAccessDenied(false);
+    //         const response = await getData(`${API_URL}admin/permission-groups`);
+    //         if (response.status === 200) {
+    //             setGroups(response.data || []);
+    //         }
+    //     } catch (err) {
+    //         console.error("Ошибка загрузки групп:", err);
+    //         if (err.status === 403) {
+    //             setAccessDenied(true);
+    //         }
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // };
 
     const loadAllUsers = async () => {
         try {
@@ -171,37 +171,37 @@ const AdminGroups = ({ mode }) => {
         }
     };
 
-    const handleCreateGroup = async (e) => {
-        e.preventDefault();
-        setError("");
+    // const handleCreateGroup = async (e) => {
+    //     e.preventDefault();
+    //     setError("");
 
-        if (!newGroupName.trim()) {
-            setError("Укажите название группы");
-            return;
-        }
+    //     if (!newGroupName.trim()) {
+    //         setError("Укажите название группы");
+    //         return;
+    //     }
 
-        try {
-            await postData("POST", `${API_URL}admin/permission-groups`, {
-                name: newGroupName,
-                description: newGroupDescription,
-            });
+    //     try {
+    //         await postData("POST", `${API_URL}admin/permission-groups`, {
+    //             name: newGroupName,
+    //             description: newGroupDescription,
+    //         });
 
-            setShowCreateModal(false);
-            setNewGroupName("");
-            setNewGroupDescription("");
-            loadGroups();
-        } catch (err) {
-            toast.error(err.message || "Ошибка создания группы", {
-                isLoading: false,
-                autoClose: 3000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                position:
-                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-            });
-            setError(err.message || "Ошибка создания группы");
-        }
-    };
+    //         setShowCreateModal(false);
+    //         setNewGroupName("");
+    //         setNewGroupDescription("");
+    //         loadGroups();
+    //     } catch (err) {
+    //         toast.error(err.message || "Ошибка создания группы", {
+    //             isLoading: false,
+    //             autoClose: 3000,
+    //             pauseOnFocusLoss: false,
+    //             pauseOnHover: false,
+    //             position:
+    //                 window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+    //         });
+    //         setError(err.message || "Ошибка создания группы");
+    //     }
+    // };
 
     const handleEditGroup = (group) => {
         setSelectedGroup(group);
@@ -610,7 +610,7 @@ const AdminGroups = ({ mode }) => {
 
     return (
         <div className="admin-groups">
-            <div className="flex justify-between items-center mb-4">
+            {/* <div className="flex justify-between items-center mb-4">
                 <div>
                     <h2 className="text-xl font-semibold">Группы прав</h2>
                     <div className="text-sm text-gray-500 mt-1">
@@ -626,7 +626,7 @@ const AdminGroups = ({ mode }) => {
                         Создать группу
                     </button>
                 )}
-            </div>
+            </div> */}
 
             {groups.length === 0 ? (
                 <div className="admin-empty">Нет групп</div>
@@ -822,79 +822,6 @@ const AdminGroups = ({ mode }) => {
                             </div>
                         </div>
                     ))}
-                </div>
-            )}
-
-            {/* Модальное окно создания группы */}
-            {showCreateModal && (
-                <div
-                    className="admin-modal"
-                    onClick={() => setShowCreateModal(false)}
-                >
-                    <div
-                        className="admin-modal__content"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <div className="admin-modal__header">
-                            <h2>Создать группу</h2>
-                        </div>
-                        <form onSubmit={handleCreateGroup}>
-                            <div className="admin-modal__body">
-                                <div className="admin-form">
-                                    <div className="admin-form__group">
-                                        <label className="admin-form__label">
-                                            Название
-                                        </label>
-                                        <input
-                                            type="text"
-                                            className="admin-form__input"
-                                            value={newGroupName}
-                                            onChange={(e) =>
-                                                setNewGroupName(e.target.value)
-                                            }
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="admin-form__group">
-                                        <label className="admin-form__label">
-                                            Описание
-                                        </label>
-                                        <textarea
-                                            className="admin-form__textarea"
-                                            value={newGroupDescription}
-                                            onChange={(e) =>
-                                                setNewGroupDescription(
-                                                    e.target.value
-                                                )
-                                            }
-                                        />
-                                    </div>
-
-                                    {error && (
-                                        <div className="admin-form__error">
-                                            {error}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                            <div className="admin-modal__footer">
-                                <button
-                                    type="button"
-                                    className="admin-btn admin-btn--secondary"
-                                    onClick={() => setShowCreateModal(false)}
-                                >
-                                    Отмена
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="admin-btn admin-btn--primary"
-                                >
-                                    Создать
-                                </button>
-                            </div>
-                        </form>
-                    </div>
                 </div>
             )}
 
@@ -1225,7 +1152,9 @@ const AdminGroups = ({ mode }) => {
                                                         >
                                                             <input
                                                                 type="checkbox"
-                                                                checked={isMassCheckboxChecked(permType)}
+                                                                checked={isMassCheckboxChecked(
+                                                                    permType
+                                                                )}
                                                                 onChange={() =>
                                                                     handleMassPermissionCheckboxChange(
                                                                         permType
@@ -1240,8 +1169,14 @@ const AdminGroups = ({ mode }) => {
                                                 {/* Массовые селекты для "Ширина прав" */}
                                                 {["view", "edit", "delete"].map(
                                                     (permType) => {
-                                                        const massScopeValue = getMassScopeValue(permType);
-                                                        const isMassCheckboxCheckedForType = isMassCheckboxChecked(permType);
+                                                        const massScopeValue =
+                                                            getMassScopeValue(
+                                                                permType
+                                                            );
+                                                        const isMassCheckboxCheckedForType =
+                                                            isMassCheckboxChecked(
+                                                                permType
+                                                            );
 
                                                         return (
                                                             <td
@@ -1249,16 +1184,28 @@ const AdminGroups = ({ mode }) => {
                                                                 className="scope-cell"
                                                             >
                                                                 <select
-                                                                    value={massScopeValue}
-                                                                    onChange={(e) =>
+                                                                    value={
+                                                                        massScopeValue
+                                                                    }
+                                                                    onChange={(
+                                                                        e
+                                                                    ) =>
                                                                         handleMassScopeChange(
                                                                             permType,
-                                                                            e.target.value
+                                                                            e
+                                                                                .target
+                                                                                .value
                                                                         )
                                                                     }
                                                                     className="scope-select"
-                                                                    disabled={!isMassCheckboxCheckedForType || selectedSections.size === 0}
-                                                                    onClick={(e) =>
+                                                                    disabled={
+                                                                        !isMassCheckboxCheckedForType ||
+                                                                        selectedSections.size ===
+                                                                            0
+                                                                    }
+                                                                    onClick={(
+                                                                        e
+                                                                    ) =>
                                                                         e.stopPropagation()
                                                                     }
                                                                 >

@@ -1,5 +1,7 @@
 import PropTypes from "prop-types";
 
+import "./AccessDenied.scss";
+
 const AccessDenied = ({ message, noAccessToAnySection = false }) => {
     const displayMessage = noAccessToAnySection
         ? "У вас нет прав для доступа ни в один раздел сервиса."

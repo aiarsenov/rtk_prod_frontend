@@ -14,6 +14,7 @@ import Popup from "../Popup/Popup";
 
 import "../AccessDenied/AccessDenied.scss";
 import "./Admin.scss";
+import AdminCreateGroupModal from "./AdminCreateGroupModal";
 
 const Admin = () => {
     const [activeTab, setActiveTab] = useState("users");
@@ -22,8 +23,11 @@ const Admin = () => {
     const [availableEmployees, setAvailableEmployees] = useState([]);
     const [selectedEmployees, setSelectedEmployees] = useState([]);
 
+    const [groups, setGroups] = useState([]);
+
     const [isLoading, setIsLoading] = useState(true);
-    const [showInviteModal, setShowInviteModal] = useState(false);
+    const [showInviteModal, setShowInviteModal] = useState(false); // Попап приглашения пользователей
+    const [showCreateModal, setShowCreateModal] = useState(false); // Попап добавления группы
 
     const [accessDenied, setAccessDenied] = useState(false);
     const user = useSelector((state) => state.user.data);
@@ -50,6 +54,26 @@ const Admin = () => {
             }
         } catch (err) {
             console.error("Ошибка загрузки пользователей:", err);
+            if (err.status === 403) {
+                setAccessDenied(true);
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    }, [import.meta.env.VITE_API_URL]);
+
+    const loadGroups = useCallback(async () => {
+        try {
+            setIsLoading(true);
+            setAccessDenied(false);
+            const response = await getData(
+                `${import.meta.env.VITE_API_URL}admin/permission-groups`
+            );
+            if (response.status === 200) {
+                setGroups(response.data || []);
+            }
+        } catch (err) {
+            console.error("Ошибка загрузки групп:", err);
             if (err.status === 403) {
                 setAccessDenied(true);
             }
@@ -104,6 +128,8 @@ const Admin = () => {
     useEffect(() => {
         if (activeTab === "users") {
             loadUsers();
+        } else if (activeTab === "groups") {
+            loadGroups();
         }
     }, [activeTab]);
 
@@ -171,6 +197,18 @@ const Admin = () => {
                             isDisabled={isLoading || activeTab != "users"}
                         />
                     )}
+
+                    {mode.edit === "full" && activeTab === "groups" && (
+                        <ActiveButton
+                            className="ml-auto"
+                            label="Добавить группу"
+                            onClick={() => {
+                                if (activeTab != "groups") return;
+                                setShowCreateModal(true);
+                            }}
+                            isDisabled={isLoading || activeTab != "groups"}
+                        />
+                    )}
                 </section>
 
                 <section className="admin__content registry__table-section w-full">
@@ -184,163 +222,170 @@ const Admin = () => {
                         />
                     )}
 
-                    {activeTab === "groups" && <AdminGroups mode={mode} />}
+                    {activeTab === "groups" && (
+                        <AdminGroups
+                            mode={mode}
+                            isLoading={isLoading}
+                            loadGroups={loadGroups}
+                            groups={groups}
+                        />
+                    )}
                 </section>
             </div>
 
+            {/* Модальное окно приглашения пользователей */}
             {showInviteModal && (
                 <Popup
                     onClick={() => setShowInviteModal(false)}
                     title="Добавить пользователей"
                 >
-                    <form>
-                        <div className="admin-form">
-                            <div className="admin-form__users">
-                                <div className="multi-select__actions">
+                    <form className="admin-form">
+                        <div className="admin-form__users">
+                            <div className="multi-select__actions">
+                                <button
+                                    className="multi-select__selectall-button"
+                                    type="button"
+                                    title="Выбрать всех пользователей"
+                                    onClick={() => {
+                                        if (
+                                            availableEmployees.length ===
+                                            selectedEmployees.length
+                                        )
+                                            return;
+
+                                        setSelectedEmployees(
+                                            availableEmployees.map((item) => ({
+                                                physical_person_id: item.id,
+                                                email: item.email,
+                                                resend: false,
+                                            }))
+                                        );
+                                    }}
+                                >
+                                    Выбрать все
+                                </button>
+
+                                {selectedEmployees.length > 0 && (
                                     <button
-                                        className="multi-select__selectall-button"
+                                        className="multi-select__reset-button"
                                         type="button"
-                                        title="Выбрать всех пользователей"
-                                        onClick={() => {
-                                            if (
-                                                availableEmployees.length ===
-                                                selectedEmployees.length
-                                            )
-                                                return;
-
-                                            setSelectedEmployees(
-                                                availableEmployees.map(
-                                                    (item) => ({
-                                                        physical_person_id:
-                                                            item.id,
-                                                        email: item.email,
-                                                        resend: false,
-                                                    })
-                                                )
-                                            );
-                                        }}
+                                        title="Сбросить выбор"
+                                        onClick={() => setSelectedEmployees([])}
                                     >
-                                        Выбрать все
-                                    </button>
-
-                                    {selectedEmployees.length > 0 && (
-                                        <button
-                                            className="multi-select__reset-button"
-                                            type="button"
-                                            title="Сбросить выбор"
-                                            onClick={() =>
-                                                setSelectedEmployees([])
-                                            }
-                                        >
-                                            <span>
-                                                <svg
-                                                    width="12"
-                                                    height="13"
-                                                    viewBox="0 0 12 13"
-                                                    fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                >
-                                                    <path
-                                                        d="M7.06 6.5l2.652 2.652-1.06 1.06L6 7.561l-2.652 2.651-1.06-1.06L4.939 6.5 2.288 3.848l1.06-1.06L6 5.439l2.652-2.651 1.06 1.06L7.061 6.5z"
-                                                        fill="#0078D2"
-                                                    ></path>
-                                                </svg>
-                                            </span>
-                                            Сбросить
-                                        </button>
-                                    )}
-                                </div>
-
-                                <div className="admin-form__users-list">
-                                    {availableEmployees.length > 0 &&
-                                        availableEmployees.map((item) => (
-                                            <label
-                                                className="form-checkbox"
-                                                key={item.id}
-                                                htmlFor={item.id}
+                                        <span>
+                                            <svg
+                                                width="12"
+                                                height="13"
+                                                viewBox="0 0 12 13"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
                                             >
-                                                <div>
-                                                    {item.name}
-                                                    <span>{item.email}</span>
-                                                </div>
+                                                <path
+                                                    d="M7.06 6.5l2.652 2.652-1.06 1.06L6 7.561l-2.652 2.651-1.06-1.06L4.939 6.5 2.288 3.848l1.06-1.06L6 5.439l2.652-2.651 1.06 1.06L7.061 6.5z"
+                                                    fill="#0078D2"
+                                                ></path>
+                                            </svg>
+                                        </span>
+                                        Сбросить
+                                    </button>
+                                )}
+                            </div>
 
-                                                <input
-                                                    type="checkbox"
-                                                    name={item.name}
-                                                    id={item.id}
-                                                    checked={selectedEmployees.some(
-                                                        (emp) =>
-                                                            emp.physical_person_id ===
-                                                            item.id
-                                                    )}
-                                                    onChange={(e) => {
-                                                        const checked =
-                                                            e.target.checked;
+                            <div className="admin-form__users-list">
+                                {availableEmployees.length > 0 &&
+                                    availableEmployees.map((item) => (
+                                        <label
+                                            className="form-checkbox"
+                                            key={item.id}
+                                            htmlFor={item.id}
+                                        >
+                                            <div>
+                                                {item.name}
+                                                <span>{item.email}</span>
+                                            </div>
 
-                                                        setSelectedEmployees(
-                                                            (prev) => {
-                                                                if (checked) {
-                                                                    const exists =
-                                                                        prev.some(
-                                                                            (
-                                                                                emp
-                                                                            ) =>
-                                                                                emp.physical_person_id ===
-                                                                                item.id
-                                                                        );
+                                            <input
+                                                type="checkbox"
+                                                name={item.name}
+                                                id={item.id}
+                                                checked={selectedEmployees.some(
+                                                    (emp) =>
+                                                        emp.physical_person_id ===
+                                                        item.id
+                                                )}
+                                                onChange={(e) => {
+                                                    const checked =
+                                                        e.target.checked;
 
-                                                                    if (exists)
-                                                                        return prev;
+                                                    setSelectedEmployees(
+                                                        (prev) => {
+                                                            if (checked) {
+                                                                const exists =
+                                                                    prev.some(
+                                                                        (emp) =>
+                                                                            emp.physical_person_id ===
+                                                                            item.id
+                                                                    );
 
-                                                                    return [
-                                                                        ...prev,
-                                                                        {
-                                                                            physical_person_id:
-                                                                                item.id,
-                                                                            email: item.email,
-                                                                            resend: false,
-                                                                        },
-                                                                    ];
-                                                                }
+                                                                if (exists)
+                                                                    return prev;
 
-                                                                return prev.filter(
-                                                                    (emp) =>
-                                                                        emp.physical_person_id !==
-                                                                        item.id
-                                                                );
+                                                                return [
+                                                                    ...prev,
+                                                                    {
+                                                                        physical_person_id:
+                                                                            item.id,
+                                                                        email: item.email,
+                                                                        resend: false,
+                                                                    },
+                                                                ];
                                                             }
-                                                        );
-                                                    }}
-                                                />
-                                                <div className="checkbox"></div>
-                                            </label>
-                                        ))}
-                                </div>
+
+                                                            return prev.filter(
+                                                                (emp) =>
+                                                                    emp.physical_person_id !==
+                                                                    item.id
+                                                            );
+                                                        }
+                                                    );
+                                                }}
+                                            />
+                                            <div className="checkbox"></div>
+                                        </label>
+                                    ))}
                             </div>
                         </div>
-
-                        <div className="action-form__footer">
-                            <button
-                                type="button"
-                                className="cancel-button"
-                                onClick={() => setShowInviteModal(false)}
-                                title="Отменить приглашение"
-                            >
-                                Отмена
-                            </button>
-
-                            <button
-                                type="button"
-                                className="action-button"
-                                title="Отправить приглашение пользователям"
-                                onClick={handleInviteSubmit}
-                                disabled={selectedEmployees.length <= 0}
-                            >
-                                Добавить
-                            </button>
-                        </div>
                     </form>
+
+                    <div className="action-form__footer">
+                        <button
+                            type="button"
+                            className="cancel-button"
+                            onClick={() => setShowInviteModal(false)}
+                            title="Отменить приглашение"
+                        >
+                            Отмена
+                        </button>
+
+                        <button
+                            type="button"
+                            className="action-button"
+                            title="Отправить приглашение пользователям"
+                            onClick={handleInviteSubmit}
+                            disabled={selectedEmployees.length <= 0}
+                        >
+                            Добавить
+                        </button>
+                    </div>
                 </Popup>
+            )}
+
+            {/* Модальное окно создания группы */}
+            {showCreateModal && (
+                <AdminCreateGroupModal
+                    setShowCreateModal={setShowCreateModal}
+                    loadGroups={loadGroups}
+                />
             )}
         </main>
     );
