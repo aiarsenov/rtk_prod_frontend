@@ -1,7 +1,9 @@
-import { toast } from "react-toastify";
+import { useState } from "react";
 
+import { toast } from "react-toastify";
 import postData from "../../utils/postData";
 
+import Popup from "../Popup/Popup";
 import AdminUserItem from "./AdminUserItem";
 import Loader from "../Loader";
 import AccessDenied from "../AccessDenied/AccessDenied";
@@ -9,11 +11,27 @@ import AccessDenied from "../AccessDenied/AccessDenied";
 import "../AccessDenied/AccessDenied.scss";
 
 const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
-    const handleActivate = async (userId) => {
-        if (!confirm("Вы уверены, что хотите активировать пользователя?")) {
-            return;
-        }
+    const [alert, setAlert] = useState({
+        isOpen: false,
+        title: "",
+        text: "",
+        confirmText: "",
+        onConfirm: null,
+    });
 
+    // Обработчик попапа
+    const openAlert = ({ title, text, confirmText, onConfirm }) => {
+        setAlert({
+            isOpen: true,
+            title,
+            text,
+            confirmText,
+            onConfirm,
+        });
+    };
+
+    // Активировать пользователя
+    const handleActivate = async (userId) => {
         try {
             await postData(
                 "PATCH",
@@ -32,45 +50,46 @@ const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
         }
     };
 
+    // Деактивировать пользователя
     const handleDeactivate = async (userId) => {
-        if (!confirm("Вы уверены, что хотите деактивировать пользователя?")) {
-            return;
-        }
+        openAlert({
+            title: "Деактивировать пользователя?",
+            text: "Вы уверены, что хотите деактивировать пользователя?",
+            confirmText: "Деактивировать",
+            onConfirm: async () => {
+                try {
+                    await postData(
+                        "PATCH",
+                        `${
+                            import.meta.env.VITE_API_URL
+                        }admin/users/${userId}/deactivate`
+                    );
 
-        try {
-            await postData(
-                "PATCH",
-                `${
-                    import.meta.env.VITE_API_URL
-                }admin/users/${userId}/deactivate`
-            );
-            loadUsers();
-        } catch (err) {
-            toast.error(
-                err.status === 403
-                    ? "Нельзя деактивировать собственную учетную запись"
-                    : err.message || "Ошибка деактивации пользователя",
-                {
-                    position:
-                        window.innerWidth >= 1440
-                            ? "bottom-right"
-                            : "top-right",
-                    autoClose: 3000,
-                    pauseOnFocusLoss: false,
-                    pauseOnHover: false,
-                    draggable: true,
+                    loadUsers();
+                    setAlert((prev) => ({ ...prev, isOpen: false }));
+                } catch (err) {
+                    toast.error(
+                        err.status === 403
+                            ? "Нельзя деактивировать собственную учетную запись"
+                            : err.message || "Ошибка деактивации пользователя",
+                        {
+                            position:
+                                window.innerWidth >= 1440
+                                    ? "bottom-right"
+                                    : "top-right",
+                            autoClose: 3000,
+                            pauseOnFocusLoss: false,
+                            pauseOnHover: false,
+                            draggable: true,
+                        }
+                    );
                 }
-            );
-        }
+            },
+        });
     };
 
+    // Повторная отправка приглашения
     const handleResendInvitation = async (invitationId) => {
-        if (
-            !confirm("Вы уверены, что хотите повторно отправить приглашение?")
-        ) {
-            return;
-        }
-
         try {
             await postData(
                 "POST",
@@ -96,90 +115,102 @@ const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
         }
     };
 
+    // Отзыв приглашения
     const handleCancelInvitation = async (invitationId) => {
-        if (!confirm("Вы уверены, что хотите отозвать приглашение?")) {
-            return;
-        }
-
-        try {
-            await postData(
-                "DELETE",
-                `${
-                    import.meta.env.VITE_API_URL
-                }admin/users/invitations/${invitationId}`
-            );
-            loadUsers();
-        } catch (err) {
-            toast.error(err.message || "Ошибка отзыва приглашения", {
-                position:
-                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-                autoClose: 3000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                draggable: true,
-            });
-        }
+        openAlert({
+            title: "Отозвать приглашение?",
+            text: "Вы уверены, что хотите отозвать приглашение?",
+            confirmText: "Отозвать",
+            onConfirm: async () => {
+                try {
+                    await postData(
+                        "DELETE",
+                        `${
+                            import.meta.env.VITE_API_URL
+                        }admin/users/invitations/${invitationId}`
+                    );
+                    loadUsers();
+                    setAlert((prev) => ({ ...prev, isOpen: false }));
+                } catch (err) {
+                    toast.error(err.message || "Ошибка отзыва приглашения", {
+                        position:
+                            window.innerWidth >= 1440
+                                ? "bottom-right"
+                                : "top-right",
+                        autoClose: 3000,
+                        pauseOnFocusLoss: false,
+                        pauseOnHover: false,
+                        draggable: true,
+                    });
+                }
+            },
+        });
     };
 
+    // Удаление пользователя
     const handleDeleteUser = async (userId) => {
-        if (
-            !confirm(
-                "Вы уверены, что хотите удалить пользователя? Это действие необратимо!"
-            )
-        ) {
-            return;
-        }
-
-        try {
-            await postData(
-                "DELETE",
-                `${import.meta.env.VITE_API_URL}admin/users/${userId}`
-            );
-            loadUsers();
-        } catch (err) {
-            toast.error(err.message || "Ошибка удаления пользователя", {
-                position:
-                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-                autoClose: 3000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                draggable: true,
-            });
-        }
+        openAlert({
+            title: "Удалить пользователя?",
+            text: "Данные будут безвозвратно утеряны.",
+            confirmText: "Удалить",
+            onConfirm: async () => {
+                try {
+                    await postData(
+                        "DELETE",
+                        `${import.meta.env.VITE_API_URL}admin/users/${userId}`
+                    );
+                    loadUsers();
+                    setAlert((prev) => ({ ...prev, isOpen: false }));
+                } catch (err) {
+                    toast.error(err.message || "Ошибка удаления пользователя", {
+                        position:
+                            window.innerWidth >= 1440
+                                ? "bottom-right"
+                                : "top-right",
+                        autoClose: 3000,
+                        pauseOnFocusLoss: false,
+                        pauseOnHover: false,
+                        draggable: true,
+                    });
+                }
+            },
+        });
     };
 
-    const handleRemove2FA = async (userId) => {
-        if (!confirm("Вы уверены, что хотите удалить 2FA у пользователя?")) {
-            return;
-        }
-
-        try {
-            await postData(
-                "DELETE",
-                `${import.meta.env.VITE_API_URL}admin/users/${userId}/2fa`
-            );
-            loadUsers();
-        } catch (err) {
-            toast.error(err.message || "Ошибка удаления 2FA", {
-                position:
-                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-                autoClose: 3000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                draggable: true,
-            });
-        }
+    // Удаление 2FA
+    const handleRemove2FA = (userId) => {
+        openAlert({
+            title: "Удалить 2FA?",
+            text: "Вы уверены, что хотите удалить 2FA у пользователя?",
+            confirmText: "Удалить",
+            onConfirm: async () => {
+                try {
+                    await postData(
+                        "DELETE",
+                        `${
+                            import.meta.env.VITE_API_URL
+                        }admin/users/${userId}/2fa`
+                    );
+                    loadUsers();
+                    setAlert((prev) => ({ ...prev, isOpen: false }));
+                } catch (err) {
+                    toast.error(err.message || "Ошибка удаления 2FA", {
+                        position:
+                            window.innerWidth >= 1440
+                                ? "bottom-right"
+                                : "top-right",
+                        autoClose: 3000,
+                        pauseOnFocusLoss: false,
+                        pauseOnHover: false,
+                        draggable: true,
+                    });
+                }
+            },
+        });
     };
 
+    // Запросить 2FA
     const handleRequire2FA = async (userId) => {
-        if (
-            !confirm(
-                "Вы уверены, что хотите установить требование 2FA для пользователя?"
-            )
-        ) {
-            return;
-        }
-
         try {
             await postData(
                 "POST",
@@ -253,6 +284,53 @@ const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
                         </tbody>
                     </table>
                 </div>
+            )}
+
+            {alert.isOpen && (
+                <Popup
+                    onClick={() =>
+                        setAlert({
+                            isOpen: false,
+                            title: "",
+                            text: "",
+                            confirmText: "",
+                            onConfirm: null,
+                        })
+                    }
+                    title={alert.title}
+                >
+                    <form>
+                        <div className="action-form__body">{alert.text}</div>
+
+                        <div className="action-form__footer">
+                            <button
+                                type="button"
+                                className="cancel-button"
+                                onClick={() =>
+                                    setAlert({
+                                        isOpen: false,
+                                        title: "",
+                                        text: "",
+                                        confirmText: "",
+                                        onConfirm: null,
+                                    })
+                                }
+                                title={"Закрыть окно"}
+                            >
+                                Отмена
+                            </button>
+
+                            <button
+                                type="button"
+                                className="action-button"
+                                title={alert.confirmText}
+                                onClick={alert.onConfirm}
+                            >
+                                {alert.confirmText}
+                            </button>
+                        </div>
+                    </form>
+                </Popup>
             )}
         </div>
     );

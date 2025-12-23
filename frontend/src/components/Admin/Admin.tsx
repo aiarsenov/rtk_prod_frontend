@@ -17,14 +17,15 @@ import "./Admin.scss";
 
 const Admin = () => {
     const [activeTab, setActiveTab] = useState("users");
-    const [showInviteModal, setShowInviteModal] = useState(false);
+
+    const [users, setUsers] = useState([]);
     const [availableEmployees, setAvailableEmployees] = useState([]);
     const [selectedEmployees, setSelectedEmployees] = useState([]);
-    const [error, setError] = useState("");
-    const [isLoading, setIsLoading] = useState(true);
-    const [accessDenied, setAccessDenied] = useState(false);
-    const [users, setUsers] = useState([]);
 
+    const [isLoading, setIsLoading] = useState(true);
+    const [showInviteModal, setShowInviteModal] = useState(false);
+
+    const [accessDenied, setAccessDenied] = useState(false);
     const user = useSelector((state) => state.user.data);
 
     const userPermitions = useSelector(
@@ -71,10 +72,7 @@ const Admin = () => {
         }
     };
 
-    const handleInviteSubmit = async (e) => {
-        e.preventDefault();
-        setError("");
-
+    const handleInviteSubmit = async () => {
         try {
             await postData(
                 "POST",
@@ -94,7 +92,6 @@ const Admin = () => {
                 pauseOnHover: false,
                 draggable: true,
             });
-            setError(err.message || "Ошибка отправки приглашения");
         }
     };
 
@@ -109,10 +106,6 @@ const Admin = () => {
             loadUsers();
         }
     }, [activeTab]);
-
-    useEffect(() => {
-        console.log(selectedEmployees);
-    }, [selectedEmployees]);
 
     // Если нет прав на управление пользователями - показываем заглушку
     if (!isAdmin(user)) {
@@ -167,12 +160,15 @@ const Admin = () => {
                         </li>
                     </ul>
 
-                    {mode.edit === "full" && (
+                    {mode.edit === "full" && activeTab === "users" && (
                         <ActiveButton
                             className="ml-auto"
                             label="Добавить пользователей"
-                            onClick={handleInviteClick}
-                            isDisabled={isLoading}
+                            onClick={() => {
+                                if (activeTab != "users") return;
+                                handleInviteClick();
+                            }}
+                            isDisabled={isLoading || activeTab != "users"}
                         />
                     )}
                 </section>
@@ -260,7 +256,7 @@ const Admin = () => {
                                         availableEmployees.map((item) => (
                                             <label
                                                 className="form-checkbox"
-                                                key={item.key}
+                                                key={item.id}
                                                 htmlFor={item.id}
                                             >
                                                 <div>
