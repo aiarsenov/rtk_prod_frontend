@@ -251,7 +251,7 @@ const AdminUserItem = ({
 
                             {mode.delete === "full" && (
                                 <DeleteButton
-                                    onLick={() => handleDeleteUser(user.id)}
+                                    onClick={() => handleDeleteUser(user.id)}
                                     className="button-hint button-hint--left"
                                     hint={true}
                                     title="Удалить пользователя из системы"

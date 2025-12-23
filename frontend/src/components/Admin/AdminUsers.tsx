@@ -323,8 +323,8 @@ const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
                             <button
                                 type="button"
                                 className="action-button"
-                                title={alert.confirmText}
                                 onClick={alert.onConfirm}
+                                title={alert.confirmText}
                             >
                                 {alert.confirmText}
                             </button>
