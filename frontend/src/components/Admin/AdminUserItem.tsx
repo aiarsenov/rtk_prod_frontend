@@ -252,7 +252,7 @@ const AdminUserItem = ({
                             {mode.delete === "full" && (
                                 <DeleteButton
                                     onClick={() => handleDeleteUser(user.id)}
-                                    className="button-hint button-hint--left"
+                                    className="button-hint--left"
                                     hint={true}
                                     title="Удалить пользователя из системы"
                                     isDisabled={mode.delete !== "full"}

@@ -158,12 +158,8 @@ const Admin = () => {
                                 id="users"
                                 checked={activeTab == "users"}
                                 onChange={() => {
-                                    if (isLoading) {
-                                        return;
-                                    }
                                     setActiveTab("users");
                                 }}
-                                // disabled={isLoading}
                             />
                             <label htmlFor="users">Пользователи</label>
                         </li>
@@ -175,12 +171,8 @@ const Admin = () => {
                                 id="groups"
                                 checked={activeTab == "groups"}
                                 onChange={() => {
-                                    if (isLoading) {
-                                        return;
-                                    }
                                     setActiveTab("groups");
                                 }}
-                                // disabled={isLoading}
                             />
                             <label htmlFor="groups">Группы</label>
                         </li>

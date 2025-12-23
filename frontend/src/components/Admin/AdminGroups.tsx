@@ -7,6 +7,7 @@ import postData from "../../utils/postData";
 import Loader from "../Loader";
 import AdminGroupItem from "./AdminGroupItem";
 import AccessDenied from "../AccessDenied/AccessDenied";
+import AdminEditGroupModal from "./AdminEditGroupModal";
 
 const SECTIONS = {
     main: "Ключевые показатели",
@@ -156,12 +157,6 @@ const AdminGroups = ({ mode, isLoading, loadGroups, groups }) => {
 
     const handleUpdateGroup = async (e) => {
         e.preventDefault();
-        setError("");
-
-        if (!editGroupName.trim()) {
-            setError("Укажите название группы");
-            return;
-        }
 
         try {
             await postData(
@@ -589,81 +584,14 @@ const AdminGroups = ({ mode, isLoading, loadGroups, groups }) => {
 
             {/* Модальное окно редактирования группы */}
             {showEditModal && selectedGroup && (
-                <div
-                    className="admin-modal"
-                    onClick={() => {
-                        setShowEditModal(false);
-                        setError("");
-                    }}
-                >
-                    <div
-                        className="admin-modal__content"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <div className="admin-modal__header">
-                            <h2>Редактировать группу</h2>
-                        </div>
-                        <form onSubmit={handleUpdateGroup}>
-                            <div className="admin-modal__body">
-                                <div className="admin-form">
-                                    <div className="admin-form__group">
-                                        <label className="admin-form__label">
-                                            Название
-                                        </label>
-                                        <input
-                                            type="text"
-                                            className="admin-form__input"
-                                            value={editGroupName}
-                                            onChange={(e) =>
-                                                setEditGroupName(e.target.value)
-                                            }
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="admin-form__group">
-                                        <label className="admin-form__label">
-                                            Описание
-                                        </label>
-                                        <textarea
-                                            className="admin-form__textarea"
-                                            value={editGroupDescription}
-                                            onChange={(e) =>
-                                                setEditGroupDescription(
-                                                    e.target.value
-                                                )
-                                            }
-                                        />
-                                    </div>
-
-                                    {error && (
-                                        <div className="admin-form__error">
-                                            {error}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                            <div className="admin-modal__footer">
-                                <button
-                                    type="button"
-                                    className="admin-btn admin-btn--secondary"
-                                    onClick={() => {
-                                        setShowEditModal(false);
-                                        setError("");
-                                    }}
-                                >
-                                    Отмена
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="admin-btn admin-btn--primary"
-                                >
-                                    Сохранить
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                <AdminEditGroupModal
+                    setShowEditModal={setShowEditModal}
+                    handleUpdateGroup={handleUpdateGroup}
+                    setEditGroupName={setEditGroupName}
+                    editGroupName={editGroupName}
+                    editGroupDescription={editGroupDescription}
+                    setEditGroupDescription={setEditGroupDescription}
+                />
             )}
 
             {/* Модальное окно добавления прав */}

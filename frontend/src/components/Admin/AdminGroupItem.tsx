@@ -1,6 +1,9 @@
 import { format, parseISO } from "date-fns";
 import { ru } from "date-fns/locale";
 
+import EditButton from "../Buttons/EditButton";
+import DeleteButton from "../Buttons/DeleteButton";
+
 const AdminGroupItem = ({
     PERMISSION_TYPES,
     SCOPES,
@@ -38,21 +41,22 @@ const AdminGroupItem = ({
                     {!item.is_system && (
                         <div className="flex gap-2">
                             {mode.edit === "full" && (
-                                <button
-                                    className="admin-btn admin-btn--secondary"
-                                    onClick={() => handleEditGroup(group)}
-                                >
-                                    Редактировать
-                                </button>
+                                <EditButton
+                                    title="Редактировать группу"
+                                    className="button-hint--left"
+                                    hint={true}
+                                    onClick={() => handleEditGroup(item)}
+                                />
                             )}
 
                             {mode.delete === "full" && (
-                                <button
-                                    className="admin-btn admin-btn--danger"
+                                <DeleteButton
                                     onClick={() => handleDeleteGroup(item.id)}
-                                >
-                                    Удалить
-                                </button>
+                                    className="button-hint--left"
+                                    hint={true}
+                                    title="Удалить группу"
+                                    isDisabled={mode.delete !== "full"}
+                                />
                             )}
                         </div>
                     )}

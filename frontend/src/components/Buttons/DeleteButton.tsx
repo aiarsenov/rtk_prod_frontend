@@ -15,7 +15,9 @@ const DeleteButton = ({
 }) => {
     return (
         <button
-            className={`delete-button extended ${className}`}
+            className={`delete-button extended ${className} ${
+                hint ? "button-hint " : ""
+            }`}
             type="button"
             onClick={() => {
                 if (isDisabled) {
@@ -41,7 +43,9 @@ const DeleteButton = ({
                 ></path>
             </svg>
 
-            <div className="button-hint__message">{title || label}</div>
+            {hint && (
+                <div className="button-hint__message">{title || label}</div>
+            )}
         </button>
     );
 };
