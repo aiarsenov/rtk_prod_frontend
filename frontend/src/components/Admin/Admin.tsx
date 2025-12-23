@@ -205,31 +205,54 @@ const Admin = () => {
                                         className="multi-select__selectall-button"
                                         type="button"
                                         title="Выбрать всех пользователей"
+                                        onClick={() => {
+                                            if (
+                                                availableEmployees.length ===
+                                                selectedEmployees.length
+                                            )
+                                                return;
+
+                                            setSelectedEmployees(
+                                                availableEmployees.map(
+                                                    (item) => ({
+                                                        physical_person_id:
+                                                            item.id,
+                                                        email: item.email,
+                                                        resend: false,
+                                                    })
+                                                )
+                                            );
+                                        }}
                                     >
                                         Выбрать все
                                     </button>
 
-                                    <button
-                                        className="multi-select__reset-button"
-                                        type="button"
-                                        title="Сбрось выбор"
-                                    >
-                                        <span>
-                                            <svg
-                                                width="12"
-                                                height="13"
-                                                viewBox="0 0 12 13"
-                                                fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path
-                                                    d="M7.06 6.5l2.652 2.652-1.06 1.06L6 7.561l-2.652 2.651-1.06-1.06L4.939 6.5 2.288 3.848l1.06-1.06L6 5.439l2.652-2.651 1.06 1.06L7.061 6.5z"
-                                                    fill="#0078D2"
-                                                ></path>
-                                            </svg>
-                                        </span>
-                                        Сбросить
-                                    </button>
+                                    {selectedEmployees.length > 0 && (
+                                        <button
+                                            className="multi-select__reset-button"
+                                            type="button"
+                                            title="Сбросить выбор"
+                                            onClick={() =>
+                                                setSelectedEmployees([])
+                                            }
+                                        >
+                                            <span>
+                                                <svg
+                                                    width="12"
+                                                    height="13"
+                                                    viewBox="0 0 12 13"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        d="M7.06 6.5l2.652 2.652-1.06 1.06L6 7.561l-2.652 2.651-1.06-1.06L4.939 6.5 2.288 3.848l1.06-1.06L6 5.439l2.652-2.651 1.06 1.06L7.061 6.5z"
+                                                        fill="#0078D2"
+                                                    ></path>
+                                                </svg>
+                                            </span>
+                                            Сбросить
+                                        </button>
+                                    )}
                                 </div>
 
                                 <div className="admin-form__users-list">
@@ -284,7 +307,6 @@ const Admin = () => {
                                                                     ];
                                                                 }
 
-                                                                // ➖ убираем при снятии галочки
                                                                 return prev.filter(
                                                                     (emp) =>
                                                                         emp.physical_person_id !==
@@ -316,6 +338,7 @@ const Admin = () => {
                                 className="action-button"
                                 title="Отправить приглашение пользователям"
                                 onClick={handleInviteSubmit}
+                                disabled={selectedEmployees.length <= 0}
                             >
                                 Добавить
                             </button>
