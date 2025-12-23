@@ -3,12 +3,14 @@ const DeleteButton = ({
     title,
     className,
     onClick,
+    hint,
     isDisabled,
 }: {
     label?: string;
     title?: string;
     className?: string;
     isDisabled?: boolean;
+    hint?: boolean;
     onClick?: () => void;
 }) => {
     return (
@@ -38,6 +40,8 @@ const DeleteButton = ({
                     fill="currentColor"
                 ></path>
             </svg>
+
+            <div className="button-hint__message">{title || label}</div>
         </button>
     );
 };

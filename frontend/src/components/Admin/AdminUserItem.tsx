@@ -53,7 +53,7 @@ const AdminUserItem = ({
                         mode.edit === "full" && (
                             <>
                                 <button
-                                    className="button-add button-hint"
+                                    className="button-add button-hint button-hint--left"
                                     onClick={() =>
                                         handleResendInvitation(
                                             user.invitation_id
@@ -82,7 +82,7 @@ const AdminUserItem = ({
                                     </div>
                                 </button>
                                 <button
-                                    className="delete-button extended button-hint"
+                                    className="delete-button extended button-hint button-hint--left"
                                     onClick={() =>
                                         handleCancelInvitation(
                                             user.invitation_id
@@ -119,7 +119,7 @@ const AdminUserItem = ({
                                 <>
                                     {user.is_active ? (
                                         <button
-                                            className="delete-button extended button-hint"
+                                            className="delete-button extended button-hint button-hint--left"
                                             onClick={() =>
                                                 handleDeactivate(user.id)
                                             }
@@ -150,7 +150,7 @@ const AdminUserItem = ({
                                         </button>
                                     ) : (
                                         <button
-                                            className="second-add-button button-hint"
+                                            className="second-add-button button-hint button-hint--left"
                                             onClick={() =>
                                                 handleActivate(user.id)
                                             }
@@ -183,7 +183,7 @@ const AdminUserItem = ({
                                         <>
                                             {user.has_2fa ? (
                                                 <button
-                                                    className="delete-button extended button-hint"
+                                                    className="delete-button extended button-hint button-hint--left"
                                                     onClick={() =>
                                                         handleRemove2FA(user.id)
                                                     }
@@ -213,7 +213,7 @@ const AdminUserItem = ({
                                                 </button>
                                             ) : (
                                                 <button
-                                                    className="button-add button-hint"
+                                                    className="button-add button-hint button-hint--left"
                                                     onClick={() =>
                                                         handleRequire2FA(
                                                             user.id
@@ -252,6 +252,8 @@ const AdminUserItem = ({
                             {mode.delete === "full" && (
                                 <DeleteButton
                                     onLick={() => handleDeleteUser(user.id)}
+                                    className="button-hint button-hint--left"
+                                    hint={true}
                                     title="Удалить пользователя из системы"
                                     isDisabled={mode.delete !== "full"}
                                 />

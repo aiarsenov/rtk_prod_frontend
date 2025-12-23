@@ -6,7 +6,7 @@ const Hint = ({
     type = "hint",
 }: {
     message?: string;
-    position?: "top" | "bottom" | "right";
+    position?: "top" | "bottom" | "right" | "left";
     type?: "hint" | "alert";
 }) => {
     return (

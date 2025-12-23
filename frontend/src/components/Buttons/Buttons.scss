@@ -231,6 +231,35 @@
         pointer-events: none;
     }
 
+    &--left {
+        &:before {
+            transform: translateY(-50%);
+            top: 50%;
+            left: calc(0% - 10px);
+            bottom: auto;
+            border: none;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            border-left: 6px solid var(--color-gray-90);
+        }
+
+        .button-hint__message {
+            word-wrap: break-word;
+            transform: translateY(-50%) !important;
+            top: 50%;
+            bottom: auto;
+            left: auto;
+            right: calc(100% + 10px);
+            text-align: left;
+            max-width: 280px;
+            width: max-content;
+            min-width: 20px;
+            transform: none;
+            overflow-y: auto;
+            max-height: 120px;
+        }
+    }
+
     &:hover {
         &:before,
         .button-hint__message {
