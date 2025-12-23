@@ -5,6 +5,7 @@ import getData from "../../utils/getData";
 import postData from "../../utils/postData";
 
 import Loader from "../Loader";
+import AdminGroupItem from "./AdminGroupItem";
 import AccessDenied from "../AccessDenied/AccessDenied";
 
 const SECTIONS = {
@@ -101,19 +102,12 @@ const PERMISSION_MATRIX = {
 };
 
 const AdminGroups = ({ mode, isLoading, loadGroups, groups }) => {
-    // const [groups, setGroups] = useState([]);
-    // const [isLoading, setIsLoading] = useState(true);
-    // const [showCreateModal, setShowCreateModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [showAddPermissionModal, setShowAddPermissionModal] = useState(false);
     const [showAddUserModal, setShowAddUserModal] = useState(false);
     const [selectedGroup, setSelectedGroup] = useState(null);
     const [allUsers, setAllUsers] = useState([]);
     const [accessDenied, setAccessDenied] = useState(false);
-
-    // Форма создания группы
-    // const [newGroupName, setNewGroupName] = useState("");
-    // const [newGroupDescription, setNewGroupDescription] = useState("");
 
     // Форма редактирования группы
     const [editGroupName, setEditGroupName] = useState("");
@@ -142,24 +136,6 @@ const AdminGroups = ({ mode, isLoading, loadGroups, groups }) => {
         loadAllUsers();
     }, []);
 
-    // const loadGroups = async () => {
-    //     try {
-    //         setIsLoading(true);
-    //         setAccessDenied(false);
-    //         const response = await getData(`${API_URL}admin/permission-groups`);
-    //         if (response.status === 200) {
-    //             setGroups(response.data || []);
-    //         }
-    //     } catch (err) {
-    //         console.error("Ошибка загрузки групп:", err);
-    //         if (err.status === 403) {
-    //             setAccessDenied(true);
-    //         }
-    //     } finally {
-    //         setIsLoading(false);
-    //     }
-    // };
-
     const loadAllUsers = async () => {
         try {
             const response = await getData(`${API_URL}admin/users`);
@@ -170,38 +146,6 @@ const AdminGroups = ({ mode, isLoading, loadGroups, groups }) => {
             console.error("Ошибка загрузки пользователей:", err);
         }
     };
-
-    // const handleCreateGroup = async (e) => {
-    //     e.preventDefault();
-    //     setError("");
-
-    //     if (!newGroupName.trim()) {
-    //         setError("Укажите название группы");
-    //         return;
-    //     }
-
-    //     try {
-    //         await postData("POST", `${API_URL}admin/permission-groups`, {
-    //             name: newGroupName,
-    //             description: newGroupDescription,
-    //         });
-
-    //         setShowCreateModal(false);
-    //         setNewGroupName("");
-    //         setNewGroupDescription("");
-    //         loadGroups();
-    //     } catch (err) {
-    //         toast.error(err.message || "Ошибка создания группы", {
-    //             isLoading: false,
-    //             autoClose: 3000,
-    //             pauseOnFocusLoss: false,
-    //             pauseOnHover: false,
-    //             position:
-    //                 window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-    //         });
-    //         setError(err.message || "Ошибка создания группы");
-    //     }
-    // };
 
     const handleEditGroup = (group) => {
         setSelectedGroup(group);
@@ -376,6 +320,7 @@ const AdminGroups = ({ mode, isLoading, loadGroups, groups }) => {
     const areAllRowsSelected = SECTIONS_ORDER.every((section) =>
         selectedSections.has(section)
     );
+
     const handleMassPermissionCheckboxChange = (permissionType) => {
         // Если все строки выделены, снимаем выделение со всех строк
         // чтобы массовые чекбоксы работали только с отмеченными строками
@@ -610,218 +555,35 @@ const AdminGroups = ({ mode, isLoading, loadGroups, groups }) => {
 
     return (
         <div className="admin-groups">
-            {/* <div className="flex justify-between items-center mb-4">
-                <div>
-                    <h2 className="text-xl font-semibold">Группы прав</h2>
-                    <div className="text-sm text-gray-500 mt-1">
-                        Всего групп: {groups.length}
-                    </div>
-                </div>
-
-                {mode.edit === "full" && (
-                    <button
-                        className="admin-btn admin-btn--primary"
-                        onClick={() => setShowCreateModal(true)}
-                    >
-                        Создать группу
-                    </button>
-                )}
-            </div> */}
-
             {groups.length === 0 ? (
                 <div className="admin-empty">Нет групп</div>
             ) : (
-                <div className="admin-groups-list">
-                    {groups.map((group) => (
-                        <div key={group.id} className="admin-group-card">
-                            <div className="admin-group-card__header">
-                                <div>
-                                    <div className="admin-group-card__title">
-                                        {group.name}
-                                        {group.is_system && (
-                                            <span className="admin-badge admin-badge--inactive ml-2">
-                                                Системная
-                                            </span>
-                                        )}
-                                    </div>
-                                    {group.description && (
-                                        <div className="admin-group-card__description">
-                                            {group.description}
-                                        </div>
-                                    )}
-                                </div>
-                                {!group.is_system && (
-                                    <div className="flex gap-2">
-                                        {mode.edit === "full" && (
-                                            <button
-                                                className="admin-btn admin-btn--secondary"
-                                                onClick={() =>
-                                                    handleEditGroup(group)
-                                                }
-                                            >
-                                                Редактировать
-                                            </button>
-                                        )}
+                <div className="overflow-x-auto">
+                    <table className="registry-table table-auto w-full border-collapse">
+                        <thead className="registry-table__thead">
+                            <tr>
+                                <th>Группа</th>
+                                <th>Кол-во пользователей</th>
+                                <th>Автор</th>
+                                <th>Дата изменения</th>
+                                <th>Дата создания</th>
+                            </tr>
+                        </thead>
 
-                                        {mode.delete === "full" && (
-                                            <button
-                                                className="admin-btn admin-btn--danger"
-                                                onClick={() =>
-                                                    handleDeleteGroup(group.id)
-                                                }
-                                            >
-                                                Удалить
-                                            </button>
-                                        )}
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="admin-group-card__permissions">
-                                <div className="flex justify-between items-center mb-2">
-                                    <h4>Права доступа</h4>
-                                    {!group.is_system &&
-                                        mode.delete === "full" && (
-                                            <button
-                                                className="admin-btn admin-btn--secondary"
-                                                onClick={() => {
-                                                    setSelectedGroup(group);
-
-                                                    // Предзаполняем существующие права группы
-                                                    const existingPermissions =
-                                                        {};
-                                                    const existingScopes = {};
-
-                                                    if (
-                                                        group.permissions &&
-                                                        group.permissions
-                                                            .length > 0
-                                                    ) {
-                                                        group.permissions.forEach(
-                                                            (perm) => {
-                                                                const key = `${perm.section}_${perm.permission_type}`;
-                                                                existingPermissions[
-                                                                    key
-                                                                ] = true;
-                                                                existingScopes[
-                                                                    key
-                                                                ] =
-                                                                    perm.scope ||
-                                                                    "full";
-                                                            }
-                                                        );
-                                                    }
-
-                                                    setSelectedPermissions(
-                                                        existingPermissions
-                                                    );
-                                                    setPermissionScopes(
-                                                        existingScopes
-                                                    );
-                                                    setShowAddPermissionModal(
-                                                        true
-                                                    );
-                                                }}
-                                            >
-                                                Редактировать права
-                                            </button>
-                                        )}
-                                </div>
-                                {group.permissions &&
-                                group.permissions.length > 0 ? (
-                                    <div className="permission-list">
-                                        {group.permissions.map((perm) => (
-                                            <div
-                                                key={perm.id}
-                                                className="permission-tag"
-                                            >
-                                                {SECTIONS[perm.section] ||
-                                                    perm.section}{" "}
-                                                →{" "}
-                                                {PERMISSION_TYPES[
-                                                    perm.permission_type
-                                                ] || perm.permission_type}{" "}
-                                                (
-                                                {SCOPES[perm.scope] ||
-                                                    perm.scope}
-                                                )
-                                                {!group.is_system &&
-                                                    mode.delete === "full" && (
-                                                        <button
-                                                            onClick={() =>
-                                                                handleDeletePermission(
-                                                                    group.id,
-                                                                    perm.id
-                                                                )
-                                                            }
-                                                        >
-                                                            ×
-                                                        </button>
-                                                    )}
-                                            </div>
-                                        ))}
-                                    </div>
-                                ) : (
-                                    <div className="text-gray-500 text-sm">
-                                        Нет прав
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="admin-group-card__users">
-                                <div className="flex justify-between items-center mb-2">
-                                    <h4>
-                                        Пользователи{" "}
-                                        <span className="text-gray-500 text-sm font-normal">
-                                            ({group.users?.length || 0})
-                                        </span>
-                                    </h4>
-                                    {!group.is_system &&
-                                        mode.edit === "full" && (
-                                            <button
-                                                className="admin-btn admin-btn--secondary"
-                                                onClick={() => {
-                                                    setSelectedGroup(group);
-                                                    setSelectedUsers([]);
-                                                    setShowAddUserModal(true);
-                                                }}
-                                            >
-                                                Добавить пользователя
-                                            </button>
-                                        )}
-                                </div>
-                                {group.users && group.users.length > 0 ? (
-                                    <div className="user-list">
-                                        {group.users.map((user) => (
-                                            <div
-                                                key={user.id}
-                                                className="user-tag"
-                                            >
-                                                {user.name || user.email}
-                                                {!group.is_system &&
-                                                    mode.delete === "full" && (
-                                                        <button
-                                                            onClick={() =>
-                                                                handleRemoveUser(
-                                                                    group.id,
-                                                                    user.id
-                                                                )
-                                                            }
-                                                        >
-                                                            ×
-                                                        </button>
-                                                    )}
-                                            </div>
-                                        ))}
-                                    </div>
-                                ) : (
-                                    <div className="text-gray-500 text-sm">
-                                        Нет пользователей
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    ))}
+                        <tbody className="registry-table__tbody">
+                            {groups.map((item) => (
+                                <AdminGroupItem
+                                    key={item.id}
+                                    PERMISSION_TYPES={PERMISSION_TYPES}
+                                    SCOPES={SCOPES}
+                                    item={item}
+                                    mode={mode}
+                                    handleEditGroup={handleEditGroup}
+                                    handleDeleteGroup={handleDeleteGroup}
+                                />
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             )}
 

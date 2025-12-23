@@ -163,7 +163,7 @@ const Admin = () => {
                                     }
                                     setActiveTab("users");
                                 }}
-                                disabled={isLoading}
+                                // disabled={isLoading}
                             />
                             <label htmlFor="users">Пользователи</label>
                         </li>
@@ -180,7 +180,7 @@ const Admin = () => {
                                     }
                                     setActiveTab("groups");
                                 }}
-                                disabled={isLoading}
+                                // disabled={isLoading}
                             />
                             <label htmlFor="groups">Группы</label>
                         </li>
