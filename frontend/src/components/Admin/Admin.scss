@@ -7,17 +7,6 @@
         flex-grow: 1;
     }
 
-    &-form__group {
-        &:not(:last-of-type) {
-            margin-bottom: 15px;
-        }
-
-        input,
-        textarea {
-            width: 100%;
-        }
-    }
-
     .registry-table__item .delete-button {
         opacity: 1;
     }
