@@ -13,14 +13,50 @@ const AdminGroupItem = ({
     setSelectedGroup,
     setSelectedUsers,
     setShowAddUserModal,
+    setSelectedPermissions,
+    setPermissionScopes,
+    setShowAddPermissionModal,
 }) => {
+    const handleOpenEditor = () => {
+        setSelectedGroup(item);
+
+        // Предзаполняем существующие права группы
+        const existingPermissions = {};
+        const existingScopes = {};
+
+        if (item.permissions && item.permissions.length > 0) {
+            item.permissions.forEach((perm) => {
+                const key = `${perm.section}_${perm.permission_type}`;
+                existingPermissions[key] = true;
+                existingScopes[key] = perm.scope || "full";
+            });
+        }
+
+        setSelectedPermissions(existingPermissions);
+        setPermissionScopes(existingScopes);
+        setShowAddPermissionModal(true);
+    };
+
     return (
         <tr className="registry-table__item transition text-base text-left">
-            <td>{item.name || "—"}</td>
+            <td>
+                {!item.is_system && mode.delete === "full" ? (
+                    <button
+                        className="text-blue"
+                        type="button"
+                        title="Редактировать группу"
+                        onClick={handleOpenEditor}
+                    >
+                        {item.name || "—"}
+                    </button>
+                ) : (
+                    item.name || "—"
+                )}
+            </td>
 
             <td>{item.users.length || "—"}</td>
 
-            <td>{item.created_by || "—"}</td>
+            <td>{item?.creator?.name || "—"}</td>
 
             <td>
                 {item.updated_at
@@ -56,12 +92,12 @@ const AdminGroupItem = ({
                                 />
                             )}
 
-                            {mode.edit === "full" && (
+                            {!item.is_system && mode.delete === "full" && (
                                 <EditButton
                                     title="Редактировать группу"
                                     className="button-hint--left"
                                     hint={true}
-                                    onClick={() => handleEditGroup(item)}
+                                    onClick={handleOpenEditor}
                                 />
                             )}
 

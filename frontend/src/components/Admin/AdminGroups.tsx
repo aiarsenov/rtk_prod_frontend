@@ -576,6 +576,13 @@ const AdminGroups = ({ mode, isLoading, loadGroups, groups }) => {
                                     setSelectedGroup={setSelectedGroup}
                                     setSelectedUsers={setSelectedUsers}
                                     setShowAddUserModal={setShowAddUserModal}
+                                    setSelectedPermissions={
+                                        setSelectedPermissions
+                                    }
+                                    setPermissionScopes={setPermissionScopes}
+                                    setShowAddPermissionModal={
+                                        setShowAddPermissionModal
+                                    }
                                 />
                             ))}
                         </tbody>
