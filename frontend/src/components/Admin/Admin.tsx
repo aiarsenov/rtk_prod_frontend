@@ -17,7 +17,7 @@ import "./Admin.scss";
 import AdminCreateGroupModal from "./AdminCreateGroupModal";
 
 const Admin = () => {
-    const [activeTab, setActiveTab] = useState("users");
+    const [activeTab, setActiveTab] = useState("groups");
 
     const [users, setUsers] = useState([]);
     const [availableEmployees, setAvailableEmployees] = useState([]);

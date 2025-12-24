@@ -8,17 +8,18 @@ import AddButton from "../Buttons/AddButton";
 const AdminGroupItem = ({
     item,
     mode,
-    handleEditGroup,
     handleDeleteGroup,
     setSelectedGroup,
     setSelectedUsers,
     setShowAddUserModal,
     setSelectedPermissions,
     setPermissionScopes,
-    setShowAddPermissionModal,
+    setShowGroupEditor,
+    setEditorState,
 }) => {
     const handleOpenEditor = () => {
         setSelectedGroup(item);
+        setEditorState("edit");
 
         // Предзаполняем существующие права группы
         const existingPermissions = {};
@@ -34,7 +35,7 @@ const AdminGroupItem = ({
 
         setSelectedPermissions(existingPermissions);
         setPermissionScopes(existingScopes);
-        setShowAddPermissionModal(true);
+        setShowGroupEditor(true);
     };
 
     return (
