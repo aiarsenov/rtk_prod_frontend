@@ -198,7 +198,6 @@ const ReportItem = ({
                                 <div
                                     className="cursor-pointer"
                                     onClick={() => {
-                                        if (mode.view !== "full") return;
                                         openReportEditor(props);
                                     }}
                                 >
