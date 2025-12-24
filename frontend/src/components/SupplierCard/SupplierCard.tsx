@@ -253,7 +253,7 @@ const SupplierCard = () => {
             setReportName(
                 `${targetReport.project_name} / ${targetReport.report_period_code}`
             );
-            setContracts(targetReport.customer_contracts); // Передаем спикос контрактов из самого отчета (Акутально толькок в карточке подрядчика)
+            setContracts(targetReport.customer_contracts); // Передаем список контрактов из самого отчета (Акутально толькок в карточке подрядчика)
             setActiveWindow("");
             setReportWindowsState(true);
         }
