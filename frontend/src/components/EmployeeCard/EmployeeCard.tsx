@@ -856,8 +856,6 @@ const EmployeeCard = () => {
                                             ""
                                         }
                                         onChange={(selectedOption) => {
-                                            if (mode.edit !== "full") return;
-
                                             const newValue =
                                                 +selectedOption?.value || "";
 
