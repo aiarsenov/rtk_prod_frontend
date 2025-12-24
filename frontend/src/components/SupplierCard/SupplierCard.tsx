@@ -100,15 +100,15 @@ const SupplierCard = () => {
     };
 
     // Получение договоров
-    const getContracts = () => {
-        return getData(
-            `${import.meta.env.VITE_API_URL}contragents/${supplierId}/contracts`
-        ).then((response) => {
-            if (response?.status == 200) {
-                setContracts(response.data);
-            }
-        });
-    };
+    // const getContracts = () => {
+    //     return getData(
+    //         `${import.meta.env.VITE_API_URL}contragents/${supplierId}/contracts`
+    //     ).then((response) => {
+    //         if (response?.status == 200) {
+    //             setContracts(response.data);
+    //         }
+    //     });
+    // };
 
     // Получаем список отчетов
     const getProjectsReports = () => {
@@ -159,7 +159,7 @@ const SupplierCard = () => {
             await Promise.all([
                 getProjectsReports(),
                 getProjectsManagerReports(),
-                getContracts(),
+                // getContracts(),
             ]);
 
             setIsDataLoaded(true);
@@ -253,6 +253,7 @@ const SupplierCard = () => {
             setReportName(
                 `${targetReport.project_name} / ${targetReport.report_period_code}`
             );
+            setContracts(targetReport.customer_contracts); // Передаем спикос контрактов из самого отчета (Акутально толькок в карточке подрядчика)
             setActiveWindow("");
             setReportWindowsState(true);
         }

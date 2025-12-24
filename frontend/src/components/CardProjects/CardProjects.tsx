@@ -118,8 +118,8 @@ const CardProjects = ({
                                         xmlns="http://www.w3.org/2000/svg"
                                     >
                                         <path
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
+                                            fillRule="evenodd"
+                                            clipRule="evenodd"
                                             d="M8.23 3H3.937V2h5.5a.5.5 0 01.5.5V8h-1V3.707L2.791 9.854l-.707-.708L8.23 3z"
                                             fill="#0BA5EC"
                                         />

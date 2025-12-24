@@ -79,6 +79,7 @@ const ReportWindow = ({
     setReportId,
     mode,
 }: {
+    contracts: object[];
     reportName: string;
     reportWindowsState: boolean;
     reportId: number;
