@@ -13,6 +13,7 @@ export default defineConfig(() => {
         server: {
             host: '0.0.0.0',
             port: 3000,
+            allowedHosts: ['atlas.bizan.pro', 'localhost'],
             proxy: {
                 // Прокси для локальной разработки - проксируем запросы к /api на бэкенд
                 "/api": {
