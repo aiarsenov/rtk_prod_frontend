@@ -11,15 +11,12 @@ const TeammatesSection = ({
     removeTeammate,
     mode,
 }) => {
-    let name;
-
-    if (mode.edit !== "full") {
-        name =
-            physicalPersons.length > 0 &&
-            physicalPersons.find(
-                (item) => item.id === person?.physical_person_id
-            ).name;
-    }
+    let name =
+        physicalPersons.length > 0
+            ? physicalPersons.find(
+                  (item) => item.id === person?.physical_person_id
+              )?.name
+            : "";
 
     // Список селекторов, которые не будут закрываться при повторном клике на поле ввода
     const selectA = useControlledSelect("selectA");

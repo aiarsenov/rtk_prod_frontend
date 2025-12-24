@@ -110,6 +110,8 @@ const GroupEditor = ({
 }) => {
     const [error, setError] = useState("");
 
+    const [newGroupName, setNewGroupName] = useState("");
+
     // Выбранные разделы (чекбокс в конце строки)
     const [selectedSections, setSelectedSections] = useState(new Set());
 
@@ -329,9 +331,9 @@ const GroupEditor = ({
         try {
             // Отправляем все права одним запросом
             await postData(
-                "POST",
+                editorState === "create" ? "POST" : "PATCH",
                 `${API_URL}admin/permission-groups/${selectedGroup.id}/permissions/sync`,
-                { permissions }
+                { newGroupName, permissions: permissions }
             );
 
             setShowGroupEditor(false);
@@ -364,6 +366,16 @@ const GroupEditor = ({
         >
             <form>
                 <div className="action-form__body">
+                    <div className="group-editor__name">
+                        <label className="form-label">Название</label>
+                        <input
+                            type="text"
+                            className="form-field"
+                            // value={newGroupName}
+                            // onChange={(e) => setNewGroupName(e.target.value)}
+                        />
+                    </div>
+
                     <div className="permissions-table-wrapper">
                         <table className="permissions-table">
                             <colgroup>
