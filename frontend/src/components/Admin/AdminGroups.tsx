@@ -7,12 +7,12 @@ import postData from "../../utils/postData";
 import Loader from "../Loader";
 import AdminGroupItem from "./AdminGroupItem";
 import AccessDenied from "../AccessDenied/AccessDenied";
-import AdminEditGroupModal from "./AdminEditGroupModal";
 import GroupEditor from "./GroupEditor";
 
 const AdminGroups = ({
     mode,
     isLoading,
+    accessDenied,
     loadGroups,
     groups,
     showGroupEditor,
@@ -20,21 +20,11 @@ const AdminGroups = ({
     editorState,
     setEditorState,
 }) => {
-    const [showEditModal, setShowEditModal] = useState(false);
-
     const [showAddUserModal, setShowAddUserModal] = useState(false);
+    const [error, setError] = useState("");
 
     const [selectedGroup, setSelectedGroup] = useState(null);
-
     const [allUsers, setAllUsers] = useState([]);
-
-    const [accessDenied, setAccessDenied] = useState(false);
-
-    // Редактор группы
-    const [editGroupName, setEditGroupName] = useState("");
-    const [editGroupDescription, setEditGroupDescription] = useState("");
-
-    // Форма добавления прав
 
     const [selectedPermissions, setSelectedPermissions] = useState({}); // Чекбоксы выбора прав
     // Формат: { 'section_permissionType': true/false }
@@ -44,8 +34,6 @@ const AdminGroups = ({
 
     // Форма добавления пользователя
     const [selectedUsers, setSelectedUsers] = useState([]);
-
-    const [error, setError] = useState("");
 
     const loadAllUsers = async () => {
         try {
@@ -57,45 +45,6 @@ const AdminGroups = ({
             }
         } catch (err) {
             console.error("Ошибка загрузки пользователей:", err);
-        }
-    };
-
-    // const handleEditGroup = (group) => {
-    //     setSelectedGroup(group);
-    //     setEditGroupName(group.name);
-    //     setEditGroupDescription(group.description || "");
-    //     setShowEditModal(true);
-    // };
-
-    const handleUpdateGroup = async (e) => {
-        e.preventDefault();
-
-        try {
-            await postData(
-                "PUT",
-                `${import.meta.env.VITE_API_URL}admin/permission-groups/${
-                    selectedGroup.id
-                }`,
-                {
-                    name: editGroupName,
-                    description: editGroupDescription,
-                }
-            );
-
-            setShowEditModal(false);
-            setEditGroupName("");
-            setEditGroupDescription("");
-            loadGroups();
-        } catch (err) {
-            toast.error(err.message || "Ошибка обновления группы", {
-                isLoading: false,
-                autoClose: 3000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                position:
-                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-            });
-            setError(err.message || "Ошибка обновления группы");
         }
     };
 
@@ -124,30 +73,6 @@ const AdminGroups = ({
             });
         }
     };
-
-    // const handleDeletePermission = async (groupId, permissionId) => {
-    //     if (!confirm("Удалить это право?")) {
-    //         return;
-    //     }
-
-    //     try {
-    //         await postData(
-    //             "DELETE",
-    //             `${API_URL}admin/permission-groups/${groupId}/permissions/${permissionId}`
-    //         );
-
-    //         loadGroups();
-    //     } catch (err) {
-    //         toast.error(err.message || "Ошибка удаления права", {
-    //             isLoading: false,
-    //             autoClose: 3000,
-    //             pauseOnFocusLoss: false,
-    //             pauseOnHover: false,
-    //             position:
-    //                 window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-    //         });
-    //     }
-    // };
 
     const handleAddUsers = async (e) => {
         e.preventDefault();
@@ -185,6 +110,30 @@ const AdminGroups = ({
         }
     };
 
+    // const handleDeletePermission = async (groupId, permissionId) => {
+    //     if (!confirm("Удалить это право?")) {
+    //         return;
+    //     }
+
+    //     try {
+    //         await postData(
+    //             "DELETE",
+    //             `${API_URL}admin/permission-groups/${groupId}/permissions/${permissionId}`
+    //         );
+
+    //         loadGroups();
+    //     } catch (err) {
+    //         toast.error(err.message || "Ошибка удаления права", {
+    //             isLoading: false,
+    //             autoClose: 3000,
+    //             pauseOnFocusLoss: false,
+    //             pauseOnHover: false,
+    //             position:
+    //                 window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+    //         });
+    //     }
+    // };
+
     // const handleRemoveUser = async (groupId, userId) => {
     //     if (!confirm("Удалить пользователя из группы?")) {
     //         return;
@@ -215,6 +164,13 @@ const AdminGroups = ({
                 ? prev.filter((id) => id !== userId)
                 : [...prev, userId]
         );
+    };
+
+    const closeEditor = () => {
+        setShowGroupEditor(false);
+        setSelectedGroup(null);
+        setSelectedPermissions({});
+        setPermissionScopes({});
     };
 
     useEffect(() => {
@@ -271,23 +227,11 @@ const AdminGroups = ({
                 </div>
             )}
 
-            {/* Модальное окно редактирования группы */}
-            {showEditModal && selectedGroup && (
-                <AdminEditGroupModal
-                    setShowEditModal={setShowEditModal}
-                    handleUpdateGroup={handleUpdateGroup}
-                    setEditGroupName={setEditGroupName}
-                    editGroupName={editGroupName}
-                    editGroupDescription={editGroupDescription}
-                    setEditGroupDescription={setEditGroupDescription}
-                />
-            )}
-
             {/* Модальное окно добавления прав */}
             {showGroupEditor && (
                 <GroupEditor
                     editorState={editorState}
-                    setShowGroupEditor={setShowGroupEditor}
+                    closeEditor={closeEditor}
                     selectedGroup={selectedGroup}
                     selectedPermissions={selectedPermissions}
                     setSelectedPermissions={setSelectedPermissions}

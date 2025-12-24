@@ -220,6 +220,7 @@ const Admin = () => {
                         <AdminGroups
                             mode={mode}
                             isLoading={isLoading}
+                            accessDenied={accessDenied}
                             loadGroups={loadGroups}
                             groups={groups}
                             showGroupEditor={showGroupEditor}

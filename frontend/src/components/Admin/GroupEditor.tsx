@@ -100,7 +100,7 @@ const PERMISSION_MATRIX = {
 
 const GroupEditor = ({
     editorState,
-    setShowGroupEditor,
+    closeEditor,
     selectedGroup,
     selectedPermissions,
     setSelectedPermissions,
@@ -342,7 +342,7 @@ const GroupEditor = ({
                 permissions: permissions,
             });
 
-            setShowGroupEditor(false);
+            closeEditor();
             setSelectedPermissions({});
             setPermissionScopes({});
             setSelectedSections(new Set());
@@ -373,10 +373,10 @@ const GroupEditor = ({
             title={`${
                 editorState === "create"
                     ? "Добавить группу"
-                    : `Редактировать группу: ${selectedGroup.name}`
+                    : `Редактировать группу: ${selectedGroup?.name}`
             }`}
             className="group-editor"
-            onClick={() => setShowGroupEditor(false)}
+            onClick={closeEditor}
         >
             <form>
                 <div className="action-form__body">
@@ -460,19 +460,26 @@ const GroupEditor = ({
                                                             className="permission-cell"
                                                         >
                                                             {isAllowed ? (
-                                                                <input
-                                                                    type="checkbox"
-                                                                    checked={
-                                                                        isChecked
-                                                                    }
-                                                                    onChange={() =>
-                                                                        handlePermissionCheckboxChange(
-                                                                            sectionKey,
-                                                                            permType
-                                                                        )
-                                                                    }
-                                                                    className="permission-checkbox"
-                                                                />
+                                                                <label
+                                                                    htmlFor={`${sectionKey}_${permType}`}
+                                                                    className="form-checkbox"
+                                                                >
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        id={`${sectionKey}_${permType}`}
+                                                                        checked={
+                                                                            isChecked
+                                                                        }
+                                                                        onChange={() =>
+                                                                            handlePermissionCheckboxChange(
+                                                                                sectionKey,
+                                                                                permType
+                                                                            )
+                                                                        }
+                                                                        className="permission-checkbox"
+                                                                    />
+                                                                    <div className="checkbox"></div>
+                                                                </label>
                                                             ) : (
                                                                 <span className="permission-disabled">
                                                                     —
@@ -553,18 +560,25 @@ const GroupEditor = ({
 
                                             {/* Чекбокс выбора всей строки */}
                                             <td className="row-checkbox-cell">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={selectedSections.has(
-                                                        sectionKey
-                                                    )}
-                                                    onChange={() =>
-                                                        handleSectionCheckboxChange(
+                                                <label
+                                                    htmlFor={`${sectionKey}`}
+                                                    className="form-checkbox"
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selectedSections.has(
                                                             sectionKey
-                                                        )
-                                                    }
-                                                    className="row-checkbox"
-                                                />
+                                                        )}
+                                                        id={sectionKey}
+                                                        onChange={() =>
+                                                            handleSectionCheckboxChange(
+                                                                sectionKey
+                                                            )
+                                                        }
+                                                        className="row-checkbox"
+                                                    />
+                                                    <div className="checkbox"></div>
+                                                </label>
                                             </td>
                                         </tr>
                                     );
@@ -574,23 +588,30 @@ const GroupEditor = ({
                                 <tr className="mass-select-row">
                                     {/* Массовые чекбоксы для "Выбор прав" */}
                                     {["view", "edit", "delete"].map(
-                                        (permType) => (
+                                        (permType, index) => (
                                             <td
                                                 key={`mass_${permType}`}
                                                 className="mass-checkbox-cell"
                                             >
-                                                <input
-                                                    type="checkbox"
-                                                    checked={isMassCheckboxChecked(
-                                                        permType
-                                                    )}
-                                                    onChange={() =>
-                                                        handleMassPermissionCheckboxChange(
+                                                <label
+                                                    htmlFor={`${permType}_${index}`}
+                                                    className="form-checkbox"
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        id={`${permType}_${index}`}
+                                                        checked={isMassCheckboxChecked(
                                                             permType
-                                                        )
-                                                    }
-                                                    className="mass-checkbox"
-                                                />
+                                                        )}
+                                                        onChange={() =>
+                                                            handleMassPermissionCheckboxChange(
+                                                                permType
+                                                            )
+                                                        }
+                                                        className="row-checkbox"
+                                                    />
+                                                    <div className="checkbox"></div>
+                                                </label>
                                             </td>
                                         )
                                     )}
@@ -643,12 +664,20 @@ const GroupEditor = ({
 
                                     {/* Чекбокс для выделения всех строк */}
                                     <td className="mass-checkbox-cell">
-                                        <input
-                                            type="checkbox"
-                                            checked={areAllRowsSelected}
-                                            onChange={handleSelectAllRows}
-                                            className="row-checkbox"
-                                        />
+                                        <label
+                                            htmlFor="select_all"
+                                            className="form-checkbox"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                id="select_all"
+                                                checked={areAllRowsSelected}
+                                                onChange={handleSelectAllRows}
+                                                className="row-checkbox"
+                                            />
+
+                                            <div className="checkbox"></div>
+                                        </label>
                                     </td>
                                 </tr>
                             </tbody>
@@ -662,7 +691,7 @@ const GroupEditor = ({
                     <button
                         type="button"
                         className="cancel-button"
-                        onClick={() => setShowGroupEditor(false)}
+                        onClick={closeEditor}
                         title="Закрыть редактор"
                     >
                         Отмена
