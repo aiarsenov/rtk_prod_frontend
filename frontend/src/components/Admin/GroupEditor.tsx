@@ -380,12 +380,12 @@ const GroupEditor = ({
         >
             <form>
                 <div className="action-form__body">
-                    <div className="group-editor__name">
+                    <div className="group-editor__name mb-[15px]">
                         <label className="form-label">Название</label>
 
                         <input
                             type="text"
-                            className="form-field"
+                            className="form-field w-[350px]"
                             value={newGroupName}
                             onChange={(e) => setNewGroupName(e.target.value)}
                         />
