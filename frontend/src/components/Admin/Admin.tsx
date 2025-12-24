@@ -14,7 +14,6 @@ import Popup from "../Popup/Popup";
 
 import "../AccessDenied/AccessDenied.scss";
 import "./Admin.scss";
-import AdminCreateGroupModal from "./AdminCreateGroupModal";
 
 const Admin = () => {
     const [activeTab, setActiveTab] = useState("groups");
@@ -27,7 +26,8 @@ const Admin = () => {
 
     const [isLoading, setIsLoading] = useState(true);
     const [showInviteModal, setShowInviteModal] = useState(false); // Попап приглашения пользователей
-    const [showCreateModal, setShowCreateModal] = useState(false); // Попап добавления группы
+    const [showGroupEditor, setShowGroupEditor] = useState(false); // Попап добавления группы
+    const [editorState, setEditorState] = useState("create"); // Режим редактора группы
 
     const [accessDenied, setAccessDenied] = useState(false);
     const user = useSelector((state) => state.user.data);
@@ -196,7 +196,9 @@ const Admin = () => {
                             label="Добавить группу"
                             onClick={() => {
                                 if (activeTab != "groups") return;
-                                setShowCreateModal(true);
+                                setEditorState("create");
+                                setShowGroupEditor(true);
+                                // setShowCreateModal(true);
                             }}
                             isDisabled={isLoading || activeTab != "groups"}
                         />
@@ -220,6 +222,10 @@ const Admin = () => {
                             isLoading={isLoading}
                             loadGroups={loadGroups}
                             groups={groups}
+                            showGroupEditor={showGroupEditor}
+                            setShowGroupEditor={setShowGroupEditor}
+                            editorState={editorState}
+                            setEditorState={setEditorState}
                         />
                     )}
                 </section>
@@ -370,14 +376,6 @@ const Admin = () => {
                         </button>
                     </div>
                 </Popup>
-            )}
-
-            {/* Модальное окно создания группы */}
-            {showCreateModal && (
-                <AdminCreateGroupModal
-                    setShowCreateModal={setShowCreateModal}
-                    loadGroups={loadGroups}
-                />
             )}
         </main>
     );

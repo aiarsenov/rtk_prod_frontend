@@ -11,13 +11,6 @@ const TeammatesSection = ({
     removeTeammate,
     mode,
 }) => {
-    let name =
-        physicalPersons.length > 0
-            ? physicalPersons.find(
-                  (item) => item.id === person?.physical_person_id
-              )?.name
-            : "";
-
     // Список селекторов, которые не будут закрываться при повторном клике на поле ввода
     const selectA = useControlledSelect("selectA");
     const selectB = useControlledSelect("selectB");
@@ -52,8 +45,8 @@ const TeammatesSection = ({
 
             <div className="person-block__body">
                 {mode.edit !== "full" ? (
-                    <div className="form-field" title={name}>
-                        {name}
+                    <div className="form-field" title={person.full_name}>
+                        {person.full_name}
                     </div>
                 ) : (
                     <CreatableSelect
@@ -61,7 +54,7 @@ const TeammatesSection = ({
                             physicalPersons.length > 0 &&
                             physicalPersons.map((item) => ({
                                 value: item.id,
-                                label: item.name,
+                                label: item.full_name,
                             }))
                         }
                         className="form-select-extend"
@@ -73,7 +66,7 @@ const TeammatesSection = ({
                                 physicalPersons
                                     .map((item) => ({
                                         value: item.id,
-                                        label: item.name,
+                                        label: item.full_name,
                                     }))
                                     .find(
                                         (option) =>

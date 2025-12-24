@@ -10,9 +10,18 @@ import AccessDenied from "../AccessDenied/AccessDenied";
 import AdminEditGroupModal from "./AdminEditGroupModal";
 import GroupEditor from "./GroupEditor";
 
-const AdminGroups = ({ mode, isLoading, loadGroups, groups }) => {
+const AdminGroups = ({
+    mode,
+    isLoading,
+    loadGroups,
+    groups,
+    showGroupEditor,
+    setShowGroupEditor,
+    editorState,
+    setEditorState,
+}) => {
     const [showEditModal, setShowEditModal] = useState(false);
-    const [showGroupEditor, setShowGroupEditor] = useState(false);
+
     const [showAddUserModal, setShowAddUserModal] = useState(false);
 
     const [selectedGroup, setSelectedGroup] = useState(null);
@@ -24,7 +33,6 @@ const AdminGroups = ({ mode, isLoading, loadGroups, groups }) => {
     // Редактор группы
     const [editGroupName, setEditGroupName] = useState("");
     const [editGroupDescription, setEditGroupDescription] = useState("");
-    const [editorState, setEditorState] = useState("create");
 
     // Форма добавления прав
 
@@ -276,7 +284,7 @@ const AdminGroups = ({ mode, isLoading, loadGroups, groups }) => {
             )}
 
             {/* Модальное окно добавления прав */}
-            {showGroupEditor && selectedGroup && (
+            {showGroupEditor && (
                 <GroupEditor
                     editorState={editorState}
                     setShowGroupEditor={setShowGroupEditor}

@@ -675,7 +675,7 @@ const ReportWindow = ({
             getData(
                 `${import.meta.env.VITE_API_URL}report-types?with-count=true`
             ),
-            getData(`${import.meta.env.VITE_API_URL}physical-persons`),
+            getData(`${import.meta.env.VITE_API_URL}reports/team-members`),
             getData(`${import.meta.env.VITE_API_URL}suppliers`),
             getData(`${import.meta.env.VITE_API_URL}roles?minimal=true`),
             getData(`${import.meta.env.VITE_API_URL}report-statuses`),

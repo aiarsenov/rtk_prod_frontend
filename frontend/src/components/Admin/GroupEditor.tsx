@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import postData from "../../utils/postData";
 import { toast } from "react-toastify";
@@ -302,12 +302,20 @@ const GroupEditor = ({
         setPermissionScopes(newScopes);
     };
 
-    const handleAddPermission = async (e) => {
-        e.preventDefault();
+    // Создание / Изменение группы
+    const handleSaveGroup = async () => {
         setError("");
+
+        const URL =
+            editorState === "create"
+                ? `${import.meta.env.VITE_API_URL}admin/permission-groups`
+                : `${import.meta.env.VITE_API_URL}admin/permission-groups/${
+                      selectedGroup.id
+                  }`;
 
         // Преобразуем selectedPermissions в массив прав для отправки
         const permissions = [];
+
         Object.entries(selectedPermissions).forEach(([key, isSelected]) => {
             if (isSelected) {
                 // Правильно разбираем ключ: последняя часть - это permission_type, все остальное - section
@@ -329,12 +337,10 @@ const GroupEditor = ({
         }
 
         try {
-            // Отправляем все права одним запросом
-            await postData(
-                editorState === "create" ? "POST" : "PATCH",
-                `${API_URL}admin/permission-groups/${selectedGroup.id}/permissions/sync`,
-                { newGroupName, permissions: permissions }
-            );
+            await postData(editorState === "create" ? "POST" : "PATCH", URL, {
+                name: newGroupName,
+                permissions: permissions,
+            });
 
             setShowGroupEditor(false);
             setSelectedPermissions({});
@@ -354,6 +360,14 @@ const GroupEditor = ({
         }
     };
 
+    useEffect(() => {
+        if (selectedGroup?.name) {
+            setNewGroupName(selectedGroup?.name);
+        } else {
+            setNewGroupName("");
+        }
+    }, [selectedGroup]);
+
     return (
         <Popup
             title={`${
@@ -368,11 +382,12 @@ const GroupEditor = ({
                 <div className="action-form__body">
                     <div className="group-editor__name">
                         <label className="form-label">Название</label>
+
                         <input
                             type="text"
                             className="form-field"
-                            // value={newGroupName}
-                            // onChange={(e) => setNewGroupName(e.target.value)}
+                            value={newGroupName}
+                            onChange={(e) => setNewGroupName(e.target.value)}
                         />
                     </div>
 
@@ -661,7 +676,7 @@ const GroupEditor = ({
                                 ? "Добавить группу"
                                 : `Сохранить изменения`
                         }`}
-                        onClick={handleAddPermission}
+                        onClick={handleSaveGroup}
                     >
                         {editorState === "create" ? "Добавить" : `Сохранить`}
                     </button>
