@@ -86,5 +86,11 @@
         { "label": "Кол-во сотрудников в подразделении", "key": "total_employees_count", "hint": true },
         { "label": "Последнее изменение", "key": "updated_at" },
         { "label": "Автор измнения", "key": "updated_by" }
+    ],
+    "leads": [
+        { "label": "Название", "key": "name" },
+        { "label": "Кол-во проектов в воронке продаж", "key": "sales_funnel_projects_count" },
+        { "label": "Последнее изменение", "key": "updated_at" },
+        { "label": "Автор измнения", "key": "updated_by" }
     ]
 }

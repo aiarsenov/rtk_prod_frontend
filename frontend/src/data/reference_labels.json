@@ -53,5 +53,8 @@
     "departments": [
         { "label": "Наименование", "key": "name" },
         { "label": "Учитывать в численности и ФОТ", "key": "include_in_payroll" }
+    ],
+    "leads": [
+        { "label": "Название", "key": "name" }
     ]
 }

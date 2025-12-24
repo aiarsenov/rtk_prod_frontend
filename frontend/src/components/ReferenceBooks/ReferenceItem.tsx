@@ -206,7 +206,8 @@ const ReferenceItem = ({
                                     data.employee_count > 0 ||
                                     data.employees_count > 0 ||
                                     (bookId == "roles" && data.count > 0) ||
-                                    data.total_employees_count > 0
+                                    data.total_employees_count > 0 ||
+                                    (bookId == "leads" && !data.can_delete)
                                 }
                             >
                                 <svg

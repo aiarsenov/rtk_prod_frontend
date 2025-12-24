@@ -994,7 +994,8 @@ const SingleBook = () => {
                             bookId != "creditor" &&
                             bookId != "contragent" &&
                             bookId != "working-hours" &&
-                            bookId != "report-types" && (
+                            bookId != "report-types" &&
+                            bookId != "leads" && (
                                 <button
                                     type="button"
                                     className="button-active"
