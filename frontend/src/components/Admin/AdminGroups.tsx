@@ -77,8 +77,8 @@ const AdminGroups = ({
     };
 
     // Закрепление пользователей за группой
-    const handleAddGroupUsers = () => {
-        if (selectedUsers.length === 0) {
+    const handleAddGroupUsers = (users) => {
+        if (users.length === 0) {
             alert("Выберите хотя бы одного пользователя");
             return;
         }
@@ -89,7 +89,7 @@ const AdminGroups = ({
                 selectedGroup.id
             }/users`,
             {
-                user_ids: selectedUsers,
+                user_ids: users,
             }
         )
             .then((response) => {

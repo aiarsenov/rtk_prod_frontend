@@ -1,6 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Popup from "../Popup/Popup";
+
+const arraysAreDifferent = (arr1, arr2) => {
+    if (arr1.length !== arr2.length) {
+        return true;
+    }
+
+    const ids1 = new Set(arr1.map((item) => item.id));
+    const ids2 = new Set(arr2.map((item) => item.id));
+
+    return [...ids1].some((id) => !ids2.has(id));
+};
 
 const AdminGroupAddUsersModal = ({
     closeModal,
@@ -8,12 +19,44 @@ const AdminGroupAddUsersModal = ({
     selectedGroup,
     handleAddGroupUsers,
 }) => {
-    const [selectedUsers, setSelectedUsers] = useState([]);
+    const [selectedUsers, setSelectedUsers] = useState([]); // Список добавленных в группу пользователей
+    const [resultList, setResultList] = useState([]); // Список отображаемых пользователей
+    const [isDifferent, setIsDifferent] = useState(false); // Изменился ли список добавленных пользователей
+
+    useEffect(() => {
+        if (selectedGroup && selectedGroup?.users?.length > 0) {
+            setSelectedUsers(selectedGroup.users);
+        }
+    }, [selectedGroup]);
+
+    useEffect(() => {
+        if (allUsers.length > 0 && selectedUsers.length > 0) {
+            const existingUserIds = selectedUsers
+                .map((user) => user?.id)
+                .filter((id) => id != null);
+
+            const availableUsers = allUsers.filter(
+                (user) => !existingUserIds.includes(user.id)
+            );
+
+            setResultList(availableUsers);
+        } else if (allUsers.length > 0) {
+            setResultList(allUsers);
+        }
+    }, [allUsers, selectedUsers]);
+
+    useEffect(() => {
+        if (arraysAreDifferent(selectedGroup.users, selectedUsers)) {
+            setIsDifferent(true);
+        } else {
+            setIsDifferent(false);
+        }
+    }, [selectedUsers]);
 
     return (
         <Popup title="Добавить пользователей в группу" onClick={closeModal}>
             <form className="admin-form">
-                <div className="admin-form__users">
+                <div className="admin-form__users" style={{ paddingBottom: 0 }}>
                     <div className="multi-select__actions">
                         <button
                             className="multi-select__selectall-button"
@@ -23,24 +66,20 @@ const AdminGroupAddUsersModal = ({
                                 if (allUsers.length === selectedUsers.length)
                                     return;
 
-                                // setSelectedEmployees(
-                                //     availableEmployees.map((item) => ({
-                                //         physical_person_id: item.id,
-                                //         email: item.email,
-                                //         resend: false,
-                                //     }))
-                                // );
+                                setSelectedUsers(allUsers);
                             }}
                         >
                             Выбрать все
                         </button>
 
-                        {selectedUsers.length > 0 && (
+                        {isDifferent && (
                             <button
                                 className="multi-select__reset-button"
                                 type="button"
                                 title="Сбросить выбор"
-                                onClick={() => setSelectedUsers([])}
+                                onClick={() => {
+                                    setSelectedUsers(selectedGroup.users);
+                                }}
                             >
                                 <span>
                                     <svg
@@ -62,8 +101,8 @@ const AdminGroupAddUsersModal = ({
                     </div>
 
                     <div className="admin-form__users-list">
-                        {allUsers.length > 0 &&
-                            allUsers.map((item) => (
+                        {resultList.length > 0 &&
+                            resultList.map((item) => (
                                 <label
                                     className="form-checkbox"
                                     key={item.id}
@@ -78,70 +117,44 @@ const AdminGroupAddUsersModal = ({
                                         type="checkbox"
                                         name={item.name}
                                         id={item.id}
-                                        // checked={selectedEmployees.some(
-                                        //     (emp) =>
-                                        //         emp.physical_person_id ===
-                                        //         item.id
-                                        // )}
-                                        // onChange={(e) => {
-                                        //     const checked = e.target.checked;
-
-                                        //     setSelectedEmployees((prev) => {
-                                        //         if (checked) {
-                                        //             const exists = prev.some(
-                                        //                 (emp) =>
-                                        //                     emp.physical_person_id ===
-                                        //                     item.id
-                                        //             );
-
-                                        //             if (exists) return prev;
-
-                                        //             return [
-                                        //                 ...prev,
-                                        //                 {
-                                        //                     physical_person_id:
-                                        //                         item.id,
-                                        //                     email: item.email,
-                                        //                     resend: false,
-                                        //                 },
-                                        //             ];
-                                        //         }
-
-                                        //         return prev.filter(
-                                        //             (emp) =>
-                                        //                 emp.physical_person_id !==
-                                        //                 item.id
-                                        //         );
-                                        //     });
-                                        // }}
+                                        onChange={() => {
+                                            setSelectedUsers([
+                                                ...selectedUsers,
+                                                item,
+                                            ]);
+                                        }}
                                     />
-                                    <div className="checkbox"></div>
                                 </label>
                             ))}
                     </div>
+                </div>
 
-                    <div className="admin-group-card__users">
-                        {selectedUsers.length > 0 && (
-                            <div className="user-list">
-                                {selectedUsers.map((user) => (
-                                    <div key={user.id} className="user-tag">
-                                        {user.name || user.email}
+                <div
+                    className="flex flex-col gap-[10px] max-h-[110px] overflow-y-auto px-8 py-2"
+                    style={{
+                        borderBottom: "1px solid var(--color-gray-40)",
+                    }}
+                >
+                    {selectedUsers.length > 0 &&
+                        selectedUsers.map((user) => (
+                            <div key={user.id} className="user-tag w-fit">
+                                {user.name || user.email}
 
-                                        <button
-                                        // onClick={() =>
-                                        //     handleRemoveUser(
-                                        //         item.id,
-                                        //         user.id
-                                        //     )
-                                        // }
-                                        >
-                                            ×
-                                        </button>
-                                    </div>
-                                ))}
+                                <button
+                                    onClick={() =>
+                                        setSelectedUsers(
+                                            selectedUsers.filter(
+                                                (item) => item.id !== user.id
+                                            )
+                                        )
+                                    }
+                                    type="button"
+                                    title="Удалить пользователя из списка"
+                                >
+                                    ×
+                                </button>
                             </div>
-                        )}
-                    </div>
+                        ))}
                 </div>
             </form>
 
@@ -159,7 +172,11 @@ const AdminGroupAddUsersModal = ({
                     type="button"
                     className="action-button"
                     title="Сохранить изменения"
-                    onClick={handleAddGroupUsers}
+                    onClick={() =>
+                        handleAddGroupUsers(
+                            selectedUsers.map((item) => item.id)
+                        )
+                    }
                     disabled={selectedUsers.length <= 0}
                 >
                     Сохранить
