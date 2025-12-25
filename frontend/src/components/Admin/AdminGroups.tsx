@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 
 import getData from "../../utils/getData";
 import postData from "../../utils/postData";
+import { useBodyScrollLock } from "../../hooks/useBodyScrollLock.js";
 
 import AccessDenied from "../AccessDenied/AccessDenied";
 import Loader from "../Loader";
@@ -155,6 +156,8 @@ const AdminGroups = ({
     useEffect(() => {
         loadAllUsers();
     }, []);
+
+    useBodyScrollLock(showAddUserModal || deleteGroupId || showGroupEditor); // Блокируем экран при открытии попапа или редактора отчета
 
     if (isLoading) {
         return <Loader />;
