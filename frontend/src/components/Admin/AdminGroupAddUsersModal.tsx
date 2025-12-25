@@ -130,9 +130,9 @@ const AdminGroupAddUsersModal = ({
                 </div>
 
                 <div
-                    className="flex flex-col gap-[10px] max-h-[110px] overflow-y-auto px-8 py-2"
+                    className="flex flex-col gap-[10px] h-[110px] overflow-y-auto px-8 py-2"
                     style={{
-                        borderBottom: "1px solid var(--color-gray-40)",
+                        borderBottom: "1px solid var(--color-gray-30)",
                     }}
                 >
                     {selectedUsers.length > 0 &&
