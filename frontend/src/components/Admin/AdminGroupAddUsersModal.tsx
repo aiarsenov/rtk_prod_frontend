@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 
+import { createDebounce } from "../../utils/debounce.js";
+
 import Popup from "../Popup/Popup";
+import Search from "../Search/Search";
 
 const arraysAreDifferent = (arr1, arr2) => {
     if (arr1.length !== arr2.length) {
@@ -23,6 +26,8 @@ const AdminGroupAddUsersModal = ({
     const [resultList, setResultList] = useState([]); // Список отображаемых пользователей
     const [isDifferent, setIsDifferent] = useState(false); // Изменился ли список добавленных пользователей
 
+    const [searchQuery, setSearchQuery] = useState("");
+
     useEffect(() => {
         if (selectedGroup && selectedGroup?.users?.length > 0) {
             setSelectedUsers(selectedGroup.users);
@@ -30,20 +35,35 @@ const AdminGroupAddUsersModal = ({
     }, [selectedGroup]);
 
     useEffect(() => {
-        if (allUsers.length > 0 && selectedUsers.length > 0) {
+        let filteredUsers = allUsers;
+
+        // Фильтрация по поисковому запросу
+        if (searchQuery.trim() !== "") {
+            const query = searchQuery.toLowerCase();
+            filteredUsers = allUsers.filter(
+                (user) =>
+                    user.name?.toLowerCase().includes(query) ||
+                    user.email?.toLowerCase().includes(query)
+            );
+        }
+
+        // Исключение уже выбранных пользователей
+        if (filteredUsers.length > 0 && selectedUsers.length > 0) {
             const existingUserIds = selectedUsers
                 .map((user) => user?.id)
                 .filter((id) => id != null);
 
-            const availableUsers = allUsers.filter(
+            const availableUsers = filteredUsers.filter(
                 (user) => !existingUserIds.includes(user.id)
             );
 
             setResultList(availableUsers);
-        } else if (allUsers.length > 0) {
-            setResultList(allUsers);
+        } else if (filteredUsers.length > 0) {
+            setResultList(filteredUsers);
+        } else {
+            setResultList([]);
         }
-    }, [allUsers, selectedUsers]);
+    }, [allUsers, selectedUsers, searchQuery]);
 
     useEffect(() => {
         if (arraysAreDifferent(selectedGroup.users, selectedUsers)) {
@@ -53,8 +73,23 @@ const AdminGroupAddUsersModal = ({
         }
     }, [selectedUsers]);
 
+    const debouncedSearch = createDebounce(
+        (event) => {
+            setSearchQuery(event.value || "");
+        },
+        150,
+        false
+    );
+
     return (
         <Popup title="Добавить пользователей в группу" onClick={closeModal}>
+            <div className="px-[30px] pt-[15px]">
+                <Search
+                    placeholder="Найти пользователя"
+                    onSearch={debouncedSearch}
+                />
+            </div>
+
             <form className="admin-form">
                 <div className="admin-form__users" style={{ paddingBottom: 0 }}>
                     <div className="multi-select__actions">
@@ -130,7 +165,7 @@ const AdminGroupAddUsersModal = ({
                 </div>
 
                 <div
-                    className="flex flex-col gap-[10px] h-[110px] overflow-y-auto px-8 py-2"
+                    className="flex flex-col gap-[10px] h-[110px] overflow-y-auto px-[30px] py-2"
                     style={{
                         borderBottom: "1px solid var(--color-gray-30)",
                     }}
