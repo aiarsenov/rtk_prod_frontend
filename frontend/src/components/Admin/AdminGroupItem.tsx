@@ -123,15 +123,6 @@ const AdminGroupItem = ({
                                 />
                             )}
 
-                            {!item.is_system && mode.delete === "full" && (
-                                <EditButton
-                                    title="Редактировать группу"
-                                    className="button-hint--left"
-                                    hint={true}
-                                    onClick={handleOpenEditor}
-                                />
-                            )}
-
                             {mode.delete === "full" && (
                                 <DeleteButton
                                     onClick={() => setDeleteGroupId(item.id)}
