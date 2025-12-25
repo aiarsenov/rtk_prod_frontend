@@ -85,7 +85,7 @@ const AdminGroupAddUsersModal = ({
         <Popup title="Добавить пользователей в группу" onClick={closeModal}>
             <div className="px-[30px] pt-[15px]">
                 <Search
-                    placeholder="Найти пользователя"
+                    placeholder="Поиск по имени или email"
                     onSearch={debouncedSearch}
                 />
             </div>
