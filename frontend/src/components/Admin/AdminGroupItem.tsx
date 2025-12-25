@@ -1,7 +1,6 @@
 import { format, parseISO } from "date-fns";
 import { ru } from "date-fns/locale";
 
-import EditButton from "../Buttons/EditButton";
 import DeleteButton from "../Buttons/DeleteButton";
 import AddButton from "../Buttons/AddButton";
 
@@ -53,35 +52,6 @@ const AdminGroupItem = ({
                 ) : (
                     item.name || "—"
                 )}
-
-                {/* <div className="admin-group-card__users">
-                    {item.users && item.users.length > 0 ? (
-                        <div className="user-list">
-                            {item.users.map((user) => (
-                                <div key={user.id} className="user-tag">
-                                    {user.name || user.email}
-                                    {!item.is_system &&
-                                        mode.delete === "full" && (
-                                            <button
-                                                onClick={() =>
-                                                    handleRemoveUser(
-                                                        item.id,
-                                                        user.id
-                                                    )
-                                                }
-                                            >
-                                                ×
-                                            </button>
-                                        )}
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="text-gray-500 text-sm">
-                            Нет пользователей
-                        </div>
-                    )}
-                </div> */}
             </td>
 
             <td>{item.users.length || "—"}</td>

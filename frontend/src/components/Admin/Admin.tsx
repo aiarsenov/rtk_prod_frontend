@@ -356,7 +356,7 @@ const Admin = () => {
                         </div>
                     </form>
 
-                    <div className="action-form__footer">
+                    <div className="action-form__footer admin-form__footer">
                         <button
                             type="button"
                             className="cancel-button"
