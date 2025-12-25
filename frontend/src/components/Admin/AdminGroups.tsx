@@ -4,10 +4,11 @@ import { toast } from "react-toastify";
 import getData from "../../utils/getData";
 import postData from "../../utils/postData";
 
+import AccessDenied from "../AccessDenied/AccessDenied";
 import Loader from "../Loader";
 import AdminGroupItem from "./AdminGroupItem";
-import AccessDenied from "../AccessDenied/AccessDenied";
 import GroupEditor from "./GroupEditor";
+import Popup from "../Popup/Popup";
 
 const AdminGroups = ({
     mode,
@@ -24,16 +25,15 @@ const AdminGroups = ({
     const [error, setError] = useState("");
 
     const [selectedGroup, setSelectedGroup] = useState(null);
+    const [selectedUsers, setSelectedUsers] = useState([]);
     const [allUsers, setAllUsers] = useState([]);
+    const [deleteGroupId, setDeleteGroupId] = useState(null);
 
     const [selectedPermissions, setSelectedPermissions] = useState({}); // Чекбоксы выбора прав
     // Формат: { 'section_permissionType': true/false }
 
     const [permissionScopes, setPermissionScopes] = useState({}); // Скоупы для каждой конкретной ячейки (раздел + тип права)
     // Формат: { 'section_permissionType': 'full' | 'limited' }
-
-    // Форма добавления пользователя
-    const [selectedUsers, setSelectedUsers] = useState([]);
 
     const loadAllUsers = async () => {
         try {
@@ -48,19 +48,16 @@ const AdminGroups = ({
         }
     };
 
-    const handleDeleteGroup = async (groupId) => {
-        if (!confirm("Вы уверены, что хотите удалить группу?")) {
-            return;
-        }
-
+    const handleDeleteGroup = async () => {
         try {
             await postData(
                 "DELETE",
                 `${
                     import.meta.env.VITE_API_URL
-                }admin/permission-groups/${groupId}`
+                }admin/permission-groups/${deleteGroupId}`
             );
 
+            setDeleteGroupId(null);
             loadGroups();
         } catch (err) {
             toast.error(err.message || "Ошибка удаления группы", {
@@ -74,8 +71,7 @@ const AdminGroups = ({
         }
     };
 
-    const handleAddUsers = async (e) => {
-        e.preventDefault();
+    const handleAddUsers = async () => {
         setError("");
 
         if (selectedUsers.length === 0) {
@@ -110,53 +106,29 @@ const AdminGroups = ({
         }
     };
 
-    // const handleDeletePermission = async (groupId, permissionId) => {
-    //     if (!confirm("Удалить это право?")) {
-    //         return;
-    //     }
+    const handleRemoveUser = async (groupId, userId) => {
+        if (!confirm("Удалить пользователя из группы?")) {
+            return;
+        }
 
-    //     try {
-    //         await postData(
-    //             "DELETE",
-    //             `${API_URL}admin/permission-groups/${groupId}/permissions/${permissionId}`
-    //         );
+        try {
+            await postData(
+                "DELETE",
+                `${API_URL}admin/permission-groups/${groupId}/users/${userId}`
+            );
 
-    //         loadGroups();
-    //     } catch (err) {
-    //         toast.error(err.message || "Ошибка удаления права", {
-    //             isLoading: false,
-    //             autoClose: 3000,
-    //             pauseOnFocusLoss: false,
-    //             pauseOnHover: false,
-    //             position:
-    //                 window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-    //         });
-    //     }
-    // };
-
-    // const handleRemoveUser = async (groupId, userId) => {
-    //     if (!confirm("Удалить пользователя из группы?")) {
-    //         return;
-    //     }
-
-    //     try {
-    //         await postData(
-    //             "DELETE",
-    //             `${API_URL}admin/permission-groups/${groupId}/users/${userId}`
-    //         );
-
-    //         loadGroups();
-    //     } catch (err) {
-    //         toast.error(err.message || "Ошибка удаления пользователя", {
-    //             isLoading: false,
-    //             autoClose: 3000,
-    //             pauseOnFocusLoss: false,
-    //             pauseOnHover: false,
-    //             position:
-    //                 window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-    //         });
-    //     }
-    // };
+            loadGroups();
+        } catch (err) {
+            toast.error(err.message || "Ошибка удаления пользователя", {
+                isLoading: false,
+                autoClose: 3000,
+                pauseOnFocusLoss: false,
+                pauseOnHover: false,
+                position:
+                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+            });
+        }
+    };
 
     const toggleUserSelection = (userId) => {
         setSelectedUsers((prev) =>
@@ -210,7 +182,7 @@ const AdminGroups = ({
                                     key={item.id}
                                     item={item}
                                     mode={mode}
-                                    handleDeleteGroup={handleDeleteGroup}
+                                    setDeleteGroupId={setDeleteGroupId}
                                     setSelectedGroup={setSelectedGroup}
                                     setSelectedUsers={setSelectedUsers}
                                     setShowAddUserModal={setShowAddUserModal}
@@ -220,6 +192,7 @@ const AdminGroups = ({
                                     setPermissionScopes={setPermissionScopes}
                                     setShowGroupEditor={setShowGroupEditor}
                                     setEditorState={setEditorState}
+                                    handleRemoveUser={handleRemoveUser}
                                 />
                             ))}
                         </tbody>
@@ -339,6 +312,37 @@ const AdminGroups = ({
                         </form>
                     </div>
                 </div>
+            )}
+
+            {deleteGroupId && (
+                <Popup
+                    title="Удалить группу?"
+                    onClick={() => setDeleteGroupId(null)}
+                >
+                    <div className="action-form__body">
+                        <p>Данные будут безвозвратно утеряны.</p>
+                    </div>
+
+                    <div className="action-form__footer">
+                        <button
+                            type="button"
+                            className="cancel-button"
+                            onClick={() => setDeleteGroupId(null)}
+                            title="Отменить удаление группы"
+                        >
+                            Отмена
+                        </button>
+
+                        <button
+                            type="button"
+                            className="action-button"
+                            title="Удалить группу"
+                            onClick={handleDeleteGroup}
+                        >
+                            Удалить
+                        </button>
+                    </div>
+                </Popup>
             )}
         </div>
     );
