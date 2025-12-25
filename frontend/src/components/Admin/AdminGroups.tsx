@@ -6,9 +6,10 @@ import postData from "../../utils/postData";
 
 import AccessDenied from "../AccessDenied/AccessDenied";
 import Loader from "../Loader";
+import Popup from "../Popup/Popup";
 import AdminGroupItem from "./AdminGroupItem";
 import GroupEditor from "./GroupEditor";
-import Popup from "../Popup/Popup";
+import AdminGroupAddUsersModal from "./AdminGroupAddUsersModal";
 
 const AdminGroups = ({
     mode,
@@ -22,7 +23,6 @@ const AdminGroups = ({
     setEditorState,
 }) => {
     const [showAddUserModal, setShowAddUserModal] = useState(false);
-    const [error, setError] = useState("");
 
     const [selectedGroup, setSelectedGroup] = useState(null);
     const [selectedUsers, setSelectedUsers] = useState([]);
@@ -35,114 +35,121 @@ const AdminGroups = ({
     const [permissionScopes, setPermissionScopes] = useState({}); // Скоупы для каждой конкретной ячейки (раздел + тип права)
     // Формат: { 'section_permissionType': 'full' | 'limited' }
 
-    const loadAllUsers = async () => {
-        try {
-            const response = await getData(
-                `${import.meta.env.VITE_API_URL}admin/users`
-            );
-            if (response.status === 200) {
-                setAllUsers(response.data.data || []);
-            }
-        } catch (err) {
-            console.error("Ошибка загрузки пользователей:", err);
-        }
-    };
-
-    const handleDeleteGroup = async () => {
-        try {
-            await postData(
-                "DELETE",
-                `${
-                    import.meta.env.VITE_API_URL
-                }admin/permission-groups/${deleteGroupId}`
-            );
-
-            setDeleteGroupId(null);
-            loadGroups();
-        } catch (err) {
-            toast.error(err.message || "Ошибка удаления группы", {
-                isLoading: false,
-                autoClose: 3000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                position:
-                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-            });
-        }
-    };
-
-    const handleAddUsers = async () => {
-        setError("");
-
-        if (selectedUsers.length === 0) {
-            setError("Выберите хотя бы одного пользователя");
-            return;
-        }
-
-        try {
-            await postData(
-                "POST",
-                `${import.meta.env.VITE_API_URL}admin/permission-groups/${
-                    selectedGroup.id
-                }/users`,
-                {
-                    user_ids: selectedUsers,
+    // Получение пользователей
+    const loadAllUsers = () => {
+        return getData(`${import.meta.env.VITE_API_URL}admin/users`)
+            .then((response) => {
+                if (response.status === 200) {
+                    setAllUsers(response.data.data || []);
                 }
+            })
+            .catch((error) =>
+                console.error("Ошибка загрузки пользователей:", error)
             );
-
-            setShowAddUserModal(false);
-            setSelectedUsers([]);
-            loadGroups();
-        } catch (err) {
-            toast.error(err.message || "Ошибка добавления пользователей", {
-                isLoading: false,
-                autoClose: 3000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                position:
-                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-            });
-            setError(err.message || "Ошибка добавления пользователей");
-        }
     };
 
-    const handleRemoveUser = async (groupId, userId) => {
-        if (!confirm("Удалить пользователя из группы?")) {
+    // Удаление группы
+    const handleDeleteGroup = () => {
+        return postData(
+            "DELETE",
+            `${
+                import.meta.env.VITE_API_URL
+            }admin/permission-groups/${deleteGroupId}`
+        )
+            .then((response) => {
+                if (response?.ok) {
+                    setDeleteGroupId(null);
+                    loadGroups();
+                }
+            })
+            .catch((error) =>
+                toast.error(error.message || "Ошибка удаления группы", {
+                    isLoading: false,
+                    autoClose: 3000,
+                    pauseOnFocusLoss: false,
+                    pauseOnHover: false,
+                    position:
+                        window.innerWidth >= 1440
+                            ? "bottom-right"
+                            : "top-right",
+                })
+            );
+    };
+
+    // Закрепление пользователей за группой
+    const handleAddGroupUsers = () => {
+        if (selectedUsers.length === 0) {
+            alert("Выберите хотя бы одного пользователя");
             return;
         }
 
-        try {
-            await postData(
-                "DELETE",
-                `${API_URL}admin/permission-groups/${groupId}/users/${userId}`
+        return postData(
+            "POST",
+            `${import.meta.env.VITE_API_URL}admin/permission-groups/${
+                selectedGroup.id
+            }/users`,
+            {
+                user_ids: selectedUsers,
+            }
+        )
+            .then((response) => {
+                if (response?.ok) {
+                    setShowAddUserModal(false);
+                    setSelectedUsers([]);
+                    loadGroups();
+                }
+            })
+            .catch((error) =>
+                toast.error(
+                    error.message || "Ошибка добавления пользователей",
+                    {
+                        isLoading: false,
+                        autoClose: 3000,
+                        pauseOnFocusLoss: false,
+                        pauseOnHover: false,
+                        position:
+                            window.innerWidth >= 1440
+                                ? "bottom-right"
+                                : "top-right",
+                    }
+                )
             );
-
-            loadGroups();
-        } catch (err) {
-            toast.error(err.message || "Ошибка удаления пользователя", {
-                isLoading: false,
-                autoClose: 3000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                position:
-                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-            });
-        }
     };
 
-    const toggleUserSelection = (userId) => {
-        setSelectedUsers((prev) =>
-            prev.includes(userId)
-                ? prev.filter((id) => id !== userId)
-                : [...prev, userId]
-        );
-    };
+    // const handleRemoveUser = async (groupId, userId) => {
+    //     if (!confirm("Удалить пользователя из группы?")) {
+    //         return;
+    //     }
+
+    //     try {
+    //         await postData(
+    //             "DELETE",
+    //             `${API_URL}admin/permission-groups/${groupId}/users/${userId}`
+    //         );
+
+    //         loadGroups();
+    //     } catch (err) {
+    //         toast.error(err.message || "Ошибка удаления пользователя", {
+    //             isLoading: false,
+    //             autoClose: 3000,
+    //             pauseOnFocusLoss: false,
+    //             pauseOnHover: false,
+    //             position:
+    //                 window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+    //         });
+    //     }
+    // };
 
     const closeEditor = () => {
         setShowGroupEditor(false);
         setSelectedGroup(null);
         setSelectedPermissions({});
         setPermissionScopes({});
+    };
+
+    const closeAddUsersModal = () => {
+        setShowAddUserModal(false);
+        setSelectedGroup(null);
     };
 
     useEffect(() => {
@@ -192,7 +199,7 @@ const AdminGroups = ({
                                     setPermissionScopes={setPermissionScopes}
                                     setShowGroupEditor={setShowGroupEditor}
                                     setEditorState={setEditorState}
-                                    handleRemoveUser={handleRemoveUser}
+                                    // handleRemoveUser={handleRemoveUser}
                                 />
                             ))}
                         </tbody>
@@ -214,104 +221,14 @@ const AdminGroups = ({
                 />
             )}
 
-            {/* Модальное окно добавления пользователей */}
+            {/* Модальное окно закрепления пользователей за группой */}
             {showAddUserModal && selectedGroup && (
-                <div
-                    className="admin-modal"
-                    onClick={() => setShowAddUserModal(false)}
-                >
-                    <div
-                        className="admin-modal__content"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <div className="admin-modal__header">
-                            <h2>Добавить пользователей</h2>
-                        </div>
-                        <form onSubmit={handleAddUsers}>
-                            <div className="admin-modal__body">
-                                <div className="admin-form">
-                                    <div className="admin-form__group">
-                                        <label className="admin-form__label">
-                                            Выберите пользователей
-                                        </label>
-                                        <div
-                                            style={{
-                                                maxHeight: "300px",
-                                                overflowY: "auto",
-                                                border: "1px solid var(--color-gray-40)",
-                                                borderRadius: "6px",
-                                                padding: "8px",
-                                            }}
-                                        >
-                                            {allUsers
-                                                .filter(
-                                                    (user) =>
-                                                        !selectedGroup.users?.some(
-                                                            (u) =>
-                                                                u.id === user.id
-                                                        )
-                                                )
-                                                .map((user) => (
-                                                    <div
-                                                        key={user.id}
-                                                        style={{
-                                                            padding: "4px",
-                                                            cursor: "pointer",
-                                                        }}
-                                                    >
-                                                        <label
-                                                            style={{
-                                                                display: "flex",
-                                                                alignItems:
-                                                                    "center",
-                                                                gap: "8px",
-                                                                cursor: "pointer",
-                                                            }}
-                                                        >
-                                                            <input
-                                                                type="checkbox"
-                                                                checked={selectedUsers.includes(
-                                                                    user.id
-                                                                )}
-                                                                onChange={() =>
-                                                                    toggleUserSelection(
-                                                                        user.id
-                                                                    )
-                                                                }
-                                                            />
-                                                            {user.name ||
-                                                                user.email}
-                                                        </label>
-                                                    </div>
-                                                ))}
-                                        </div>
-                                    </div>
-
-                                    {error && (
-                                        <div className="admin-form__error">
-                                            {error}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                            <div className="admin-modal__footer">
-                                <button
-                                    type="button"
-                                    className="admin-btn admin-btn--secondary"
-                                    onClick={() => setShowAddUserModal(false)}
-                                >
-                                    Отмена
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="admin-btn admin-btn--primary"
-                                >
-                                    Добавить
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                <AdminGroupAddUsersModal
+                    allUsers={allUsers}
+                    selectedGroup={selectedGroup}
+                    closeModal={closeAddUsersModal}
+                    handleAddGroupUsers={handleAddGroupUsers}
+                />
             )}
 
             {deleteGroupId && (

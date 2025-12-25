@@ -16,7 +16,6 @@ const AdminGroupItem = ({
     setPermissionScopes,
     setShowGroupEditor,
     setEditorState,
-    handleRemoveUser,
 }) => {
     const handleOpenEditor = () => {
         setSelectedGroup(item);
@@ -55,7 +54,7 @@ const AdminGroupItem = ({
                     item.name || "—"
                 )}
 
-                <div className="admin-group-card__users">
+                {/* <div className="admin-group-card__users">
                     {item.users && item.users.length > 0 ? (
                         <div className="user-list">
                             {item.users.map((user) => (
@@ -82,7 +81,7 @@ const AdminGroupItem = ({
                             Нет пользователей
                         </div>
                     )}
-                </div>
+                </div> */}
             </td>
 
             <td>{item.users.length || "—"}</td>
