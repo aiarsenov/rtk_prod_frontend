@@ -199,7 +199,7 @@
 
         &-list {
             position: relative;
-            height: 230px;
+            max-height: 230px;
             overflow-y: auto;
             overflow-x: hidden;
 
