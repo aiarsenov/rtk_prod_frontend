@@ -117,30 +117,6 @@ const AdminGroups = ({
             );
     };
 
-    // const handleRemoveUser = async (groupId, userId) => {
-    //     if (!confirm("Удалить пользователя из группы?")) {
-    //         return;
-    //     }
-
-    //     try {
-    //         await postData(
-    //             "DELETE",
-    //             `${API_URL}admin/permission-groups/${groupId}/users/${userId}`
-    //         );
-
-    //         loadGroups();
-    //     } catch (err) {
-    //         toast.error(err.message || "Ошибка удаления пользователя", {
-    //             isLoading: false,
-    //             autoClose: 3000,
-    //             pauseOnFocusLoss: false,
-    //             pauseOnHover: false,
-    //             position:
-    //                 window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-    //         });
-    //     }
-    // };
-
     const closeEditor = () => {
         setShowGroupEditor(false);
         setSelectedGroup(null);
@@ -211,18 +187,18 @@ const AdminGroups = ({
             )}
 
             {/* Модальное окно добавления прав */}
-            {/* {showGroupEditor && ( */}
-            <GroupEditor
-                editorState={editorState}
-                closeEditor={closeEditor}
-                selectedGroup={selectedGroup}
-                selectedPermissions={selectedPermissions}
-                setSelectedPermissions={setSelectedPermissions}
-                permissionScopes={permissionScopes}
-                setPermissionScopes={setPermissionScopes}
-                loadGroups={loadGroups}
-            />
-            {/* )} */}
+            {showGroupEditor && (
+                <GroupEditor
+                    editorState={editorState}
+                    closeEditor={closeEditor}
+                    selectedGroup={selectedGroup}
+                    selectedPermissions={selectedPermissions}
+                    setSelectedPermissions={setSelectedPermissions}
+                    permissionScopes={permissionScopes}
+                    setPermissionScopes={setPermissionScopes}
+                    loadGroups={loadGroups}
+                />
+            )}
 
             {/* Модальное окно закрепления пользователей за группой */}
             {showAddUserModal && selectedGroup && (
