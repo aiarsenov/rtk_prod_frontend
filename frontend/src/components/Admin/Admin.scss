@@ -31,6 +31,20 @@
 
 .group-editor {
     max-width: 1100px;
+
+    .action-form__body {
+        padding: 18px 0 20px !important;
+    }
+
+    &__name {
+        margin-bottom: 15px;
+        padding: 0 30px;
+
+        input {
+            width: 100%;
+            max-width: 350px;
+        }
+    }
 }
 
 // Стили для таблицы прав
@@ -48,42 +62,71 @@
     border-collapse: collapse;
     table-layout: fixed;
 
-    thead {
+    &__title {
+        td {
+            text-align: left;
+            font-weight: 600;
+            font-size: 16px;
+            line-height: 140%;
+            padding: 0 30px 10px !important;
+        }
+
+        &:not(:first-of-type) td {
+            padding: 20px 30px 10px !important;
+        }
+    }
+
+    &__name {
+        padding: 16px 30px;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 150%;
+    }
+
+    .form-checkbox {
+        justify-content: center;
+    }
+
+    &__thead {
         background: var(--color-white);
         position: sticky;
         top: 0;
         z-index: 10;
 
         th {
-            padding: 10px 12px;
             text-align: center;
             font-weight: 400;
             font-size: 12px;
             line-height: 140%;
             color: var(--color-gray-70);
-
-            &.section-header {
-                text-align: left;
-                width: 200px;
-                min-width: 200px;
-                vertical-align: bottom;
-            }
-
-            &.group-header {
-                padding: 8px 12px;
-            }
-
-            &.subheader {
-                padding: 8px 8px;
-                min-width: 90px;
-            }
-
-            &.checkbox-header {
-                width: 60px;
-                min-width: 60px;
-                // background: var(--color-gray-20);
-            }
         }
+
+        &-header {
+            padding: 10px 15px 10px;
+            border-bottom: 1px solid var(--color-gray-30);
+        }
+
+        &-subheader {
+            padding: 10px 15px 20px;
+        }
+
+        .section-header {
+            text-align: left;
+            width: 100%;
+            min-width: 150px;
+            max-width: 300px;
+            vertical-align: bottom;
+            padding: 10px 30px 20px;
+        }
+
+        .checkbox-header {
+            width: 60px;
+            min-width: 60px;
+            // background: var(--color-gray-20);
+        }
+    }
+
+    &__tbody {
     }
 
     tbody {
@@ -92,20 +135,18 @@
             transition: background 0.15s ease-in-out;
 
             &:hover:not(.mass-select-row) {
-                // background: var(--color-gray-10);
+                background: var(--color-gray-10);
             }
 
             &.mass-select-row {
                 background: var(--color-gray-20);
                 border-top: 2px solid var(--color-gray-40);
                 position: sticky;
-                bottom: 0;
+                bottom: -2px;
                 z-index: 5;
                 box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
 
                 td {
-                    padding: 12px 8px;
-                    // background: var(--color-gray-20);
                     border-top: 2px solid var(--color-gray-40);
                 }
 
@@ -122,15 +163,6 @@
         }
 
         td {
-            padding: 10px 12px;
-            font-size: 13px;
-            text-align: center;
-            // border-right: 1px solid var(--color-gray-30);
-
-            // &:last-child {
-            //     border-right: none;
-            // }
-
             &.section-name {
                 font-weight: 500;
                 color: var(--color-gray-100);

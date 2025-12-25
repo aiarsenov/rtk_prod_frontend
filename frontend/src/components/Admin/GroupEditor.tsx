@@ -380,12 +380,12 @@ const GroupEditor = ({
         >
             <form>
                 <div className="action-form__body">
-                    <div className="group-editor__name mb-[15px]">
+                    <div className="group-editor__name">
                         <label className="form-label">Название</label>
 
                         <input
                             type="text"
-                            className="form-field w-[350px]"
+                            className="form-field"
                             value={newGroupName}
                             onChange={(e) => setNewGroupName(e.target.value)}
                         />
@@ -403,36 +403,52 @@ const GroupEditor = ({
                                 <col style={{ width: "90px" }} />
                                 <col style={{ width: "60px" }} />
                             </colgroup>
-                            <thead>
+
+                            <thead className="permissions-table__thead">
                                 <tr>
-                                    <th rowSpan="2" className="section-header">
+                                    <th rowSpan={2} className="section-header">
                                         Раздел / подраздел
                                     </th>
-                                    <th colSpan="3" className="group-header">
+                                    <th
+                                        colSpan={3}
+                                        className="permissions-table__thead-header"
+                                    >
                                         Выбор прав
                                     </th>
-                                    <th colSpan="3" className="group-header">
+                                    <th
+                                        colSpan={3}
+                                        className="permissions-table__thead-header"
+                                    >
                                         Ширина прав
                                     </th>
                                     <th
-                                        rowSpan="2"
+                                        rowSpan={2}
                                         className="checkbox-header"
                                     ></th>
                                 </tr>
                                 <tr>
-                                    <th className="subheader">Просмотр</th>
-                                    <th className="subheader">
+                                    <th className="permissions-table__thead-subheader">
+                                        Просмотр
+                                    </th>
+                                    <th className="permissions-table__thead-subheader">
                                         Редактирование
                                     </th>
-                                    <th className="subheader">Удаление</th>
-                                    <th className="subheader">Просмотр</th>
-                                    <th className="subheader">
+                                    <th className="permissions-table__thead-subheader">
+                                        Удаление
+                                    </th>
+                                    <th className="permissions-table__thead-subheader">
+                                        Просмотр
+                                    </th>
+                                    <th className="permissions-table__thead-subheader">
                                         Редактирование
                                     </th>
-                                    <th className="subheader">Удаление</th>
+                                    <th className="permissions-table__thead-subheader">
+                                        Удаление
+                                    </th>
                                 </tr>
                             </thead>
-                            <tbody>
+
+                            <tbody className="permissions-table__tbody">
                                 {SECTIONS_ORDER.map((sectionKey, index) => {
                                     const sectionLabel = SECTIONS[sectionKey];
                                     const matrix =
@@ -440,6 +456,7 @@ const GroupEditor = ({
 
                                     const prevSectionKey =
                                         SECTIONS_ORDER[index - 1];
+
                                     const prevTitle = prevSectionKey
                                         ? SECTIONS[prevSectionKey]?.title
                                         : null;
@@ -450,21 +467,15 @@ const GroupEditor = ({
                                     return (
                                         <>
                                             {shouldRenderTitle && (
-                                                <tr>
-                                                    <td
-                                                        colSpan={8}
-                                                        style={{
-                                                            textAlign: "left",
-                                                            fontWeight: 600,
-                                                        }}
-                                                    >
+                                                <tr className="permissions-table__title">
+                                                    <td colSpan={8}>
                                                         {sectionLabel.title}
                                                     </td>
                                                 </tr>
                                             )}
 
                                             <tr key={sectionKey}>
-                                                <td className="section-name">
+                                                <td className="permissions-table__name">
                                                     {sectionLabel.name}
                                                 </td>
 
@@ -502,7 +513,6 @@ const GroupEditor = ({
                                                                                     permType
                                                                                 )
                                                                             }
-                                                                            className="permission-checkbox"
                                                                         />
                                                                         <div className="checkbox"></div>
                                                                     </label>
