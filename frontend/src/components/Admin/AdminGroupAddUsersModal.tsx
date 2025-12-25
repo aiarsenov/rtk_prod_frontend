@@ -151,7 +151,18 @@ const AdminGroupAddUsersModal = ({
                                     type="button"
                                     title="Удалить пользователя из списка"
                                 >
-                                    ×
+                                    <svg
+                                        width="14"
+                                        height="14"
+                                        viewBox="0 0 12 12"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            d="M9.712 3.349L7.06 6l2.65 2.651-1.06 1.06L6 7.062 3.349 9.71l-1.06-1.06L4.938 6l-2.65-2.65 1.06-1.06 2.65 2.65 2.652-2.652 1.06 1.062z"
+                                            fill="currentColor"
+                                        />
+                                    </svg>
                                 </button>
                             </div>
                         ))}
