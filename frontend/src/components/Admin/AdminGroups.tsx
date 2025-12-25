@@ -211,18 +211,18 @@ const AdminGroups = ({
             )}
 
             {/* Модальное окно добавления прав */}
-            {showGroupEditor && (
-                <GroupEditor
-                    editorState={editorState}
-                    closeEditor={closeEditor}
-                    selectedGroup={selectedGroup}
-                    selectedPermissions={selectedPermissions}
-                    setSelectedPermissions={setSelectedPermissions}
-                    permissionScopes={permissionScopes}
-                    setPermissionScopes={setPermissionScopes}
-                    loadGroups={loadGroups}
-                />
-            )}
+            {/* {showGroupEditor && ( */}
+            <GroupEditor
+                editorState={editorState}
+                closeEditor={closeEditor}
+                selectedGroup={selectedGroup}
+                selectedPermissions={selectedPermissions}
+                setSelectedPermissions={setSelectedPermissions}
+                permissionScopes={permissionScopes}
+                setPermissionScopes={setPermissionScopes}
+                loadGroups={loadGroups}
+            />
+            {/* )} */}
 
             {/* Модальное окно закрепления пользователей за группой */}
             {showAddUserModal && selectedGroup && (

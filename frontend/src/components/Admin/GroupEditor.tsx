@@ -6,16 +6,16 @@ import { toast } from "react-toastify";
 import Popup from "../Popup/Popup";
 
 const SECTIONS = {
-    main: "Ключевые показатели",
-    project_reports: "Отчёты проектов",
-    employee_reports: "Отчёты сотрудников",
-    projects: "Проекты",
-    sales: "Продажи",
-    customers: "Заказчики",
-    employees: "Сотрудники",
-    contractors: "Подрядчики",
-    dictionaries: "Справочники",
-    admin: "Администрирование",
+    main: { title: "Главная", name: "Ключевые показатели" },
+    project_reports: { title: "Отчёты", name: "Отчёты проектов" },
+    employee_reports: { title: "Отчёты", name: "Отчёты сотрудников" },
+    projects: { title: "Проекты", name: "Реестр и карточки проектов" },
+    sales: { title: "Продажи", name: "Реестр и карточки в воронке" },
+    customers: { title: "Заказчики", name: "Реестр и карточки заказчиков" },
+    employees: { title: "Сотрудники", name: "Реестр и карточки сотрудников" },
+    contractors: { title: "Подрядчики", name: "Реестр и карточки подрядчиков" },
+    dictionaries: { title: "Справочники", name: "Справочники" },
+    admin: { title: "Администрирование", name: "Пользователи и группы" },
 };
 
 // Порядок отображения разделов
@@ -433,154 +433,182 @@ const GroupEditor = ({
                                 </tr>
                             </thead>
                             <tbody>
-                                {SECTIONS_ORDER.map((sectionKey) => {
+                                {SECTIONS_ORDER.map((sectionKey, index) => {
                                     const sectionLabel = SECTIONS[sectionKey];
                                     const matrix =
                                         PERMISSION_MATRIX[sectionKey] || {};
+
+                                    const prevSectionKey =
+                                        SECTIONS_ORDER[index - 1];
+                                    const prevTitle = prevSectionKey
+                                        ? SECTIONS[prevSectionKey]?.title
+                                        : null;
+
+                                    const shouldRenderTitle =
+                                        sectionLabel.title !== prevTitle;
+
                                     return (
-                                        <tr key={sectionKey}>
-                                            <td className="section-name">
-                                                {sectionLabel}
-                                            </td>
+                                        <>
+                                            {shouldRenderTitle && (
+                                                <tr>
+                                                    <td
+                                                        colSpan={8}
+                                                        style={{
+                                                            textAlign: "left",
+                                                            fontWeight: 600,
+                                                        }}
+                                                    >
+                                                        {sectionLabel.title}
+                                                    </td>
+                                                </tr>
+                                            )}
 
-                                            {/* Группа чекбоксов: Выбор прав */}
-                                            {["view", "edit", "delete"].map(
-                                                (permType) => {
-                                                    const isAllowed =
-                                                        matrix[permType] === 1;
-                                                    const key = `${sectionKey}_${permType}`;
-                                                    const isChecked =
-                                                        !!selectedPermissions[
-                                                            key
-                                                        ];
+                                            <tr key={sectionKey}>
+                                                <td className="section-name">
+                                                    {sectionLabel.name}
+                                                </td>
 
-                                                    return (
-                                                        <td
-                                                            key={`check_${permType}`}
-                                                            className="permission-cell"
-                                                        >
-                                                            {isAllowed ? (
-                                                                <label
-                                                                    htmlFor={`${sectionKey}_${permType}`}
-                                                                    className="form-checkbox"
-                                                                >
-                                                                    <input
-                                                                        type="checkbox"
-                                                                        id={`${sectionKey}_${permType}`}
-                                                                        checked={
-                                                                            isChecked
+                                                {/* Группа чекбоксов: Выбор прав */}
+                                                {["view", "edit", "delete"].map(
+                                                    (permType) => {
+                                                        const isAllowed =
+                                                            matrix[permType] ===
+                                                            1;
+                                                        const key = `${sectionKey}_${permType}`;
+                                                        const isChecked =
+                                                            !!selectedPermissions[
+                                                                key
+                                                            ];
+
+                                                        return (
+                                                            <td
+                                                                key={`check_${permType}`}
+                                                                className="permission-cell"
+                                                            >
+                                                                {isAllowed ? (
+                                                                    <label
+                                                                        htmlFor={`${sectionKey}_${permType}`}
+                                                                        className="form-checkbox"
+                                                                    >
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            id={`${sectionKey}_${permType}`}
+                                                                            checked={
+                                                                                isChecked
+                                                                            }
+                                                                            onChange={() =>
+                                                                                handlePermissionCheckboxChange(
+                                                                                    sectionKey,
+                                                                                    permType
+                                                                                )
+                                                                            }
+                                                                            className="permission-checkbox"
+                                                                        />
+                                                                        <div className="checkbox"></div>
+                                                                    </label>
+                                                                ) : (
+                                                                    <span className="permission-disabled">
+                                                                        —
+                                                                    </span>
+                                                                )}
+                                                            </td>
+                                                        );
+                                                    }
+                                                )}
+
+                                                {/* Группа селектов: Ширина прав */}
+                                                {["view", "edit", "delete"].map(
+                                                    (permType) => {
+                                                        const matrix =
+                                                            PERMISSION_MATRIX[
+                                                                sectionKey
+                                                            ] || {};
+                                                        const isAllowed =
+                                                            matrix[permType] ===
+                                                            1;
+                                                        const scopeKey = `${sectionKey}_${permType}`;
+                                                        const permissionKey = `${sectionKey}_${permType}`;
+                                                        const isChecked =
+                                                            !!selectedPermissions[
+                                                                permissionKey
+                                                            ];
+                                                        const currentScope =
+                                                            permissionScopes[
+                                                                scopeKey
+                                                            ] || "full";
+
+                                                        return (
+                                                            <td
+                                                                key={`scope_${permType}`}
+                                                                className="scope-cell"
+                                                            >
+                                                                {isAllowed ? (
+                                                                    <select
+                                                                        value={
+                                                                            currentScope
                                                                         }
-                                                                        onChange={() =>
-                                                                            handlePermissionCheckboxChange(
+                                                                        onChange={(
+                                                                            e
+                                                                        ) =>
+                                                                            handleScopeChange(
                                                                                 sectionKey,
-                                                                                permType
+                                                                                permType,
+                                                                                e
+                                                                                    .target
+                                                                                    .value
                                                                             )
                                                                         }
-                                                                        className="permission-checkbox"
-                                                                    />
-                                                                    <div className="checkbox"></div>
-                                                                </label>
-                                                            ) : (
-                                                                <span className="permission-disabled">
-                                                                    —
-                                                                </span>
-                                                            )}
-                                                        </td>
-                                                    );
-                                                }
-                                            )}
-
-                                            {/* Группа селектов: Ширина прав */}
-                                            {["view", "edit", "delete"].map(
-                                                (permType) => {
-                                                    const matrix =
-                                                        PERMISSION_MATRIX[
-                                                            sectionKey
-                                                        ] || {};
-                                                    const isAllowed =
-                                                        matrix[permType] === 1;
-                                                    const scopeKey = `${sectionKey}_${permType}`;
-                                                    const permissionKey = `${sectionKey}_${permType}`;
-                                                    const isChecked =
-                                                        !!selectedPermissions[
-                                                            permissionKey
-                                                        ];
-                                                    const currentScope =
-                                                        permissionScopes[
-                                                            scopeKey
-                                                        ] || "full";
-
-                                                    return (
-                                                        <td
-                                                            key={`scope_${permType}`}
-                                                            className="scope-cell"
-                                                        >
-                                                            {isAllowed ? (
-                                                                <select
-                                                                    value={
-                                                                        currentScope
-                                                                    }
-                                                                    onChange={(
-                                                                        e
-                                                                    ) =>
-                                                                        handleScopeChange(
-                                                                            sectionKey,
-                                                                            permType,
+                                                                        className="scope-select"
+                                                                        disabled={
+                                                                            !isChecked
+                                                                        }
+                                                                        onClick={(
                                                                             e
-                                                                                .target
-                                                                                .value
-                                                                        )
-                                                                    }
-                                                                    className="scope-select"
-                                                                    disabled={
-                                                                        !isChecked
-                                                                    }
-                                                                    onClick={(
-                                                                        e
-                                                                    ) =>
-                                                                        e.stopPropagation()
-                                                                    }
-                                                                >
-                                                                    <option value="full">
-                                                                        Полная
-                                                                    </option>
-                                                                    <option value="limited">
-                                                                        Ограниченная
-                                                                    </option>
-                                                                </select>
-                                                            ) : (
-                                                                <span className="permission-disabled">
-                                                                    —
-                                                                </span>
-                                                            )}
-                                                        </td>
-                                                    );
-                                                }
-                                            )}
+                                                                        ) =>
+                                                                            e.stopPropagation()
+                                                                        }
+                                                                    >
+                                                                        <option value="full">
+                                                                            Полная
+                                                                        </option>
+                                                                        <option value="limited">
+                                                                            Ограниченная
+                                                                        </option>
+                                                                    </select>
+                                                                ) : (
+                                                                    <span className="permission-disabled">
+                                                                        —
+                                                                    </span>
+                                                                )}
+                                                            </td>
+                                                        );
+                                                    }
+                                                )}
 
-                                            {/* Чекбокс выбора всей строки */}
-                                            <td className="row-checkbox-cell">
-                                                <label
-                                                    htmlFor={`${sectionKey}`}
-                                                    className="form-checkbox"
-                                                >
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={selectedSections.has(
-                                                            sectionKey
-                                                        )}
-                                                        id={sectionKey}
-                                                        onChange={() =>
-                                                            handleSectionCheckboxChange(
+                                                {/* Чекбокс выбора всей строки */}
+                                                <td className="row-checkbox-cell">
+                                                    <label
+                                                        htmlFor={`${sectionKey}`}
+                                                        className="form-checkbox"
+                                                    >
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={selectedSections.has(
                                                                 sectionKey
-                                                            )
-                                                        }
-                                                        className="row-checkbox"
-                                                    />
-                                                    <div className="checkbox"></div>
-                                                </label>
-                                            </td>
-                                        </tr>
+                                                            )}
+                                                            id={sectionKey}
+                                                            onChange={() =>
+                                                                handleSectionCheckboxChange(
+                                                                    sectionKey
+                                                                )
+                                                            }
+                                                            className="row-checkbox"
+                                                        />
+                                                        <div className="checkbox"></div>
+                                                    </label>
+                                                </td>
+                                            </tr>
+                                        </>
                                     );
                                 })}
 
