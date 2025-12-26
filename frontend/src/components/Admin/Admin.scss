@@ -37,9 +37,10 @@
         padding: 15px 0 0 !important;
     }
 
-    &__name {
-        margin-bottom: 15px;
-        padding: 0 30px;
+    .popup__header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
 
         input {
             width: 100%;

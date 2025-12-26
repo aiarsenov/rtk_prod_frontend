@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 import Select from "react-select";
 import ScrollCloseSelect from "../ScrollCloseSelect";
-import Popup from "../Popup/Popup";
+import Hint from "../Hint/Hint";
 
 const SECTIONS = {
     main: { title: "Главная", name: "Ключевые показатели" },
@@ -105,7 +105,7 @@ const GroupEditor = ({
 }) => {
     const [error, setError] = useState("");
 
-    const [newGroupName, setNewGroupName] = useState("");
+    const [groupName, setGroupName] = useState("");
 
     // Выбранные разделы (чекбокс в конце строки)
     const [selectedSections, setSelectedSections] = useState(new Set());
@@ -363,7 +363,7 @@ const GroupEditor = ({
         }
 
         return postData(editorState === "create" ? "POST" : "PATCH", URL, {
-            name: newGroupName,
+            name: groupName,
             permissions: permissions,
         })
             .then((response) => {
@@ -431,126 +431,140 @@ const GroupEditor = ({
 
     useEffect(() => {
         if (selectedGroup?.name) {
-            setNewGroupName(selectedGroup?.name);
+            setGroupName(selectedGroup?.name);
         } else {
-            setNewGroupName("");
+            setGroupName("");
         }
     }, [selectedGroup]);
 
     return (
-        <Popup
-            title={`${
-                editorState === "create"
-                    ? "Добавить группу"
-                    : `Редактировать группу: ${selectedGroup?.name}`
-            }`}
-            className="group-editor"
-            onClick={closeEditor}
-        >
-            <form>
-                <div className="action-form__body">
-                    <div className="group-editor__name">
-                        <label className="form-label">Название</label>
+        <div className="popup" onClick={closeEditor}>
+            <div
+                className="popup__wrapper group-editor"
+                onClick={(e) => e.stopPropagation()}
+            >
+                <div className="popup__header">
+                    <div>
+                        {`${
+                            editorState === "create"
+                                ? "Добавить группу"
+                                : `Редактировать группу: ${selectedGroup?.name}`
+                        }`}
+                    </div>
 
+                    {editorState === "create" && (
                         <input
                             type="text"
                             className="form-field"
-                            value={newGroupName}
-                            onChange={(e) => setNewGroupName(e.target.value)}
+                            value={groupName}
+                            onChange={(e) => setGroupName(e.target.value)}
                         />
-                    </div>
+                    )}
+                </div>
 
-                    <div className="permissions-table-wrapper">
-                        <table className="permissions-table">
-                            <colgroup>
-                                <col style={{ width: "200px" }} />
-                                <col style={{ width: "90px" }} />
-                                <col style={{ width: "90px" }} />
-                                <col style={{ width: "90px" }} />
-                                <col style={{ width: "130px" }} />
-                                <col style={{ width: "130px" }} />
-                                <col style={{ width: "130px" }} />
-                                <col style={{ width: "60px" }} />
-                            </colgroup>
+                <form>
+                    <div className="action-form__body">
+                        <div className="permissions-table-wrapper">
+                            <table className="permissions-table">
+                                <colgroup>
+                                    <col style={{ width: "200px" }} />
+                                    <col style={{ width: "90px" }} />
+                                    <col style={{ width: "90px" }} />
+                                    <col style={{ width: "90px" }} />
+                                    <col style={{ width: "130px" }} />
+                                    <col style={{ width: "130px" }} />
+                                    <col style={{ width: "130px" }} />
+                                    <col style={{ width: "60px" }} />
+                                </colgroup>
 
-                            <thead className="permissions-table__thead">
-                                <tr>
-                                    <th rowSpan={2} className="section-header">
-                                        Раздел / подраздел
-                                    </th>
-                                    <th
-                                        colSpan={3}
-                                        className="permissions-table__thead-header"
-                                    >
-                                        Выбор прав
-                                    </th>
-                                    <th
-                                        colSpan={3}
-                                        className="permissions-table__thead-header"
-                                    >
-                                        Ширина прав
-                                    </th>
-                                    <th
-                                        rowSpan={2}
-                                        className="checkbox-header"
-                                    ></th>
-                                </tr>
-                                <tr>
-                                    <th className="permissions-table__thead-subheader">
-                                        Просмотр
-                                    </th>
-                                    <th className="permissions-table__thead-subheader">
-                                        Редактирование
-                                    </th>
-                                    <th className="permissions-table__thead-subheader">
-                                        Удаление
-                                    </th>
-                                    <th className="permissions-table__thead-subheader">
-                                        Просмотр
-                                    </th>
-                                    <th className="permissions-table__thead-subheader">
-                                        Редактирование
-                                    </th>
-                                    <th className="permissions-table__thead-subheader">
-                                        Удаление
-                                    </th>
-                                </tr>
-                            </thead>
+                                <thead className="permissions-table__thead">
+                                    <tr>
+                                        <th
+                                            rowSpan={2}
+                                            className="section-header"
+                                        >
+                                            Раздел / подраздел
+                                        </th>
+                                        <th
+                                            colSpan={3}
+                                            className="permissions-table__thead-header"
+                                        >
+                                            Выбор прав
+                                        </th>
+                                        <th
+                                            colSpan={3}
+                                            className="permissions-table__thead-header"
+                                        >
+                                            Ширина прав
+                                        </th>
+                                        <th
+                                            rowSpan={2}
+                                            className="checkbox-header"
+                                        ></th>
+                                    </tr>
+                                    <tr>
+                                        <th className="permissions-table__thead-subheader">
+                                            Просмотр
+                                        </th>
+                                        <th className="permissions-table__thead-subheader">
+                                            Редактирование
+                                        </th>
+                                        <th className="permissions-table__thead-subheader">
+                                            Удаление
+                                        </th>
+                                        <th className="permissions-table__thead-subheader">
+                                            Просмотр
+                                            <Hint message="Просмотр" />
+                                        </th>
+                                        <th className="permissions-table__thead-subheader">
+                                            Редактирование
+                                            <Hint message="Редактирование" />
+                                        </th>
+                                        <th className="permissions-table__thead-subheader">
+                                            Удаление
+                                            <Hint message="Удаление" />
+                                        </th>
+                                    </tr>
+                                </thead>
 
-                            <tbody className="permissions-table__tbody">
-                                {SECTIONS_ORDER.map((sectionKey, index) => {
-                                    const sectionLabel = SECTIONS[sectionKey];
-                                    const matrix =
-                                        PERMISSION_MATRIX[sectionKey] || {};
+                                <tbody className="permissions-table__tbody">
+                                    {SECTIONS_ORDER.map((sectionKey, index) => {
+                                        const sectionLabel =
+                                            SECTIONS[sectionKey];
+                                        const matrix =
+                                            PERMISSION_MATRIX[sectionKey] || {};
 
-                                    const prevSectionKey =
-                                        SECTIONS_ORDER[index - 1];
+                                        const prevSectionKey =
+                                            SECTIONS_ORDER[index - 1];
 
-                                    const prevTitle = prevSectionKey
-                                        ? SECTIONS[prevSectionKey]?.title
-                                        : null;
+                                        const prevTitle = prevSectionKey
+                                            ? SECTIONS[prevSectionKey]?.title
+                                            : null;
 
-                                    const shouldRenderTitle =
-                                        sectionLabel.title !== prevTitle;
+                                        const shouldRenderTitle =
+                                            sectionLabel.title !== prevTitle;
 
-                                    return (
-                                        <Fragment key={sectionKey}>
-                                            {shouldRenderTitle && (
-                                                <tr className="permissions-table__title">
-                                                    <td colSpan={8}>
-                                                        {sectionLabel.title}
+                                        return (
+                                            <Fragment key={sectionKey}>
+                                                {shouldRenderTitle && (
+                                                    <tr className="permissions-table__title">
+                                                        <td colSpan={8}>
+                                                            {sectionLabel.title}
+                                                        </td>
+                                                    </tr>
+                                                )}
+
+                                                <tr>
+                                                    <td className="permissions-table__name">
+                                                        {sectionLabel.name}
                                                     </td>
-                                                </tr>
-                                            )}
 
-                                            <tr>
-                                                <td className="permissions-table__name">
-                                                    {sectionLabel.name}
-                                                </td>
-
-                                                {/* Группа чекбоксов: Выбор прав */}
-                                                {["view", "edit", "delete"].map(
-                                                    (permType) => {
+                                                    {/* Группа чекбоксов: Выбор прав */}
+                                                    {[
+                                                        "view",
+                                                        "edit",
+                                                        "delete",
+                                                    ].map((permType) => {
                                                         const isAllowed =
                                                             matrix[permType] ===
                                                             1;
@@ -592,12 +606,14 @@ const GroupEditor = ({
                                                                 )}
                                                             </td>
                                                         );
-                                                    }
-                                                )}
+                                                    })}
 
-                                                {/* Группа селектов: Ширина прав */}
-                                                {["view", "edit", "delete"].map(
-                                                    (permType) => {
+                                                    {/* Группа селектов: Ширина прав */}
+                                                    {[
+                                                        "view",
+                                                        "edit",
+                                                        "delete",
+                                                    ].map((permType) => {
                                                         const matrix =
                                                             PERMISSION_MATRIX[
                                                                 sectionKey
@@ -657,169 +673,177 @@ const GroupEditor = ({
                                                                 )}
                                                             </td>
                                                         );
-                                                    }
-                                                )}
+                                                    })}
 
-                                                {/* Чекбокс выбора всей строки */}
-                                                <td className="row-checkbox-cell">
+                                                    {/* Чекбокс выбора всей строки */}
+                                                    <td className="row-checkbox-cell">
+                                                        <label
+                                                            htmlFor={`${sectionKey}`}
+                                                            className="form-checkbox"
+                                                        >
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={selectedSections.has(
+                                                                    sectionKey
+                                                                )}
+                                                                id={sectionKey}
+                                                                onChange={() =>
+                                                                    handleSectionCheckboxChange(
+                                                                        sectionKey
+                                                                    )
+                                                                }
+                                                                className="row-checkbox"
+                                                            />
+                                                            <div className="checkbox"></div>
+                                                        </label>
+                                                    </td>
+                                                </tr>
+                                            </Fragment>
+                                        );
+                                    })}
+
+                                    {/* Строка с массовыми чекбоксами внизу */}
+                                    <tr className="mass-select-row">
+                                        {/* Массовые чекбоксы для "Выбор прав" */}
+                                        {["view", "edit", "delete"].map(
+                                            (permType, index) => (
+                                                <td
+                                                    key={`mass_${permType}`}
+                                                    className="mass-checkbox-cell"
+                                                >
                                                     <label
-                                                        htmlFor={`${sectionKey}`}
+                                                        htmlFor={`${permType}_${index}`}
                                                         className="form-checkbox"
                                                     >
                                                         <input
                                                             type="checkbox"
-                                                            checked={selectedSections.has(
-                                                                sectionKey
+                                                            id={`${permType}_${index}`}
+                                                            checked={isMassCheckboxChecked(
+                                                                permType
                                                             )}
-                                                            id={sectionKey}
                                                             onChange={() =>
-                                                                handleSectionCheckboxChange(
-                                                                    sectionKey
+                                                                handleMassPermissionCheckboxChange(
+                                                                    permType
                                                                 )
                                                             }
-                                                            className="row-checkbox"
                                                         />
                                                         <div className="checkbox"></div>
                                                     </label>
                                                 </td>
-                                            </tr>
-                                        </Fragment>
-                                    );
-                                })}
+                                            )
+                                        )}
 
-                                {/* Строка с массовыми чекбоксами внизу */}
-                                <tr className="mass-select-row">
-                                    {/* Массовые чекбоксы для "Выбор прав" */}
-                                    {["view", "edit", "delete"].map(
-                                        (permType, index) => (
-                                            <td
-                                                key={`mass_${permType}`}
-                                                className="mass-checkbox-cell"
+                                        {/* Массовые селекты для "Ширина прав" */}
+                                        {["view", "edit", "delete"].map(
+                                            (permType) => {
+                                                const massScopeValue =
+                                                    getMassScopeValue(permType);
+
+                                                const isMassCheckboxCheckedForType =
+                                                    isMassCheckboxChecked(
+                                                        permType
+                                                    );
+
+                                                return (
+                                                    <td
+                                                        key={`mass_scope_${permType}`}
+                                                        className="scope-cell"
+                                                    >
+                                                        <Select
+                                                            className="form-select-extend"
+                                                            classNamePrefix="form-select-extend"
+                                                            options={
+                                                                RIGHTS_WIDTH_OPTIONS
+                                                            }
+                                                            placeholder="—"
+                                                            isSearchable={false}
+                                                            menuPortalTarget={
+                                                                document.body
+                                                            }
+                                                            menuPosition="fixed"
+                                                            menuShouldScrollIntoView={
+                                                                false
+                                                            }
+                                                            value={RIGHTS_WIDTH_OPTIONS.find(
+                                                                (item) =>
+                                                                    item.value ===
+                                                                    massScopeValue
+                                                            )}
+                                                            onChange={(e) =>
+                                                                handleMassScopeChange(
+                                                                    permType,
+                                                                    e.value
+                                                                )
+                                                            }
+                                                            isDisabled={
+                                                                !isMassCheckboxCheckedForType ||
+                                                                selectedSections.size ===
+                                                                    0
+                                                            }
+                                                        />
+                                                    </td>
+                                                );
+                                            }
+                                        )}
+
+                                        {/* Чекбокс для выделения всех строк */}
+                                        <td className="mass-checkbox-cell">
+                                            <label
+                                                htmlFor="select_all"
+                                                className="form-checkbox"
                                             >
-                                                <label
-                                                    htmlFor={`${permType}_${index}`}
-                                                    className="form-checkbox"
-                                                >
-                                                    <input
-                                                        type="checkbox"
-                                                        id={`${permType}_${index}`}
-                                                        checked={isMassCheckboxChecked(
-                                                            permType
-                                                        )}
-                                                        onChange={() =>
-                                                            handleMassPermissionCheckboxChange(
-                                                                permType
-                                                            )
-                                                        }
-                                                    />
-                                                    <div className="checkbox"></div>
-                                                </label>
-                                            </td>
-                                        )
-                                    )}
+                                                <input
+                                                    type="checkbox"
+                                                    id="select_all"
+                                                    checked={areAllRowsSelected}
+                                                    onChange={
+                                                        handleSelectAllRows
+                                                    }
+                                                    className="row-checkbox"
+                                                />
 
-                                    {/* Массовые селекты для "Ширина прав" */}
-                                    {["view", "edit", "delete"].map(
-                                        (permType) => {
-                                            const massScopeValue =
-                                                getMassScopeValue(permType);
-
-                                            const isMassCheckboxCheckedForType =
-                                                isMassCheckboxChecked(permType);
-
-                                            return (
-                                                <td
-                                                    key={`mass_scope_${permType}`}
-                                                    className="scope-cell"
-                                                >
-                                                    <Select
-                                                        className="form-select-extend"
-                                                        classNamePrefix="form-select-extend"
-                                                        options={
-                                                            RIGHTS_WIDTH_OPTIONS
-                                                        }
-                                                        placeholder="—"
-                                                        isSearchable={false}
-                                                        menuPortalTarget={
-                                                            document.body
-                                                        }
-                                                        menuPosition="fixed"
-                                                        menuShouldScrollIntoView={
-                                                            false
-                                                        }
-                                                        value={RIGHTS_WIDTH_OPTIONS.find(
-                                                            (item) =>
-                                                                item.value ===
-                                                                massScopeValue
-                                                        )}
-                                                        onChange={(e) =>
-                                                            handleMassScopeChange(
-                                                                permType,
-                                                                e.value
-                                                            )
-                                                        }
-                                                        isDisabled={
-                                                            !isMassCheckboxCheckedForType ||
-                                                            selectedSections.size ===
-                                                                0
-                                                        }
-                                                    />
-                                                </td>
-                                            );
-                                        }
-                                    )}
-
-                                    {/* Чекбокс для выделения всех строк */}
-                                    <td className="mass-checkbox-cell">
-                                        <label
-                                            htmlFor="select_all"
-                                            className="form-checkbox"
-                                        >
-                                            <input
-                                                type="checkbox"
-                                                id="select_all"
-                                                checked={areAllRowsSelected}
-                                                onChange={handleSelectAllRows}
-                                                className="row-checkbox"
-                                            />
-
-                                            <div className="checkbox"></div>
-                                        </label>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                                <div className="checkbox"></div>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
 
-                <div className="action-form__footer relative">
-                    {error && <div className="admin-form__error">{error}</div>}
+                    <div className="action-form__footer relative">
+                        {error && (
+                            <div className="admin-form__error">{error}</div>
+                        )}
 
-                    <button
-                        type="button"
-                        className="cancel-button"
-                        onClick={closeEditor}
-                        title="Закрыть редактор"
-                    >
-                        Отмена
-                    </button>
+                        <button
+                            type="button"
+                            className="cancel-button"
+                            onClick={closeEditor}
+                            title="Закрыть редактор"
+                        >
+                            Отмена
+                        </button>
 
-                    <button
-                        type="button"
-                        className="action-button"
-                        title={`${
-                            editorState === "create"
-                                ? "Добавить группу"
-                                : `Сохранить изменения`
-                        }`}
-                        onClick={handleSaveGroup}
-                        disabled={newGroupName.length < 2}
-                    >
-                        {editorState === "create" ? "Добавить" : `Сохранить`}
-                    </button>
-                </div>
-            </form>
-        </Popup>
+                        <button
+                            type="button"
+                            className="action-button"
+                            title={`${
+                                editorState === "create"
+                                    ? "Добавить группу"
+                                    : `Сохранить изменения`
+                            }`}
+                            onClick={handleSaveGroup}
+                            disabled={groupName.length < 2}
+                        >
+                            {editorState === "create"
+                                ? "Добавить"
+                                : `Сохранить`}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     );
 };
 
