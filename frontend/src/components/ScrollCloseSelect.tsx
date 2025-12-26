@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import Select from "react-select";
 
+
+// Используется в редакторе групп - закрывается при скролле
 const ScrollCloseSelect = ({
     options,
     placeholder = "—",

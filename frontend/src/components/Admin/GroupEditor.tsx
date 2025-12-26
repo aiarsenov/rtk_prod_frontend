@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 
 import postData from "../../utils/postData";
 import { toast } from "react-toastify";
@@ -166,9 +166,12 @@ const GroupEditor = ({
         }
     };
 
+    // Массовый выбор прав в столбце
     const handleMassPermissionCheckboxChange = (permissionType) => {
         // Если все строки выделены, снимаем выделение со всех строк
         // чтобы массовые чекбоксы работали только с отмеченными строками
+        console.log(permissionType);
+
         let currentSelectedSections = selectedSections;
         if (areAllRowsSelected) {
             currentSelectedSections = new Set();
@@ -461,7 +464,7 @@ const GroupEditor = ({
                                         sectionLabel.title !== prevTitle;
 
                                     return (
-                                        <>
+                                        <Fragment key={sectionKey}>
                                             {shouldRenderTitle && (
                                                 <tr className="permissions-table__title">
                                                     <td colSpan={8}>
@@ -470,7 +473,7 @@ const GroupEditor = ({
                                                 </tr>
                                             )}
 
-                                            <tr key={sectionKey}>
+                                            <tr>
                                                 <td className="permissions-table__name">
                                                     {sectionLabel.name}
                                                 </td>
@@ -610,7 +613,7 @@ const GroupEditor = ({
                                                     </label>
                                                 </td>
                                             </tr>
-                                        </>
+                                        </Fragment>
                                     );
                                 })}
 
@@ -638,7 +641,6 @@ const GroupEditor = ({
                                                                 permType
                                                             )
                                                         }
-                                                        className="row-checkbox"
                                                     />
                                                     <div className="checkbox"></div>
                                                 </label>
@@ -651,6 +653,7 @@ const GroupEditor = ({
                                         (permType) => {
                                             const massScopeValue =
                                                 getMassScopeValue(permType);
+
                                             const isMassCheckboxCheckedForType =
                                                 isMassCheckboxChecked(permType);
 
