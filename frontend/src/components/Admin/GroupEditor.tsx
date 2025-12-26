@@ -116,12 +116,73 @@ const GroupEditor = ({
     );
 
     // Обработчик изменения чекбокса права
+    // const handlePermissionCheckboxChange = (section, permissionType) => {
+    //     const key = `${section}_${permissionType}`;
+
+    //     setSelectedPermissions((prev) => ({
+    //         ...prev,
+    //         [key]: !prev[key],
+    //     }));
+    // };
+
     const handlePermissionCheckboxChange = (section, permissionType) => {
-        const key = `${section}_${permissionType}`;
-        setSelectedPermissions((prev) => ({
-            ...prev,
-            [key]: !prev[key],
-        }));
+        setSelectedPermissions((prev) => {
+            const newPermissions = { ...prev };
+            const newScopes = { ...permissionScopes };
+
+            const viewKey = `${section}_view`;
+            const editKey = `${section}_edit`;
+            const deleteKey = `${section}_delete`;
+
+            const isChecked = !!newPermissions[`${section}_${permissionType}`];
+
+            if (isChecked) {
+                // Снятие чекбокса
+                if (permissionType === "view") {
+                    // снимаем все
+                    delete newPermissions[viewKey];
+                    delete newPermissions[editKey];
+                    delete newPermissions[deleteKey];
+
+                    delete newScopes[viewKey];
+                    delete newScopes[editKey];
+                    delete newScopes[deleteKey];
+                } else if (permissionType === "edit") {
+                    // снимаем edit и delete
+                    delete newPermissions[editKey];
+                    delete newPermissions[deleteKey];
+
+                    delete newScopes[editKey];
+                    delete newScopes[deleteKey];
+                } else if (permissionType === "delete") {
+                    // снимаем только delete
+                    delete newPermissions[deleteKey];
+                    delete newScopes[deleteKey];
+                }
+            } else {
+                // Выбор чекбокса — добавляем зависимости
+                if (permissionType === "view") {
+                    newPermissions[viewKey] = true;
+                    newScopes[viewKey] ||= "full";
+                } else if (permissionType === "edit") {
+                    newPermissions[viewKey] = true;
+                    newPermissions[editKey] = true;
+
+                    newScopes[viewKey] ||= "full";
+                    newScopes[editKey] ||= "full";
+                } else if (permissionType === "delete") {
+                    newPermissions[viewKey] = true;
+                    newPermissions[editKey] = true;
+                    newPermissions[deleteKey] = true;
+
+                    newScopes[viewKey] ||= "full";
+                    newScopes[editKey] ||= "full";
+                    newScopes[deleteKey] ||= "full";
+                }
+            }
+
+            return newPermissions;
+        });
     };
 
     // Обработчик изменения scope для конкретной ячейки (раздел + тип права)
@@ -202,6 +263,7 @@ const GroupEditor = ({
         setPermissionScopes(newScopes);
     };
 
+    // Проверяем, все ли права раздела данного типа отмечены
     const isMassCheckboxChecked = (permissionType) => {
         // Все допустимые ключи для данного типа
         const keys = SECTIONS_ORDER.filter((section) => {
@@ -280,7 +342,7 @@ const GroupEditor = ({
     };
 
     // Создание / Изменение группы
-    const handleSaveGroup = async () => {
+    const handleSaveGroup = () => {
         setError("");
 
         const URL =
@@ -313,29 +375,72 @@ const GroupEditor = ({
             return;
         }
 
-        try {
-            await postData(editorState === "create" ? "POST" : "PATCH", URL, {
-                name: newGroupName,
-                permissions: permissions,
+        return postData(editorState === "create" ? "POST" : "PATCH", URL, {
+            name: newGroupName,
+            permissions: permissions,
+        })
+            .then((response) => {
+                if (response.ok) {
+                    closeEditor();
+                    setSelectedPermissions({});
+                    setPermissionScopes({});
+                    setSelectedSections(new Set());
+                    loadGroups();
+                }
+            })
+            .catch((error) => {
+                toast.error(error.message || "Ошибка сохранения прав", {
+                    isLoading: false,
+                    autoClose: 3000,
+                    pauseOnFocusLoss: false,
+                    pauseOnHover: false,
+                    position:
+                        window.innerWidth >= 1440
+                            ? "bottom-right"
+                            : "top-right",
+                });
+                setError(error.message || "Ошибка сохранения прав");
+            });
+    };
+
+    useEffect(() => {
+        setSelectedPermissions((prev) => {
+            const newPermissions = { ...prev };
+            const newScopes = { ...permissionScopes };
+            let changed = false;
+
+            SECTIONS_ORDER.forEach((section) => {
+                const viewKey = `${section}_view`;
+                const editKey = `${section}_edit`;
+                const deleteKey = `${section}_delete`;
+
+                const hasView = !!newPermissions[viewKey];
+                const hasEdit = !!newPermissions[editKey];
+                const hasDelete = !!newPermissions[deleteKey];
+
+                // Добавляем зависимости при выборе edit/delete
+                if (hasEdit && !hasView) {
+                    newPermissions[viewKey] = true;
+                    newScopes[viewKey] ||= "full";
+                    changed = true;
+                }
+                if (hasDelete) {
+                    if (!hasView) {
+                        newPermissions[viewKey] = true;
+                        newScopes[viewKey] ||= "full";
+                        changed = true;
+                    }
+                    if (!hasEdit) {
+                        newPermissions[editKey] = true;
+                        newScopes[editKey] ||= "full";
+                        changed = true;
+                    }
+                }
             });
 
-            closeEditor();
-            setSelectedPermissions({});
-            setPermissionScopes({});
-            setSelectedSections(new Set());
-            loadGroups();
-        } catch (err) {
-            toast.error(err.message || "Ошибка сохранения прав", {
-                isLoading: false,
-                autoClose: 3000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                position:
-                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-            });
-            setError(err.message || "Ошибка сохранения прав");
-        }
-    };
+            return changed ? newPermissions : prev;
+        });
+    }, [selectedPermissions]);
 
     useEffect(() => {
         if (selectedGroup?.name) {
@@ -698,11 +803,11 @@ const GroupEditor = ({
                             </tbody>
                         </table>
                     </div>
-
-                    {error && <div className="admin-form__error">{error}</div>}
                 </div>
 
-                <div className="action-form__footer">
+                <div className="action-form__footer relative">
+                    {error && <div className="admin-form__error">{error}</div>}
+
                     <button
                         type="button"
                         className="cancel-button"

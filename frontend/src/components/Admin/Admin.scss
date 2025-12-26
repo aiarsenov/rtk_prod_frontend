@@ -282,7 +282,11 @@
     }
 
     &__error {
-        font-size: 12px;
+        position: absolute;
+        top: 10px;
+        left: 0;
+        padding: 0 30px;
+        font-size: 14px;
         color: var(--color-red-60);
     }
 }
