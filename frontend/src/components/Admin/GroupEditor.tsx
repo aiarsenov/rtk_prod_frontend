@@ -17,7 +17,7 @@ const SECTIONS = {
     employees: { title: "Сотрудники", name: "Реестр и карточки сотрудников" },
     contractors: { title: "Подрядчики", name: "Реестр и карточки подрядчиков" },
     dictionaries: { title: "Справочники", name: "Справочники" },
-    admin: { title: "Администрирование", name: "Пользователи и группы" },
+    admin: { title: "Администрирование", name: "Пользователи и группы прав" },
 };
 
 // Порядок отображения разделов
@@ -35,7 +35,6 @@ const SECTIONS_ORDER = [
 ];
 
 // Матрица прав: какие типы прав доступны для каждого раздела
-// 0 = недоступно, 1 = доступно
 const PERMISSION_MATRIX = {
     main: {
         view: 1,
@@ -44,7 +43,7 @@ const PERMISSION_MATRIX = {
     },
     project_reports: {
         view: 1,
-        edit: 1,
+        edit: 0,
         delete: 0,
     },
     employee_reports: {
@@ -814,6 +813,7 @@ const GroupEditor = ({
                                 : `Сохранить изменения`
                         }`}
                         onClick={handleSaveGroup}
+                        disabled={newGroupName.length < 2}
                     >
                         {editorState === "create" ? "Добавить" : `Сохранить`}
                     </button>
