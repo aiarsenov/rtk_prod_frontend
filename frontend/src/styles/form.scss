@@ -318,7 +318,7 @@
 
     &-select-extend {
         &__menu-portal {
-            z-index: 9999 !important;
+            z-index: 1000 !important;
 
             [class*="-menu"] {
                 z-index: 25;

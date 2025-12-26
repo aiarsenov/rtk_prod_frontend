@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import postData from "../../utils/postData";
 import { toast } from "react-toastify";
 
-import CreatableSelect from "react-select/creatable";
 import Select from "react-select";
+import ScrollCloseSelect from "../ScrollCloseSelect";
 import Popup from "../Popup/Popup";
 
 const SECTIONS = {
@@ -553,22 +553,9 @@ const GroupEditor = ({
                                                                 className="scope-cell"
                                                             >
                                                                 {isAllowed ? (
-                                                                    <Select
-                                                                        className="form-select-extend"
-                                                                        classNamePrefix="form-select-extend"
+                                                                    <ScrollCloseSelect
                                                                         options={
                                                                             RIGHTS_WIDTH_OPTIONS
-                                                                        }
-                                                                        placeholder="—"
-                                                                        isSearchable={
-                                                                            false
-                                                                        }
-                                                                        menuPortalTarget={
-                                                                            document.body
-                                                                        }
-                                                                        menuPosition="fixed"
-                                                                        menuShouldScrollIntoView={
-                                                                            false
                                                                         }
                                                                         value={RIGHTS_WIDTH_OPTIONS.find(
                                                                             (
