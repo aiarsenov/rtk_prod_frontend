@@ -116,15 +116,6 @@ const GroupEditor = ({
     );
 
     // Обработчик изменения чекбокса права
-    // const handlePermissionCheckboxChange = (section, permissionType) => {
-    //     const key = `${section}_${permissionType}`;
-
-    //     setSelectedPermissions((prev) => ({
-    //         ...prev,
-    //         [key]: !prev[key],
-    //     }));
-    // };
-
     const handlePermissionCheckboxChange = (section, permissionType) => {
         setSelectedPermissions((prev) => {
             const newPermissions = { ...prev };
@@ -139,7 +130,6 @@ const GroupEditor = ({
             if (isChecked) {
                 // Снятие чекбокса
                 if (permissionType === "view") {
-                    // снимаем все
                     delete newPermissions[viewKey];
                     delete newPermissions[editKey];
                     delete newPermissions[deleteKey];
@@ -148,14 +138,12 @@ const GroupEditor = ({
                     delete newScopes[editKey];
                     delete newScopes[deleteKey];
                 } else if (permissionType === "edit") {
-                    // снимаем edit и delete
                     delete newPermissions[editKey];
                     delete newPermissions[deleteKey];
 
                     delete newScopes[editKey];
                     delete newScopes[deleteKey];
                 } else if (permissionType === "delete") {
-                    // снимаем только delete
                     delete newPermissions[deleteKey];
                     delete newScopes[deleteKey];
                 }
