@@ -141,24 +141,18 @@
 
             &.mass-select-row {
                 background: var(--color-gray-20);
-                border-top: 2px solid var(--color-gray-40);
                 position: sticky;
                 bottom: -2px;
                 z-index: 5;
-                box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
-
-                td {
-                    border-top: 2px solid var(--color-gray-40);
-                }
 
                 &::before {
                     content: "";
                     position: absolute;
-                    top: -2px;
+                    top: 0;
                     left: 0;
                     right: 0;
                     height: 2px;
-                    background: var(--color-gray-40);
+                    background: var(--color-gray-20);
                 }
             }
         }
@@ -207,14 +201,6 @@
 .permission-disabled {
     color: var(--color-gray-50);
     font-size: 16px;
-}
-
-.mass-select-label {
-    font-weight: 600;
-    color: var(--color-gray-80);
-    text-align: left;
-    width: 200px;
-    min-width: 200px;
 }
 
 .admin-form {
