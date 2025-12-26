@@ -56,5 +56,8 @@
     ],
     "leads": [
         { "label": "Название", "key": "name" }
+    ],
+    "lead-contacts": [
+        { "label": "Название", "key": "name" }
     ]
 }

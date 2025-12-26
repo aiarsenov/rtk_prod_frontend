@@ -16,7 +16,7 @@ const ReferenceBooksTheadItems = ({
 }) => {
     return (
         <>
-            {COLUMNS[bookId].map(
+            {COLUMNS[bookId]?.map(
                 ({ label, key, filter, options, hint, is_sortable }) => {
                     return (
                         <th className="min-w-[50px]" rowSpan="2" key={key}>
