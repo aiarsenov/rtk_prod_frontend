@@ -187,7 +187,7 @@ const AdminGroups = ({
             )}
 
             {/* Модальное окно добавления прав */}
-            {/* {showGroupEditor && ( */}
+            {showGroupEditor && (
                 <GroupEditor
                     editorState={editorState}
                     closeEditor={closeEditor}
@@ -198,7 +198,7 @@ const AdminGroups = ({
                     setPermissionScopes={setPermissionScopes}
                     loadGroups={loadGroups}
                 />
-            {/* )} */}
+            )}
 
             {/* Модальное окно закрепления пользователей за группой */}
             {showAddUserModal && selectedGroup && (
