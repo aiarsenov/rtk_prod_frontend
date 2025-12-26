@@ -6,6 +6,22 @@ import formatMoney from "../../utils/formatMoney";
 import AutoResizeTextarea from "../AutoResizeTextarea";
 import Hint from "../Hint/Hint";
 
+const formatMoneyDisplay = (raw) => {
+    if (!raw) return "";
+
+    const [whole, fraction] = raw.split(".");
+    const formattedWhole = whole.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+
+    return fraction !== undefined
+        ? `${formattedWhole},${fraction.slice(0, 2)}`
+        : formattedWhole;
+};
+
+const parseMoneyDisplay = (display) => {
+    if (!display) return "";
+    return display.replace(/\s/g, "").replace(",", ".");
+};
+
 const SaleStageDetails = ({ stage, mode, updateStageDetails }) => {
     const [stageData, setStageData] = useState(stage || {});
 
@@ -43,17 +59,32 @@ const SaleStageDetails = ({ stage, mode, updateStageDetails }) => {
 
                                             <input
                                                 type="text"
-                                                value={
-                                                    formatMoney(
-                                                        item.current_value
-                                                    ) || ""
-                                                }
-                                                onChange={(evt) => {
+                                                value={formatMoneyDisplay(
+                                                    item.current_value
+                                                )}
+                                                onChange={(e) => {
                                                     if (mode.edit !== "full")
                                                         return;
 
-                                                    const newValue =
-                                                        evt.target.value;
+                                                    const input = e.target;
+                                                    const cursor =
+                                                        input.selectionStart;
+                                                    const displayValue =
+                                                        input.value;
+
+                                                    // считаем цифры до курсора
+                                                    const digitsBefore =
+                                                        displayValue
+                                                            .slice(0, cursor)
+                                                            .replace(
+                                                                /\D/g,
+                                                                ""
+                                                            ).length;
+
+                                                    const rawValue =
+                                                        parseMoneyDisplay(
+                                                            displayValue
+                                                        );
 
                                                     setStageData((prev) => ({
                                                         ...prev,
@@ -65,11 +96,45 @@ const SaleStageDetails = ({ stage, mode, updateStageDetails }) => {
                                                                         ? {
                                                                               ...metric,
                                                                               current_value:
-                                                                                  newValue,
+                                                                                  rawValue,
                                                                           }
                                                                         : metric
                                                             ),
                                                     }));
+
+                                                    requestAnimationFrame(
+                                                        () => {
+                                                            const formatted =
+                                                                formatMoneyDisplay(
+                                                                    rawValue
+                                                                );
+
+                                                            let pos = 0;
+                                                            let digitsCount = 0;
+
+                                                            while (
+                                                                digitsCount <
+                                                                    digitsBefore &&
+                                                                pos <
+                                                                    formatted.length
+                                                            ) {
+                                                                if (
+                                                                    /\d/.test(
+                                                                        formatted[
+                                                                            pos
+                                                                        ]
+                                                                    )
+                                                                )
+                                                                    digitsCount++;
+                                                                pos++;
+                                                            }
+
+                                                            input.setSelectionRange(
+                                                                pos,
+                                                                pos
+                                                            );
+                                                        }
+                                                    );
                                                 }}
                                                 onBlur={() => {
                                                     if (mode.edit !== "full")
