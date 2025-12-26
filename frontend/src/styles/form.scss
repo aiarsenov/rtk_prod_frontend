@@ -35,7 +35,8 @@
         }
 
         .form-field,
-        .form-select:disabled {
+        .form-select:disabled,
+        .form-textarea {
             background-color: transparent;
         }
     }
@@ -244,6 +245,8 @@
     }
 
     &-checkbox {
+        display: flex;
+        align-items: center;
         gap: 0 !important;
         cursor: pointer;
 
@@ -314,6 +317,26 @@
     }
 
     &-select-extend {
+        &__menu-portal {
+            z-index: 1000 !important;
+
+            [class*="-menu"] {
+                z-index: 25;
+                overflow: hidden;
+                border: 1px solid var(--color-gray-40);
+                border-radius: 10px;
+                box-shadow: 0px 12px 28px 0px rgba(0, 32, 51, 0.12);
+                font-weight: 400;
+                font-size: 14px;
+                line-height: 140%;
+
+                [class*="-option"] {
+                    padding: 10px 13px;
+                    border-bottom: 1px solid var(--color-gray-30);
+                }
+            }
+        }
+
         &_nosearch {
             > [class*="-control"] {
                 padding: 5px;
@@ -410,7 +433,7 @@
         font-size: 14px;
         line-height: 140%;
         background: var(--color-gray-20);
-        min-height: 80px;
+        min-height: 30px;
         transition: border var(--trans);
 
         &:focus {

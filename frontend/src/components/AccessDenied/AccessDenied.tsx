@@ -1,11 +1,13 @@
 import PropTypes from "prop-types";
 
+import "./AccessDenied.scss";
+
 const AccessDenied = ({ message, noAccessToAnySection = false }) => {
     const displayMessage = noAccessToAnySection
         ? "У вас нет прав для доступа ни в один раздел сервиса."
         : message || "У вас нет прав для доступа в данный раздел.";
 
-    const displayHint = "Обратитесь к администратору для получения доступа."
+    const displayHint = "Обратитесь к администратору для получения доступа.";
     return (
         <div className="access-denied">
             <div className="access-denied__icon">

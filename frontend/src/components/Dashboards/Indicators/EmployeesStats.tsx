@@ -90,7 +90,7 @@ const EmployeesStats = ({
                 borderSkipped: false,
                 order: 2,
                 tooltip: {
-                    enabled: false,
+                    enabled: true,
                 },
             },
             {
@@ -99,15 +99,137 @@ const EmployeesStats = ({
                     parseValue(item.value)
                 ),
                 backgroundColor: "#BDB4FE",
+                hoverBackgroundColor: "#BDB4FE",
                 borderRadius: 5,
                 barThickness: 20,
                 maxBarThickness: 20,
                 minBarThickness: 20,
                 barPercentage: 1,
                 order: 1,
+                tooltip: {
+                    enabled: false,
+                },
             },
         ],
     };
+
+    // const horizontalOptions = {
+    //     indexAxis: "y",
+    //     responsive: true,
+    //     maintainAspectRatio: false,
+    //     animation: false,
+    //     normalized: true,
+    //     plugins: {
+    //         legend: {
+    //             display: false,
+    //         },
+    //         title: {
+    //             display: false,
+    //             text: "",
+    //         },
+    //         datalabels: {
+    //             anchor: "end",
+    //             align: "right",
+    //             offset: 8,
+    //             color: "#002033",
+    //             clip: false,
+    //             formatter: (value) => {
+    //                 if (!Number.isFinite(value)) return "";
+    //                 // Форматируем с запятой вместо точки, 2 знака после запятой
+    //                 return value.toFixed(2).toString().replace(".", ",");
+    //             },
+    //         },
+    //         tooltip: {
+    //             displayColors: false,
+    //             filter: function (tooltipItem) {
+    //                 return tooltipItem.datasetIndex === 0;
+    //             },
+    //             callbacks: {
+    //                 label: (context) => {
+    //                     const index = context.dataIndex;
+    //                     const datasetIndex = context.datasetIndex;
+
+    //                     const previousDataset = context.chart.data.datasets[0];
+    //                     const previousValue = parseFloat(
+    //                         previousDataset.data[index]
+    //                     );
+
+    //                     const suffix = (() => {
+    //                         switch (employeeFilters.metric_type[0]) {
+    //                             case "headcount":
+    //                                 return "чел.";
+    //                             case "gross_salary":
+    //                                 return "млн руб.";
+    //                             case "average_salary":
+    //                                 return "тыс. руб.";
+    //                             default:
+    //                                 return "";
+    //                         }
+    //                     })();
+
+    //                     const formatValue = (val) => {
+    //                         if (isNaN(val)) return val;
+    //                         return val.toFixed(2).replace(".", ",");
+    //                     };
+
+    //                     return [
+    //                         `Прошлое значение: ${formatValue(
+    //                             previousValue
+    //                         )} ${suffix}`,
+    //                     ];
+    //                 },
+    //                 title: () => "",
+    //             },
+    //         },
+    //     },
+
+    //     scales: {
+    //         y: {
+    //             stacked: true,
+    //             position: "left",
+    //             ticks: {
+    //                 color: "#002033",
+    //                 font: { size: 14 },
+    //                 crossAlign: "far",
+    //                 padding: 15,
+    //                 autoSkip: false,
+    //                 maxRotation: 0,
+    //                 callback: function (value) {
+    //                     let label = this.getLabelForValue(value);
+    //                     return label.length > 25
+    //                         ? label.slice(0, 25) + "…"
+    //                         : label;
+    //                 },
+    //             },
+    //             grid: {
+    //                 drawBorder: false,
+    //                 drawTicks: false,
+    //                 lineWidth: 1,
+    //                 color: "#E4E7EC",
+    //             },
+    //             border: {
+    //                 dash: [3, 3],
+    //                 display: false,
+    //             },
+    //         },
+
+    //         x: {
+    //             beginAtZero: true,
+    //             ticks: {
+    //                 display: false,
+    //             },
+    //             grid: {
+    //                 drawTicks: false,
+    //                 display: false,
+    //             },
+    //             border: { display: false },
+    //             afterDataLimits: (axis) => {
+    //                 const max = axis.max ?? 0;
+    //                 axis.max = max * 1.1;
+    //             },
+    //         },
+    //     },
+    // };
 
     const horizontalOptions = {
         indexAxis: "y",
@@ -131,23 +253,21 @@ const EmployeesStats = ({
                 clip: false,
                 formatter: (value) => {
                     if (!Number.isFinite(value)) return "";
-                    // Форматируем с запятой вместо точки, 2 знака после запятой
                     return value.toFixed(2).toString().replace(".", ",");
                 },
             },
             tooltip: {
                 displayColors: false,
+                mode: "index",
+                intersect: false,
                 callbacks: {
-                    label: (context) => {
+                    label: function (context) {
+                        if (context.datasetIndex !== 0) {
+                            return null;
+                        }
+
                         const index = context.dataIndex;
-                        const datasetIndex = context.datasetIndex;
-
-                        const currentDataset = context.chart.data.datasets[1];
                         const previousDataset = context.chart.data.datasets[0];
-
-                        const currentValue = parseFloat(
-                            currentDataset.data[index]
-                        );
                         const previousValue = parseFloat(
                             previousDataset.data[index]
                         );
@@ -170,21 +290,16 @@ const EmployeesStats = ({
                             return val.toFixed(2).replace(".", ",");
                         };
 
-                        if (datasetIndex === 0) {
-                            return [
-                                `Прошлое значение: ${formatValue(
-                                    previousValue
-                                )} ${suffix}`,
-                            ];
-                        } else {
-                            return [
-                                `Текущее значение: ${formatValue(
-                                    currentValue
-                                )} ${suffix}`,
-                            ];
-                        }
+                        return `Прошлое значение: ${formatValue(
+                            previousValue
+                        )} ${suffix}`;
                     },
+
                     title: () => "",
+                },
+
+                filter: function (tooltipItem) {
+                    return tooltipItem.datasetIndex === 0;
                 },
             },
         },
@@ -232,6 +347,28 @@ const EmployeesStats = ({
                 afterDataLimits: (axis) => {
                     const max = axis.max ?? 0;
                     axis.max = max * 1.1;
+                },
+            },
+        },
+        // Настройки для взаимодействия
+        interaction: {
+            mode: "index", // Режим индекса позволяет реагировать на все бары в одной группе
+            axis: "y", // По вертикальной оси
+            intersect: false, // Не требовать точного пересечения
+        },
+        hover: {
+            mode: "index", // То же самое для hover
+            intersect: false,
+        },
+        // Настройки элементов
+        elements: {
+            bar: {
+                hoverBackgroundColor: function (context) {
+                    const datasetIndex = context.datasetIndex;
+                    if (datasetIndex === 0) {
+                        return "#E0E0FF"; // Для широкого бара
+                    }
+                    return "#BDB4FE"; // Для тонкого бара - без изменения
                 },
             },
         },

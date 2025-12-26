@@ -8,7 +8,6 @@
     "report-types": [
         { "label": "Сокращённое наименование", "key": "name" },
         { "label": "Полное наименование", "key": "full_name" },
-        { "label": "Регулярный", "key": "is_regular", "hint": true },
         { "label": "Указывать стоимость в отчете", "key": "show_cost", "hint": true },
         { "label": "Кол-во отчётов", "key": "count", "hint": true },
         { "label": "Последнее изменение", "key": "updated_at" },
@@ -85,6 +84,12 @@
         { "label": "Наименование", "key": "name" },
         { "label": "Учитывать в численности и ФОТ", "key": "include_in_payroll", "hint": true },
         { "label": "Кол-во сотрудников в подразделении", "key": "total_employees_count", "hint": true },
+        { "label": "Последнее изменение", "key": "updated_at" },
+        { "label": "Автор измнения", "key": "updated_by" }
+    ],
+    "leads": [
+        { "label": "Название", "key": "name" },
+        { "label": "Кол-во проектов в воронке продаж", "key": "sales_funnel_projects_count" },
         { "label": "Последнее изменение", "key": "updated_at" },
         { "label": "Автор измнения", "key": "updated_by" }
     ]

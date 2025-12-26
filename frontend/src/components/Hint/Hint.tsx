@@ -6,7 +6,7 @@ const Hint = ({
     type = "hint",
 }: {
     message?: string;
-    position?: "top" | "bottom" | "right";
+    position?: "top" | "bottom" | "right" | "left";
     type?: "hint" | "alert";
 }) => {
     return (
@@ -36,8 +36,8 @@ const Hint = ({
                         xmlns="http://www.w3.org/2000/svg"
                     >
                         <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
+                            fillRule="evenodd"
+                            clipRule="evenodd"
                             d="M10 18.333a8.333 8.333 0 110-16.666 8.333 8.333 0 010 16.666zm-.833-12.5v5h1.666v-5H9.167zM10 14.167a1.042 1.042 0 110-2.084 1.042 1.042 0 010 2.084z"
                             fill="currentColor"
                         />

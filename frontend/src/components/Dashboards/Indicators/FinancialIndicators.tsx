@@ -38,6 +38,21 @@ const OPTIONS = [
     { value: "customer", label: "Заказчик" },
 ];
 
+function getChartPadding(length: number): number | undefined {
+    switch (length) {
+        case 1:
+            return 72;
+        case 2:
+            return 62;
+        case 3:
+            return 42;
+        case 4:
+            return 32;
+        default:
+            return undefined;
+    }
+}
+
 const FinancialIndicators = ({
     isFinancialListLoaded,
     isFinancialProfitListLoaded,
@@ -67,6 +82,8 @@ const FinancialIndicators = ({
         key: "receipts.value",
         action: "ascending",
     });
+
+    const padding = getChartPadding(sortedMergedList.length);
 
     // Ключевые финансовые показатели - Поступления
     const financialListData1 = {
@@ -404,7 +421,10 @@ const FinancialIndicators = ({
                         <ul className="indicators__financial-indicators__label-list">
                             {sortedMergedList.length > 0 &&
                                 sortedMergedList.map((item) => (
-                                    <li key={item.id}>
+                                    <li
+                                        key={item.id}
+                                        style={{ padding: `${padding}px 0` }}
+                                    >
                                         <div className="hidden-group">
                                             <div className="visible-text">
                                                 {item.name}

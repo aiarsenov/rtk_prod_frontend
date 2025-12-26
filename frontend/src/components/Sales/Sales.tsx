@@ -6,6 +6,7 @@ import getData from "../../utils/getData";
 import postData from "../../utils/postData";
 import buildQueryParams from "../../utils/buildQueryParams";
 import { sortList } from "../../utils/sortList";
+import { sortDateList } from "../../utils/sortDateList";
 
 import SalesItem from "./SalesItem";
 import Popup from "../Popup/Popup";
@@ -141,6 +142,7 @@ const Sales = () => {
             date: "range",
             dateValue: requestDateQuery,
             setFunc: setRequestDateQuery,
+            is_sortable: true,
         },
         {
             label: "Источник",
@@ -155,6 +157,7 @@ const Sales = () => {
             dateValue: statusDate,
             options: statusDateOptions,
             setFunc: setStatusDate,
+            is_sortable: true,
         },
         {
             label: "Статус",
@@ -268,6 +271,12 @@ const Sales = () => {
             );
         });
 
+        if (sortBy.key === "status_date" || sortBy.key === "request_date") {
+            filtered = sortDateList(filtered, sortBy);
+        } else {
+            filtered = sortList(filtered, sortBy);
+        }
+
         filtered = sortList(filtered, sortBy);
 
         return filtered;
@@ -324,317 +333,337 @@ const Sales = () => {
 
                     <table className="registry-table table-auto w-full border-collapse">
                         <thead className="registry-table__thead">
-                            <tr>
-                                {COLUMNS.map(
-                                    ({
-                                        label,
-                                        key,
-                                        filter,
-                                        date,
-                                        dateValue,
-                                        options,
-                                        setFunc,
-                                        is_sortable,
-                                    }) => {
-                                        return (
-                                            <th
-                                                className="min-w-[125px]"
-                                                rowSpan="2"
-                                                key={key}
-                                            >
-                                                <div className="registry-table__thead-item">
-                                                    {(() => {
-                                                        if (filter) {
-                                                            return (
-                                                                <>
-                                                                    <div className="registry-table__thead-label">
-                                                                        {label}
-                                                                    </div>
+                            {!isLoading && (
+                                <tr>
+                                    {COLUMNS.map(
+                                        ({
+                                            label,
+                                            key,
+                                            filter,
+                                            date,
+                                            dateValue,
+                                            options,
+                                            setFunc,
+                                            is_sortable,
+                                        }) => {
+                                            return (
+                                                <th
+                                                    className="min-w-[125px]"
+                                                    rowSpan="2"
+                                                    key={key}
+                                                >
+                                                    <div className="registry-table__thead-item">
+                                                        {(() => {
+                                                            if (filter) {
+                                                                return (
+                                                                    <>
+                                                                        <div className="registry-table__thead-label">
+                                                                            {
+                                                                                label
+                                                                            }
+                                                                        </div>
 
-                                                                    {filters[
-                                                                        filter
-                                                                    ].length >
-                                                                        0 && (
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={() => {
-                                                                                setFilters(
-                                                                                    (
-                                                                                        prev
-                                                                                    ) => ({
-                                                                                        ...prev,
-                                                                                        [filter]:
-                                                                                            [],
-                                                                                    })
-                                                                                );
-                                                                            }}
-                                                                        >
-                                                                            <svg
-                                                                                width="16"
-                                                                                height="16"
-                                                                                viewBox="0 0 16 16"
-                                                                                fill="none"
-                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                        {filters[
+                                                                            filter
+                                                                        ]
+                                                                            .length >
+                                                                            0 && (
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={() => {
+                                                                                    setFilters(
+                                                                                        (
+                                                                                            prev
+                                                                                        ) => ({
+                                                                                            ...prev,
+                                                                                            [filter]:
+                                                                                                [],
+                                                                                        })
+                                                                                    );
+                                                                                }}
                                                                             >
-                                                                                <path
-                                                                                    d="M9.06 8l3.713 3.712-1.06 1.06L8 9.06l-3.712 3.713-1.061-1.06L6.939 8 3.227 4.287l1.06-1.06L8 6.939l3.712-3.712 1.061 1.06L9.061 8z"
-                                                                                    fill="#000"
-                                                                                />
-                                                                            </svg>
-                                                                        </button>
-                                                                    )}
+                                                                                <svg
+                                                                                    width="16"
+                                                                                    height="16"
+                                                                                    viewBox="0 0 16 16"
+                                                                                    fill="none"
+                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                >
+                                                                                    <path
+                                                                                        d="M9.06 8l3.713 3.712-1.06 1.06L8 9.06l-3.712 3.713-1.061-1.06L6.939 8 3.227 4.287l1.06-1.06L8 6.939l3.712-3.712 1.061 1.06L9.061 8z"
+                                                                                        fill="#000"
+                                                                                    />
+                                                                                </svg>
+                                                                            </button>
+                                                                        )}
 
-                                                                    {options.length >
-                                                                        0 &&
-                                                                        options.some(
-                                                                            (
-                                                                                val
-                                                                            ) =>
-                                                                                val !==
-                                                                                undefined
-                                                                        ) && (
-                                                                            <FilterButton
-                                                                                label={
-                                                                                    label
+                                                                        {options.length >
+                                                                            0 &&
+                                                                            options.some(
+                                                                                (
+                                                                                    val
+                                                                                ) =>
+                                                                                    val !==
+                                                                                    undefined
+                                                                            ) && (
+                                                                                <FilterButton
+                                                                                    label={
+                                                                                        label
+                                                                                    }
+                                                                                    key={
+                                                                                        key
+                                                                                    }
+                                                                                    filterKey={
+                                                                                        key
+                                                                                    }
+                                                                                    openFilter={
+                                                                                        openFilter
+                                                                                    }
+                                                                                    setOpenFilter={
+                                                                                        setOpenFilter
+                                                                                    }
+                                                                                />
+                                                                            )}
+
+                                                                        {openFilter ===
+                                                                            key && (
+                                                                            <MultiSelectWithSearch
+                                                                                options={
+                                                                                    options.length >
+                                                                                    0
+                                                                                        ? options.map(
+                                                                                              (
+                                                                                                  name
+                                                                                              ) => ({
+                                                                                                  value: name,
+                                                                                                  label: name,
+                                                                                              })
+                                                                                          )
+                                                                                        : []
                                                                                 }
-                                                                                key={
-                                                                                    key
+                                                                                selectedValues={
+                                                                                    filters[
+                                                                                        filter
+                                                                                    ]
                                                                                 }
-                                                                                filterKey={
-                                                                                    key
+                                                                                onChange={(
+                                                                                    updated
+                                                                                ) =>
+                                                                                    setFilters(
+                                                                                        (
+                                                                                            prev
+                                                                                        ) => ({
+                                                                                            ...prev,
+                                                                                            ...updated,
+                                                                                        })
+                                                                                    )
                                                                                 }
-                                                                                openFilter={
-                                                                                    openFilter
+                                                                                fieldName={
+                                                                                    filter
                                                                                 }
-                                                                                setOpenFilter={
+                                                                                close={
                                                                                     setOpenFilter
                                                                                 }
                                                                             />
                                                                         )}
-
-                                                                    {openFilter ===
-                                                                        key && (
-                                                                        <MultiSelectWithSearch
-                                                                            options={
-                                                                                options.length >
-                                                                                0
-                                                                                    ? options.map(
-                                                                                          (
-                                                                                              name
-                                                                                          ) => ({
-                                                                                              value: name,
-                                                                                              label: name,
-                                                                                          })
-                                                                                      )
-                                                                                    : []
+                                                                    </>
+                                                                );
+                                                            } else if (date) {
+                                                                return (
+                                                                    <>
+                                                                        <div
+                                                                            className="registry-table__thead-label"
+                                                                            style={
+                                                                                dateValue &&
+                                                                                dateValue[
+                                                                                    `${key}_from`
+                                                                                ][0]
+                                                                                    ? {
+                                                                                          overflow:
+                                                                                              "visible",
+                                                                                      }
+                                                                                    : {}
                                                                             }
-                                                                            selectedValues={
-                                                                                filters[
-                                                                                    filter
-                                                                                ]
-                                                                            }
-                                                                            onChange={(
-                                                                                updated
-                                                                            ) =>
-                                                                                setFilters(
-                                                                                    (
-                                                                                        prev
-                                                                                    ) => ({
-                                                                                        ...prev,
-                                                                                        ...updated,
-                                                                                    })
-                                                                                )
-                                                                            }
-                                                                            fieldName={
-                                                                                filter
-                                                                            }
-                                                                            close={
-                                                                                setOpenFilter
-                                                                            }
-                                                                        />
-                                                                    )}
-                                                                </>
-                                                            );
-                                                        } else if (date) {
-                                                            return (
-                                                                <>
-                                                                    <div
-                                                                        className="registry-table__thead-label"
-                                                                        style={
-                                                                            dateValue &&
-                                                                            dateValue[
+                                                                        >
+                                                                            {dateValue[
                                                                                 `${key}_from`
-                                                                            ][0]
-                                                                                ? {
-                                                                                      overflow:
-                                                                                          "visible",
-                                                                                  }
-                                                                                : {}
-                                                                        }
-                                                                    >
-                                                                        {dateValue[
-                                                                            `${key}_from`
-                                                                        ] ? (
-                                                                            <div className="registry-table__thead-label-date">
-                                                                                <span>
-                                                                                    {dateValue &&
-                                                                                        dateValue[
-                                                                                            `${key}_from`
-                                                                                        ][0]
-                                                                                            .split(
-                                                                                                "-"
-                                                                                            )
-                                                                                            .reverse()
-                                                                                            .join(
-                                                                                                "."
-                                                                                            )}
-                                                                                </span>
-
-                                                                                <div className="hint__message">
-                                                                                    {(() => {
-                                                                                        const from =
-                                                                                            dateValue?.[
+                                                                            ] ? (
+                                                                                <div className="registry-table__thead-label-date">
+                                                                                    <span>
+                                                                                        {dateValue &&
+                                                                                            dateValue[
                                                                                                 `${key}_from`
-                                                                                            ]?.[0];
-                                                                                        const to =
-                                                                                            dateValue?.[
-                                                                                                `${key}_to`
-                                                                                            ]?.[0];
-
-                                                                                        if (
-                                                                                            !from
-                                                                                        )
-                                                                                            return "";
-
-                                                                                        const formattedFrom =
-                                                                                            from
+                                                                                            ][0]
                                                                                                 .split(
                                                                                                     "-"
                                                                                                 )
                                                                                                 .reverse()
                                                                                                 .join(
                                                                                                     "."
-                                                                                                );
-                                                                                        const formattedTo =
-                                                                                            to
-                                                                                                ? to
-                                                                                                      .split(
-                                                                                                          "-"
-                                                                                                      )
-                                                                                                      .reverse()
-                                                                                                      .join(
-                                                                                                          "."
-                                                                                                      )
-                                                                                                : null;
+                                                                                                )}
+                                                                                    </span>
 
-                                                                                        return formattedTo
-                                                                                            ? `${formattedFrom} - ${formattedTo}`
-                                                                                            : formattedFrom;
-                                                                                    })()}
+                                                                                    <div className="hint__message">
+                                                                                        {(() => {
+                                                                                            const from =
+                                                                                                dateValue?.[
+                                                                                                    `${key}_from`
+                                                                                                ]?.[0];
+                                                                                            const to =
+                                                                                                dateValue?.[
+                                                                                                    `${key}_to`
+                                                                                                ]?.[0];
+
+                                                                                            if (
+                                                                                                !from
+                                                                                            )
+                                                                                                return "";
+
+                                                                                            const formattedFrom =
+                                                                                                from
+                                                                                                    .split(
+                                                                                                        "-"
+                                                                                                    )
+                                                                                                    .reverse()
+                                                                                                    .join(
+                                                                                                        "."
+                                                                                                    );
+                                                                                            const formattedTo =
+                                                                                                to
+                                                                                                    ? to
+                                                                                                          .split(
+                                                                                                              "-"
+                                                                                                          )
+                                                                                                          .reverse()
+                                                                                                          .join(
+                                                                                                              "."
+                                                                                                          )
+                                                                                                    : null;
+
+                                                                                            return formattedTo
+                                                                                                ? `${formattedFrom} - ${formattedTo}`
+                                                                                                : formattedFrom;
+                                                                                        })()}
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
-                                                                        ) : (
-                                                                            label
-                                                                        )}
-                                                                    </div>
+                                                                            ) : (
+                                                                                label
+                                                                            )}
+                                                                        </div>
 
-                                                                    {Object.keys(
-                                                                        dateValue
-                                                                    ).length >
-                                                                        0 && (
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={() => {
-                                                                                setFunc(
-                                                                                    ""
-                                                                                );
-                                                                            }}
-                                                                        >
-                                                                            <svg
-                                                                                width="16"
-                                                                                height="16"
-                                                                                viewBox="0 0 16 16"
-                                                                                fill="none"
-                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                        {Object.keys(
+                                                                            dateValue
+                                                                        )
+                                                                            .length >
+                                                                            0 && (
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={() => {
+                                                                                    setFunc(
+                                                                                        ""
+                                                                                    );
+                                                                                }}
                                                                             >
-                                                                                <path
-                                                                                    d="M9.06 8l3.713 3.712-1.06 1.06L8 9.06l-3.712 3.713-1.061-1.06L6.939 8 3.227 4.287l1.06-1.06L8 6.939l3.712-3.712 1.061 1.06L9.061 8z"
-                                                                                    fill="#000"
-                                                                                />
-                                                                            </svg>
-                                                                        </button>
-                                                                    )}
+                                                                                <svg
+                                                                                    width="16"
+                                                                                    height="16"
+                                                                                    viewBox="0 0 16 16"
+                                                                                    fill="none"
+                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                >
+                                                                                    <path
+                                                                                        d="M9.06 8l3.713 3.712-1.06 1.06L8 9.06l-3.712 3.713-1.061-1.06L6.939 8 3.227 4.287l1.06-1.06L8 6.939l3.712-3.712 1.061 1.06L9.061 8z"
+                                                                                        fill="#000"
+                                                                                    />
+                                                                                </svg>
+                                                                            </button>
+                                                                        )}
 
-                                                                    <FilterButton
-                                                                        label={
-                                                                            label
-                                                                        }
-                                                                        key={
-                                                                            key
-                                                                        }
-                                                                        filterKey={
-                                                                            key
-                                                                        }
-                                                                        openFilter={
-                                                                            openFilter
-                                                                        }
-                                                                        setOpenFilter={
-                                                                            setOpenFilter
-                                                                        }
-                                                                    />
-
-                                                                    {openFilter ===
-                                                                        key && (
-                                                                        <CustomDatePicker
-                                                                            fieldkey={
+                                                                        <FilterButton
+                                                                            label={
+                                                                                label
+                                                                            }
+                                                                            key={
                                                                                 key
                                                                             }
-                                                                            closePicker={
+                                                                            filterKey={
+                                                                                key
+                                                                            }
+                                                                            openFilter={
+                                                                                openFilter
+                                                                            }
+                                                                            setOpenFilter={
                                                                                 setOpenFilter
                                                                             }
-                                                                            onChange={(
-                                                                                updated
-                                                                            ) => {
-                                                                                setFunc(
+                                                                        />
+
+                                                                        {openFilter ===
+                                                                            key && (
+                                                                            <CustomDatePicker
+                                                                                fieldkey={
+                                                                                    key
+                                                                                }
+                                                                                closePicker={
+                                                                                    setOpenFilter
+                                                                                }
+                                                                                onChange={(
                                                                                     updated
-                                                                                );
-                                                                            }}
+                                                                                ) => {
+                                                                                    setFunc(
+                                                                                        updated
+                                                                                    );
+                                                                                }}
+                                                                            />
+                                                                        )}
+
+                                                                        {is_sortable && (
+                                                                            <TheadSortButton
+                                                                                value={
+                                                                                    key as any
+                                                                                }
+                                                                                sortBy={
+                                                                                    sortBy as any
+                                                                                }
+                                                                                setSortBy={
+                                                                                    setSortBy as any
+                                                                                }
+                                                                            />
+                                                                        )}
+                                                                    </>
+                                                                );
+                                                            }
+
+                                                            return (
+                                                                <>
+                                                                    <div
+                                                                        className="registry-table__thead-label"
+                                                                        dangerouslySetInnerHTML={{
+                                                                            __html: label,
+                                                                        }}
+                                                                    />
+                                                                    {is_sortable && (
+                                                                        <TheadSortButton
+                                                                            value={
+                                                                                key as any
+                                                                            }
+                                                                            sortBy={
+                                                                                sortBy as any
+                                                                            }
+                                                                            setSortBy={
+                                                                                setSortBy as any
+                                                                            }
                                                                         />
                                                                     )}
                                                                 </>
                                                             );
-                                                        }
-
-                                                        return (
-                                                            <>
-                                                                <div
-                                                                    className="registry-table__thead-label"
-                                                                    dangerouslySetInnerHTML={{
-                                                                        __html: label,
-                                                                    }}
-                                                                />
-                                                                {is_sortable && (
-                                                                    <TheadSortButton
-                                                                        value={
-                                                                            key as any
-                                                                        }
-                                                                        sortBy={
-                                                                            sortBy as any
-                                                                        }
-                                                                        setSortBy={
-                                                                            setSortBy as any
-                                                                        }
-                                                                    />
-                                                                )}
-                                                            </>
-                                                        );
-                                                    })()}
-                                                </div>
-                                            </th>
-                                        );
-                                    }
-                                )}
-                            </tr>
+                                                        })()}
+                                                    </div>
+                                                </th>
+                                            );
+                                        }
+                                    )}
+                                </tr>
+                            )}
                         </thead>
 
                         <tbody className="registry-table__tbody">

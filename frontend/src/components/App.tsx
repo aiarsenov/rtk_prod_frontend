@@ -14,13 +14,8 @@ function getBackendLoginUrl() {
         return `${apiUrl}auth/login`;
     }
 
-    // Если apiUrl относительный, используем текущий домен
-    if (apiUrl.startsWith('/')) {
-        return `${apiUrl}auth/login`;
-    }
-
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || window.location.origin;
-    const apiPath = `/${apiUrl}`;
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://127.0.0.1:8000';
+    const apiPath = apiUrl.startsWith('/') ? apiUrl : `/${apiUrl}`;
 
     return `${backendUrl}${apiPath}auth/login`;
 }

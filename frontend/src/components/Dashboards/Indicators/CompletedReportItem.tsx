@@ -1,3 +1,5 @@
+import Hint from "../../Hint/Hint";
+
 interface Project {
     name: string;
     contragent: string;
@@ -9,6 +11,7 @@ const CompletedReportItem = ({
     id,
     report_period_code,
     days,
+    note,
     execution_period,
     report_period,
     openReportEditor,
@@ -18,6 +21,7 @@ const CompletedReportItem = ({
     id: number;
     report_period_code: string;
     days: string;
+    note: string;
     execution_period: string;
     report_period: string;
     openReportEditor: (args: {
@@ -49,7 +53,13 @@ const CompletedReportItem = ({
             </div>
 
             <div className="reports__list-item__col">
-                <div>{report_period_code}</div>
+                <div className="flex items-start gap-1">
+                    {report_period_code}
+
+                    {note && (
+                        <Hint type="alert" position="right" message={note} />
+                    )}
+                </div>
                 <span>{report_period}</span>
             </div>
 

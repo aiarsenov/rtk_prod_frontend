@@ -1,13 +1,13 @@
 const Loader = ({
-    transparent = false,
     bgColor = "",
+    absolute = false | true,
 }: {
-    transparent?: boolean;
     bgColor?: string;
+    absolute?: boolean;
 }) => {
     return (
         <div
-            className={`loader ${transparent ? "transparent" : ""}`}
+            className={`loader ${absolute ? "absolute" : ""}`}
             style={{ background: bgColor }}
         >
             <div className="loader__icon"></div>

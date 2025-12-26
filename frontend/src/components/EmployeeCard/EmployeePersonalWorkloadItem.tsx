@@ -1,9 +1,12 @@
+import Hint from "../Hint/Hint";
+
 interface Props {
     project_name: string;
     industry_names: [];
     report_period_code: string;
     execution_perƒiod_code: string;
     load_percentage: number;
+    note: string;
 }
 
 const EmployeePersonalWorkloadItem = ({
@@ -29,7 +32,18 @@ const EmployeePersonalWorkloadItem = ({
             </div>
 
             <div className="employee-card__personal-workload__list-item__period">
-                <strong>{props?.report_period_code}</strong>
+                <div className="flex items-start gap-1">
+                    <strong>{props?.report_period_code}</strong>
+
+                    {props.note && (
+                        <Hint
+                            type="alert"
+                            position="right"
+                            message={props.note}
+                        />
+                    )}
+                </div>
+
                 <span>{props?.execution_period_code}</span>
             </div>
 
@@ -43,7 +57,7 @@ const EmployeePersonalWorkloadItem = ({
                     value={props.load_percentage ?? ""}
                     onChange={(evt) => {
                         if (mode.edit !== "full") return;
-                        
+
                         const raw = evt.target.value;
 
                         // Если после пустое, то сохраняем пустую строку

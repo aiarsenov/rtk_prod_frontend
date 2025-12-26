@@ -37,6 +37,7 @@
         min-width: fit-content;
         max-width: 275px;
         z-index: 2;
+        pointer-events: none;
     }
 
     &:hover {
@@ -83,7 +84,34 @@
             left: calc(100% + 10px);
             text-align: left;
             max-width: 280px;
-            min-width: 0;
+            width: max-content;
+            min-width: 20px;
+            transform: none;
+            overflow-y: auto;
+            max-height: 120px;
+        }
+    }
+
+    &--left {
+        &:before {
+            top: calc(100% - 13px);
+            left: calc(100% + 8px);
+            bottom: auto;
+            border: none;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            border-right: 6px solid var(--color-gray-90);
+        }
+
+        .hint__message {
+            word-wrap: break-word;
+            top: calc(100% - 15px);
+            bottom: auto;
+            left: calc(100% + 10px);
+            text-align: left;
+            max-width: 280px;
+            width: max-content;
+            min-width: 20px;
             transform: none;
             overflow-y: auto;
             max-height: 120px;

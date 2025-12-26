@@ -79,6 +79,7 @@ const ReportWindow = ({
     setReportId,
     mode,
 }: {
+    contracts: object[];
     reportName: string;
     reportWindowsState: boolean;
     reportId: number;
@@ -674,7 +675,7 @@ const ReportWindow = ({
             getData(
                 `${import.meta.env.VITE_API_URL}report-types?with-count=true`
             ),
-            getData(`${import.meta.env.VITE_API_URL}physical-persons`),
+            getData(`${import.meta.env.VITE_API_URL}reports/team-members`),
             getData(`${import.meta.env.VITE_API_URL}suppliers`),
             getData(`${import.meta.env.VITE_API_URL}roles?minimal=true`),
             getData(`${import.meta.env.VITE_API_URL}report-statuses`),
@@ -1121,8 +1122,9 @@ const ReportWindow = ({
                                                     placeholder={
                                                         mode.edit === "full"
                                                             ? "Текст заметки"
-                                                            : ""
+                                                            : "—"
                                                     }
+                                                    minHeight={31}
                                                     value={
                                                         reportData?.note || ""
                                                     }
@@ -1150,11 +1152,15 @@ const ReportWindow = ({
 
                                                 <DateFields
                                                     mode={mode}
-                                                    className={"form-field"}
+                                                    className="form-field"
                                                     value={
                                                         reportData.report_period
                                                     }
                                                     onChange={(val) => {
+                                                        console.log(
+                                                            "Отчетный период"
+                                                        );
+
                                                         setReportData(
                                                             (prev) => ({
                                                                 ...prev,
@@ -1214,6 +1220,9 @@ const ReportWindow = ({
                                                             reportData.implementation_period
                                                         }
                                                         onChange={(val) => {
+                                                            console.log(
+                                                                "Период реализации"
+                                                            );
                                                             setReportData(
                                                                 (prev) => ({
                                                                     ...prev,
@@ -1350,6 +1359,9 @@ const ReportWindow = ({
                                                             reportData.execution_period
                                                         }
                                                         onChange={(val) => {
+                                                            console.log(
+                                                                "Период выполнения"
+                                                            );
                                                             setReportData(
                                                                 (prev) => ({
                                                                     ...prev,

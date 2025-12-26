@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 
 import "./CardReportsList.scss";
 
+import Hint from "../Hint/Hint";
 import Loader from "../Loader";
 
 const CardReportsList = ({
@@ -82,8 +83,11 @@ const CardReportsList = ({
                                     openReportEditor(item.id);
                                 }}
                             >
-                                <div className="reports__list-item__col reports__list-item__col-name">
-                                    <div>{item.project_name}</div>
+                                <div className="reports__list-item__col">
+                                    <div className="reports__list-item__col-name">
+                                        {item.project_name}
+                                    </div>
+
                                     <span
                                         style={{
                                             overflow: "hidden",
@@ -97,8 +101,18 @@ const CardReportsList = ({
                                 </div>
 
                                 <div className="reports__list-item__col">
-                                    <div className="text-lg whitespace-nowrap">
-                                        {item.report_period_code}
+                                    <div className="flex items-start gap-1">
+                                        <div className="text-lg whitespace-nowrap">
+                                            {item.report_period_code}
+                                        </div>
+
+                                        {item.note && (
+                                            <Hint
+                                                type="alert"
+                                                position="right"
+                                                message={item.note}
+                                            />
+                                        )}
                                     </div>
                                     <span className="text-sm">
                                         {item.report_period}

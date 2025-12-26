@@ -1,24 +1,20 @@
-const AddButton = ({
+const ActiveButton = ({
     label = "Добавить",
     title,
     className,
     onClick,
-    hint,
     isDisabled,
 }: {
     label?: string;
     title?: string;
     className?: string;
     isDisabled?: boolean;
-    hint?: boolean;
     onClick?: () => void;
 }) => {
     return (
         <button
+            className={`button-active ${className}`}
             type="button"
-            className={`button-add ${className} ${className} ${
-                hint ? "button-hint " : ""
-            }`}
             onClick={() => {
                 if (isDisabled) {
                     return;
@@ -28,28 +24,24 @@ const AddButton = ({
             title={title || label}
             disabled={isDisabled}
         >
-            {label}
+            <span>{label}</span>
 
-            <span>
+            <div className="button-active__icon">
                 <svg
-                    width="10"
-                    height="9"
-                    viewBox="0 0 10 9"
+                    width="12"
+                    height="13"
+                    viewBox="0 0 12 13"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                 >
                     <path
-                        d="M5.75 3.75H9.5v1.5H5.75V9h-1.5V5.25H.5v-1.5h3.75V0h1.5v3.75z"
+                        d="M6.75 5.75h3.75v1.5H6.75V11h-1.5V7.25H1.5v-1.5h3.75V2h1.5v3.75z"
                         fill="currentColor"
                     ></path>
                 </svg>
-            </span>
-
-            {hint && (
-                <div className="button-hint__message">{title || label}</div>
-            )}
+            </div>
         </button>
     );
 };
 
-export default AddButton;
+export default ActiveButton;
