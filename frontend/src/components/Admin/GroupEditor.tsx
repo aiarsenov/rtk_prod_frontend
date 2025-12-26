@@ -16,7 +16,29 @@ const SECTIONS = {
     customers: { title: "Заказчики", name: "Реестр и карточки заказчиков" },
     employees: { title: "Сотрудники", name: "Реестр и карточки сотрудников" },
     contractors: { title: "Подрядчики", name: "Реестр и карточки подрядчиков" },
-    dictionaries: { title: "Справочники", name: "Справочники" },
+    leads: { title: "Справочники", name: "Лиды" },
+    lead_contacts: { title: "Справочники", name: "Контакты лидов" },
+    industries: { title: "Справочники", name: "Отрасли проектов" },
+    report_types: { title: "Справочники", name: "Типы услуг / отчетов" },
+    management_report_types: {
+        title: "Справочники",
+        name: "Типы отчётов менеджмента",
+    },
+    roles: { title: "Справочники", name: "Роли в проектах" },
+    positions: { title: "Справочники", name: "Должности сотрудников" },
+    banks: { title: "Справочники", name: "Кредиторы" },
+    creditor: { title: "Справочники", name: "Контакты кредиторов" },
+    contragent: { title: "Справочники", name: "Контакты заказчиков" },
+    suppliers_with_reports: {
+        title: "Справочники",
+        name: "Контакты подрядчиков",
+    },
+    request_sources: {
+        title: "Справочники",
+        name: "Источники запросов в воронке продаж",
+    },
+    working_hours: { title: "Справочники", name: "Рабочие часы" },
+    departments: { title: "Справочники", name: "Подразделения" },
     admin: { title: "Администрирование", name: "Пользователи и группы прав" },
 };
 
@@ -30,7 +52,20 @@ const SECTIONS_ORDER = [
     "customers",
     "employees",
     "contractors",
-    "dictionaries",
+    "leads",
+    "lead_contacts",
+    "industries",
+    "report_types",
+    "management_report_types",
+    "roles",
+    "positions",
+    "banks",
+    "creditor",
+    "contragent",
+    "suppliers_with_reports",
+    "request_sources",
+    "working_hours",
+    "departments",
     "admin",
 ];
 
@@ -76,7 +111,72 @@ const PERMISSION_MATRIX = {
         edit: 1,
         delete: 0,
     },
-    dictionaries: {
+    leads: {
+        view: 1,
+        edit: 1,
+        delete: 1,
+    },
+    lead_contacts: {
+        view: 1,
+        edit: 1,
+        delete: 1,
+    },
+    industries: {
+        view: 1,
+        edit: 1,
+        delete: 1,
+    },
+    report_types: {
+        view: 1,
+        edit: 1,
+        delete: 1,
+    },
+    management_report_types: {
+        view: 1,
+        edit: 1,
+        delete: 1,
+    },
+    roles: {
+        view: 1,
+        edit: 1,
+        delete: 1,
+    },
+    positions: {
+        view: 1,
+        edit: 1,
+        delete: 1,
+    },
+    banks: {
+        view: 1,
+        edit: 1,
+        delete: 1,
+    },
+    creditor: {
+        view: 1,
+        edit: 1,
+        delete: 1,
+    },
+    contragent: {
+        view: 1,
+        edit: 1,
+        delete: 1,
+    },
+    suppliers_with_reports: {
+        view: 1,
+        edit: 1,
+        delete: 1,
+    },
+    request_sources: {
+        view: 1,
+        edit: 1,
+        delete: 1,
+    },
+    working_hours: {
+        view: 1,
+        edit: 1,
+        delete: 1,
+    },
+    departments: {
         view: 1,
         edit: 1,
         delete: 1,
@@ -342,6 +442,8 @@ const GroupEditor = ({
         // Преобразуем selectedPermissions в массив прав для отправки
         const permissions = [];
 
+        // console.log(selectedPermissions);
+
         Object.entries(selectedPermissions).forEach(([key, isSelected]) => {
             if (isSelected) {
                 // Правильно разбираем ключ: последняя часть - это permission_type, все остальное - section
@@ -356,6 +458,8 @@ const GroupEditor = ({
                 });
             }
         });
+
+        // console.log(permissions);
 
         if (permissions.length === 0) {
             setError("Выберите хотя бы одно право");
