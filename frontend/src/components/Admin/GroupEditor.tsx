@@ -168,45 +168,31 @@ const GroupEditor = ({
 
     // Массовый выбор прав в столбце
     const handleMassPermissionCheckboxChange = (permissionType) => {
-        // Если все строки выделены, снимаем выделение со всех строк
-        // чтобы массовые чекбоксы работали только с отмеченными строками
-        console.log(permissionType);
-
-        let currentSelectedSections = selectedSections;
-        if (areAllRowsSelected) {
-            currentSelectedSections = new Set();
-            setSelectedSections(currentSelectedSections);
-        }
-
-        // Если нет отмеченных строк, ничего не делаем
-        if (currentSelectedSections.size === 0) {
-            return;
-        }
-
         const newPermissions = { ...selectedPermissions };
         const newScopes = { ...permissionScopes };
-        let allCheckedInSelectedSections = true;
 
-        // Проверяем, все ли чекбоксы данного типа выбраны у отмеченных строк
-        currentSelectedSections.forEach((section) => {
-            const matrix = PERMISSION_MATRIX[section] || {};
-            if (matrix[permissionType] === 1) {
-                const key = `${section}_${permissionType}`;
-                if (!newPermissions[key]) {
-                    allCheckedInSelectedSections = false;
-                }
-            }
-        });
+        // Получаем все допустимые ключи для данного типа действия
+        const availableKeys = SECTIONS_ORDER.filter((section) => {
+            const matrix = PERMISSION_MATRIX[section];
+            return matrix?.[permissionType] === 1;
+        }).map((section) => `${section}_${permissionType}`);
 
-        // Если все выбраны у отмеченных строк - снимаем, иначе отмечаем
-        currentSelectedSections.forEach((section) => {
-            const matrix = PERMISSION_MATRIX[section] || {};
-            if (matrix[permissionType] === 1) {
-                const key = `${section}_${permissionType}`;
-                newPermissions[key] = !allCheckedInSelectedSections;
+        if (availableKeys.length === 0) return;
 
-                // Устанавливаем scope по умолчанию, если отмечаем
-                if (!allCheckedInSelectedSections && !newScopes[key]) {
+        // Проверяем, все ли они уже отмечены
+        const areAllChecked = availableKeys.every(
+            (key) => newPermissions[key] === true
+        );
+
+        // Если все отмечены — снимаем, иначе отмечаем все
+        availableKeys.forEach((key) => {
+            if (areAllChecked) {
+                delete newPermissions[key];
+                delete newScopes[key];
+            } else {
+                newPermissions[key] = true;
+
+                if (!newScopes[key]) {
                     newScopes[key] = "full";
                 }
             }
@@ -217,26 +203,18 @@ const GroupEditor = ({
     };
 
     const isMassCheckboxChecked = (permissionType) => {
-        if (areAllRowsSelected) {
+        // Все допустимые ключи для данного типа
+        const keys = SECTIONS_ORDER.filter((section) => {
+            const matrix = PERMISSION_MATRIX[section];
+            return matrix?.[permissionType] === 1;
+        }).map((section) => `${section}_${permissionType}`);
+
+        if (keys.length === 0) {
             return false;
         }
 
-        if (selectedSections.size === 0) {
-            return false;
-        }
-
-        let allChecked = true;
-        selectedSections.forEach((section) => {
-            const matrix = PERMISSION_MATRIX[section] || {};
-            if (matrix[permissionType] === 1) {
-                const key = `${section}_${permissionType}`;
-                if (!selectedPermissions[key]) {
-                    allChecked = false;
-                }
-            }
-        });
-
-        return allChecked;
+        // Проверяем, что все они отмечены
+        return keys.every((key) => selectedPermissions[key] === true);
     };
 
     const getMassScopeValue = (permissionType) => {
