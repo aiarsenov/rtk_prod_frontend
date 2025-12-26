@@ -85,6 +85,10 @@
 
     .form-checkbox {
         justify-content: center;
+
+        .checkbox {
+            margin-right: 0;
+        }
     }
 
     &__thead {
@@ -103,7 +107,6 @@
 
         &-header {
             padding: 10px 15px 10px;
-            // border-bottom: 1px solid var(--color-gray-30);
         }
 
         &-subheader {
@@ -122,19 +125,15 @@
         .checkbox-header {
             width: 60px;
             min-width: 60px;
-            // background: var(--color-gray-20);
         }
     }
 
     &__tbody {
-    }
-
-    tbody {
         tr {
             border-bottom: 1px solid var(--color-gray-30);
             transition: background 0.15s ease-in-out;
 
-            &:hover:not(.mass-select-row) {
+            &:hover:not(.mass-select-row, .permissions-table__title) {
                 background: var(--color-gray-10);
             }
 
@@ -174,47 +173,24 @@
             &.permission-cell,
             &.scope-cell {
                 text-align: center;
-                vertical-align: middle;
                 min-width: 90px;
                 width: 90px;
+                padding: 0 15px;
             }
 
             &.mass-checkbox-cell {
                 text-align: center;
-                vertical-align: middle;
                 min-width: 90px;
                 width: 90px;
                 padding: 12px 8px !important;
             }
 
-            &.row-checkbox-cell {
-                text-align: center;
-                vertical-align: middle;
-                min-width: 60px;
-                width: 60px;
-            }
-
             &.empty-cell {
                 background: var(--color-gray-20);
-                border-top: 2px solid var(--color-gray-40);
+                border-top: 1px solid var(--color-gray-40);
             }
         }
     }
-}
-
-.permission-checkbox,
-.row-checkbox,
-.mass-checkbox {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-    accent-color: var(--color-blue-70);
-    margin: 0;
-}
-
-.mass-checkbox {
-    width: 20px;
-    height: 20px;
 }
 
 .scope-select {
@@ -268,138 +244,6 @@
     width: 200px;
     min-width: 200px;
 }
-
-.row-checkbox-cell {
-    // background: var(--color-gray-10);
-}
-
-// .admin-btn {
-//     padding: 6px 12px;
-//     font-size: 14px;
-//     font-weight: 500;
-//     border-radius: 6px;
-//     border: none;
-//     cursor: pointer;
-//     transition: all 0.2s ease-in-out;
-
-//     &--primary {
-//         background: var(--color-blue-70);
-//         color: white;
-
-//         &:hover {
-//             background: var(--color-blue-80);
-//         }
-//     }
-
-//     &--secondary {
-//         background: var(--color-gray-20);
-//         color: var(--color-gray-80);
-
-//         &:hover {
-//             background: var(--color-gray-30);
-//         }
-//     }
-
-//     &--success {
-//         background: var(--color-green-60);
-//         color: white;
-
-//         &:hover {
-//             background: var(--color-green-70);
-//         }
-//     }
-
-//     &--danger {
-//         background: var(--color-red-60);
-//         color: white;
-
-//         &:hover {
-//             background: var(--color-red-70);
-//         }
-//     }
-
-//     &--sm {
-//         padding: 4px 10px;
-//         font-size: 13px;
-//     }
-
-//     &:disabled {
-//         opacity: 0.5;
-//         cursor: not-allowed;
-//     }
-// }
-
-// .admin-badge {
-//     display: inline-block;
-//     padding: 3px 8px;
-//     border-radius: 99px;
-//     font-size: 12px;
-//     font-weight: 500;
-
-//     &--active {
-//         background: var(--color-green-30);
-//         color: var(--color-green-80);
-//     }
-
-//     &--inactive {
-//         background: var(--color-gray-30);
-//         color: var(--color-gray-70);
-//     }
-
-//     &--warning {
-//         background: var(--color-orange-30);
-//         color: var(--color-orange-80);
-//     }
-// }
-
-// .admin-modal {
-//     position: fixed;
-//     top: 0;
-//     left: 0;
-//     right: 0;
-//     bottom: 0;
-//     background: rgba(0, 0, 0, 0.5);
-//     display: flex;
-//     align-items: center;
-//     justify-content: center;
-//     z-index: 1000;
-
-//     &__content {
-//         background: white;
-//         border-radius: 12px;
-//         padding: 24px;
-//         max-width: 500px;
-//         width: 90%;
-//         max-height: 90vh;
-//         overflow-y: auto;
-
-//         &--wide {
-//             max-width: 1100px;
-//             max-height: 85vh;
-//             width: 95%;
-//         }
-//     }
-
-//     &__header {
-//         margin-bottom: 20px;
-
-//         h2 {
-//             font-size: 20px;
-//             font-weight: 600;
-//             color: var(--color-gray-100);
-//         }
-//     }
-
-//     &__body {
-//         margin-bottom: 20px;
-//     }
-
-//     &__footer {
-//         display: flex;
-//         gap: 12px;
-//         justify-content: flex-end;
-//     }
-// }
 
 .admin-form {
     .form-checkbox {
