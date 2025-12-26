@@ -1,5 +1,6 @@
 @use "../../styles/media-breakpoints" as *;
 
+
 .admin {
     &__container {
         display: flex;
@@ -31,9 +32,10 @@
 
 .group-editor {
     max-width: 1100px;
+    max-height: 100vh;
 
     .action-form__body {
-        padding: 18px 0 20px !important;
+        padding: 15px 0 0 !important;
     }
 
     &__name {
@@ -49,7 +51,8 @@
 
 // Стили для таблицы прав
 .permissions-table-wrapper {
-    max-height: 55vh;
+    height: 100%;
+    max-height: 60vh;
     overflow-y: auto;
     overflow-x: auto;
     margin-bottom: 16px;
@@ -170,8 +173,7 @@
                 min-width: 200px;
             }
 
-            &.permission-cell,
-            &.scope-cell {
+            &.permission-cell {
                 text-align: center;
                 min-width: 90px;
                 width: 90px;
@@ -189,48 +191,58 @@
                 background: var(--color-gray-20);
                 border-top: 1px solid var(--color-gray-40);
             }
+
+            &.scope-cell {
+                padding: 0 15px;
+                min-width: 130px;
+            }
+
+            .form-select-extend {
+                min-width: 110px;
+                max-width: 130px;
+            }
         }
     }
 }
 
-.scope-select {
-    padding: 5px 10px;
-    border: 1px solid var(--color-gray-40);
-    border-radius: 4px;
-    font-size: 12px;
-    color: var(--color-gray-100);
-    background: white;
-    cursor: pointer;
-    min-width: 100px;
-    width: 100%;
-    max-width: 130px;
-    min-height: 29px;
+// .scope-select {
+//     padding: 5px 10px;
+//     border: 1px solid var(--color-gray-40);
+//     border-radius: 4px;
+//     font-size: 12px;
+//     color: var(--color-gray-100);
+//     background: white;
+//     cursor: pointer;
+//     min-width: 100px;
+//     width: 100%;
 
-    &:focus {
-        outline: none;
-        border-color: var(--color-blue-70);
-    }
+//     min-height: 29px;
 
-    &:hover {
-        border-color: var(--color-blue-60);
-    }
+//     &:focus {
+//         outline: none;
+//         border-color: var(--color-blue-70);
+//     }
 
-    &:disabled {
-        color: var(--color-gray-50);
-        background: var(--color-gray-10);
-        border-color: var(--color-gray-30);
-        cursor: not-allowed;
-        opacity: 0.6;
+//     &:hover {
+//         border-color: var(--color-blue-60);
+//     }
 
-        &:hover {
-            border-color: var(--color-gray-30);
-        }
+//     &:disabled {
+//         color: var(--color-gray-50);
+//         background: var(--color-gray-10);
+//         border-color: var(--color-gray-30);
+//         cursor: not-allowed;
+//         opacity: 0.6;
 
-        option {
-            color: var(--color-gray-50);
-        }
-    }
-}
+//         &:hover {
+//             border-color: var(--color-gray-30);
+//         }
+
+//         option {
+//             color: var(--color-gray-50);
+//         }
+//     }
+// }
 
 .permission-disabled {
     color: var(--color-gray-50);

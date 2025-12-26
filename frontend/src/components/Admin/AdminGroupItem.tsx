@@ -9,7 +9,6 @@ const AdminGroupItem = ({
     mode,
     setDeleteGroupId,
     setSelectedGroup,
-    setSelectedUsers,
     setShowAddUserModal,
     setSelectedPermissions,
     setPermissionScopes,
@@ -86,7 +85,6 @@ const AdminGroupItem = ({
                                     hint={true}
                                     onClick={() => {
                                         setSelectedGroup(item);
-                                        setSelectedUsers([]);
                                         setShowAddUserModal(true);
                                     }}
                                 />

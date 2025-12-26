@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import postData from "../../utils/postData";
 import { toast } from "react-toastify";
 
+import CreatableSelect from "react-select/creatable";
+import Select from "react-select";
 import Popup from "../Popup/Popup";
 
 const SECTIONS = {
@@ -31,17 +33,6 @@ const SECTIONS_ORDER = [
     "dictionaries",
     "admin",
 ];
-
-const PERMISSION_TYPES = {
-    view: "Просмотр",
-    edit: "Редактирование",
-    delete: "Удаление",
-};
-
-const SCOPES = {
-    full: "Полный доступ",
-    limited: "Ограниченный",
-};
 
 // Матрица прав: какие типы прав доступны для каждого раздела
 // 0 = недоступно, 1 = доступно
@@ -97,6 +88,11 @@ const PERMISSION_MATRIX = {
         delete: 1,
     },
 };
+
+const RIGHTS_WIDTH_OPTIONS = [
+    { label: "Полная", value: "full" },
+    { label: "Ограниченная", value: "limited" },
+];
 
 const GroupEditor = ({
     editorState,
@@ -398,9 +394,9 @@ const GroupEditor = ({
                                 <col style={{ width: "90px" }} />
                                 <col style={{ width: "90px" }} />
                                 <col style={{ width: "90px" }} />
-                                <col style={{ width: "90px" }} />
-                                <col style={{ width: "90px" }} />
-                                <col style={{ width: "90px" }} />
+                                <col style={{ width: "130px" }} />
+                                <col style={{ width: "130px" }} />
+                                <col style={{ width: "130px" }} />
                                 <col style={{ width: "60px" }} />
                             </colgroup>
 
@@ -533,15 +529,19 @@ const GroupEditor = ({
                                                             PERMISSION_MATRIX[
                                                                 sectionKey
                                                             ] || {};
+
                                                         const isAllowed =
                                                             matrix[permType] ===
                                                             1;
                                                         const scopeKey = `${sectionKey}_${permType}`;
+
                                                         const permissionKey = `${sectionKey}_${permType}`;
+
                                                         const isChecked =
                                                             !!selectedPermissions[
                                                                 permissionKey
                                                             ];
+
                                                         const currentScope =
                                                             permissionScopes[
                                                                 scopeKey
@@ -553,38 +553,43 @@ const GroupEditor = ({
                                                                 className="scope-cell"
                                                             >
                                                                 {isAllowed ? (
-                                                                    <select
-                                                                        value={
-                                                                            currentScope
+                                                                    <Select
+                                                                        className="form-select-extend"
+                                                                        classNamePrefix="form-select-extend"
+                                                                        options={
+                                                                            RIGHTS_WIDTH_OPTIONS
                                                                         }
+                                                                        placeholder="—"
+                                                                        isSearchable={
+                                                                            false
+                                                                        }
+                                                                        menuPortalTarget={
+                                                                            document.body
+                                                                        }
+                                                                        menuPosition="fixed"
+                                                                        menuShouldScrollIntoView={
+                                                                            false
+                                                                        }
+                                                                        value={RIGHTS_WIDTH_OPTIONS.find(
+                                                                            (
+                                                                                item
+                                                                            ) =>
+                                                                                item.value ===
+                                                                                currentScope
+                                                                        )}
                                                                         onChange={(
                                                                             e
                                                                         ) =>
                                                                             handleScopeChange(
                                                                                 sectionKey,
                                                                                 permType,
-                                                                                e
-                                                                                    .target
-                                                                                    .value
+                                                                                e.value
                                                                             )
                                                                         }
-                                                                        className="scope-select"
-                                                                        disabled={
+                                                                        isDisabled={
                                                                             !isChecked
                                                                         }
-                                                                        onClick={(
-                                                                            e
-                                                                        ) =>
-                                                                            e.stopPropagation()
-                                                                        }
-                                                                    >
-                                                                        <option value="full">
-                                                                            Полная
-                                                                        </option>
-                                                                        <option value="limited">
-                                                                            Ограниченная
-                                                                        </option>
-                                                                    </select>
+                                                                    />
                                                                 ) : (
                                                                     <span className="permission-disabled">
                                                                         —
@@ -667,34 +672,38 @@ const GroupEditor = ({
                                                     key={`mass_scope_${permType}`}
                                                     className="scope-cell"
                                                 >
-                                                    <select
-                                                        value={massScopeValue}
+                                                    <Select
+                                                        className="form-select-extend"
+                                                        classNamePrefix="form-select-extend"
+                                                        options={
+                                                            RIGHTS_WIDTH_OPTIONS
+                                                        }
+                                                        placeholder="—"
+                                                        isSearchable={false}
+                                                        menuPortalTarget={
+                                                            document.body
+                                                        }
+                                                        menuPosition="fixed"
+                                                        menuShouldScrollIntoView={
+                                                            false
+                                                        }
+                                                        value={RIGHTS_WIDTH_OPTIONS.find(
+                                                            (item) =>
+                                                                item.value ===
+                                                                massScopeValue
+                                                        )}
                                                         onChange={(e) =>
                                                             handleMassScopeChange(
                                                                 permType,
-                                                                e.target.value
+                                                                e.value
                                                             )
                                                         }
-                                                        className="scope-select"
-                                                        disabled={
+                                                        isDisabled={
                                                             !isMassCheckboxCheckedForType ||
                                                             selectedSections.size ===
                                                                 0
                                                         }
-                                                        onClick={(e) =>
-                                                            e.stopPropagation()
-                                                        }
-                                                    >
-                                                        <option value="">
-                                                            —
-                                                        </option>
-                                                        <option value="full">
-                                                            Полная
-                                                        </option>
-                                                        <option value="limited">
-                                                            Ограниченная
-                                                        </option>
-                                                    </select>
+                                                    />
                                                 </td>
                                             );
                                         }

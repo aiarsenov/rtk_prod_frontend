@@ -25,16 +25,12 @@ const AdminGroups = ({
 }) => {
     const [showAddUserModal, setShowAddUserModal] = useState(false);
 
-    const [selectedGroup, setSelectedGroup] = useState(null);
-    const [selectedUsers, setSelectedUsers] = useState([]);
     const [allUsers, setAllUsers] = useState([]);
+    const [selectedGroup, setSelectedGroup] = useState(null);
     const [deleteGroupId, setDeleteGroupId] = useState(null);
 
-    const [selectedPermissions, setSelectedPermissions] = useState({}); // Чекбоксы выбора прав
-    // Формат: { 'section_permissionType': true/false }
-
-    const [permissionScopes, setPermissionScopes] = useState({}); // Скоупы для каждой конкретной ячейки (раздел + тип права)
-    // Формат: { 'section_permissionType': 'full' | 'limited' }
+    const [selectedPermissions, setSelectedPermissions] = useState({}); // Чекбоксы выбора прав. Формат: { 'section_permissionType': true/false }
+    const [permissionScopes, setPermissionScopes] = useState({}); // Скоупы для каждой конкретной ячейки (раздел + тип права). Формат: { 'section_permissionType': 'full' | 'limited' }
 
     // Получение пользователей
     const loadAllUsers = () => {
@@ -96,7 +92,6 @@ const AdminGroups = ({
             .then((response) => {
                 if (response?.ok) {
                     setShowAddUserModal(false);
-                    setSelectedUsers([]);
                     loadGroups();
                 }
             })
@@ -117,6 +112,7 @@ const AdminGroups = ({
             );
     };
 
+    // Закрыть редактор прав
     const closeEditor = () => {
         setShowGroupEditor(false);
         setSelectedGroup(null);
@@ -124,6 +120,7 @@ const AdminGroups = ({
         setPermissionScopes({});
     };
 
+    // Закрыть окно добавления пользователя
     const closeAddUsersModal = () => {
         setShowAddUserModal(false);
         setSelectedGroup(null);
@@ -170,7 +167,6 @@ const AdminGroups = ({
                                     mode={mode}
                                     setDeleteGroupId={setDeleteGroupId}
                                     setSelectedGroup={setSelectedGroup}
-                                    setSelectedUsers={setSelectedUsers}
                                     setShowAddUserModal={setShowAddUserModal}
                                     setSelectedPermissions={
                                         setSelectedPermissions
@@ -178,7 +174,6 @@ const AdminGroups = ({
                                     setPermissionScopes={setPermissionScopes}
                                     setShowGroupEditor={setShowGroupEditor}
                                     setEditorState={setEditorState}
-                                    // handleRemoveUser={handleRemoveUser}
                                 />
                             ))}
                         </tbody>
@@ -210,6 +205,7 @@ const AdminGroups = ({
                 />
             )}
 
+            {/* Модальное окно подтверждения удаления группы */}
             {deleteGroupId && (
                 <Popup
                     title="Удалить группу?"
