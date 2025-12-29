@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 
 import getColorBySign from "../../utils/getColorBySign";
-// import formatMoney from "../../utils/formatMoney";
 
 import AutoResizeTextarea from "../AutoResizeTextarea";
 import Hint from "../Hint/Hint";

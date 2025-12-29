@@ -75,116 +75,139 @@ const PERMISSION_MATRIX = {
         view: 1,
         edit: 0,
         delete: 0,
+        permissonWidth: "full",
     },
     project_reports: {
         view: 1,
         edit: 0,
         delete: 0,
+        permissonWidth: "all",
     },
     employee_reports: {
         view: 1,
         edit: 1,
         delete: 0,
+        permissonWidth: "all",
     },
     projects: {
         view: 1,
         edit: 1,
         delete: 1,
+        permissonWidth: "all",
     },
     sales: {
         view: 1,
         edit: 1,
         delete: 1,
+        permissonWidth: "all",
     },
     customers: {
         view: 1,
         edit: 1,
         delete: 0,
+        permissonWidth: "full",
     },
     contractors: {
         view: 1,
         edit: 1,
         delete: 0,
+        permissonWidth: "all",
     },
     employees: {
         view: 1,
         edit: 1,
         delete: 0,
+        permissonWidth: "all",
     },
     leads: {
         view: 1,
         edit: 1,
         delete: 1,
+        permissonWidth: "all",
     },
     lead_contacts: {
         view: 1,
         edit: 1,
         delete: 1,
+        permissonWidth: "all",
     },
     industries: {
         view: 1,
         edit: 1,
         delete: 1,
+        permissonWidth: "all",
     },
     report_types: {
         view: 1,
         edit: 1,
         delete: 1,
+        permissonWidth: "all",
     },
     management_report_types: {
         view: 1,
         edit: 1,
         delete: 1,
+        permissonWidth: "all",
     },
     roles: {
         view: 1,
         edit: 1,
         delete: 1,
+        permissonWidth: "all",
     },
     positions: {
         view: 1,
         edit: 1,
         delete: 1,
+        permissonWidth: "all",
     },
     banks: {
         view: 1,
         edit: 1,
         delete: 1,
+        permissonWidth: "all",
     },
     creditor: {
         view: 1,
         edit: 1,
         delete: 1,
+        permissonWidth: "all",
     },
     contragent: {
         view: 1,
         edit: 1,
         delete: 1,
+        permissonWidth: "all",
     },
     suppliers_with_reports: {
         view: 1,
         edit: 1,
         delete: 1,
+        permissonWidth: "all",
     },
     request_sources: {
         view: 1,
         edit: 1,
         delete: 1,
+        permissonWidth: "all",
     },
     working_hours: {
         view: 1,
         edit: 1,
         delete: 1,
+        permissonWidth: "all",
     },
     departments: {
         view: 1,
         edit: 1,
         delete: 1,
+        permissonWidth: "all",
     },
     admin: {
         view: 1,
         edit: 1,
         delete: 1,
+        permissonWidth: "all",
     },
 };
 
@@ -740,6 +763,16 @@ const GroupEditor = ({
                                                                 scopeKey
                                                             ] || "full";
 
+                                                        const availableOptions =
+                                                            matrix?.permissonWidth ===
+                                                            "all"
+                                                                ? RIGHTS_WIDTH_OPTIONS
+                                                                : RIGHTS_WIDTH_OPTIONS.filter(
+                                                                      (item) =>
+                                                                          item.value ===
+                                                                          matrix.permissonWidth
+                                                                  );
+
                                                         return (
                                                             <td
                                                                 key={`scope_${permType}`}
@@ -748,9 +781,9 @@ const GroupEditor = ({
                                                                 {isAllowed ? (
                                                                     <ScrollCloseSelect
                                                                         options={
-                                                                            RIGHTS_WIDTH_OPTIONS
+                                                                            availableOptions
                                                                         }
-                                                                        value={RIGHTS_WIDTH_OPTIONS.find(
+                                                                        value={availableOptions.find(
                                                                             (
                                                                                 item
                                                                             ) =>
@@ -759,15 +792,23 @@ const GroupEditor = ({
                                                                         )}
                                                                         onChange={(
                                                                             e
-                                                                        ) =>
+                                                                        ) => {
+                                                                            if (
+                                                                                availableOptions?.length <
+                                                                                2
+                                                                            )
+                                                                                return;
+
                                                                             handleScopeChange(
                                                                                 sectionKey,
                                                                                 permType,
                                                                                 e.value
-                                                                            )
-                                                                        }
+                                                                            );
+                                                                        }}
                                                                         isDisabled={
-                                                                            !isChecked
+                                                                            !isChecked ||
+                                                                            availableOptions?.length <
+                                                                                2
                                                                         }
                                                                     />
                                                                 ) : (
