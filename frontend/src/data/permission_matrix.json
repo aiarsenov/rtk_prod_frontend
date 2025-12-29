@@ -1,0 +1,179 @@
+{
+    "main": {
+        "view": 1,
+        "edit": 0,
+        "delete": 0,
+        "permission_width_view": "full"
+    },
+    "project_reports": {
+        "view": 1,
+        "edit": 0,
+        "delete": 0,
+        "permission_width_view": "all"
+    },
+    "employee_reports": {
+        "view": 1,
+        "edit": 1,
+        "delete": 0,
+        "permission_width_view": "all",
+        "permission_width_edit": "all"
+    },
+    "projects": {
+        "view": 1,
+        "edit": 1,
+        "delete": 1,
+        "permission_width_view": "all",
+        "permission_width_edit": "all",
+        "permission_width_delete": "all"
+    },
+    "sales": {
+        "view": 1,
+        "edit": 1,
+        "delete": 1,
+        "permission_width_view": "all",
+        "permission_width_edit": "all",
+        "permission_width_delete": "all"
+    },
+    "customers": {
+        "view": 1,
+        "edit": 1,
+        "delete": 0,
+        "permission_width_view": "full",
+        "permission_width_edit": "full",
+        "permission_width_delete": "full"
+    },
+    "contractors": {
+        "view": 1,
+        "edit": 1,
+        "delete": 0,
+        "permission_width_view": "all",
+        "permission_width_edit": "all"
+    },
+    "employees": {
+        "view": 1,
+        "edit": 1,
+        "delete": 0,
+        "permission_width_view": "all",
+        "permission_width_edit": "all"
+    },
+    "leads": {
+        "view": 1,
+        "edit": 1,
+        "delete": 1,
+        "permission_width_view": "all",
+        "permission_width_edit": "all",
+        "permission_width_delete": "all"
+    },
+    "lead_contacts": {
+        "view": 1,
+        "edit": 1,
+        "delete": 1,
+        "permission_width_view": "all",
+        "permission_width_edit": "all",
+        "permission_width_delete": "all"
+    },
+    "industries": {
+        "view": 1,
+        "edit": 1,
+        "delete": 1,
+        "permission_width_view": "all",
+        "permission_width_edit": "all",
+        "permission_width_delete": "all"
+    },
+    "report_types": {
+        "view": 1,
+        "edit": 1,
+        "delete": 1,
+        "permission_width_view": "all",
+        "permission_width_edit": "all",
+        "permission_width_delete": "all"
+    },
+    "management_report_types": {
+        "view": 1,
+        "edit": 1,
+        "delete": 1,
+        "permission_width_view": "all",
+        "permission_width_edit": "all",
+        "permission_width_delete": "all"
+    },
+    "roles": {
+        "view": 1,
+        "edit": 1,
+        "delete": 1,
+        "permission_width_view": "all",
+        "permission_width_edit": "all",
+        "permission_width_delete": "all"
+    },
+    "positions": {
+        "view": 1,
+        "edit": 1,
+        "delete": 1,
+        "permission_width_view": "all",
+        "permission_width_edit": "all",
+        "permission_width_delete": "all"
+    },
+    "banks": {
+        "view": 1,
+        "edit": 1,
+        "delete": 1,
+        "permission_width_view": "all",
+        "permission_width_edit": "all",
+        "permission_width_delete": "all"
+    },
+    "creditor": {
+        "view": 1,
+        "edit": 1,
+        "delete": 1,
+        "permission_width_view": "all",
+        "permission_width_edit": "all",
+        "permission_width_delete": "all"
+    },
+    "contragent": {
+        "view": 1,
+        "edit": 1,
+        "delete": 1,
+        "permission_width_view": "all",
+        "permission_width_edit": "all",
+        "permission_width_delete": "all"
+    },
+    "suppliers_with_reports": {
+        "view": 1,
+        "edit": 1,
+        "delete": 1,
+        "permission_width_view": "all",
+        "permission_width_edit": "all",
+        "permission_width_delete": "all"
+    },
+    "request_sources": {
+        "view": 1,
+        "edit": 1,
+        "delete": 1,
+        "permission_width_view": "all",
+        "permission_width_edit": "all",
+        "permission_width_delete": "all"
+    },
+    "working_hours": {
+        "view": 1,
+        "edit": 1,
+        "delete": 1,
+        "permission_width_view": "all",
+        "permission_width_edit": "all",
+        "permission_width_delete": "all"
+    },
+    "departments": {
+        "view": 1,
+        "edit": 1,
+        "delete": 1,
+        "permission_width_view": "all",
+        "permission_width_edit": "all",
+        "permission_width_delete": "all"
+    },
+    "admin": {
+        "view": 1,
+        "edit": 1,
+        "delete": 1,
+        "permission_width_view": "all",
+        "permission_width_edit": "all",
+        "permission_width_delete": "all"
+    }
+}
