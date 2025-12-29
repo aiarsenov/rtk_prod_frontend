@@ -75,139 +75,178 @@ const PERMISSION_MATRIX = {
         view: 1,
         edit: 0,
         delete: 0,
-        permissonWidth: "full",
+        permission_width_view: "full",
     },
     project_reports: {
         view: 1,
         edit: 0,
         delete: 0,
-        permissonWidth: "all",
+        permission_width_view: "all",
     },
     employee_reports: {
         view: 1,
         edit: 1,
         delete: 0,
-        permissonWidth: "all",
+        permission_width_view: "all",
+        permission_width_edit: "all",
     },
     projects: {
         view: 1,
         edit: 1,
         delete: 1,
-        permissonWidth: "all",
+        permission_width_view: "all",
+        permission_width_edit: "all",
+        permission_width_delete: "all",
     },
     sales: {
         view: 1,
         edit: 1,
         delete: 1,
-        permissonWidth: "all",
+        permission_width_view: "all",
+        permission_width_edit: "all",
+        permission_width_delete: "all",
     },
     customers: {
         view: 1,
         edit: 1,
         delete: 0,
-        permissonWidth: "full",
+        permission_width_view: "full",
+        permission_width_edit: "full",
+        permission_width_delete: "full",
     },
     contractors: {
         view: 1,
         edit: 1,
         delete: 0,
-        permissonWidth: "all",
+        permission_width_view: "all",
+        permission_width_edit: "all",
     },
     employees: {
         view: 1,
         edit: 1,
         delete: 0,
-        permissonWidth: "all",
+        permission_width_view: "all",
+        permission_width_edit: "all",
     },
     leads: {
         view: 1,
         edit: 1,
         delete: 1,
-        permissonWidth: "all",
+        permission_width_view: "all",
+        permission_width_edit: "all",
+        permission_width_delete: "all",
     },
     lead_contacts: {
         view: 1,
         edit: 1,
         delete: 1,
-        permissonWidth: "all",
+        permission_width_view: "all",
+        permission_width_edit: "all",
+        permission_width_delete: "all",
     },
     industries: {
         view: 1,
         edit: 1,
         delete: 1,
-        permissonWidth: "all",
+        permission_width_view: "all",
+        permission_width_edit: "all",
+        permission_width_delete: "all",
     },
     report_types: {
         view: 1,
         edit: 1,
         delete: 1,
-        permissonWidth: "all",
+        permission_width_view: "all",
+        permission_width_edit: "all",
+        permission_width_delete: "all",
     },
     management_report_types: {
         view: 1,
         edit: 1,
         delete: 1,
-        permissonWidth: "all",
+        permission_width_view: "all",
+        permission_width_edit: "all",
+        permission_width_delete: "all",
     },
     roles: {
         view: 1,
         edit: 1,
         delete: 1,
-        permissonWidth: "all",
+        permission_width_view: "all",
+        permission_width_edit: "all",
+        permission_width_delete: "all",
     },
     positions: {
         view: 1,
         edit: 1,
         delete: 1,
-        permissonWidth: "all",
+        permission_width_view: "all",
+        permission_width_edit: "all",
+        permission_width_delete: "all",
     },
     banks: {
         view: 1,
         edit: 1,
         delete: 1,
-        permissonWidth: "all",
+        permission_width_view: "all",
+        permission_width_edit: "all",
+        permission_width_delete: "all",
     },
     creditor: {
         view: 1,
         edit: 1,
         delete: 1,
-        permissonWidth: "all",
+        permission_width_view: "all",
+        permission_width_edit: "all",
+        permission_width_delete: "all",
     },
     contragent: {
         view: 1,
         edit: 1,
         delete: 1,
-        permissonWidth: "all",
+        permission_width_view: "all",
+        permission_width_edit: "all",
+        permission_width_delete: "all",
     },
     suppliers_with_reports: {
         view: 1,
         edit: 1,
         delete: 1,
-        permissonWidth: "all",
+        permission_width_view: "all",
+        permission_width_edit: "all",
+        permission_width_delete: "all",
     },
     request_sources: {
         view: 1,
         edit: 1,
         delete: 1,
-        permissonWidth: "all",
+        permission_width_view: "all",
+        permission_width_edit: "all",
+        permission_width_delete: "all",
     },
     working_hours: {
         view: 1,
         edit: 1,
         delete: 1,
-        permissonWidth: "all",
+        permission_width_view: "all",
+        permission_width_edit: "all",
+        permission_width_delete: "all",
     },
     departments: {
         view: 1,
         edit: 1,
         delete: 1,
-        permissonWidth: "all",
+        permission_width_view: "all",
+        permission_width_edit: "all",
+        permission_width_delete: "all",
     },
     admin: {
         view: 1,
         edit: 1,
         delete: 1,
-        permissonWidth: "all",
+        permission_width_view: "all",
+        permission_width_edit: "all",
+        permission_width_delete: "all",
     },
 };
 
@@ -215,6 +254,21 @@ const RIGHTS_WIDTH_OPTIONS = [
     { label: "Полная", value: "full" },
     { label: "Ограниченная", value: "limited" },
 ];
+
+const checkPermissions = (matrix) => {
+    const permissions = ["view", "edit", "delete"];
+
+    const enabledPermissions = permissions.filter((perm) => matrix[perm] === 1);
+
+    if (enabledPermissions.length === 0) {
+        return false;
+    }
+
+    return enabledPermissions.every((perm) => {
+        const widthKey = `permission_width_${perm}`;
+        return matrix[widthKey] === "all";
+    });
+};
 
 const GroupEditor = ({
     editorState,
@@ -309,6 +363,8 @@ const GroupEditor = ({
     const handleSectionCheckboxChange = (section) => {
         const newSelectedSections = new Set(selectedSections);
 
+        console.log(section);
+
         if (newSelectedSections.has(section)) {
             // Убираем раздел из выбранных
             newSelectedSections.delete(section);
@@ -320,6 +376,7 @@ const GroupEditor = ({
         setSelectedSections(newSelectedSections);
     };
 
+    // Выделение всех строк
     const handleSelectAllRows = () => {
         const allSections = new Set(SECTIONS_ORDER);
         const allSelected = SECTIONS_ORDER.every((section) =>
@@ -424,12 +481,16 @@ const GroupEditor = ({
         return firstScope || "";
     };
 
+    // Выбор раздела для настройки ширины прав
     const handleMassScopeChange = (permissionType, scope) => {
         let currentSelectedSections = selectedSections;
-        if (areAllRowsSelected) {
-            currentSelectedSections = new Set();
-            setSelectedSections(currentSelectedSections);
-        }
+
+        // if (areAllRowsSelected) {
+        //     currentSelectedSections = new Set();
+        //     setSelectedSections(currentSelectedSections);
+        // }
+
+        console.log(currentSelectedSections);
 
         if (currentSelectedSections.size === 0) {
             return;
@@ -439,6 +500,7 @@ const GroupEditor = ({
 
         currentSelectedSections.forEach((section) => {
             const matrix = PERMISSION_MATRIX[section] || {};
+
             if (matrix[permissionType] === 1) {
                 const key = `${section}_${permissionType}`;
                 // Применяем только если чекбокс права отмечен
@@ -447,6 +509,8 @@ const GroupEditor = ({
                 }
             }
         });
+
+        console.log(newScopes);
 
         setPermissionScopes(newScopes);
     };
@@ -517,6 +581,7 @@ const GroupEditor = ({
             });
     };
 
+    // Иерархия прав (Просмотр -> Редактирование -> Удаление)
     useEffect(() => {
         setSelectedPermissions((prev) => {
             const newPermissions = { ...prev };
@@ -624,10 +689,6 @@ const GroupEditor = ({
                                         >
                                             Ширина прав
                                         </th>
-                                        {/* <th
-                                            rowSpan={2}
-                                            className="checkbox-header"
-                                        ></th> */}
                                     </tr>
                                     <tr>
                                         <th className="permissions-table__thead-subheader">
@@ -661,6 +722,7 @@ const GroupEditor = ({
                                     {SECTIONS_ORDER.map((sectionKey, index) => {
                                         const sectionLabel =
                                             SECTIONS[sectionKey];
+
                                         const matrix =
                                             PERMISSION_MATRIX[sectionKey] || {};
 
@@ -673,6 +735,8 @@ const GroupEditor = ({
 
                                         const shouldRenderTitle =
                                             sectionLabel.title !== prevTitle;
+
+                                        console.log(matrix);
 
                                         return (
                                             <Fragment key={sectionKey}>
@@ -752,6 +816,7 @@ const GroupEditor = ({
                                                         const isAllowed =
                                                             matrix[permType] ===
                                                             1;
+
                                                         const scopeKey = `${sectionKey}_${permType}`;
 
                                                         const permissionKey = `${sectionKey}_${permType}`;
@@ -766,14 +831,18 @@ const GroupEditor = ({
                                                                 scopeKey
                                                             ] || "full";
 
+                                                        const widthKey = `permission_width_${permType}`;
+
                                                         const availableOptions =
-                                                            matrix?.permissonWidth ===
+                                                            matrix[widthKey] ===
                                                             "all"
                                                                 ? RIGHTS_WIDTH_OPTIONS
                                                                 : RIGHTS_WIDTH_OPTIONS.filter(
                                                                       (item) =>
                                                                           item.value ===
-                                                                          matrix.permissonWidth
+                                                                          matrix[
+                                                                              widthKey
+                                                                          ]
                                                                   );
 
                                                         return (
@@ -825,25 +894,31 @@ const GroupEditor = ({
 
                                                     {/* Чекбокс выбора всей строки */}
                                                     <td className="row-checkbox-cell">
-                                                        <label
-                                                            htmlFor={`${sectionKey}`}
-                                                            className="form-checkbox"
-                                                        >
-                                                            <input
-                                                                type="checkbox"
-                                                                checked={selectedSections.has(
-                                                                    sectionKey
-                                                                )}
-                                                                id={sectionKey}
-                                                                onChange={() =>
-                                                                    handleSectionCheckboxChange(
+                                                        {checkPermissions(
+                                                            matrix
+                                                        ) && (
+                                                            <label
+                                                                htmlFor={`${sectionKey}`}
+                                                                className="form-checkbox"
+                                                            >
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={selectedSections.has(
                                                                         sectionKey
-                                                                    )
-                                                                }
-                                                                className="row-checkbox"
-                                                            />
-                                                            <div className="checkbox"></div>
-                                                        </label>
+                                                                    )}
+                                                                    id={
+                                                                        sectionKey
+                                                                    }
+                                                                    onChange={() =>
+                                                                        handleSectionCheckboxChange(
+                                                                            sectionKey
+                                                                        )
+                                                                    }
+                                                                    className="row-checkbox"
+                                                                />
+                                                                <div className="checkbox"></div>
+                                                            </label>
+                                                        )}
                                                     </td>
                                                 </tr>
                                             </Fragment>
