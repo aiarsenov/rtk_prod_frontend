@@ -363,8 +363,6 @@ const GroupEditor = ({
     const handleSectionCheckboxChange = (section) => {
         const newSelectedSections = new Set(selectedSections);
 
-        console.log(section);
-
         if (newSelectedSections.has(section)) {
             // Убираем раздел из выбранных
             newSelectedSections.delete(section);
