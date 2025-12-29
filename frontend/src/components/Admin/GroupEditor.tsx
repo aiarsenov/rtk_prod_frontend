@@ -601,7 +601,7 @@ const GroupEditor = ({
                                     <col style={{ width: "130px" }} />
                                     <col style={{ width: "130px" }} />
                                     <col style={{ width: "130px" }} />
-                                    <col style={{ width: "60px" }} />
+                                    <col style={{ width: "100px" }} />
                                 </colgroup>
 
                                 <thead className="permissions-table__thead">
@@ -619,15 +619,15 @@ const GroupEditor = ({
                                             Выбор прав
                                         </th>
                                         <th
-                                            colSpan={3}
+                                            colSpan={4}
                                             className="permissions-table__thead-header"
                                         >
                                             Ширина прав
                                         </th>
-                                        <th
+                                        {/* <th
                                             rowSpan={2}
                                             className="checkbox-header"
-                                        ></th>
+                                        ></th> */}
                                     </tr>
                                     <tr>
                                         <th className="permissions-table__thead-subheader">
@@ -650,6 +650,9 @@ const GroupEditor = ({
                                         <th className="permissions-table__thead-subheader">
                                             Удаление
                                             <Hint message="Удаление" />
+                                        </th>
+                                        <th className="permissions-table__thead-subheader">
+                                            Выбор раздела
                                         </th>
                                     </tr>
                                 </thead>
