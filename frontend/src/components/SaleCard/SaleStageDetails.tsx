@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import getColorBySign from "../../utils/getColorBySign";
-import formatMoney from "../../utils/formatMoney";
+// import formatMoney from "../../utils/formatMoney";
 
 import AutoResizeTextarea from "../AutoResizeTextarea";
 import Hint from "../Hint/Hint";
@@ -19,7 +19,17 @@ const formatMoneyDisplay = (raw) => {
 
 const parseMoneyDisplay = (display) => {
     if (!display) return "";
-    return display.replace(/\s/g, "").replace(",", ".");
+
+    // Оставляем только цифры и запятую
+    let cleaned = display.replace(/[^0-9,]/g, "");
+
+    // Запрещаем вторую запятую
+    const parts = cleaned.split(",");
+    if (parts.length > 2) {
+        cleaned = parts[0] + "," + parts.slice(1).join("");
+    }
+
+    return cleaned.replace(",", ".");
 };
 
 const SaleStageDetails = ({ stage, mode, updateStageDetails }) => {
@@ -59,6 +69,8 @@ const SaleStageDetails = ({ stage, mode, updateStageDetails }) => {
 
                                             <input
                                                 type="text"
+                                                inputMode="decimal"
+                                                pattern="[0-9, ]*"
                                                 value={formatMoneyDisplay(
                                                     item.current_value
                                                 )}
@@ -72,7 +84,11 @@ const SaleStageDetails = ({ stage, mode, updateStageDetails }) => {
                                                     const displayValue =
                                                         input.value;
 
-                                                    // считаем цифры до курсора
+                                                    const commaJustTyped =
+                                                        displayValue[
+                                                            cursor - 1
+                                                        ] === ",";
+
                                                     const digitsBefore =
                                                         displayValue
                                                             .slice(0, cursor)
@@ -126,6 +142,15 @@ const SaleStageDetails = ({ stage, mode, updateStageDetails }) => {
                                                                     )
                                                                 )
                                                                     digitsCount++;
+                                                                pos++;
+                                                            }
+
+                                                            if (
+                                                                commaJustTyped &&
+                                                                formatted[
+                                                                    pos
+                                                                ] === ","
+                                                            ) {
                                                                 pos++;
                                                             }
 
