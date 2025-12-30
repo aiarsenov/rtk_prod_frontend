@@ -116,11 +116,49 @@ const GroupEditor = ({
 
     // Обработчик изменения scope для конкретной ячейки (раздел + тип права)
     const handleScopeChange = (section, permissionType, scope) => {
+        const matrix = PERMISSION_MATRIX[section] || {};
         const key = `${section}_${permissionType}`;
-        setPermissionScopes((prev) => ({
-            ...prev,
-            [key]: scope,
-        }));
+
+        setPermissionScopes((prev) => {
+            const next = { ...prev };
+
+            // Устанавливаем текущее право
+            next[key] = scope;
+
+            // Если просмотр ограничен, то остальные права - тоже
+            if (permissionType === "view" && scope === "limited") {
+                PERMISSION_ORDER.forEach((perm) => {
+                    if (perm === "view") return;
+
+                    const permKey = `${section}_${perm}`;
+
+                    if (matrix[perm] === 1 && selectedPermissions[permKey]) {
+                        next[permKey] = "limited";
+                    }
+                });
+            }
+
+            // Переключаем все права выше от edit или delete
+            if (scope === "full") {
+                const currentIndex = PERMISSION_ORDER.indexOf(permissionType);
+
+                if (currentIndex > 0) {
+                    for (let i = 0; i < currentIndex; i++) {
+                        const prevPerm = PERMISSION_ORDER[i];
+                        const prevKey = `${section}_${prevPerm}`;
+
+                        if (
+                            matrix[prevPerm] === 1 &&
+                            selectedPermissions[prevKey]
+                        ) {
+                            next[prevKey] = "full";
+                        }
+                    }
+                }
+            }
+
+            return next;
+        });
     };
 
     // Обработчик чекбокса выбора всей строки (раздела)
@@ -244,45 +282,6 @@ const GroupEditor = ({
         return firstScope || "";
     };
 
-    // const handleMassScopeChange = (permissionType, scope) => {
-    //     if (selectedSections.size === 0) {
-    //         return;
-    //     }
-
-    //     console.log(permissionType);
-    //     console.log(scope);
-
-    //     const newScopes = { ...permissionScopes };
-
-    //     selectedSections.forEach((section) => {
-    //         const matrix = PERMISSION_MATRIX[section] || {};
-
-    //         // Изменение права быть разрешено
-    //         if (matrix[permissionType] !== 1) {
-    //             return;
-    //         }
-
-    //         const key = `${section}_${permissionType}`;
-
-    //         // Право должно быть включено
-    //         if (!selectedPermissions[key]) {
-    //             return;
-    //         }
-
-    //         const widthKey = `permission_width_${permissionType}`;
-
-    //         if (widthKey in matrix && matrix[widthKey] !== "all") {
-    //             newScopes[key] = matrix[widthKey];
-    //         } else {
-    //             newScopes[key] = scope;
-    //         }
-    //     });
-
-    //     setPermissionScopes(newScopes);
-    // };
-
-    const PERMISSION_ORDER = ["view", "edit", "delete"];
-
     const handleMassScopeChange = (permissionType, scope) => {
         if (selectedSections.size === 0) {
             return;
@@ -305,7 +304,7 @@ const GroupEditor = ({
                 newScopes[key] = resolvedScope;
             }
 
-            // Массовое переключение на full для edit и delete
+            // Если просмотр ограничен, то остальные права - тоже
             if (
                 scope === "full" &&
                 (permissionType === "edit" || permissionType === "delete")
@@ -324,7 +323,7 @@ const GroupEditor = ({
                 });
             }
 
-            // Ограничение от ширины просмотра
+            // Переключаем все права выше от edit или delete
             if (permissionType === "view" && scope === "limited") {
                 Object.keys(matrix).forEach((matrixKey) => {
                     if (!matrixKey.startsWith("permission_width_")) {
