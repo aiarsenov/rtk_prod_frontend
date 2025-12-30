@@ -3,27 +3,32 @@ const ActiveButton = ({
     title,
     className,
     onClick,
+    isLoading,
     isDisabled,
 }: {
     label?: string;
     title?: string;
     className?: string;
     isDisabled?: boolean;
+    isLoading?: boolean;
     onClick?: () => void;
 }) => {
     return (
         <button
-            className={`button-active ${className}`}
+            className={`button-active ${className} ${
+                isLoading ? "button_loading" : ""
+            }`}
             type="button"
             onClick={() => {
-                if (isDisabled) {
-                    return;
-                }
+                if (isDisabled || isLoading) return;
+
                 onClick();
             }}
-            title={title || label}
+            title={isLoading ? "Загрузка" : title || label}
             disabled={isDisabled}
         >
+            <div className="load__icon"></div>
+
             <span>{label}</span>
 
             <div className="button-active__icon">

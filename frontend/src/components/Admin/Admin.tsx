@@ -11,6 +11,7 @@ import AdminUsers from "./AdminUsers";
 import AdminGroups from "./AdminGroups";
 import ActiveButton from "../Buttons/ActiveButton";
 import Popup from "../Popup/Popup";
+import SubmitButton from "../Buttons/SubmitButton";
 
 import "../AccessDenied/AccessDenied.scss";
 import "./Admin.scss";
@@ -21,6 +22,8 @@ const Admin = () => {
     const [users, setUsers] = useState([]);
     const [availableEmployees, setAvailableEmployees] = useState([]);
     const [selectedEmployees, setSelectedEmployees] = useState([]);
+    const [usersIsLoading, setUsersIsLoading] = useState(false);
+    const [usersSubmit, setIsSubmit] = useState(false);
 
     const [groups, setGroups] = useState([]);
 
@@ -83,40 +86,49 @@ const Admin = () => {
     }, [import.meta.env.VITE_API_URL]);
 
     // Получаем доступынх для приглашения сотрудников
-    const fetchAvailableEmployees = async () => {
-        try {
-            const response = await getData(
-                `${import.meta.env.VITE_API_URL}admin/users/available`
-            );
-            if (response.status === 200) {
-                setAvailableEmployees(response.data || []);
-            }
-        } catch (err) {
-            console.error("Ошибка загрузки сотрудников:", err);
-        }
+    const fetchAvailableEmployees = () => {
+        setUsersIsLoading(true);
+
+        return getData(`${import.meta.env.VITE_API_URL}admin/users/available`)
+            .then((response) => {
+                if (response.status === 200) {
+                    setAvailableEmployees(response.data || []);
+                }
+            })
+            .catch((error) =>
+                console.error("Ошибка загрузки сотрудников:", error)
+            )
+            .finally(() => setUsersIsLoading(false));
     };
 
-    const handleInviteSubmit = async () => {
-        try {
-            await postData(
-                "POST",
-                `${import.meta.env.VITE_API_URL}admin/users/invite`,
-                { invitations: selectedEmployees }
-            );
+    const handleInviteSubmit = () => {
+        setIsSubmit(true);
 
-            setShowInviteModal(false);
-            setSelectedEmployees([]);
-            loadUsers();
-        } catch (err) {
-            toast.error(err.message || "Ошибка отправки приглашения", {
-                position:
-                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-                autoClose: 3000,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                draggable: true,
-            });
-        }
+        return postData(
+            "POST",
+            `${import.meta.env.VITE_API_URL}admin/users/invite`,
+            { invitations: selectedEmployees }
+        )
+            .then((response) => {
+                if (response.ok) {
+                    setShowInviteModal(false);
+                    setSelectedEmployees([]);
+                    loadUsers();
+                }
+            })
+            .catch((error) =>
+                toast.error(error.message || "Ошибка отправки приглашения", {
+                    position:
+                        window.innerWidth >= 1440
+                            ? "bottom-right"
+                            : "top-right",
+                    autoClose: 3000,
+                    pauseOnFocusLoss: false,
+                    pauseOnHover: false,
+                    draggable: true,
+                })
+            )
+            .finally(() => setIsSubmit(false));
     };
 
     // Открываем попап добавления пользователей после получения списка
@@ -186,6 +198,7 @@ const Admin = () => {
                                 if (activeTab != "users") return;
                                 handleInviteClick();
                             }}
+                            isLoading={usersIsLoading}
                             isDisabled={isLoading || activeTab != "users"}
                         />
                     )}
@@ -198,7 +211,6 @@ const Admin = () => {
                                 if (activeTab != "groups") return;
                                 setEditorState("create");
                                 setShowGroupEditor(true);
-                                // setShowCreateModal(true);
                             }}
                             isDisabled={isLoading || activeTab != "groups"}
                         />
@@ -366,15 +378,13 @@ const Admin = () => {
                             Отмена
                         </button>
 
-                        <button
-                            type="button"
-                            className="action-button"
+                        <SubmitButton
                             title="Отправить приглашение пользователям"
+                            label="Добавить"
                             onClick={handleInviteSubmit}
-                            disabled={selectedEmployees.length <= 0}
-                        >
-                            Добавить
-                        </button>
+                            isDisabled={selectedEmployees.length <= 0}
+                            isLoading={usersSubmit}
+                        />
                     </div>
                 </Popup>
             )}

@@ -32,6 +32,8 @@ const AdminGroups = ({
     const [selectedPermissions, setSelectedPermissions] = useState({}); // Чекбоксы выбора прав. Формат: { 'section_permissionType': true/false }
     const [permissionScopes, setPermissionScopes] = useState({}); // Скоупы для каждой конкретной ячейки (раздел + тип права). Формат: { 'section_permissionType': 'full' | 'limited' }
 
+    const [isProgress, setIsProgress] = useState(false);
+
     // Получение пользователей
     const loadAllUsers = () => {
         return getData(`${import.meta.env.VITE_API_URL}admin/users`)
@@ -75,6 +77,8 @@ const AdminGroups = ({
 
     // Закрепление пользователей за группой
     const handleAddGroupUsers = (users) => {
+        setIsProgress(true);
+
         if (users.length === 0) {
             alert("Выберите хотя бы одного пользователя");
             return;
@@ -109,7 +113,8 @@ const AdminGroups = ({
                                 : "top-right",
                     }
                 )
-            );
+            )
+            .finally(() => setIsProgress(false));
     };
 
     // Закрыть редактор прав
@@ -202,6 +207,7 @@ const AdminGroups = ({
                     selectedGroup={selectedGroup}
                     closeModal={closeAddUsersModal}
                     handleAddGroupUsers={handleAddGroupUsers}
+                    isProgress={isProgress}
                 />
             )}
 

@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import Select from "react-select";
 import ScrollCloseSelect from "../ScrollCloseSelect";
 import Hint from "../Hint/Hint";
+import SubmitButton from "../Buttons/SubmitButton";
 
 import SECTIONS from "../../data/sections.json";
 import SECTIONS_ORDER from "../../data/sections_order.json"; // Порядок отображения разделов
@@ -42,6 +43,7 @@ const GroupEditor = ({
     loadGroups,
 }) => {
     const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     const [groupName, setGroupName] = useState("");
 
@@ -276,6 +278,7 @@ const GroupEditor = ({
 
     // Создание / Изменение группы
     const handleSaveGroup = () => {
+        setIsLoading(true);
         setError("");
 
         const URL =
@@ -333,7 +336,8 @@ const GroupEditor = ({
                             : "top-right",
                 });
                 setError(error.message || "Ошибка сохранения прав");
-            });
+            })
+            .finally(() => setIsLoading(false));
     };
 
     // Иерархия прав (Просмотр -> Редактирование -> Удаление)
@@ -801,21 +805,21 @@ const GroupEditor = ({
                             Отмена
                         </button>
 
-                        <button
-                            type="button"
-                            className="action-button"
+                        <SubmitButton
                             title={`${
                                 editorState === "create"
                                     ? "Добавить группу"
                                     : `Сохранить изменения`
                             }`}
+                            label={
+                                editorState === "create"
+                                    ? "Добавить"
+                                    : `Сохранить`
+                            }
                             onClick={handleSaveGroup}
-                            disabled={groupName.length < 2}
-                        >
-                            {editorState === "create"
-                                ? "Добавить"
-                                : `Сохранить`}
-                        </button>
+                            isDisabled={groupName.length < 2}
+                            isLoading={isLoading}
+                        />
                     </div>
                 </form>
             </div>

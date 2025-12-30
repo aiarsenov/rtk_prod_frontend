@@ -4,6 +4,7 @@ import { createDebounce } from "../../utils/debounce.js";
 
 import Popup from "../Popup/Popup";
 import Search from "../Search/Search";
+import SubmitButton from "../Buttons/SubmitButton";
 
 const arraysAreDifferent = (arr1, arr2) => {
     if (arr1.length !== arr2.length) {
@@ -21,6 +22,7 @@ const AdminGroupAddUsersModal = ({
     allUsers,
     selectedGroup,
     handleAddGroupUsers,
+    isProgress,
 }) => {
     const [selectedUsers, setSelectedUsers] = useState([]); // Список добавленных в группу пользователей
     const [resultList, setResultList] = useState([]); // Список отображаемых пользователей
@@ -214,19 +216,17 @@ const AdminGroupAddUsersModal = ({
                     Отмена
                 </button>
 
-                <button
-                    type="button"
-                    className="action-button"
+                <SubmitButton
                     title="Сохранить изменения"
+                    label="Сохранить"
                     onClick={() =>
                         handleAddGroupUsers(
                             selectedUsers.map((item) => item.id)
                         )
                     }
-                    disabled={selectedUsers.length <= 0}
-                >
-                    Сохранить
-                </button>
+                    isDisabled={selectedUsers.length <= 0}
+                    isLoading={isProgress}
+                />
             </div>
         </Popup>
     );
