@@ -17,6 +17,8 @@ const RIGHTS_WIDTH_OPTIONS = [
     { label: "Ограниченная", value: "limited" },
 ];
 
+const PERMISSION_ORDER = ["view", "edit", "delete"];
+
 const checkPermissions = (matrix) => {
     const permissions = ["view", "edit", "delete"];
 
@@ -242,6 +244,45 @@ const GroupEditor = ({
         return firstScope || "";
     };
 
+    // const handleMassScopeChange = (permissionType, scope) => {
+    //     if (selectedSections.size === 0) {
+    //         return;
+    //     }
+
+    //     console.log(permissionType);
+    //     console.log(scope);
+
+    //     const newScopes = { ...permissionScopes };
+
+    //     selectedSections.forEach((section) => {
+    //         const matrix = PERMISSION_MATRIX[section] || {};
+
+    //         // Изменение права быть разрешено
+    //         if (matrix[permissionType] !== 1) {
+    //             return;
+    //         }
+
+    //         const key = `${section}_${permissionType}`;
+
+    //         // Право должно быть включено
+    //         if (!selectedPermissions[key]) {
+    //             return;
+    //         }
+
+    //         const widthKey = `permission_width_${permissionType}`;
+
+    //         if (widthKey in matrix && matrix[widthKey] !== "all") {
+    //             newScopes[key] = matrix[widthKey];
+    //         } else {
+    //             newScopes[key] = scope;
+    //         }
+    //     });
+
+    //     setPermissionScopes(newScopes);
+    // };
+
+    const PERMISSION_ORDER = ["view", "edit", "delete"];
+
     const handleMassScopeChange = (permissionType, scope) => {
         if (selectedSections.size === 0) {
             return;
@@ -252,24 +293,51 @@ const GroupEditor = ({
         selectedSections.forEach((section) => {
             const matrix = PERMISSION_MATRIX[section] || {};
 
-            // Изменение права быть разрешено
-            if (matrix[permissionType] !== 1) {
-                return;
-            }
-
             const key = `${section}_${permissionType}`;
-
-            // Право должно быть включено
-            if (!selectedPermissions[key]) {
-                return;
-            }
-
             const widthKey = `permission_width_${permissionType}`;
 
-            if (widthKey in matrix && matrix[widthKey] !== "all") {
-                newScopes[key] = matrix[widthKey];
-            } else {
-                newScopes[key] = scope;
+            if (matrix[permissionType] === 1 && selectedPermissions[key]) {
+                const resolvedScope =
+                    widthKey in matrix && matrix[widthKey] !== "all"
+                        ? matrix[widthKey]
+                        : scope;
+
+                newScopes[key] = resolvedScope;
+            }
+
+            // Массовое переключение на full для edit и delete
+            if (
+                scope === "full" &&
+                (permissionType === "edit" || permissionType === "delete")
+            ) {
+                Object.keys(matrix).forEach((matrixKey) => {
+                    if (!matrixKey.startsWith("permission_width_")) {
+                        return;
+                    }
+
+                    const perm = matrixKey.replace("permission_width_", "");
+                    const permKey = `${section}_${perm}`;
+
+                    if (matrix[perm] === 1 && selectedPermissions[permKey]) {
+                        newScopes[permKey] = "full";
+                    }
+                });
+            }
+
+            // Ограничение от ширины просмотра
+            if (permissionType === "view" && scope === "limited") {
+                Object.keys(matrix).forEach((matrixKey) => {
+                    if (!matrixKey.startsWith("permission_width_")) {
+                        return;
+                    }
+
+                    const perm = matrixKey.replace("permission_width_", "");
+                    const permKey = `${section}_${perm}`;
+
+                    if (matrix[perm] === 1 && selectedPermissions[permKey]) {
+                        newScopes[permKey] = "limited";
+                    }
+                });
             }
         });
 
