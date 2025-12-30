@@ -46,8 +46,8 @@
         "view": 1,
         "edit": 1,
         "delete": 0,
-        "permission_width_view": "all",
-        "permission_width_edit": "all"
+        "permission_width_view": "full",
+        "permission_width_edit": "full"
     },
     "employees": {
         "view": 1,

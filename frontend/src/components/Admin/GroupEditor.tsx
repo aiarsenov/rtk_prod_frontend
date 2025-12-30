@@ -11,250 +11,6 @@ import SECTIONS from "../../data/sections.json";
 import SECTIONS_ORDER from "../../data/sections_order.json"; // Порядок отображения разделов
 import PERMISSION_MATRIX from "../../data/permission_matrix.json"; // Матрица прав: какие типы прав доступны для каждого раздела
 
-
-// const SECTIONS = {
-//     main: { title: "Главная", name: "Ключевые показатели" },
-//     project_reports: { title: "Отчёты", name: "Отчёты проектов" },
-//     employee_reports: { title: "Отчёты", name: "Отчёты сотрудников" },
-//     projects: { title: "Проекты", name: "Реестр и карточки проектов" },
-//     sales: { title: "Продажи", name: "Реестр и карточки в воронке" },
-//     customers: { title: "Заказчики", name: "Реестр и карточки заказчиков" },
-//     employees: { title: "Сотрудники", name: "Реестр и карточки сотрудников" },
-//     contractors: { title: "Подрядчики", name: "Реестр и карточки подрядчиков" },
-//     leads: { title: "Справочники", name: "Лиды" },
-//     lead_contacts: { title: "Справочники", name: "Контакты лидов" },
-//     industries: { title: "Справочники", name: "Отрасли проектов" },
-//     report_types: { title: "Справочники", name: "Типы услуг / отчетов" },
-//     management_report_types: {
-//         title: "Справочники",
-//         name: "Типы отчётов менеджмента",
-//     },
-//     roles: { title: "Справочники", name: "Роли в проектах" },
-//     positions: { title: "Справочники", name: "Должности сотрудников" },
-//     banks: { title: "Справочники", name: "Кредиторы" },
-//     creditor: { title: "Справочники", name: "Контакты кредиторов" },
-//     contragent: { title: "Справочники", name: "Контакты заказчиков" },
-//     suppliers_with_reports: {
-//         title: "Справочники",
-//         name: "Контакты подрядчиков",
-//     },
-//     request_sources: {
-//         title: "Справочники",
-//         name: "Источники запросов в воронке продаж",
-//     },
-//     working_hours: { title: "Справочники", name: "Рабочие часы" },
-//     departments: { title: "Справочники", name: "Подразделения" },
-//     admin: { title: "Администрирование", name: "Пользователи и группы прав" },
-// };
-
-
-// const SECTIONS_ORDER = [
-//     "main",
-//     "project_reports",
-//     "employee_reports",
-//     "projects",
-//     "sales",
-//     "customers",
-//     "employees",
-//     "contractors",
-//     "leads",
-//     "lead_contacts",
-//     "industries",
-//     "report_types",
-//     "management_report_types",
-//     "roles",
-//     "positions",
-//     "banks",
-//     "creditor",
-//     "contragent",
-//     "suppliers_with_reports",
-//     "request_sources",
-//     "working_hours",
-//     "departments",
-//     "admin",
-// ];
-
-
-// const PERMISSION_MATRIX = {
-//     main: {
-//         view: 1,
-//         edit: 0,
-//         delete: 0,
-//         permission_width_view: "full",
-//     },
-//     project_reports: {
-//         view: 1,
-//         edit: 0,
-//         delete: 0,
-//         permission_width_view: "all",
-//     },
-//     employee_reports: {
-//         view: 1,
-//         edit: 1,
-//         delete: 0,
-//         permission_width_view: "all",
-//         permission_width_edit: "all",
-//     },
-//     projects: {
-//         view: 1,
-//         edit: 1,
-//         delete: 1,
-//         permission_width_view: "all",
-//         permission_width_edit: "all",
-//         permission_width_delete: "all",
-//     },
-//     sales: {
-//         view: 1,
-//         edit: 1,
-//         delete: 1,
-//         permission_width_view: "all",
-//         permission_width_edit: "all",
-//         permission_width_delete: "all",
-//     },
-//     customers: {
-//         view: 1,
-//         edit: 1,
-//         delete: 0,
-//         permission_width_view: "full",
-//         permission_width_edit: "full",
-//         permission_width_delete: "full",
-//     },
-//     contractors: {
-//         view: 1,
-//         edit: 1,
-//         delete: 0,
-//         permission_width_view: "all",
-//         permission_width_edit: "all",
-//     },
-//     employees: {
-//         view: 1,
-//         edit: 1,
-//         delete: 0,
-//         permission_width_view: "all",
-//         permission_width_edit: "all",
-//     },
-//     leads: {
-//         view: 1,
-//         edit: 1,
-//         delete: 1,
-//         permission_width_view: "all",
-//         permission_width_edit: "all",
-//         permission_width_delete: "all",
-//     },
-//     lead_contacts: {
-//         view: 1,
-//         edit: 1,
-//         delete: 1,
-//         permission_width_view: "all",
-//         permission_width_edit: "all",
-//         permission_width_delete: "all",
-//     },
-//     industries: {
-//         view: 1,
-//         edit: 1,
-//         delete: 1,
-//         permission_width_view: "all",
-//         permission_width_edit: "all",
-//         permission_width_delete: "all",
-//     },
-//     report_types: {
-//         view: 1,
-//         edit: 1,
-//         delete: 1,
-//         permission_width_view: "all",
-//         permission_width_edit: "all",
-//         permission_width_delete: "all",
-//     },
-//     management_report_types: {
-//         view: 1,
-//         edit: 1,
-//         delete: 1,
-//         permission_width_view: "all",
-//         permission_width_edit: "all",
-//         permission_width_delete: "all",
-//     },
-//     roles: {
-//         view: 1,
-//         edit: 1,
-//         delete: 1,
-//         permission_width_view: "all",
-//         permission_width_edit: "all",
-//         permission_width_delete: "all",
-//     },
-//     positions: {
-//         view: 1,
-//         edit: 1,
-//         delete: 1,
-//         permission_width_view: "all",
-//         permission_width_edit: "all",
-//         permission_width_delete: "all",
-//     },
-//     banks: {
-//         view: 1,
-//         edit: 1,
-//         delete: 1,
-//         permission_width_view: "all",
-//         permission_width_edit: "all",
-//         permission_width_delete: "all",
-//     },
-//     creditor: {
-//         view: 1,
-//         edit: 1,
-//         delete: 1,
-//         permission_width_view: "all",
-//         permission_width_edit: "all",
-//         permission_width_delete: "all",
-//     },
-//     contragent: {
-//         view: 1,
-//         edit: 1,
-//         delete: 1,
-//         permission_width_view: "all",
-//         permission_width_edit: "all",
-//         permission_width_delete: "all",
-//     },
-//     suppliers_with_reports: {
-//         view: 1,
-//         edit: 1,
-//         delete: 1,
-//         permission_width_view: "all",
-//         permission_width_edit: "all",
-//         permission_width_delete: "all",
-//     },
-//     request_sources: {
-//         view: 1,
-//         edit: 1,
-//         delete: 1,
-//         permission_width_view: "all",
-//         permission_width_edit: "all",
-//         permission_width_delete: "all",
-//     },
-//     working_hours: {
-//         view: 1,
-//         edit: 1,
-//         delete: 1,
-//         permission_width_view: "all",
-//         permission_width_edit: "all",
-//         permission_width_delete: "all",
-//     },
-//     departments: {
-//         view: 1,
-//         edit: 1,
-//         delete: 1,
-//         permission_width_view: "all",
-//         permission_width_edit: "all",
-//         permission_width_delete: "all",
-//     },
-//     admin: {
-//         view: 1,
-//         edit: 1,
-//         delete: 1,
-//         permission_width_view: "all",
-//         permission_width_edit: "all",
-//         permission_width_delete: "all",
-//     },
-// };
-
 const RIGHTS_WIDTH_OPTIONS = [
     { label: "Полная", value: "full" },
     { label: "Ограниченная", value: "limited" },
@@ -484,43 +240,6 @@ const GroupEditor = ({
         return firstScope || "";
     };
 
-    // Выбор раздела для настройки ширины прав
-    // const handleMassScopeChange = (permissionType, scope) => {
-    //     let currentSelectedSections = selectedSections;
-
-    //     // if (areAllRowsSelected) {
-    //     //     currentSelectedSections = new Set();
-    //     //     setSelectedSections(currentSelectedSections);
-    //     // }
-
-    //     // console.log(permissionType);
-
-    //     if (currentSelectedSections.size === 0) {
-    //         return;
-    //     }
-
-    //     const newScopes = { ...permissionScopes };
-
-    //     currentSelectedSections.forEach((section) => {
-    //         const matrix = PERMISSION_MATRIX[section] || {};
-
-    //         // console.log(matrix);
-
-    //         if (matrix[permissionType] === 1) {
-    //             const key = `${section}_${permissionType}`;
-    //             // Применяем только если чекбокс права отмечен
-    //             if (selectedPermissions[key]) {
-    //                 newScopes[key] = scope;
-    //             }
-    //         }
-    //     });
-
-    //     // console.log(selectedSections);
-    //     console.log(newScopes);
-
-    //     setPermissionScopes(newScopes);
-    // };
-
     const handleMassScopeChange = (permissionType, scope) => {
         if (selectedSections.size === 0) {
             return;
@@ -531,30 +250,27 @@ const GroupEditor = ({
         selectedSections.forEach((section) => {
             const matrix = PERMISSION_MATRIX[section] || {};
 
-            // право должно быть разрешено
+            // Изменение права быть разрешено
             if (matrix[permissionType] !== 1) {
                 return;
             }
 
             const key = `${section}_${permissionType}`;
 
-            // право должно быть включено
+            // Право должно быть включено
             if (!selectedPermissions[key]) {
                 return;
             }
 
             const widthKey = `permission_width_${permissionType}`;
 
-            // если permission_width_* есть и он не "all" — используем его
             if (widthKey in matrix && matrix[widthKey] !== "all") {
                 newScopes[key] = matrix[widthKey];
             } else {
-                // иначе применяем массовый scope
                 newScopes[key] = scope;
             }
         });
 
-        console.log(newScopes);
         setPermissionScopes(newScopes);
     };
 
