@@ -20,3 +20,9 @@ const getFirstNameAndSurname = (fullName) => {
 };
 
 export default getFirstNameAndSurname;
+
+
+
+
+
+

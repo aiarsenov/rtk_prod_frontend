@@ -37,9 +37,10 @@
         padding: 15px 0 0 !important;
     }
 
-    &__name {
-        margin-bottom: 15px;
-        padding: 0 30px;
+    .popup__header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
 
         input {
             width: 100%;
@@ -79,7 +80,7 @@
     }
 
     &__name {
-        padding: 16px 30px;
+        padding: 15px 15px 15px 30px;
         font-weight: 400;
         font-size: 14px;
         line-height: 150%;
@@ -201,6 +202,8 @@
 .permission-disabled {
     color: var(--color-gray-50);
     font-size: 16px;
+    text-align: center;
+    display: block;
 }
 
 .admin-form {

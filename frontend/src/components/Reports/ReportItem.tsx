@@ -11,7 +11,6 @@ type Column = {
 };
 
 type ReportItemProps = {
-    mode: object;
     columns: Column[];
     props: object;
     openReportEditor: () => void;
@@ -19,7 +18,6 @@ type ReportItemProps = {
 };
 
 const ReportItem = ({
-    mode,
     columns,
     props,
     openReportEditor,
@@ -38,15 +36,15 @@ const ReportItem = ({
 
                 let statusClass;
 
-                if (key === "report_status") {
+                if (key === "report_status" && value) {
                     if (
-                        value.toLowerCase() === "завершен" ||
+                        value?.toLowerCase() === "завершен" ||
                         value === "active"
                     ) {
                         statusClass = "registry-table__item-status_active";
                     } else if (
-                        value.toLowerCase() === "в процессе" ||
-                        value.toLowerCase() === "в работе"
+                        value?.toLowerCase() === "в процессе" ||
+                        value?.toLowerCase() === "в работе"
                     ) {
                         statusClass = "registry-table__item-status_inprogress";
                     }

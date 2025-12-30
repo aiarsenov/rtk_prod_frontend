@@ -21,3 +21,9 @@ const formatNumberWithComma = (value, decimals = 2) => {
 };
 
 export default formatNumberWithComma;
+
+
+
+
+
+

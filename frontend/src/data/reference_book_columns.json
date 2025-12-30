@@ -92,5 +92,8 @@
         { "label": "Кол-во проектов в воронке продаж", "key": "sales_funnel_projects_count" },
         { "label": "Последнее изменение", "key": "updated_at" },
         { "label": "Автор измнения", "key": "updated_by" }
+    ],
+    "lead-contacts": [
+        { "label": "Название", "key": "name" }
     ]
 }
