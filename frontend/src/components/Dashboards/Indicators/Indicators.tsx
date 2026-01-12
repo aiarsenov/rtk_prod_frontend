@@ -382,7 +382,7 @@ const Indicators = () => {
             }company/project-manager-reports-dashboard?${queryString}`
         ).then((response) => {
             if (response?.status == 200) {
-                setProjectManagerReports(response.data.reports);
+                setProjectManagerReports(response.data.items);
             }
         });
     };
