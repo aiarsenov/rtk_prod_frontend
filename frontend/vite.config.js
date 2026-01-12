@@ -11,6 +11,7 @@ export default defineConfig(() => {
         base,
         plugins: [react(), tailwindcss()],
         server: {
+            allowedHosts: ['atlas.bizan.pro'],
             proxy: {
                 // Прокси для локальной разработки - проксируем запросы к /api на бэкенд
                 "/api": {
