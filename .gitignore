@@ -13,6 +13,9 @@ dist-ssr
 *.local
 .env
 
+# Package lock files - обновляются только вручную на продакшн сервере
+frontend/package-lock.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
