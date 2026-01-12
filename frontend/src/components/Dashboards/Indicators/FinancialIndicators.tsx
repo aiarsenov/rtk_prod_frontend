@@ -234,8 +234,16 @@ const FinancialIndicators = ({
                     display: false,
                 },
                 afterDataLimits: (axis) => {
+                    const min = axis.min ?? 0;
                     const max = axis.max ?? 0;
-                    axis.max = max * 1.15;
+
+                    if (max > 0) {
+                        axis.max = max * 1.15;
+                    }
+
+                    if (min < 0) {
+                        axis.min = min * 1.15;
+                    }
                 },
             },
         },
@@ -305,8 +313,16 @@ const FinancialIndicators = ({
                 },
                 border: { display: false },
                 afterDataLimits: (axis) => {
+                    const min = axis.min ?? 0;
                     const max = axis.max ?? 0;
-                    axis.max = max * 1.15;
+
+                    if (max > 0) {
+                        axis.max = max * 1.15;
+                    }
+
+                    if (min < 0) {
+                        axis.min = min * 1.15;
+                    }
                 },
             },
         },
