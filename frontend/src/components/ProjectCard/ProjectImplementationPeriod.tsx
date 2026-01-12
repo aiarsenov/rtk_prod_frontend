@@ -13,9 +13,13 @@ const ProgressBlock = ({ percentage }) => {
     );
 };
 
+const toNumber = (value) => {
+    if (typeof value !== "string") return value;
+    return Number(value.replace(/,/g, "."));
+};
+
 const ProjectImplementationPeriod = ({ projectData }) => {
     const percentage = projectData?.completion_percentage;
-    const date = projectData?.implementation_period_string || "";
 
     return (
         <div
@@ -37,9 +41,13 @@ const ProjectImplementationPeriod = ({ projectData }) => {
                 <div className="flex items-center gap-[10px]">
                     {projectData?.implementation_period > 0 && (
                         <>
-                            {projectData?.base_implementation_period_for_difference > 0 && (
+                            {projectData?.base_implementation_period_for_difference >
+                                0 && (
                                 <span>
-                                    {projectData.base_implementation_period_for_difference} мес.
+                                    {
+                                        projectData.base_implementation_period_for_difference
+                                    }{" "}
+                                    мес.
                                 </span>
                             )}
 
@@ -69,18 +77,14 @@ const ProjectImplementationPeriod = ({ projectData }) => {
 
                         {percentage !== 0 && (
                             <span className="flex items-center gap-[10px]">
-                                <span>
-                                    {percentage}%
-                                </span>
+                                <span>{percentage}%</span>
 
                                 {projectData?.implementation_period_string}
                             </span>
                         )}
 
                         {percentage && (
-                            <ProgressBlock
-                                percentage={percentage}
-                            />
+                            <ProgressBlock percentage={toNumber(percentage)} />
                         )}
                     </>
                 ) : (

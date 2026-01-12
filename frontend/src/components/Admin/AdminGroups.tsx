@@ -152,38 +152,35 @@ const AdminGroups = ({
             {groups.length === 0 ? (
                 <div className="admin-empty">Нет групп</div>
             ) : (
-                <div className="overflow-x-auto">
-                    <table className="registry-table table-auto w-full border-collapse">
-                        <thead className="registry-table__thead">
-                            <tr>
-                                <th>Группа</th>
-                                <th>Кол-во пользователей</th>
-                                <th>Автор</th>
-                                <th>Дата изменения</th>
-                                <th>Дата создания</th>
-                            </tr>
-                        </thead>
+                <table className="registry-table table-auto w-full border-collapse">
+                    <thead className="registry-table__thead">
+                        <tr>
+                            <th>Группа</th>
+                            <th>Кол-во пользователей</th>
+                            <th>Автор</th>
+                            <th>Дата изменения</th>
+                            <th>Дата создания</th>
+                            <th></th>
+                        </tr>
+                    </thead>
 
-                        <tbody className="registry-table__tbody">
-                            {groups.map((item) => (
-                                <AdminGroupItem
-                                    key={item.id}
-                                    item={item}
-                                    mode={mode}
-                                    setDeleteGroupId={setDeleteGroupId}
-                                    setSelectedGroup={setSelectedGroup}
-                                    setShowAddUserModal={setShowAddUserModal}
-                                    setSelectedPermissions={
-                                        setSelectedPermissions
-                                    }
-                                    setPermissionScopes={setPermissionScopes}
-                                    setShowGroupEditor={setShowGroupEditor}
-                                    setEditorState={setEditorState}
-                                />
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                    <tbody className="registry-table__tbody">
+                        {groups.map((item) => (
+                            <AdminGroupItem
+                                key={item.id}
+                                item={item}
+                                mode={mode}
+                                setDeleteGroupId={setDeleteGroupId}
+                                setSelectedGroup={setSelectedGroup}
+                                setShowAddUserModal={setShowAddUserModal}
+                                setSelectedPermissions={setSelectedPermissions}
+                                setPermissionScopes={setPermissionScopes}
+                                setShowGroupEditor={setShowGroupEditor}
+                                setEditorState={setEditorState}
+                            />
+                        ))}
+                    </tbody>
+                </table>
             )}
 
             {/* Модальное окно добавления прав */}

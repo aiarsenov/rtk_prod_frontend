@@ -75,16 +75,17 @@ const CardManagementReportList = ({
                             {managerReports.length > 0 &&
                                 managerReports.map((item) => {
                                     if (
-                                        item.status?.toLowerCase() ===
+                                        item.status &&
+                                        (item.status?.toLowerCase() ===
                                             "завершен" ||
-                                        item.status?.toLowerCase() ===
-                                            "утвержден" ||
-                                        item.status?.toLowerCase() ===
-                                            "завершён" ||
-                                        item.status?.toLowerCase() ===
-                                            "утверждён" ||
-                                        item.status?.toLowerCase() ===
-                                            "запланирован"
+                                            item.status?.toLowerCase() ===
+                                                "утвержден" ||
+                                            item.status?.toLowerCase() ===
+                                                "завершён" ||
+                                            item.status?.toLowerCase() ===
+                                                "утверждён" ||
+                                            item.status?.toLowerCase() ===
+                                                "запланирован")
                                     ) {
                                         statusClass = "status_active";
                                     } else if (

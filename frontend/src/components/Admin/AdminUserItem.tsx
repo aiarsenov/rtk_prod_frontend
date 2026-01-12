@@ -47,7 +47,7 @@ const AdminUserItem = ({
                     : "—"}
             </td>
 
-            <td>
+            <td className="max-w-[100px]">
                 <div className="admin-actions">
                     {user.status === "invited" ? (
                         mode.edit === "full" && (
@@ -246,17 +246,18 @@ const AdminUserItem = ({
                                             )}
                                         </>
                                     )}
-                                </>
-                            )}
 
-                            {mode.delete === "full" && (
-                                <DeleteButton
-                                    onClick={() => handleDeleteUser(user.id)}
-                                    className="button-hint--left"
-                                    hint={true}
-                                    title="Удалить пользователя из системы"
-                                    isDisabled={mode.delete !== "full"}
-                                />
+                                    <DeleteButton
+                                        onClick={() => {
+                                            if (mode.delete !== "full") return;
+                                            handleDeleteUser(user.id);
+                                        }}
+                                        className="button-hint--left"
+                                        hint={true}
+                                        title="Удалить пользователя из системы"
+                                        isDisabled={mode.delete !== "full"}
+                                    />
+                                </>
                             )}
                         </>
                     )}

@@ -17,7 +17,7 @@ import "../AccessDenied/AccessDenied.scss";
 import "./Admin.scss";
 
 const Admin = () => {
-    const [activeTab, setActiveTab] = useState("groups");
+    const [activeTab, setActiveTab] = useState("users");
 
     const [users, setUsers] = useState([]);
     const [availableEmployees, setAvailableEmployees] = useState([]);

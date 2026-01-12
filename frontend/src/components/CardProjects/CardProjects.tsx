@@ -22,11 +22,11 @@ const CardProjects = ({
                 projects.map((item) => {
                     let statusClass;
 
-                    if (item.status === "completed") {
+                    if (item.status && item.status === "completed") {
                         statusClass = "registry-table__item-status_active";
-                    } else if (item.status === "active") {
+                    } else if (item.status && item.status === "active") {
                         statusClass = "registry-table__item-status_completed";
-                    } else if (item.status === "undefined") {
+                    } else if (item.status && item.status === "undefined") {
                         statusClass = "registry-table__item-status_canceled";
                     }
 

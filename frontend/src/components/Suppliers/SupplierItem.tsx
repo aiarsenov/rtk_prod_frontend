@@ -15,7 +15,7 @@ const SupplierItem = ({ props, columns }) => {
 
                 let statusClass;
 
-                if (key === "status") {
+                if (key === "status" && value) {
                     if (value === "completed") {
                         statusClass = "registry-table__item-status_completed";
                     } else if (value === "active") {

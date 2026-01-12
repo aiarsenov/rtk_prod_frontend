@@ -78,26 +78,27 @@ const AdminGroupItem = ({
                     {!item.is_system && (
                         <div className="flex gap-2">
                             {!item.is_system && mode.edit === "full" && (
-                                <AddButton
-                                    label=""
-                                    className="button-hint--left"
-                                    title="Добавить пользователя"
-                                    hint={true}
-                                    onClick={() => {
-                                        setSelectedGroup(item);
-                                        setShowAddUserModal(true);
-                                    }}
-                                />
-                            )}
-
-                            {mode.delete === "full" && (
-                                <DeleteButton
-                                    onClick={() => setDeleteGroupId(item.id)}
-                                    className="button-hint--left"
-                                    hint={true}
-                                    title="Удалить группу"
-                                    isDisabled={mode.delete !== "full"}
-                                />
+                                <>
+                                    <AddButton
+                                        label=""
+                                        className="button-hint--left"
+                                        title="Добавить пользователя"
+                                        hint={true}
+                                        onClick={() => {
+                                            setSelectedGroup(item);
+                                            setShowAddUserModal(true);
+                                        }}
+                                    />
+                                    <DeleteButton
+                                        onClick={() =>
+                                            setDeleteGroupId(item.id)
+                                        }
+                                        className="button-hint--left"
+                                        hint={true}
+                                        title="Удалить группу"
+                                        isDisabled={mode.delete !== "full"}
+                                    />
+                                </>
                             )}
                         </div>
                     )}

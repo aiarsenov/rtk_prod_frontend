@@ -244,44 +244,36 @@ const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
             {users.length === 0 ? (
                 <div className="admin-empty">Нет пользователей</div>
             ) : (
-                <div className="overflow-x-auto">
-                    <table className="registry-table table-auto w-full border-collapse">
-                        <thead className="registry-table__thead">
-                            <tr>
-                                <th>ID</th>
-                                <th>Имя</th>
-                                <th>Email</th>
-                                <th>Статус</th>
-                                <th>Последний вход</th>
-                                {mode.edit === "full" ||
-                                    (mode.delete === "full" && (
-                                        <th>Действия</th>
-                                    ))}
-                            </tr>
-                        </thead>
+                <table className="registry-table table-auto w-full border-collapse">
+                    <thead className="registry-table__thead">
+                        <tr>
+                            <th>ID</th>
+                            <th>Имя</th>
+                            <th>Email</th>
+                            <th>Статус</th>
+                            <th>Последний вход</th>
+                            {(mode.edit === "full" ||
+                                mode.delete === "full") && <th className="max-w-[100px]">Действия</th>}
+                        </tr>
+                    </thead>
 
-                        <tbody className="registry-table__tbody">
-                            {users.map((user) => (
-                                <AdminUserItem
-                                    key={user.id}
-                                    user={user}
-                                    mode={mode}
-                                    handleResendInvitation={
-                                        handleResendInvitation
-                                    }
-                                    handleCancelInvitation={
-                                        handleCancelInvitation
-                                    }
-                                    handleDeactivate={handleDeactivate}
-                                    handleActivate={handleActivate}
-                                    handleRemove2FA={handleRemove2FA}
-                                    handleRequire2FA={handleRequire2FA}
-                                    handleDeleteUser={handleDeleteUser}
-                                />
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                    <tbody className="registry-table__tbody">
+                        {users.map((user) => (
+                            <AdminUserItem
+                                key={user.id}
+                                user={user}
+                                mode={mode}
+                                handleResendInvitation={handleResendInvitation}
+                                handleCancelInvitation={handleCancelInvitation}
+                                handleDeactivate={handleDeactivate}
+                                handleActivate={handleActivate}
+                                handleRemove2FA={handleRemove2FA}
+                                handleRequire2FA={handleRequire2FA}
+                                handleDeleteUser={handleDeleteUser}
+                            />
+                        ))}
+                    </tbody>
+                </table>
             )}
 
             {alert.isOpen && (

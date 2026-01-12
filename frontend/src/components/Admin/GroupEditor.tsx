@@ -56,6 +56,12 @@ const GroupEditor = ({
         selectedSections.has(section)
     );
 
+    const [massScopes, setMassScopes] = useState({
+        view: "",
+        edit: "",
+        delete: "",
+    });
+
     // Обработчик изменения чекбокса права
     const handlePermissionCheckboxChange = (section, permissionType) => {
         setSelectedPermissions((prev) => {
@@ -162,7 +168,6 @@ const GroupEditor = ({
     };
 
     // Обработчик чекбокса выбора всей строки (раздела)
-    // Теперь ТОЛЬКО отмечает/снимает строку, НЕ трогая чекбоксы прав
     const handleSectionCheckboxChange = (section) => {
         const newSelectedSections = new Set(selectedSections);
 
@@ -248,39 +253,116 @@ const GroupEditor = ({
     };
 
     const getMassScopeValue = (permissionType) => {
-        if (areAllRowsSelected) {
-            return "";
-        }
-
         if (selectedSections.size === 0) {
             return "";
         }
 
-        let firstScope = null;
-        let hasCheckedPermissions = false;
-
-        selectedSections.forEach((section) => {
-            const matrix = PERMISSION_MATRIX[section] || {};
-            if (matrix[permissionType] === 1) {
-                const key = `${section}_${permissionType}`;
-                if (selectedPermissions[key]) {
-                    hasCheckedPermissions = true;
-                    const scope = permissionScopes[key] || "full";
-                    if (firstScope === null) {
-                        firstScope = scope;
-                    } else if (firstScope !== scope) {
-                        firstScope = "";
-                    }
-                }
-            }
-        });
-
-        if (!hasCheckedPermissions) {
-            return "";
-        }
-
-        return firstScope || "";
+        return massScopes[permissionType] || "";
     };
+
+    useEffect(() => {
+        setMassScopes({
+            view: "",
+            edit: "",
+            delete: "",
+        });
+    }, [selectedSections]);
+
+    // Массовое переключаение ширины прав
+    // const handleMassScopeChange = (permissionType, scope) => {
+    //     if (selectedSections.size === 0) {
+    //         return;
+    //     }
+
+    //     const newScopes = { ...permissionScopes };
+
+    //     selectedSections.forEach((section) => {
+    //         const matrix = PERMISSION_MATRIX[section] || {};
+
+    //         const key = `${section}_${permissionType}`;
+    //         const widthKey = `permission_width_${permissionType}`;
+
+    //         if (matrix[permissionType] === 1 && selectedPermissions[key]) {
+    //             const resolvedScope =
+    //                 widthKey in matrix && matrix[widthKey] !== "all"
+    //                     ? matrix[widthKey]
+    //                     : scope;
+
+    //             newScopes[key] = resolvedScope;
+    //         }
+
+    //         // Если просмотр ограничен, то остальные права - тоже
+    //         // if (
+    //         //     scope === "full" &&
+    //         //     (permissionType === "edit" || permissionType === "delete")
+    //         // ) {
+    //         //     Object.keys(matrix).forEach((matrixKey) => {
+    //         //         if (!matrixKey.startsWith("permission_width_")) {
+    //         //             return;
+    //         //         }
+
+    //         //         const perm = matrixKey.replace("permission_width_", "");
+    //         //         const permKey = `${section}_${perm}`;
+
+    //         //         if (matrix[perm] === 1 && selectedPermissions[permKey]) {
+    //         //             newScopes[permKey] = "full";
+    //         //         }
+    //         //     });
+    //         // }
+
+    //         if (scope === "full") {
+    //             const currentIndex = PERMISSION_ORDER.indexOf(permissionType);
+
+    //             if (currentIndex > 0) {
+    //                 for (let i = 0; i < currentIndex; i++) {
+    //                     const perm = PERMISSION_ORDER[i];
+    //                     const permKey = `${section}_${perm}`;
+
+    //                     if (
+    //                         matrix[perm] === 1 &&
+    //                         selectedPermissions[permKey]
+    //                     ) {
+    //                         newScopes[permKey] = "full";
+    //                     }
+    //                 }
+    //             }
+    //         }
+
+    //         // Переключаем все права выше от edit или delete
+    //         if (permissionType === "view" && scope === "limited") {
+    //             Object.keys(matrix).forEach((matrixKey) => {
+    //                 if (!matrixKey.startsWith("permission_width_")) {
+    //                     return;
+    //                 }
+
+    //                 const perm = matrixKey.replace("permission_width_", "");
+    //                 const permKey = `${section}_${perm}`;
+
+    //                 if (matrix[perm] === 1 && selectedPermissions[permKey]) {
+    //                     newScopes[permKey] = "limited";
+    //                 }
+    //             });
+    //         }
+    //     });
+
+    //     setPermissionScopes(newScopes);
+
+    //     setMassScopes((prev) => ({
+    //         ...prev,
+    //         [permissionType]: scope,
+
+    //         // Обратная иерархия
+    //         ...(scope === "full" &&
+    //         (permissionType === "edit" || permissionType === "delete")
+    //             ? { view: "full", edit: "full" }
+    //             : {}),
+
+    //         // Прямая иерархия
+    //         ...(permissionType === "view" && scope === "limited"
+    //             ? { edit: "limited", delete: "limited" }
+    //             : {}),
+    //     }));
+    // };
 
     const handleMassScopeChange = (permissionType, scope) => {
         if (selectedSections.size === 0) {
@@ -290,12 +372,13 @@ const GroupEditor = ({
         const newScopes = { ...permissionScopes };
 
         selectedSections.forEach((section) => {
-            const matrix = PERMISSION_MATRIX[section] || {};
+            const matrix = PERMISSION_MATRIX[section];
+            if (!matrix) return;
 
             const key = `${section}_${permissionType}`;
             const widthKey = `permission_width_${permissionType}`;
 
-            if (matrix[permissionType] === 1 && selectedPermissions[key]) {
+            if (matrix[permissionType] === 1) {
                 const resolvedScope =
                     widthKey in matrix && matrix[widthKey] !== "all"
                         ? matrix[widthKey]
@@ -304,43 +387,58 @@ const GroupEditor = ({
                 newScopes[key] = resolvedScope;
             }
 
-            // Если просмотр ограничен, то остальные права - тоже
-            if (
-                scope === "full" &&
-                (permissionType === "edit" || permissionType === "delete")
-            ) {
-                Object.keys(matrix).forEach((matrixKey) => {
-                    if (!matrixKey.startsWith("permission_width_")) {
-                        return;
-                    }
+            const currentIndex = PERMISSION_ORDER.indexOf(permissionType);
 
-                    const perm = matrixKey.replace("permission_width_", "");
+            // Поднятие вверх (full)
+            if (scope === "full" && currentIndex > 0) {
+                for (let i = 0; i < currentIndex; i++) {
+                    const perm = PERMISSION_ORDER[i];
                     const permKey = `${section}_${perm}`;
 
                     if (matrix[perm] === 1 && selectedPermissions[permKey]) {
                         newScopes[permKey] = "full";
                     }
-                });
+                }
             }
 
-            // Переключаем все права выше от edit или delete
-            if (permissionType === "view" && scope === "limited") {
-                Object.keys(matrix).forEach((matrixKey) => {
-                    if (!matrixKey.startsWith("permission_width_")) {
-                        return;
-                    }
-
-                    const perm = matrixKey.replace("permission_width_", "");
+            // Ограничение вниз
+            if (scope === "limited") {
+                for (
+                    let i = currentIndex + 1;
+                    i < PERMISSION_ORDER.length;
+                    i++
+                ) {
+                    const perm = PERMISSION_ORDER[i];
                     const permKey = `${section}_${perm}`;
 
                     if (matrix[perm] === 1 && selectedPermissions[permKey]) {
                         newScopes[permKey] = "limited";
                     }
-                });
+                }
             }
         });
 
         setPermissionScopes(newScopes);
+
+        // Меняем состояние массовых селекторов
+        setMassScopes((prev) => {
+            const next = { ...prev, [permissionType]: scope };
+            const index = PERMISSION_ORDER.indexOf(permissionType);
+
+            if (scope === "full") {
+                for (let i = 0; i < index; i++) {
+                    next[PERMISSION_ORDER[i]] = "full";
+                }
+            }
+
+            if (scope === "limited") {
+                for (let i = index + 1; i < PERMISSION_ORDER.length; i++) {
+                    next[PERMISSION_ORDER[i]] = "limited";
+                }
+            }
+
+            return next;
+        });
     };
 
     // Создание / Изменение группы
@@ -405,6 +503,17 @@ const GroupEditor = ({
                 setError(error.message || "Ошибка сохранения прав");
             })
             .finally(() => setIsLoading(false));
+    };
+
+    const isMassPermissionAvailable = (permissionType) => {
+        if (selectedSections.size === 0) {
+            return false;
+        }
+
+        return Array.from(selectedSections).some((section) => {
+            const matrix = PERMISSION_MATRIX[section];
+            return matrix?.[permissionType] === 1;
+        });
     };
 
     // Иерархия прав (Просмотр -> Редактирование -> Удаление)
@@ -786,11 +895,6 @@ const GroupEditor = ({
                                                 const massScopeValue =
                                                     getMassScopeValue(permType);
 
-                                                const isMassCheckboxCheckedForType =
-                                                    isMassCheckboxChecked(
-                                                        permType
-                                                    );
-
                                                 return (
                                                     <td
                                                         key={`mass_scope_${permType}`}
@@ -811,21 +915,36 @@ const GroupEditor = ({
                                                             menuShouldScrollIntoView={
                                                                 false
                                                             }
-                                                            value={RIGHTS_WIDTH_OPTIONS.find(
-                                                                (item) =>
-                                                                    item.value ===
-                                                                    massScopeValue
-                                                            )}
+                                                            value={
+                                                                isMassPermissionAvailable(
+                                                                    permType
+                                                                )
+                                                                    ? RIGHTS_WIDTH_OPTIONS.find(
+                                                                          (
+                                                                              item
+                                                                          ) =>
+                                                                              item.value ===
+                                                                              massScopeValue
+                                                                      )
+                                                                    : null
+                                                            }
                                                             onChange={(e) => {
+                                                                if (
+                                                                    !isMassPermissionAvailable(
+                                                                        permType
+                                                                    )
+                                                                )
+                                                                    return;
+
                                                                 handleMassScopeChange(
                                                                     permType,
                                                                     e.value
                                                                 );
                                                             }}
                                                             isDisabled={
-                                                                !isMassCheckboxCheckedForType ||
-                                                                selectedSections.size ===
-                                                                    0
+                                                                !isMassPermissionAvailable(
+                                                                    permType
+                                                                )
                                                             }
                                                         />
                                                     </td>
@@ -835,22 +954,27 @@ const GroupEditor = ({
 
                                         {/* Чекбокс для выделения всех строк */}
                                         <td className="mass-checkbox-cell">
-                                            <label
-                                                htmlFor="select_all"
-                                                className="form-checkbox"
-                                            >
-                                                <input
-                                                    type="checkbox"
-                                                    id="select_all"
-                                                    checked={areAllRowsSelected}
-                                                    onChange={
-                                                        handleSelectAllRows
-                                                    }
-                                                    className="row-checkbox"
-                                                />
+                                            {Object.keys(selectedPermissions)
+                                                .length > 0 && (
+                                                <label
+                                                    htmlFor="select_all"
+                                                    className="form-checkbox"
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        id="select_all"
+                                                        checked={
+                                                            areAllRowsSelected
+                                                        }
+                                                        onChange={
+                                                            handleSelectAllRows
+                                                        }
+                                                        className="row-checkbox"
+                                                    />
 
-                                                <div className="checkbox"></div>
-                                            </label>
+                                                    <div className="checkbox"></div>
+                                                </label>
+                                            )}
                                         </td>
                                     </tr>
                                 </tbody>

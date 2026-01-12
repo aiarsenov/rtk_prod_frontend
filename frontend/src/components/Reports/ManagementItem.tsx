@@ -55,7 +55,7 @@ const ManagementItem = ({
 
                 let statusClass;
 
-                if (key === "status") {
+                if (key === "status" && value) {
                     if (
                         value.toLowerCase() === "завершен" ||
                         value.toLowerCase() === "утверждён"

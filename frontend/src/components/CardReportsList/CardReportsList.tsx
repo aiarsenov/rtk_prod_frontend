@@ -56,10 +56,11 @@ const CardReportsList = ({
                     reports.length > 0 &&
                     reports.map((item) => {
                         if (
-                            item.status?.toLowerCase() === "завершен" ||
-                            item.status?.toLowerCase() === "утвержден" ||
-                            item.status?.toLowerCase() === "завершён" ||
-                            item.status?.toLowerCase() === "утверждён"
+                            item.status &&
+                            (item.status?.toLowerCase() === "завершен" ||
+                                item.status?.toLowerCase() === "утвержден" ||
+                                item.status?.toLowerCase() === "завершён" ||
+                                item.status?.toLowerCase() === "утверждён")
                         ) {
                             statusClass = "completed";
                         } else if (
