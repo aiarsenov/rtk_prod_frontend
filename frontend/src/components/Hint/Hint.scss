@@ -38,6 +38,7 @@
         max-width: 275px;
         z-index: 2;
         pointer-events: none;
+        white-space: pre-line;
     }
 
     &:hover {
@@ -63,6 +64,7 @@
         .hint__message {
             top: calc(100% + 10px);
             bottom: auto;
+            text-align: left;
         }
     }
 
