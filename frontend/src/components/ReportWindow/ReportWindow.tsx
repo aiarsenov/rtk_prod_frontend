@@ -274,7 +274,7 @@ const ReportWindow = ({
         setIsDataChanged(false);
         setIsLoading(true);
         setReportId(null);
-
+        setPreFillReportData({});
         setTeammates([]);
         setContractors([]);
         setReportTypes([]);
@@ -541,7 +541,6 @@ const ReportWindow = ({
         );
 
         console.log(selectedType);
-        
 
         if (selectedType) {
             if (
