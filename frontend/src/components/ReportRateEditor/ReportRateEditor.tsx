@@ -33,6 +33,8 @@ const ReportRateEditor = ({
     const [saveBeforeClose, setSaveBeforeClose] = useState(false);
     const [isChanged, setIsChanged] = useState(false);
 
+    let statusClass = "";
+
     const rateHandler = (name: string, value: string | number) => {
         setReportRateData((prev) => ({
             ...prev,
@@ -55,6 +57,18 @@ const ReportRateEditor = ({
     useEffect(() => {
         if (reportData) {
             setReportRateData({ ...reportData });
+
+            if (reportData.status) {
+                const status = reportData?.status?.toLowerCase();
+
+                if (status === "утверждён") {
+                    statusClass = "form-field__status_completed";
+                } else if (status === "в работе" || isChanged) {
+                    statusClass = "form-field__status_progress";
+                } else {
+                    statusClass = "";
+                }
+            }
         }
 
         if (reportData.show_save_bar) {
@@ -200,15 +214,7 @@ const ReportRateEditor = ({
 
                                     {reportRateData.status && (
                                         <div
-                                            className={`form-field form-field__status ${
-                                                reportRateData.status.toLowerCase() ===
-                                                    "утверждён" ||
-                                                reportRateData.status.toLowerCase() ===
-                                                    "в работе" ||
-                                                isChanged
-                                                    ? "form-field__status_progress"
-                                                    : ""
-                                            }`}
+                                            className={`form-field form-field__status ${statusClass}`}
                                         >
                                             <span></span>
                                             {isChanged
