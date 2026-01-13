@@ -732,7 +732,7 @@ const ReportWindow = ({
             setReportData((prev) => ({
                 ...prev,
                 show_cost: selectedType.show_cost,
-                is_regular: selectedType.is_regular,
+                // is_regular: selectedType.is_regular,
                 ...(selectedType.is_regular === false && {
                     regularity: "one_time",
                 }),
