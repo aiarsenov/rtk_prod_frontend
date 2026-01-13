@@ -49,32 +49,24 @@ const SaleFunnelItem = ({
             stage.name.toLowerCase() == "получен отказ" ||
             stage.name.toLowerCase() == "отказ от участия"
         ) {
-            // if (isLast) {
-                setStatusClass("status_canceled");
-            // }
+            setStatusClass("status_canceled");
+
             return "status_canceled";
         } else if (stage.name.toLowerCase() == "проект отложен") {
-            // if (isLast) {
-                setStatusClass("status_completed");
-            // }
+            setStatusClass("status_completed");
+
             return "status_completed";
         }
 
         // Логика окрашивания в зависимости от даты и перехода на следующий этап
         if (!stage.stage_date) {
-            // if (isLast) {
-            //     setStatusClass("");
-            // }
             return "";
         } else if (hasNextStage) {
-            // if (isLast) {
-                setStatusClass("status_active");
-            // }
+            setStatusClass("status_active");
+
             return "status_active";
         } else {
-            // if (isLast) {
-                setStatusClass("status_inprogress");
-            // }
+            setStatusClass("status_inprogress");
             return "status_inprogress";
         }
     };
