@@ -16,7 +16,7 @@ export default defineConfig(() => {
             proxy: {
                 // Прокси для локальной разработки - проксируем запросы к /api на бэкенд
                 "/api": {
-                    target: "http://127.0.0.1:8000",
+                    target: "http://laravel:8000",
                     changeOrigin: true,
                     secure: false,
                     cookieDomainRewrite: "",
