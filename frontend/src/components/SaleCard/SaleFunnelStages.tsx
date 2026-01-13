@@ -17,6 +17,7 @@ const SaleFunnelStages = ({
     getStages,
     fetchServices,
     setSaleStages,
+    setStatusClass,
     mode,
 }: {
     mode: object;
@@ -735,6 +736,7 @@ const SaleFunnelStages = ({
                                 updateStageDetails={updateStageDetails}
                                 isLast={isLast}
                                 hasNextStage={hasNextStage}
+                                setStatusClass={setStatusClass}
                                 mode={mode}
                             />
                         );

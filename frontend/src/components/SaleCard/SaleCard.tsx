@@ -24,21 +24,6 @@ import { ToastContainer, toast } from "react-toastify";
 
 import "./SaleCard.scss";
 
-const handleStatusClass = (status) => {
-    if (status.toLowerCase() == "получен запрос") {
-        return "";
-    } else if (
-        status.toLowerCase() == "получен отказ" ||
-        status.toLowerCase() == "отказ от участия"
-    ) {
-        return "status_canceled";
-    } else if (status.toLowerCase() == "проект отложен") {
-        return "status_completed";
-    } else {
-        return "status_active";
-    }
-};
-
 const SaleCard = () => {
     const userPermitions = useSelector(
         (state) => state.user?.data?.permissions
@@ -57,6 +42,7 @@ const SaleCard = () => {
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
     const [saleStatus, setSaleStatus] = useState(null); // Статус продажи
+    const [statusClass, setStatusClass] = useState(""); // Цвет статуса
 
     const [cardData, setCardData] = useState({
         industries: { main: null, others: [] },
@@ -452,11 +438,7 @@ const SaleCard = () => {
                                 />
 
                                 {saleStatus && (
-                                    <span
-                                        className={`status ${handleStatusClass(
-                                            saleStatus
-                                        )}`}
-                                    >
+                                    <span className={`status ${statusClass}`}>
                                         {saleStatus}
                                     </span>
                                 )}
@@ -948,6 +930,7 @@ const SaleCard = () => {
                                 getStages={getStages}
                                 fetchServices={fetchServices}
                                 setSaleStages={setSaleStages}
+                                setStatusClass={setStatusClass}
                                 mode={mode}
                             />
                         </section>
