@@ -50,7 +50,7 @@ const FinancialMetrics = ({
             <div className="statistics-block__item">
                 <div className="statistics-block__item-label">
                     Выручка
-                    <Hint message="Выручка" />
+                    <Hint message="Выручка с НДС (по методу начисления) за отчётный период." />
                 </div>
                 <div className="statistics-block__item-value">
                     {financialMetrics.revenue?.value ? (
@@ -105,7 +105,7 @@ const FinancialMetrics = ({
             <div className="statistics-block__item">
                 <div className="statistics-block__item-label">
                     Поступления
-                    <Hint message="Поступления" />
+                    <Hint message="Поступления денежных средств от клиентов с НДС за отчётный период." />
                 </div>
                 <div className="statistics-block__item-value">
                     {financialMetrics.receipts?.value ? (
@@ -160,7 +160,7 @@ const FinancialMetrics = ({
             <div className="statistics-block__item">
                 <div className="statistics-block__item-label">
                     ДЗ
-                    <Hint message="ДЗ" />
+                    <Hint message="Дебиторская задолженность клиентов с НДС на конец отчётного месяца." />
                 </div>
                 <div className="statistics-block__item-value">
                     {financialMetrics.debts?.value ? (

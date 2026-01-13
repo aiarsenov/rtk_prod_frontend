@@ -58,7 +58,9 @@ const EmployeeMetrics = ({
             <div className="statistics-block__item">
                 <div className="statistics-block__item-label">
                     Численность
-                    <Hint message="Численность" />
+                    <Hint message="Среднемесячная численность персонала за отчётный период. Изменение в процентах отображается по отношению к предыдущему аналогичному периоду.
+
+В расчёте численности учитываются только штатные сотрудники подразделений, помеченных как «Учитывать в численности и ФОТ» в справочнике «Подразделения»." />
                 </div>
                 <div className="statistics-block__item-value">
                     {total_active_employees?.value ? (
@@ -102,7 +104,9 @@ const EmployeeMetrics = ({
             <div className="statistics-block__item">
                 <div className="statistics-block__item-label">
                     ФОТ gross
-                    <Hint message="ФОТ gross" />
+                    <Hint message="ФОТ gross (с учётом НДФЛ, без учёта социальных отчислений) за отчётный период. Изменение в процентах отображается по отношению к предыдущему аналогичному периоду.
+
+В расчёте ФОТ gross участвуют только штатные сотрудники подразделений, помеченных как «Учитывать в численности и ФОТ» в справочнике «Подразделения»." />
                 </div>
                 <div className="statistics-block__item-value">
                     {gross_salary?.value ? (
@@ -144,7 +148,11 @@ const EmployeeMetrics = ({
             <div className="statistics-block__item">
                 <div className="statistics-block__item-label">
                     Средняя з/п
-                    <Hint message="Средняя з/п" />
+                    <Hint message="Среднемесячная заработная плата gross (с учётом НДФЛ, без учёта социальных отчислений) за отчётный период.
+
+Рассчитывается как ФОТ gross, разделённый на среднемесячную численность персонала за отчётный период. Изменение в процентах отображается по отношению к предыдущему аналогичному периоду.
+
+В расчёте средней заработной платы участвуют только штатные сотрудники подразделений, помеченных как «Учитывать в численности и ФОТ» в справочнике «Подразделения»." />
                 </div>
                 <div className="statistics-block__item-value">
                     {average_salary?.value ? (

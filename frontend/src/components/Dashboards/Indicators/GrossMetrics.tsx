@@ -57,7 +57,11 @@ const GrossMetrics = ({
             <div className="statistics-block__item">
                 <div className="statistics-block__item-label">
                     Валовая прибыль
-                    <Hint message="Валовая прибыль" />
+                    <Hint message="
+Валовая прибыль за отчётный период.
+
+Рассчитывается как выручка с НДС за вычетом расходов на подрядчиков с НДС и ФОТ сотрудников, задействованных в реализации проектов.
+" />
                 </div>
                 <div className="statistics-block__item-value">
                     {financialMetrics.gross_profit?.value ? (
@@ -106,7 +110,9 @@ const GrossMetrics = ({
             <div className="statistics-block__item">
                 <div className="statistics-block__item-label">
                     Валовая рентабельность
-                    <Hint message="Валовая рентабельность" />
+                    <Hint message="Валовая рентабельность за отчётный период.
+
+Рассчитывается как отношение валовой прибыли к выручке." />
                 </div>
                 <div className="statistics-block__item-value">
                     {financialMetrics.gross_margin?.value ? (

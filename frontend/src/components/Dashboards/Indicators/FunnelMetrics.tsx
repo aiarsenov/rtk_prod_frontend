@@ -14,7 +14,8 @@ const FunnelMetrics = ({ funnelMetrics }: { funnelMetrics: FunnelMetrics }) => {
             <div className="statistics-block__item">
                 <div className="statistics-block__item-label">
                     {funnelMetrics?.request_received?.label}
-                    <Hint message={funnelMetrics?.request_received?.label} />
+                    <Hint message="Количество запросов, полученных за отчётный период.
+" />
                 </div>
                 <div className="statistics-block__item-value">
                     {funnelMetrics?.request_received?.value !== "0" ? (
@@ -32,7 +33,7 @@ const FunnelMetrics = ({ funnelMetrics }: { funnelMetrics: FunnelMetrics }) => {
             <div className="statistics-block__item">
                 <div className="statistics-block__item-label">
                     {funnelMetrics?.proposal_sent?.label}
-                    <Hint message={funnelMetrics?.proposal_sent?.label} />
+                    <Hint message="Количество коммерческих предложений, отправленных за отчётный период." />
                 </div>
                 <div className="statistics-block__item-value">
                     {funnelMetrics?.proposal_sent?.value !== "0" ? (
@@ -52,7 +53,7 @@ const FunnelMetrics = ({ funnelMetrics }: { funnelMetrics: FunnelMetrics }) => {
             <div className="statistics-block__item">
                 <div className="statistics-block__item-label">
                     {funnelMetrics?.agreement?.label}
-                    <Hint message={funnelMetrics?.agreement?.label} />
+                    <Hint message="Количество договоров, заключённых за отчётный период." />
                 </div>
                 <div className="statistics-block__item-value">
                     {funnelMetrics?.agreement?.value !== "0" ? (
@@ -70,7 +71,7 @@ const FunnelMetrics = ({ funnelMetrics }: { funnelMetrics: FunnelMetrics }) => {
             <div className="statistics-block__item">
                 <div className="statistics-block__item-label">
                     {funnelMetrics?.rejected?.label}
-                    <Hint message={funnelMetrics?.rejected?.label} />
+                    <Hint message="Количество отказов, полученных за отчётный период" />
                 </div>
                 <div className="statistics-block__item-value">
                     {funnelMetrics?.rejected?.value !== "0" ? (
@@ -88,7 +89,7 @@ const FunnelMetrics = ({ funnelMetrics }: { funnelMetrics: FunnelMetrics }) => {
             <div className="statistics-block__item">
                 <div className="statistics-block__item-label">
                     {funnelMetrics?.postponed?.label}
-                    <Hint message={funnelMetrics?.postponed?.label} />
+                    <Hint message="Количество заявок (лидов), отложенных за отчётный период." />
                 </div>
                 <div className="statistics-block__item-value">
                     {funnelMetrics?.postponed?.value !== "0" ? (

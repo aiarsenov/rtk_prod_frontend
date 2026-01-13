@@ -132,7 +132,6 @@ const ProjectManagerReports = ({
                     {filteredManagementReports.length > 0 &&
                         filteredManagementReports.length}
                 </span>
-                <Hint message={"Отчёты ответственных"} />
             </h2>
 
             <div className="reports__list-header">

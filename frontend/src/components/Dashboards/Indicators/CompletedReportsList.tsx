@@ -55,7 +55,6 @@ const CompletedReportsList = ({
             <h2 className="card__subtitle">
                 Завершённые отчёты
                 <span>{completedReports.items?.length || 0}</span>
-                <Hint message={"Завершённые отчёты"} />
             </h2>
 
             <div className="reports__list-header">
