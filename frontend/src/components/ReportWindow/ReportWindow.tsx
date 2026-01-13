@@ -540,9 +540,12 @@ const ReportWindow = ({
             (type) => type.id === +reportData.report_type_id
         );
 
+        console.log(selectedType);
+        
+
         if (selectedType) {
             if (
-                selectedType.is_regular &&
+                // selectedType.is_regular &&
                 reportData.regularity != "" &&
                 reportData.regularity != "one_time"
             ) {
@@ -558,7 +561,7 @@ const ReportWindow = ({
                     }?${queryString}`
                 );
             } else if (
-                !selectedType.is_regular &&
+                // !selectedType.is_regular &&
                 reportData.regularity != "" &&
                 reportData.regularity == "one_time"
             ) {
