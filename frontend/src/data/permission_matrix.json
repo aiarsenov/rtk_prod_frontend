@@ -60,120 +60,120 @@
         "view": 1,
         "edit": 1,
         "delete": 1,
-        "permission_width_view": "all",
-        "permission_width_edit": "all",
-        "permission_width_delete": "all"
+        "permission_width_view": "full",
+        "permission_width_edit": "full",
+        "permission_width_delete": "full"
     },
     "lead_contacts": {
         "view": 1,
         "edit": 1,
         "delete": 1,
-        "permission_width_view": "all",
-        "permission_width_edit": "all",
-        "permission_width_delete": "all"
+        "permission_width_view": "full",
+        "permission_width_edit": "full",
+        "permission_width_delete": "full"
     },
     "industries": {
         "view": 1,
         "edit": 1,
         "delete": 1,
-        "permission_width_view": "all",
-        "permission_width_edit": "all",
-        "permission_width_delete": "all"
+        "permission_width_view": "full",
+        "permission_width_edit": "full",
+        "permission_width_delete": "full"
     },
     "report_types": {
         "view": 1,
         "edit": 1,
         "delete": 1,
-        "permission_width_view": "all",
-        "permission_width_edit": "all",
-        "permission_width_delete": "all"
+        "permission_width_view": "full",
+        "permission_width_edit": "full",
+        "permission_width_delete": "full"
     },
     "management_report_types": {
         "view": 1,
         "edit": 1,
         "delete": 1,
-        "permission_width_view": "all",
-        "permission_width_edit": "all",
-        "permission_width_delete": "all"
+        "permission_width_view": "full",
+        "permission_width_edit": "full",
+        "permission_width_delete": "full"
     },
     "roles": {
         "view": 1,
         "edit": 1,
         "delete": 1,
-        "permission_width_view": "all",
-        "permission_width_edit": "all",
-        "permission_width_delete": "all"
+        "permission_width_view": "full",
+        "permission_width_edit": "full",
+        "permission_width_delete": "full"
     },
     "positions": {
         "view": 1,
         "edit": 1,
         "delete": 1,
-        "permission_width_view": "all",
-        "permission_width_edit": "all",
-        "permission_width_delete": "all"
+        "permission_width_view": "full",
+        "permission_width_edit": "full",
+        "permission_width_delete": "full"
     },
     "banks": {
         "view": 1,
         "edit": 1,
         "delete": 1,
-        "permission_width_view": "all",
-        "permission_width_edit": "all",
-        "permission_width_delete": "all"
+        "permission_width_view": "full",
+        "permission_width_edit": "full",
+        "permission_width_delete": "full"
     },
     "creditor": {
         "view": 1,
         "edit": 1,
         "delete": 1,
-        "permission_width_view": "all",
-        "permission_width_edit": "all",
-        "permission_width_delete": "all"
+        "permission_width_view": "full",
+        "permission_width_edit": "full",
+        "permission_width_delete": "full"
     },
     "contragent": {
         "view": 1,
         "edit": 1,
         "delete": 1,
-        "permission_width_view": "all",
-        "permission_width_edit": "all",
-        "permission_width_delete": "all"
+        "permission_width_view": "full",
+        "permission_width_edit": "full",
+        "permission_width_delete": "full"
     },
     "suppliers_with_reports": {
         "view": 1,
         "edit": 1,
         "delete": 1,
-        "permission_width_view": "all",
-        "permission_width_edit": "all",
-        "permission_width_delete": "all"
+        "permission_width_view": "full",
+        "permission_width_edit": "full",
+        "permission_width_delete": "full"
     },
     "request_sources": {
         "view": 1,
         "edit": 1,
         "delete": 1,
-        "permission_width_view": "all",
-        "permission_width_edit": "all",
-        "permission_width_delete": "all"
+        "permission_width_view": "full",
+        "permission_width_edit": "full",
+        "permission_width_delete": "full"
     },
     "working_hours": {
         "view": 1,
         "edit": 1,
         "delete": 1,
-        "permission_width_view": "all",
-        "permission_width_edit": "all",
-        "permission_width_delete": "all"
+        "permission_width_view": "full",
+        "permission_width_edit": "full",
+        "permission_width_delete": "full"
     },
     "departments": {
         "view": 1,
         "edit": 1,
         "delete": 1,
-        "permission_width_view": "all",
-        "permission_width_edit": "all",
-        "permission_width_delete": "all"
+        "permission_width_view": "full",
+        "permission_width_edit": "full",
+        "permission_width_delete": "full"
     },
     "admin": {
         "view": 1,
         "edit": 1,
         "delete": 1,
-        "permission_width_view": "all",
-        "permission_width_edit": "all",
-        "permission_width_delete": "all"
+        "permission_width_view": "full",
+        "permission_width_edit": "full",
+        "permission_width_delete": "full"
     }
 }

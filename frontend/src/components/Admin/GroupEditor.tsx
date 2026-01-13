@@ -201,33 +201,106 @@ const GroupEditor = ({
     };
 
     // Массовый выбор прав в столбце
+    // const handleMassPermissionCheckboxChange = (permissionType) => {
+    //     const newPermissions = { ...selectedPermissions };
+    //     const newScopes = { ...permissionScopes };
+
+    //     // Получаем все допустимые ключи для данного типа действия
+    //     const availableKeys = SECTIONS_ORDER.filter((section) => {
+    //         const matrix = PERMISSION_MATRIX[section];
+    //         return matrix?.[permissionType] === 1;
+    //     }).map((section) => `${section}_${permissionType}`);
+
+    //     if (availableKeys.length === 0) return;
+
+    //     // Проверяем, все ли они уже отмечены
+    //     const areAllChecked = availableKeys.every(
+    //         (key) => newPermissions[key] === true
+    //     );
+
+    //     // Если все отмечены — снимаем, иначе отмечаем все
+    //     availableKeys.forEach((key) => {
+    //         if (areAllChecked) {
+    //             delete newPermissions[key];
+    //             delete newScopes[key];
+    //         } else {
+    //             newPermissions[key] = true;
+
+    //             if (!newScopes[key]) {
+    //                 newScopes[key] = "full";
+    //             }
+    //         }
+    //     });
+
+    //     setSelectedPermissions(newPermissions);
+    //     setPermissionScopes(newScopes);
+    // };
+
+    // Массовый выбор прав в столбце
     const handleMassPermissionCheckboxChange = (permissionType) => {
         const newPermissions = { ...selectedPermissions };
         const newScopes = { ...permissionScopes };
 
-        // Получаем все допустимые ключи для данного типа действия
-        const availableKeys = SECTIONS_ORDER.filter((section) => {
-            const matrix = PERMISSION_MATRIX[section];
-            return matrix?.[permissionType] === 1;
-        }).map((section) => `${section}_${permissionType}`);
+        const allKeys = SECTIONS_ORDER.map(
+            (section) => `${section}_${permissionType}`
+        );
 
-        if (availableKeys.length === 0) return;
-
-        // Проверяем, все ли они уже отмечены
-        const areAllChecked = availableKeys.every(
+        const areAllChecked = allKeys.every(
             (key) => newPermissions[key] === true
         );
 
-        // Если все отмечены — снимаем, иначе отмечаем все
-        availableKeys.forEach((key) => {
-            if (areAllChecked) {
-                delete newPermissions[key];
-                delete newScopes[key];
-            } else {
-                newPermissions[key] = true;
+        SECTIONS_ORDER.forEach((section) => {
+            const viewKey = `${section}_view`;
+            const editKey = `${section}_edit`;
+            const deleteKey = `${section}_delete`;
 
-                if (!newScopes[key]) {
-                    newScopes[key] = "full";
+            if (areAllChecked) {
+                // Массовое снятие
+                if (permissionType === "view") {
+                    delete newPermissions[viewKey];
+                    delete newPermissions[editKey];
+                    delete newPermissions[deleteKey];
+
+                    delete newScopes[viewKey];
+                    delete newScopes[editKey];
+                    delete newScopes[deleteKey];
+                }
+
+                if (permissionType === "edit") {
+                    delete newPermissions[editKey];
+                    delete newPermissions[deleteKey];
+
+                    delete newScopes[editKey];
+                    delete newScopes[deleteKey];
+                }
+
+                if (permissionType === "delete") {
+                    delete newPermissions[deleteKey];
+                    delete newScopes[deleteKey];
+                }
+            } else {
+                // Массовое включение
+                if (permissionType === "view") {
+                    newPermissions[viewKey] = true;
+                    newScopes[viewKey] ||= "full";
+                }
+
+                if (permissionType === "edit") {
+                    newPermissions[viewKey] = true;
+                    newPermissions[editKey] = true;
+
+                    newScopes[viewKey] ||= "full";
+                    newScopes[editKey] ||= "full";
+                }
+
+                if (permissionType === "delete") {
+                    newPermissions[viewKey] = true;
+                    newPermissions[editKey] = true;
+                    newPermissions[deleteKey] = true;
+
+                    newScopes[viewKey] ||= "full";
+                    newScopes[editKey] ||= "full";
+                    newScopes[deleteKey] ||= "full";
                 }
             }
         });
@@ -259,110 +332,6 @@ const GroupEditor = ({
 
         return massScopes[permissionType] || "";
     };
-
-    useEffect(() => {
-        setMassScopes({
-            view: "",
-            edit: "",
-            delete: "",
-        });
-    }, [selectedSections]);
-
-    // Массовое переключаение ширины прав
-    // const handleMassScopeChange = (permissionType, scope) => {
-    //     if (selectedSections.size === 0) {
-    //         return;
-    //     }
-
-    //     const newScopes = { ...permissionScopes };
-
-    //     selectedSections.forEach((section) => {
-    //         const matrix = PERMISSION_MATRIX[section] || {};
-
-    //         const key = `${section}_${permissionType}`;
-    //         const widthKey = `permission_width_${permissionType}`;
-
-    //         if (matrix[permissionType] === 1 && selectedPermissions[key]) {
-    //             const resolvedScope =
-    //                 widthKey in matrix && matrix[widthKey] !== "all"
-    //                     ? matrix[widthKey]
-    //                     : scope;
-
-    //             newScopes[key] = resolvedScope;
-    //         }
-
-    //         // Если просмотр ограничен, то остальные права - тоже
-    //         // if (
-    //         //     scope === "full" &&
-    //         //     (permissionType === "edit" || permissionType === "delete")
-    //         // ) {
-    //         //     Object.keys(matrix).forEach((matrixKey) => {
-    //         //         if (!matrixKey.startsWith("permission_width_")) {
-    //         //             return;
-    //         //         }
-
-    //         //         const perm = matrixKey.replace("permission_width_", "");
-    //         //         const permKey = `${section}_${perm}`;
-
-    //         //         if (matrix[perm] === 1 && selectedPermissions[permKey]) {
-    //         //             newScopes[permKey] = "full";
-    //         //         }
-    //         //     });
-    //         // }
-
-    //         if (scope === "full") {
-    //             const currentIndex = PERMISSION_ORDER.indexOf(permissionType);
-
-    //             if (currentIndex > 0) {
-    //                 for (let i = 0; i < currentIndex; i++) {
-    //                     const perm = PERMISSION_ORDER[i];
-    //                     const permKey = `${section}_${perm}`;
-
-    //                     if (
-    //                         matrix[perm] === 1 &&
-    //                         selectedPermissions[permKey]
-    //                     ) {
-    //                         newScopes[permKey] = "full";
-    //                     }
-    //                 }
-    //             }
-    //         }
-
-    //         // Переключаем все права выше от edit или delete
-    //         if (permissionType === "view" && scope === "limited") {
-    //             Object.keys(matrix).forEach((matrixKey) => {
-    //                 if (!matrixKey.startsWith("permission_width_")) {
-    //                     return;
-    //                 }
-
-    //                 const perm = matrixKey.replace("permission_width_", "");
-    //                 const permKey = `${section}_${perm}`;
-
-    //                 if (matrix[perm] === 1 && selectedPermissions[permKey]) {
-    //                     newScopes[permKey] = "limited";
-    //                 }
-    //             });
-    //         }
-    //     });
-
-    //     setPermissionScopes(newScopes);
-
-    //     setMassScopes((prev) => ({
-    //         ...prev,
-    //         [permissionType]: scope,
-
-    //         // Обратная иерархия
-    //         ...(scope === "full" &&
-    //         (permissionType === "edit" || permissionType === "delete")
-    //             ? { view: "full", edit: "full" }
-    //             : {}),
-
-    //         // Прямая иерархия
-    //         ...(permissionType === "view" && scope === "limited"
-    //             ? { edit: "limited", delete: "limited" }
-    //             : {}),
-    //     }));
-    // };
 
     const handleMassScopeChange = (permissionType, scope) => {
         if (selectedSections.size === 0) {
@@ -516,11 +485,57 @@ const GroupEditor = ({
         });
     };
 
+    useEffect(() => {
+        setMassScopes({
+            view: "",
+            edit: "",
+            delete: "",
+        });
+    }, [selectedSections]);
+
     // Иерархия прав (Просмотр -> Редактирование -> Удаление)
+    // useEffect(() => {
+    //     setSelectedPermissions((prev) => {
+    //         const newPermissions = { ...prev };
+    //         const newScopes = { ...permissionScopes };
+    //         let changed = false;
+
+    //         SECTIONS_ORDER.forEach((section) => {
+    //             const viewKey = `${section}_view`;
+    //             const editKey = `${section}_edit`;
+    //             const deleteKey = `${section}_delete`;
+
+    //             const hasView = !!newPermissions[viewKey];
+    //             const hasEdit = !!newPermissions[editKey];
+    //             const hasDelete = !!newPermissions[deleteKey];
+
+    //             // Добавляем зависимости при выборе edit/delete
+    //             if (hasEdit && !hasView) {
+    //                 newPermissions[viewKey] = true;
+    //                 newScopes[viewKey] ||= "full";
+    //                 changed = true;
+    //             }
+    //             if (hasDelete) {
+    //                 if (!hasView) {
+    //                     newPermissions[viewKey] = true;
+    //                     newScopes[viewKey] ||= "full";
+    //                     changed = true;
+    //                 }
+    //                 if (!hasEdit) {
+    //                     newPermissions[editKey] = true;
+    //                     newScopes[editKey] ||= "full";
+    //                     changed = true;
+    //                 }
+    //             }
+    //         });
+
+    //         return changed ? newPermissions : prev;
+    //     });
+    // }, [selectedPermissions]);
+
     useEffect(() => {
         setSelectedPermissions((prev) => {
-            const newPermissions = { ...prev };
-            const newScopes = { ...permissionScopes };
+            const next = { ...prev };
             let changed = false;
 
             SECTIONS_ORDER.forEach((section) => {
@@ -528,31 +543,44 @@ const GroupEditor = ({
                 const editKey = `${section}_edit`;
                 const deleteKey = `${section}_delete`;
 
-                const hasView = !!newPermissions[viewKey];
-                const hasEdit = !!newPermissions[editKey];
-                const hasDelete = !!newPermissions[deleteKey];
+                const hasView = !!next[viewKey];
+                const hasEdit = !!next[editKey];
+                const hasDelete = !!next[deleteKey];
 
-                // Добавляем зависимости при выборе edit/delete
                 if (hasEdit && !hasView) {
-                    newPermissions[viewKey] = true;
-                    newScopes[viewKey] ||= "full";
+                    next[viewKey] = true;
                     changed = true;
                 }
+
                 if (hasDelete) {
-                    if (!hasView) {
-                        newPermissions[viewKey] = true;
-                        newScopes[viewKey] ||= "full";
-                        changed = true;
-                    }
                     if (!hasEdit) {
-                        newPermissions[editKey] = true;
-                        newScopes[editKey] ||= "full";
+                        next[editKey] = true;
                         changed = true;
                     }
+                    if (!hasView) {
+                        next[viewKey] = true;
+                        changed = true;
+                    }
+                }
+
+                if (!hasView) {
+                    if (hasEdit) {
+                        delete next[editKey];
+                        changed = true;
+                    }
+                    if (hasDelete) {
+                        delete next[deleteKey];
+                        changed = true;
+                    }
+                }
+
+                if (!hasEdit && hasDelete) {
+                    delete next[deleteKey];
+                    changed = true;
                 }
             });
 
-            return changed ? newPermissions : prev;
+            return changed ? next : prev;
         });
     }, [selectedPermissions]);
 
