@@ -349,37 +349,8 @@ const FinancialIndicators = ({
         if (financialList.items && financialProfitList.items) {
             const merged = [
                 ...(financialList?.items || []),
-                ...([
-                    {
-                        id: 6,
-                        name: 'ГОК "Светловский"',
-                        gross_profit: {
-                            value: -3.09,
-                            label: "млн руб",
-                        },
-                        gross_margin: {
-                            value: 0,
-                            label: "%",
-                        },
-                    },
-                    {
-                        id: 5,
-                        name: "ГОК",
-                        gross_profit: {
-                            value: -1.09,
-                            label: "млн руб",
-                        },
-                        gross_margin: {
-                            value: 0,
-                            label: "%",
-                        },
-                    },
-                ] || []),
+                ...(financialProfitList?.items || []),
             ]
-                // const merged = [
-                //     ...(financialList?.items || []),
-                //     ...(financialProfitList?.items || []),
-                // ]
                 // Убираем дубликаты по id
                 .reduce((acc, item) => {
                     const existing = acc.find((el) => el.id === item.id);
