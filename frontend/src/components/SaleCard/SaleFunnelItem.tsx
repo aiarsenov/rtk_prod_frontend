@@ -62,9 +62,9 @@ const SaleFunnelItem = ({
 
         // Логика окрашивания в зависимости от даты и перехода на следующий этап
         if (!stage.stage_date) {
-            if (isLast) {
-                setStatusClass("ƒ");
-            }
+            // if (isLast) {
+            //     setStatusClass("");
+            // }
             return "";
         } else if (hasNextStage) {
             if (isLast) {
