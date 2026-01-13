@@ -31,7 +31,7 @@ ChartJS.register(
 import { Bar } from "react-chartjs-2";
 
 const OPTIONS = [
-    { value: "headcount", label: "Численность, чел" },
+    { value: "headcount", label: "Численность, чел." },
     { value: "gross_salary", label: "ФОТ gross, млн руб." },
     { value: "average_salary", label: "Средняя зп, тыс. руб." },
 ];
@@ -401,7 +401,6 @@ const EmployeesStats = ({
                             }
                         />
 
-                        <Hint message={""} />
                     </div>
 
                     <div className="h-[225px] overflow-auto">
