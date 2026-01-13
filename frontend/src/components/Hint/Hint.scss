@@ -19,6 +19,7 @@
     }
 
     &__message {
+        width: max-content;
         position: absolute;
         opacity: 0;
         visibility: hidden;
