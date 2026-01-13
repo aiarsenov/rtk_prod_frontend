@@ -11,7 +11,8 @@ export default defineConfig(() => {
         base,
         plugins: [react(), tailwindcss()],
         server: {
-            allowedHosts: ['atlas.bizan.pro'],
+            host: "0.0.0.0",
+            allowedHosts: ["atlas.bizan.pro", ".bizan.pro"],
             proxy: {
                 // Прокси для локальной разработки - проксируем запросы к /api на бэкенд
                 "/api": {
@@ -25,21 +26,36 @@ export default defineConfig(() => {
                         });
                         proxy.on("proxyReq", (proxyReq, req, _res) => {
                             if (req.headers.origin) {
-                                proxyReq.setHeader("X-Original-Origin", req.headers.origin);
-                                proxyReq.setHeader("Origin", req.headers.origin);
+                                proxyReq.setHeader(
+                                    "X-Original-Origin",
+                                    req.headers.origin
+                                );
+                                proxyReq.setHeader(
+                                    "Origin",
+                                    req.headers.origin
+                                );
                             }
                             // Сохраняем Referer
                             if (req.headers.referer) {
-                                proxyReq.setHeader("Referer", req.headers.referer);
+                                proxyReq.setHeader(
+                                    "Referer",
+                                    req.headers.referer
+                                );
                             }
                         });
                         proxy.on("proxyRes", (proxyRes, req, res) => {
-                            if (proxyRes.headers['set-cookie']) {
-                                proxyRes.headers['set-cookie'] = proxyRes.headers['set-cookie'].map((cookie) => {
-                                    return cookie
-                                        .replace(/Domain=[^;]+/gi, '')
-                                        .replace(/SameSite=None/gi, 'SameSite=Lax');
-                                });
+                            if (proxyRes.headers["set-cookie"]) {
+                                proxyRes.headers["set-cookie"] =
+                                    proxyRes.headers["set-cookie"].map(
+                                        (cookie) => {
+                                            return cookie
+                                                .replace(/Domain=[^;]+/gi, "")
+                                                .replace(
+                                                    /SameSite=None/gi,
+                                                    "SameSite=Lax"
+                                                );
+                                        }
+                                    );
                             }
                         });
                     },
