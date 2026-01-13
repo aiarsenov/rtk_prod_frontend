@@ -540,8 +540,6 @@ const ReportWindow = ({
             (type) => type.id === +reportData.report_type_id
         );
 
-        console.log(selectedType);
-
         if (selectedType) {
             if (
                 // selectedType.is_regular &&
@@ -591,7 +589,7 @@ const ReportWindow = ({
 
         if (selectedType) {
             if (
-                selectedType.is_regular &&
+                // selectedType.is_regular &&
                 reportData.regularity != "" &&
                 reportData.regularity != "one_time"
             ) {
@@ -600,7 +598,7 @@ const ReportWindow = ({
                 );
                 setAutoPrefillPopupState(true);
             } else if (
-                !selectedType.is_regular &&
+                // !selectedType.is_regular &&
                 reportData.regularity != "" &&
                 reportData.regularity == "one_time"
             ) {
@@ -1159,10 +1157,6 @@ const ReportWindow = ({
                                                         reportData.report_period
                                                     }
                                                     onChange={(val) => {
-                                                        console.log(
-                                                            "Отчетный период"
-                                                        );
-
                                                         setReportData(
                                                             (prev) => ({
                                                                 ...prev,
@@ -1222,9 +1216,6 @@ const ReportWindow = ({
                                                             reportData.implementation_period
                                                         }
                                                         onChange={(val) => {
-                                                            console.log(
-                                                                "Период реализации"
-                                                            );
                                                             setReportData(
                                                                 (prev) => ({
                                                                     ...prev,
@@ -1361,9 +1352,6 @@ const ReportWindow = ({
                                                             reportData.execution_period
                                                         }
                                                         onChange={(val) => {
-                                                            console.log(
-                                                                "Период выполнения"
-                                                            );
                                                             setReportData(
                                                                 (prev) => ({
                                                                     ...prev,
