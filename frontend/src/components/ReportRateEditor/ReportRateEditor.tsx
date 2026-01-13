@@ -206,7 +206,7 @@ const ReportRateEditor = ({
                                                 reportRateData.status.toLowerCase() ===
                                                     "в работе" ||
                                                 isChanged
-                                                    ? "form-field__status_completed"
+                                                    ? "form-field__status_progress"
                                                     : ""
                                             }`}
                                         >
