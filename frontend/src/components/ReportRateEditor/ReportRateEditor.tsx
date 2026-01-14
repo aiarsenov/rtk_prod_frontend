@@ -50,6 +50,7 @@ const ReportRateEditor = ({
         }));
 
         if (!isChanged) {
+            setShowApprove(false)
             setIsChanged(true);
         }
     };
@@ -73,6 +74,8 @@ const ReportRateEditor = ({
             setIsChanged(true);
         }
 
+
+        // Если отчет не утвержден, но в нем есть изменения - отображаем только кнопку Утвердить
         if (
             !reportData.show_save_bar &&
             reportData.status &&
@@ -328,7 +331,7 @@ const ReportRateEditor = ({
                                 <div className="container">
                                     {mode.edit === "full" && (
                                         <>
-                                            {!showApprove && (
+                                            {!showApprove && isChanged && (
                                                 <button
                                                     type="button"
                                                     className="cancel-button"
