@@ -52,17 +52,28 @@ const CardMultiSelector = ({
                 </ul>
             )}
 
-            {!disabled && (
-                <AddButton
-                    label={buttonLabel}
-                    title={buttonTitle}
-                    className={buttonClassName}
-                    onClick={() => {
-                        setInitialValues(selectedValues);
-                        setShowWindow(true);
-                    }}
-                />
-            )}
+            {!disabled &&
+                (selectedItems.length > 0 ? (
+                    <AddButton
+                        label={"Изменить"}
+                        title={"Изменить список"}
+                        className={buttonClassName}
+                        onClick={() => {
+                            setInitialValues(selectedValues);
+                            setShowWindow(true);
+                        }}
+                    />
+                ) : (
+                    <AddButton
+                        label={buttonLabel}
+                        title={buttonTitle}
+                        className={buttonClassName}
+                        onClick={() => {
+                            setInitialValues(selectedValues);
+                            setShowWindow(true);
+                        }}
+                    />
+                ))}
 
             {showWindow && !disabled && (
                 <Popup
