@@ -17,13 +17,31 @@ const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
     const [sortedList, setSortedList] = useState(users);
     const [openFilter, setOpenFilter] = useState("");
 
-    // Заполняем селектор сотрудников
+    // Заполняем селектор пользователей
     const nameOptions = useMemo(() => {
         const allNames = users
             .map((item) => item.name)
             .filter((name) => name !== null);
 
         return Array.from(new Set(allNames));
+    }, [users]);
+
+    // Заполняем селектор групп прав
+    const groupOptions = useMemo(() => {
+        const allGroups = users
+            .map((item) => item.groups)
+            .filter((group) => group !== null);
+
+        return Array.from(new Set(allGroups));
+    }, [users]);
+
+    // Заполняем селектор статусов
+    const statusOptions = useMemo(() => {
+        const allStatuses = users
+            .map((item) => item.status)
+            .filter((status) => status !== null);
+
+        return Array.from(new Set(allStatuses));
     }, [users]);
 
     const [alert, setAlert] = useState({
@@ -259,7 +277,20 @@ const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
             is_sortable: true,
         },
         { label: "Email", key: "email" },
-        { label: "Статус", key: "status" },
+        {
+            label: "Группы прав",
+            key: "groups",
+            filter: "selectedGroups",
+            options: groupOptions,
+            filterNoSearch: true,
+        },
+        {
+            label: "Статус",
+            key: "status",
+            filter: "selectedStatuses",
+            options: statusOptions,
+            filterNoSearch: true,
+        },
         { label: "Последний вход", key: "last_login_at" },
     ];
 
@@ -285,9 +316,7 @@ const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
 
     const [filters, setFilters] = useState({
         selectedNames: [],
-        selectedPositions: [],
-        selectedDepartments: [],
-        selectedTypes: [],
+        selectedGroups: [],
         selectedStatuses: [],
     });
 
@@ -295,8 +324,11 @@ const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
         return sortedList.filter((item) => {
             return (
                 filters.selectedNames.length === 0 ||
-                filters.selectedNames.includes(item.name)
-                // &&
+                (filters.selectedNames.includes(item.name) &&
+                    filters.selectedGroups.length === 0) ||
+                (filters.selectedGroups.includes(item) &&
+                    filters.selectedStatuses.length === 0) ||
+                filters.selectedStatuses.includes(item)
             );
         });
     }, [sortedList, filters]);
@@ -328,18 +360,6 @@ const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
                             openFilter={openFilter}
                             setOpenFilter={setOpenFilter}
                         />
-
-                        {/* <tr>
-                            <th>ID</th>
-                            <th>Пользователь</th>
-                            <th>Email</th>
-                            <th>Статус</th>
-                            <th>Последний вход</th>
-                            {(mode.edit === "full" ||
-                                mode.delete === "full") && (
-                                <th className="max-w-[100px]">Действия</th>
-                            )}
-                        </tr> */}
                     </thead>
 
                     <tbody className="registry-table__tbody">

@@ -20,6 +20,21 @@ const AdminUserItem = ({
             <td>{user.email || "—"}</td>
 
             <td>
+                <div className="flex items-center gap-[5px] flex-wrap">
+                    {user?.groups.length > 0
+                        ? user?.groups?.map((item, index) => (
+                              <div
+                                  className="p-[3px_8px] border-[#E4E7EC] border rounded-[99px]"
+                                  key={`${item}_${index}`}
+                              >
+                                  {item}
+                              </div>
+                          ))
+                        : "—"}
+                </div>
+            </td>
+
+            <td>
                 <span
                     className={`admin-badge ${
                         user.status === "invited"
@@ -32,8 +47,8 @@ const AdminUserItem = ({
                     {user.status === "invited"
                         ? "Приглашен"
                         : user.is_active
-                        ? "Активен"
-                        : "Неактивен"}
+                        ? "Активный"
+                        : "Неактивный"}
                 </span>
             </td>
 
