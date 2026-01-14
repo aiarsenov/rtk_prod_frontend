@@ -22,6 +22,15 @@ const RATE_LABELS = [
     { key: "contractor_assessment", label: "Подрядчики" },
 ];
 
+const ACTIVE_FILEDS = [
+    "general_summary",
+    "bank_assessment",
+    "customer_assessment",
+    "team_assessment",
+    "contractor_assessment",
+    "general_assessment",
+];
+
 const ReportRateEditor = ({
     closeEditor,
     updateReportDetails,
@@ -32,6 +41,7 @@ const ReportRateEditor = ({
     const [reportRateData, setReportRateData] = useState<object>(reportData);
     const [saveBeforeClose, setSaveBeforeClose] = useState(false);
     const [isChanged, setIsChanged] = useState(false);
+    const [showApprove, setShowApprove] = useState(false);
 
     const rateHandler = (name: string, value: string | number) => {
         setReportRateData((prev) => ({
@@ -45,8 +55,10 @@ const ReportRateEditor = ({
     };
 
     const resetState = useCallback(() => {
+        setReportRateData({});
         setSaveBeforeClose(false);
         setIsChanged(false);
+        setShowApprove(false);
         closeEditor();
     }, [closeEditor]);
 
@@ -60,11 +72,21 @@ const ReportRateEditor = ({
         if (reportData.show_save_bar) {
             setIsChanged(true);
         }
-    }, [reportData]);
 
-    useEffect(() => {
-        console.log(reportRateData);
-    }, [reportRateData]);
+        if (
+            !reportData.show_save_bar &&
+            reportData.status &&
+            reportData?.status?.toLowerCase() !== "утверждён" &&
+            !isChanged
+        ) {
+            ACTIVE_FILEDS.forEach((item) => {
+                if (reportData[item] != null) {
+                    setShowApprove(true);
+                    return;
+                }
+            });
+        }
+    }, [reportData]);
 
     useBodyScrollLock(rateEditorState);
 
@@ -100,7 +122,13 @@ const ReportRateEditor = ({
             className={`bottom-sheet bottom-sheet_desk ${
                 rateEditorState ? "active" : ""
             }`}
-            onClick={() => resetState()}
+            onClick={() => {
+                if (isChanged) {
+                    setSaveBeforeClose(true);
+                } else {
+                    resetState();
+                }
+            }}
         >
             <div
                 className="bottom-sheet__wrapper"
@@ -292,31 +320,31 @@ const ReportRateEditor = ({
 
                             <div
                                 className={`bottom-nav ${
-                                    isChanged ? "" : "bottom-nav_disabled"
+                                    isChanged || showApprove
+                                        ? ""
+                                        : "bottom-nav_disabled"
                                 }`}
                             >
                                 <div className="container">
                                     {mode.edit === "full" && (
                                         <>
-                                            <button
-                                                type="button"
-                                                className="cancel-button"
-                                                onClick={() => {
-                                                    updateReportDetails(
-                                                        reportRateData,
-                                                        "save"
-                                                    )
-                                                        .then(() => {
+                                            {!showApprove && (
+                                                <button
+                                                    type="button"
+                                                    className="cancel-button"
+                                                    onClick={() => {
+                                                        updateReportDetails(
+                                                            reportRateData,
+                                                            "save"
+                                                        ).then(() => {
                                                             resetState();
-                                                        })
-                                                        .catch(() => {
-                                                            // Ошибка уже обработана в updateReportDetails
                                                         });
-                                                }}
-                                                title="Сохранить без утверждения"
-                                            >
-                                                Сохранить без утверждения
-                                            </button>
+                                                    }}
+                                                    title="Сохранить без утверждения"
+                                                >
+                                                    Сохранить без утверждения
+                                                </button>
+                                            )}
 
                                             <button
                                                 type="button"
@@ -325,17 +353,19 @@ const ReportRateEditor = ({
                                                     updateReportDetails(
                                                         reportRateData,
                                                         "approve"
-                                                    )
-                                                        .then(() => {
-                                                            resetState();
-                                                        })
-                                                        .catch(() => {
-                                                            // Ошибка уже обработана в updateReportDetails
-                                                        });
+                                                    ).then(() => {
+                                                        resetState();
+                                                    });
                                                 }}
-                                                title="Сохранить и утвердить"
+                                                title={
+                                                    showApprove
+                                                        ? "Утвердить"
+                                                        : "Сохранить и утвердить"
+                                                }
                                             >
-                                                Сохранить и утвердить
+                                                {showApprove
+                                                    ? "Утвердить"
+                                                    : "Сохранить и утвердить"}
                                             </button>
                                         </>
                                     )}
