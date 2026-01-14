@@ -1,14 +1,30 @@
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 import { toast } from "react-toastify";
 import postData from "../../utils/postData";
+import { sortList } from "../../utils/sortList";
 
 import Popup from "../Popup/Popup";
 import AdminUserItem from "./AdminUserItem";
 import Loader from "../Loader";
 import AccessDenied from "../AccessDenied/AccessDenied";
+import AdminTheadRow from "./AdminTheadRow";
 
 const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
+    const [sortBy, setSortBy] = useState({ key: "", action: "" });
+
+    const [sortedList, setSortedList] = useState(users);
+    const [openFilter, setOpenFilter] = useState("");
+
+    // Заполняем селектор сотрудников
+    const nameOptions = useMemo(() => {
+        const allNames = users
+            .map((item) => item.name)
+            .filter((name) => name !== null);
+
+        return Array.from(new Set(allNames));
+    }, [users]);
+
     const [alert, setAlert] = useState({
         isOpen: false,
         title: "",
@@ -229,6 +245,48 @@ const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
         }
     };
 
+    const COLUMNS = [
+        {
+            label: "ID",
+            key: "id",
+        },
+        {
+            label: "Пользователь",
+            key: "name",
+            filter: "selectedNames",
+            options: nameOptions,
+        },
+        { label: "Email", key: "email" },
+        { label: "Статус", key: "status" },
+        { label: "Последний вход", key: "last_login_at" },
+    ];
+
+    useEffect(() => {
+        setSortedList(users);
+    }, [users]);
+
+    useEffect(() => {
+        setSortedList(sortList(users, sortBy));
+    }, [sortBy]);
+
+    const [filters, setFilters] = useState({
+        selectedNames: [],
+        selectedPositions: [],
+        selectedDepartments: [],
+        selectedTypes: [],
+        selectedStatuses: [],
+    });
+
+    const filteredList = useMemo(() => {
+        return sortedList.filter((item) => {
+            return (
+                filters.selectedNames.length === 0 ||
+                filters.selectedNames.includes(item.name)
+                // &&
+            );
+        });
+    }, [sortedList, filters]);
+
     if (isLoading) {
         return <Loader absolute={true} />;
     }
@@ -246,19 +304,32 @@ const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
             ) : (
                 <table className="registry-table table-auto w-full border-collapse">
                     <thead className="registry-table__thead">
-                        <tr>
+                        <AdminTheadRow
+                            COLUMNS={COLUMNS}
+                            mode={mode}
+                            filters={filters}
+                            setFilters={setFilters}
+                            sortBy={sortBy}
+                            setSortBy={setSortBy}
+                            openFilter={openFilter}
+                            setOpenFilter={setOpenFilter}
+                        />
+
+                        {/* <tr>
                             <th>ID</th>
-                            <th>Имя</th>
+                            <th>Пользователь</th>
                             <th>Email</th>
                             <th>Статус</th>
                             <th>Последний вход</th>
                             {(mode.edit === "full" ||
-                                mode.delete === "full") && <th className="max-w-[100px]">Действия</th>}
-                        </tr>
+                                mode.delete === "full") && (
+                                <th className="max-w-[100px]">Действия</th>
+                            )}
+                        </tr> */}
                     </thead>
 
                     <tbody className="registry-table__tbody">
-                        {users.map((user) => (
+                        {filteredList.map((user) => (
                             <AdminUserItem
                                 key={user.id}
                                 user={user}

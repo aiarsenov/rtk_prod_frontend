@@ -160,7 +160,14 @@ const Admin = () => {
         <main className="page reports-registry admin">
             <div className="container admin__container">
                 <section className="registry__header flex items-center">
-                    <h1 className="title">Администрирование</h1>
+                    <h1 className="title">
+                        Администрирование
+                        <span>
+                            {activeTab === "users"
+                                ? users.length
+                                : groups.length}
+                        </span>
+                    </h1>
 
                     <ul className="card__tabs">
                         <li className="card__tabs-item radio-field_tab">
