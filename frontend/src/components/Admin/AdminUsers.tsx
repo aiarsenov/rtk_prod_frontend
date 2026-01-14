@@ -3,6 +3,7 @@ import { useState, useMemo, useEffect } from "react";
 import { toast } from "react-toastify";
 import postData from "../../utils/postData";
 import { sortList } from "../../utils/sortList";
+import { sortTextList } from "../../utils/sortTextList";
 
 import Popup from "../Popup/Popup";
 import AdminUserItem from "./AdminUserItem";
@@ -255,6 +256,7 @@ const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
             key: "name",
             filter: "selectedNames",
             options: nameOptions,
+            is_sortable: true,
         },
         { label: "Email", key: "email" },
         { label: "Статус", key: "status" },
@@ -266,8 +268,20 @@ const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
     }, [users]);
 
     useEffect(() => {
-        setSortedList(sortList(users, sortBy));
+        if (sortBy.key === "name") {
+            setSortedList(sortTextList(users, sortBy));
+        } else {
+            setSortedList(sortList(users, sortBy));
+        }
     }, [sortBy]);
+
+    // Задаем состояние кнопке сортировки поля Польлователь
+    useEffect(() => {
+        setSortBy({
+            key: "name",
+            action: "ascending",
+        });
+    }, []);
 
     const [filters, setFilters] = useState({
         selectedNames: [],

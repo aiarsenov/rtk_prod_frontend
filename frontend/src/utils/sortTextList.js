@@ -1,3 +1,5 @@
+/* Сортировка по алфавиту */
+
 export const sortTextList = (list, sortBy) => {
     const parseText = (item) => {
         const raw = item?.[sortBy.key];
