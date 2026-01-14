@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import postData from "../../utils/postData";
 import { sortList } from "../../utils/sortList";
 import { sortTextList } from "../../utils/sortTextList";
+import { sortDateList } from "../../utils/sortDateList";
 
 import Popup from "../Popup/Popup";
 import AdminUserItem from "./AdminUserItem";
@@ -307,7 +308,7 @@ const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
             label: "Дата смены статуса",
             key: "status_changed_date",
         },
-        { label: "Последний вход", key: "last_login_at" },
+        { label: "Последний вход", key: "last_login_at", is_sortable: true },
     ];
 
     useEffect(() => {
@@ -317,6 +318,8 @@ const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
     useEffect(() => {
         if (sortBy.key === "name") {
             setSortedList(sortTextList(users, sortBy));
+        } else if (sortBy.key === "last_login_at") {
+            setSortedList(sortDateList(users, sortBy));
         } else {
             setSortedList(sortList(users, sortBy));
         }
