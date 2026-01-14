@@ -1,39 +1,36 @@
 /* Сортировка по алфавиту */
 
 export const sortTextList = (list, sortBy) => {
+    const collator = new Intl.Collator(["ru", "en"], {
+        sensitivity: "base",
+        ignorePunctuation: true,
+    });
+
     const parseText = (item) => {
-        const raw = item?.[sortBy.key];
-        if (!raw || typeof raw !== "string") return null;
-        return raw.toLowerCase().trim();
+        const value = item?.[sortBy.key];
+        if (typeof value !== "string") return "";
+        return value.trim();
     };
 
-    switch (sortBy.action) {
-        case "":
-            return list;
+    const isCyrillic = (text) => /^[\u0400-\u04FF]/.test(text);
 
-        case "ascending": // A → Z
-            return [...list].sort((a, b) => {
-                const textA = parseText(a);
-                const textB = parseText(b);
+    if (!sortBy.action) return list;
 
-                if (!textA) return 1;
-                if (!textB) return -1;
+    return [...list].sort((a, b) => {
+        const textA = parseText(a);
+        const textB = parseText(b);
 
-                return textA.localeCompare(textB);
-            });
+        const aIsCyr = isCyrillic(textA);
+        const bIsCyr = isCyrillic(textB);
 
-        case "descending": // Z → A
-            return [...list].sort((a, b) => {
-                const textA = parseText(a);
-                const textB = parseText(b);
+        // Кириллица всегда выше
+        if (aIsCyr !== bIsCyr) {
+            return aIsCyr ? -1 : 1;
+        }
 
-                if (!textA) return 1;
-                if (!textB) return -1;
+        // Обычное алфавитное сравнение
+        const result = collator.compare(textA, textB);
 
-                return textB.localeCompare(textA);
-            });
-
-        default:
-            return list;
-    }
+        return sortBy.action === "ascending" ? result : -result;
+    });
 };
