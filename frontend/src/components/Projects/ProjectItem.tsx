@@ -256,10 +256,15 @@ const ProjectItem = ({
                                                 <span>мес.</span>
                                             </b>
 
-                                            {props?.completion_percentage && (
+                                            {props?.completion_percentage !=
+                                                null && (
                                                 <span>
                                                     {Math.round(
-                                                        props?.completion_percentage
+                                                        Number(
+                                                            String(
+                                                                props.completion_percentage
+                                                            ).replace(",", ".")
+                                                        )
                                                     )}
                                                     %
                                                 </span>
