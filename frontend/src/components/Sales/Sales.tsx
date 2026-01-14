@@ -282,6 +282,15 @@ const Sales = () => {
         return filtered;
     }, [list, filters, statusDate, sortBy]);
 
+
+    // Задаем состояние кнопке сортировки поля Дата статуса
+    useEffect(() => {
+        setSortBy({
+            key: "status_date",
+            action: "ascending",
+        });
+    }, []);
+
     return (
         <main className="page projects">
             <div className="container registry__container">

@@ -1,5 +1,3 @@
-import { useState, useEffect } from "react";
-
 import "./TheadSortButton.scss";
 
 const TheadSortButton = ({
@@ -7,63 +5,54 @@ const TheadSortButton = ({
     sortBy,
     setSortBy,
 }: {
-    value: number;
-    sortBy: string;
-    setSortBy: React.Dispatch<React.SetStateAction<string>>;
+    value: string;
+    sortBy: { key: string; action: string };
+    setSortBy: React.Dispatch<
+        React.SetStateAction<{ key: string; action: string }>
+    >;
 }) => {
-    const [state, setState] = useState({
-        class: "",
-        title: "Сортировать по убыванию",
-    });
+    const isActive = sortBy.key === value;
 
-    const handleState = () => {
-        switch (state.class) {
-            case "":
-                setState({
-                    class: "thead__item-sort-btn_ascending",
-                    title: "Сортировать по возрастанию",
-                });
-                setSortBy({ key: value, action: "ascending" });
+    const className = isActive
+        ? sortBy.action === "ascending"
+            ? "thead__item-sort-btn_ascending"
+            : sortBy.action === "descending"
+            ? "thead__item-sort-btn_descending"
+            : ""
+        : "";
 
-                break;
+    const title = !isActive
+        ? "Сортировать по убыванию"
+        : sortBy.action === "ascending"
+        ? "Сортировать по возрастанию"
+        : sortBy.action === "descending"
+        ? "Отменить сортировку"
+        : "Сортировать по убыванию";
 
-            case "thead__item-sort-btn_ascending":
-                setState({
-                    class: "thead__item-sort-btn_descending",
-                    title: "Отменить сортировку",
-                });
-                setSortBy({ key: value, action: "descending" });
+    const handleClick = () => {
+        if (!isActive) {
+            setSortBy({ key: value, action: "ascending" });
+            return;
+        }
 
-                break;
+        if (sortBy.action === "ascending") {
+            setSortBy({ key: value, action: "descending" });
+            return;
+        }
 
-            case "thead__item-sort-btn_descending":
-                setState({
-                    class: "",
-                    title: "Сортировать по убыванию",
-                });
-                setSortBy({ key: "", action: "" });
-
-                break;
+        if (sortBy.action === "descending") {
+            setSortBy({ key: "", action: "" });
         }
     };
-
-    useEffect(() => {
-        if (value !== sortBy.key) {
-            setState({
-                class: "",
-                title: "Сортировать по убыванию",
-            });
-        }
-    }, [sortBy]);
 
     return (
         <button
             type="button"
-            className={`thead__item-sort-btn ${state.class}`}
-            onClick={() => handleState()}
-            title={state.title}
+            className={`thead__item-sort-btn ${className}`}
+            onClick={handleClick}
+            title={title}
         >
-            <div></div>
+            <div />
         </button>
     );
 };
