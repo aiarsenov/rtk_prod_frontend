@@ -12,7 +12,7 @@ import AccessDenied from "../AccessDenied/AccessDenied";
 import AdminTheadRow from "./AdminTheadRow";
 
 const formatStatus = (user) => {
-    if (user.status === "invited") {
+    if (user.status === "Приглашен") {
         return "Приглашен";
     }
 

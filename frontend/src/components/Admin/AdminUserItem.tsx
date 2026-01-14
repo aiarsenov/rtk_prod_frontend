@@ -36,15 +36,15 @@ const AdminUserItem = ({
 
             <td>
                 <span
-                    className={`admin-badge ${
-                        user.status === "invited"
-                            ? "admin-badge--warning"
+                    className={`status ${
+                        user.status === "Приглашен"
+                            ? "status_inprogress"
                             : user.is_active
-                            ? "admin-badge--active"
-                            : "admin-badge--inactive"
+                            ? "status_active"
+                            : "status_canceled"
                     }`}
                 >
-                    {user.status === "invited"
+                    {user.status === "Приглашен"
                         ? "Приглашен"
                         : user.is_active
                         ? "Активный"
@@ -53,7 +53,7 @@ const AdminUserItem = ({
             </td>
 
             <td>
-                {user.status === "invited"
+                {user.status === "Приглашен"
                     ? user.invited_at
                         ? new Date(user.invited_at).toLocaleString("ru-RU")
                         : "—"
@@ -64,7 +64,7 @@ const AdminUserItem = ({
 
             <td className="max-w-[100px]">
                 <div className="admin-actions">
-                    {user.status === "invited" ? (
+                    {user.status === "Приглашен" ? (
                         mode.edit === "full" && (
                             <>
                                 <button
