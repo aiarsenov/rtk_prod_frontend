@@ -53,20 +53,20 @@ const AdminUserItem = ({
             </td>
 
             <td>
+                {user.status_changed_date
+                    ? new Date(user?.status_changed_date).toLocaleString(
+                          "ru-RU"
+                      )
+                    : "—"}
+            </td>
+
+            <td>
                 {user.status === "Приглашен"
                     ? user.invited_at
                         ? new Date(user.invited_at).toLocaleString("ru-RU")
                         : "—"
                     : user.last_login_at
                     ? new Date(user.last_login_at).toLocaleString("ru-RU")
-                    : "—"}
-            </td>
-
-            <td>
-                {user.status_changed_date
-                    ? new Date(user?.status_changed_date).toLocaleString(
-                          "ru-RU"
-                      )
                     : "—"}
             </td>
 
