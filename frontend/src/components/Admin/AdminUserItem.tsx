@@ -15,9 +15,9 @@ const AdminUserItem = ({
         <tr className="registry-table__item transition text-base text-left">
             <td>{user.type === "invitation" ? "—" : user.id}</td>
 
-            <td>{user.name || "—"}</td>
+            <td className="min-w-[150px]">{user.name || "—"}</td>
 
-            <td>{user.email || "—"}</td>
+            <td className="min-w-[150px]">{user.email || "—"}</td>
 
             <td>
                 <div className="flex items-center gap-[5px] flex-wrap">

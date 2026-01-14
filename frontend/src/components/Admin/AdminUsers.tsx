@@ -11,6 +11,18 @@ import Loader from "../Loader";
 import AccessDenied from "../AccessDenied/AccessDenied";
 import AdminTheadRow from "./AdminTheadRow";
 
+const formatStatus = (user) => {
+    if (user.status === "invited") {
+        return "Приглашен";
+    }
+
+    if (user.is_active) {
+        return "Активный";
+    }
+
+    return "Неактивный";
+};
+
 const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
     const [sortBy, setSortBy] = useState({ key: "", action: "" });
 
@@ -29,8 +41,8 @@ const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
     // Заполняем селектор групп прав
     const groupOptions = useMemo(() => {
         const allGroups = users
-            .map((item) => item.groups)
-            .filter((group) => group !== null);
+            .flatMap((item) => item.groups ?? [])
+            .filter((group) => group);
 
         return Array.from(new Set(allGroups));
     }, [users]);
@@ -38,8 +50,8 @@ const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
     // Заполняем селектор статусов
     const statusOptions = useMemo(() => {
         const allStatuses = users
-            .map((item) => item.status)
-            .filter((status) => status !== null);
+            .map((user) => formatStatus(user))
+            .filter(Boolean);
 
         return Array.from(new Set(allStatuses));
     }, [users]);
@@ -323,12 +335,14 @@ const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
     const filteredList = useMemo(() => {
         return sortedList.filter((item) => {
             return (
-                filters.selectedNames.length === 0 ||
-                (filters.selectedNames.includes(item.name) &&
-                    filters.selectedGroups.length === 0) ||
-                (filters.selectedGroups.includes(item) &&
-                    filters.selectedStatuses.length === 0) ||
-                filters.selectedStatuses.includes(item)
+                (filters.selectedNames.length === 0 ||
+                    filters.selectedNames.includes(item.name)) &&
+                (filters.selectedGroups.length === 0 ||
+                    filters.selectedGroups.some((group) =>
+                        item.groups.includes(group)
+                    )) &&
+                (filters.selectedStatuses.length === 0 ||
+                    filters.selectedStatuses.includes(formatStatus(item)))
             );
         });
     }, [sortedList, filters]);
