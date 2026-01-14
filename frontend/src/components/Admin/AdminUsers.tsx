@@ -303,6 +303,10 @@ const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
             options: statusOptions,
             filterNoSearch: true,
         },
+        {
+            label: "Дата смены статуса",
+            key: "status_changed_date",
+        },
         { label: "Последний вход", key: "last_login_at" },
     ];
 

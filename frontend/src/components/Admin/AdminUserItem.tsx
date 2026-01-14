@@ -62,6 +62,14 @@ const AdminUserItem = ({
                     : "—"}
             </td>
 
+            <td>
+                {user.status_changed_date
+                    ? new Date(user?.status_changed_date).toLocaleString(
+                          "ru-RU"
+                      )
+                    : "—"}
+            </td>
+
             <td className="max-w-[100px]">
                 <div className="admin-actions">
                     {user.status === "Приглашен" ? (
