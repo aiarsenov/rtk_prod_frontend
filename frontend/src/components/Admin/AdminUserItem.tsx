@@ -20,7 +20,7 @@ const AdminUserItem = ({
             <td className="min-w-[150px]">{user.email || "—"}</td>
 
             <td>
-                <div className="flex items-center gap-[5px] flex-wrap">
+                <div className="flex items-center gap-[5px] flex-wrap max-w-[300px]">
                     {user?.groups.length > 0
                         ? user?.groups?.map((item, index) => (
                               <div
