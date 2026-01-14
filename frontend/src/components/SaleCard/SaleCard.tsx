@@ -349,7 +349,6 @@ const SaleCard = () => {
                 }
             })
             .catch((error) => {
-                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка при обновлении проекта", {
                     containerId: "toastContainer",
                     isLoading: false,

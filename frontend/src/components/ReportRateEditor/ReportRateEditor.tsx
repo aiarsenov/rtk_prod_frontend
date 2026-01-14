@@ -62,6 +62,10 @@ const ReportRateEditor = ({
         }
     }, [reportData]);
 
+    useEffect(() => {
+        console.log(reportRateData);
+    }, [reportRateData]);
+
     useBodyScrollLock(rateEditorState);
 
     // Обработчик ESC для закрытия панели детализации отчета

@@ -156,27 +156,34 @@ const IndicatorsFilters = ({
         <div className="dashboards__filters container">
             <div className="dashboards__filters-wrapper">
                 <div className="dashboards__filters-nav">
-                    <CustomDatePickerField
-                        className="calendar"
-                        startDate={
-                            new Date(selectedFilters?.report_month?.[0]) ??
-                            new Date()
-                        }
-                        value={
-                            new Date(selectedFilters?.report_month?.[0]) ??
-                            new Date()
-                        }
-                        onChange={(updated) => {
-                            const formatted = new Date(updated)
-                                .toISOString()
-                                .slice(0, 7);
+                    <div className="flex items-start">
+                        <CustomDatePickerField
+                            className="calendar"
+                            startDate={
+                                new Date(selectedFilters?.report_month?.[0]) ??
+                                new Date()
+                            }
+                            value={
+                                new Date(selectedFilters?.report_month?.[0]) ??
+                                new Date()
+                            }
+                            onChange={(updated) => {
+                                const formatted = new Date(updated)
+                                    .toISOString()
+                                    .slice(0, 7);
 
-                            handleFilterChange("report_month", [formatted]);
-                        }}
-                        showMonthYear={true}
-                        type="months"
-                        single={true}
-                    />
+                                handleFilterChange("report_month", [formatted]);
+                            }}
+                            showMonthYear={true}
+                            type="months"
+                            single={true}
+                        />
+
+                        <Hint
+                            message="Выбор отчётного месяца."
+                            position="bottom"
+                        />
+                    </div>
 
                     <div className="filters__period-wrapper">
                         <ul className="filters__period">
@@ -206,12 +213,13 @@ const IndicatorsFilters = ({
                                 ))}
                         </ul>
 
-                        <Hint message="Выбор отчётного периода. Все показатели на дашборде отображаются за выбранный отчётный период.
-
-Если выбрано «1 мес.», отчётный период соответствует отчётному месяцу.
-Если выбрано «12 мес.», отчётный период равен 12 предыдущим месяцам, включая отчётный месяц.
-
-Например, при выборе отчётного месяца «Декабрь 2025» и отчётного периода «12 мес.» отчётный период будет соответствовать периоду с января 2025 по декабрь 2025." position="bottom" />
+                        <Hint
+                            message="Выбор отчётного периода. Все показатели на дашборде отображаются за выбранный отчётный период.
+                                Если выбрано «1 мес.», отчётный период соответствует отчётному месяцу.
+                                Если выбрано «12 мес.», отчётный период равен 12 предыдущим месяцам, включая отчётный месяц.
+                                Например, при выборе отчётного месяца «Декабрь 2025» и отчётного периода «12 мес.» отчётный период будет соответствовать периоду с января 2025 по декабрь 2025."
+                            position="bottom"
+                        />
                     </div>
 
                     <div className="filters__wrapper flex">
@@ -270,10 +278,12 @@ const IndicatorsFilters = ({
                             }}
                         />
 
-                        <Hint message="Выбор заказчика. Для выбора доступны все заказчики, к которым в разделе «Проекты» привязан хотя бы один проект.
-
-При выборе конкретного заказчика все показатели на дашборде будут отфильтрованы по данному заказчику, за исключением блоков «Персонал» и «Отчёты менеджмента».
-" position="bottom" />
+                        <Hint
+                            message="Выбор заказчика. Для выбора доступны все заказчики, к которым в разделе «Проекты» привязан хотя бы один проект.
+                                При выборе конкретного заказчика все показатели на дашборде будут отфильтрованы по данному заказчику, за исключением блоков «Персонал» и «Отчёты менеджмента».
+                                "
+                            position="bottom"
+                        />
                     </div>
 
                     <div className="filters__wrapper flex">
@@ -321,10 +331,12 @@ const IndicatorsFilters = ({
                             }}
                         />
 
-                        <Hint message="Выбор проекта. Для выбора доступны все проекты, добавленные в разделе «Проекты».
-
-При выборе конкретного проекта все показатели на дашборде будут отфильтрованы по данному проекту, за исключением блоков «Персонал» и «Отчёты менеджмента».
-" position="bottom" />
+                        <Hint
+                            message="Выбор проекта. Для выбора доступны все проекты, добавленные в разделе «Проекты».
+                            При выборе конкретного проекта все показатели на дашборде будут отфильтрованы по данному проекту, за исключением блоков «Персонал» и «Отчёты менеджмента».
+                            "
+                            position="bottom"
+                        />
                     </div>
                 </div>
 

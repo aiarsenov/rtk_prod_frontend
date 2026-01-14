@@ -544,7 +544,7 @@ const Indicators = () => {
         }
     }, [
         mainFilters,
-        // // selectedReportMonth.report_month,
+        // selectedReportMonth.report_month,
         // mainFilters.contragent_id,
         // mainFilters.project_id,
     ]);

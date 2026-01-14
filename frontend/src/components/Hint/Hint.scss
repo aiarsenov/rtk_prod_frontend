@@ -37,7 +37,7 @@
         transition: opacity var(--trans);
         min-width: fit-content;
         max-width: 275px;
-        z-index: 2;
+        z-index: 99;
         pointer-events: none;
         white-space: pre-line;
     }

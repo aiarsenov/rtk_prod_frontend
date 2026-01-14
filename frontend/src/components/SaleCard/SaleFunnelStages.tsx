@@ -54,20 +54,6 @@ const SaleFunnelStages = ({
                 { stage_date: null, stage_instance_id: instance_id }
             ).then((response) => {
                 if (response.ok) {
-                    // toast.success(
-                    //     response.message || "Дата этапа успешно очищена",
-                    //     {
-                    //         containerId: "toastContainerStages",
-                    //         isLoading: false,
-                    //         autoClose: 1200,
-                    //         pauseOnFocusLoss: false,
-                    //         pauseOnHover: false,
-                    //         position:
-                    //             window.innerWidth >= 1440
-                    //                 ? "bottom-right"
-                    //                 : "top-right",
-                    //     }
-                    // );
                 } else {
                     toast.error(response.error || "Ошибка запроса", {
                         containerId: "toastContainerStages",
@@ -101,20 +87,6 @@ const SaleFunnelStages = ({
         )
             .then((response) => {
                 if (response.ok) {
-                    // toast.success(
-                    //     response.message || "Дата этапа успешно обновлена",
-                    //     {
-                    //         containerId: "toastContainerStages",
-                    //         isLoading: false,
-                    //         autoClose: 1200,
-                    //         pauseOnFocusLoss: false,
-                    //         pauseOnHover: false,
-                    //         position:
-                    //             window.innerWidth >= 1440
-                    //                 ? "bottom-right"
-                    //                 : "top-right",
-                    //     }
-                    // );
                 } else {
                     toast.error(response.error || "Ошибка запроса", {
                         containerId: "toastContainerStages",
@@ -189,19 +161,6 @@ const SaleFunnelStages = ({
                     if (nextStage) {
                         requestNextStage(nextStage.id, stage_status);
                     } else {
-                        // toast.success(response.message, {
-                        //     type: "success",
-                        //     containerId: "toastContainerStages",
-                        //     isLoading: false,
-                        //     autoClose: 1200,
-                        //     pauseOnFocusLoss: false,
-                        //     pauseOnHover: false,
-                        //     draggable: true,
-                        //     position:
-                        //         window.innerWidth >= 1440
-                        //             ? "bottom-right"
-                        //             : "top-right",
-                        // });
                         fetchServices();
                         getStages();
                     }
@@ -438,20 +397,6 @@ const SaleFunnelStages = ({
         )
             .then((response) => {
                 if (response?.ok) {
-                    // toast.success(response.message, {
-                    //     type: "success",
-                    //     containerId: "toastContainerStages",
-                    //     isLoading: false,
-                    //     autoClose: 1200,
-                    //     pauseOnFocusLoss: false,
-                    //     pauseOnHover: false,
-                    //     draggable: true,
-                    //     position:
-                    //         window.innerWidth >= 1440
-                    //             ? "bottom-right"
-                    //             : "top-right",
-                    // });
-
                     getStages();
 
                     // Устанавливаем дату для конечных этапов
@@ -571,15 +516,6 @@ const SaleFunnelStages = ({
         )
             .then((response) => {
                 if (response?.ok) {
-                    // toast.success(response.message || "Воронка возобновления", {
-                    //     containerId: "toast",
-                    //     isLoading: false,
-                    //     autoClose: 3000,
-                    //     pauseOnFocusLoss: false,
-                    //     pauseOnHover: false,
-                    //     position: "top-center",
-                    // });
-
                     getStages();
                     setPopupState(false);
                     setResumableStages([]);
@@ -607,21 +543,6 @@ const SaleFunnelStages = ({
         )
             .then((response) => {
                 if (response?.ok) {
-                    // toast.success(
-                    //     response.message || "Возобновление отменено",
-                    //     {
-                    //         containerId: "toast",
-                    //         isLoading: false,
-                    //         autoClose: 3000,
-                    //         pauseOnFocusLoss: false,
-                    //         pauseOnHover: false,
-                    //         position:
-                    //             window.innerWidth >= 1440
-                    //                 ? "bottom-right"
-                    //                 : "top-right",
-                    //     }
-                    // );
-
                     fetchServices();
                     getStages();
                 }
