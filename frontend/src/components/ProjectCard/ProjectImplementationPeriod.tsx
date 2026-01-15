@@ -1,4 +1,5 @@
 import getColorBySign from "../../utils/getColorBySign";
+import Hint from "../Hint/Hint";
 
 const ProgressBlock = ({ percentage }) => {
     const progress = percentage > 100 ? 0 : percentage;
@@ -73,7 +74,10 @@ const ProjectImplementationPeriod = ({ projectData }) => {
             <div className="project-budget__block-title">
                 {projectData?.implementation_period !== null ? (
                     <>
-                        <span className="active">срок реализации</span>
+                        <div>
+                            <span className="active">срок реализации</span>
+                            <Hint message="Срок реализации" />
+                        </div>
 
                         {percentage !== 0 && (
                             <span className="flex items-center gap-[10px]">

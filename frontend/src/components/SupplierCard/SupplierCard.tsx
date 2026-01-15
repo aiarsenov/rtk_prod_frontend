@@ -11,6 +11,7 @@ import { useWindowWidth } from "../../hooks/useWindowWidth.js";
 
 import { ToastContainer, toast } from "react-toastify";
 
+import Hint from "../Hint/Hint";
 import CardProjects from "../CardProjects/CardProjects";
 import ReportWindow from "../ReportWindow/ReportWindow";
 import CardBottomActions from "../CardBottomActions.js";
@@ -72,8 +73,6 @@ const SupplierCard = () => {
     const [responsiblePersons, setResponsiblePersons] = useState([]);
     const [addRespPerson, setAddRespPerson] = useState(false);
 
-    // let query;
-
     // Получаем отчеты по выбранному проекту
     const getProjectReports = (id) => {
         setReportWindowsState(false);
@@ -98,17 +97,6 @@ const SupplierCard = () => {
             setSelectedManagerReports([]);
         }
     };
-
-    // Получение договоров
-    // const getContracts = () => {
-    //     return getData(
-    //         `${import.meta.env.VITE_API_URL}contragents/${supplierId}/contracts`
-    //     ).then((response) => {
-    //         if (response?.status == 200) {
-    //             setContracts(response.data);
-    //         }
-    //     });
-    // };
 
     // Получаем список отчетов
     const getProjectsReports = () => {
@@ -178,31 +166,9 @@ const SupplierCard = () => {
 
     // Обновление данных карточки
     const updateData = (showMessage = true) => {
-        // query = toast.loading("Обновление", {
-        //     containerId: "toastContainer",
-        //     draggable: true,
-        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        // });
-
         postData("PATCH", `${URL}/${supplierId}`, cardDataCustom)
             .then((response) => {
                 if (response?.ok && showMessage) {
-                    // toast.update(query, {
-                    //     render: "Данные обновлены",
-                    //     type: "success",
-                    //     containerId: "toastContainer",
-                    //     isLoading: false,
-                    //     autoClose: 1200,
-                    //     pauseOnFocusLoss: false,
-                    //     pauseOnHover: false,
-                    //     draggable: true,
-                    //     position:
-                    //         window.innerWidth >= 1440
-                    //             ? "bottom-right"
-                    //             : "top-right",
-                    // });
-
-                    // toast.dismiss(query);
                     setCardData((prev) => ({
                         ...prev,
                         ...response,
@@ -212,7 +178,6 @@ const SupplierCard = () => {
                         ...response,
                     }));
                 } else {
-                    // toast.dismiss(query);
                     toast.error("Ошибка обновления данных", {
                         containerId: "toastContainer",
                         isLoading: false,
@@ -228,7 +193,6 @@ const SupplierCard = () => {
                 }
             })
             .catch((error) => {
-                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка обновления данных", {
                     containerId: "toastContainer",
                     isLoading: false,
@@ -261,12 +225,6 @@ const SupplierCard = () => {
 
     // Добавление ключевого лица
     const sendExecutor = (data) => {
-        // query = toast.loading("Выполняется отправка", {
-        //     containerId: "toastContainer",
-        //     draggable: true,
-        //     position: window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-        // });
-
         postData("POST", `${URL}/${supplierId}/contacts`, data)
             .then((response) => {
                 if (response?.ok) {
@@ -279,27 +237,9 @@ const SupplierCard = () => {
                     ]);
 
                     setAddRespPerson(false);
-
-                    // toast.dismiss(query);
-
-                    // toast.update(query, {
-                    //     render: response.message || "Ключевое лицо добавлено",
-                    //     type: "success",
-                    //     containerId: "toastContainer",
-                    //     isLoading: false,
-                    //     autoClose: 1200,
-                    //     pauseOnFocusLoss: false,
-                    //     pauseOnHover: false,
-                    //     draggable: true,
-                    //     position:
-                    //         window.innerWidth >= 1440
-                    //             ? "bottom-right"
-                    //             : "top-right",
-                    // });
                 }
             })
             .catch((error) => {
-                // toast.dismiss(query);
                 toast.error(error.message || "Ошибка добавления исполнителя", {
                     containerId: "toastContainer",
                     isLoading: false,
@@ -328,18 +268,6 @@ const SupplierCard = () => {
                 setResponsiblePersons(
                     responsiblePersons.filter((item) => item.id !== id)
                 );
-
-                // toast.success("Ключевое лицо удалено", {
-                //     containerId: "toastContainer",
-                //     isLoading: false,
-                //     autoClose: 1500,
-                //     pauseOnFocusLoss: false,
-                //     pauseOnHover: false,
-                //     position:
-                //         window.innerWidth >= 1440
-                //             ? "bottom-right"
-                //             : "top-right",
-                // });
             }
         });
     };
@@ -573,6 +501,7 @@ const SupplierCard = () => {
                             <section className="project-card__project-executors">
                                 <h2 className="card__subtitle">
                                     Ключевые лица
+                                    <Hint message="Ключевые лица" />
                                 </h2>
 
                                 <ul className="project-card__executors-list">

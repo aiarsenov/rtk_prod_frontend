@@ -1,4 +1,5 @@
 import getColorBySign from "../../utils/getColorBySign";
+import Hint from "../Hint/Hint";
 
 const ProjectBudget = ({ projectData }) => {
     return (
@@ -45,7 +46,8 @@ const ProjectBudget = ({ projectData }) => {
                         projectData?.project_budget !== null && "active"
                     }`}
                 >
-                    бюджет проекта
+                    бюджет проекта 
+                    <Hint message="Бюджет проекта" />
                 </span>
                 {projectData?.project_budget == null && <b>Нет данных</b>}
             </div>

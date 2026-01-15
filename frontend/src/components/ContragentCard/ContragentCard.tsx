@@ -11,6 +11,7 @@ import { useWindowWidth } from "../../hooks/useWindowWidth.js";
 
 import { ToastContainer, toast } from "react-toastify";
 
+import Hint from "../Hint/Hint";
 import CardProjects from "../CardProjects/CardProjects";
 import ReportWindow from "../ReportWindow/ReportWindow";
 import CardBottomActions from "../CardBottomActions.js";
@@ -533,6 +534,7 @@ const ContragentCard = () => {
                             <section className="project-card__project-team">
                                 <h2 className="card__subtitle">
                                     Ключевые лица
+                                    <Hint message="Ключевые лица" />
                                 </h2>
 
                                 <div className="project-card__team">
