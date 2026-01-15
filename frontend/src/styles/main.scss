@@ -580,7 +580,7 @@ body {
 .statistics-block {
     padding: 0 20px;
     position: relative;
-    overflow: hidden;
+    // overflow: hidden;
 
     @media (min-width: $media-xxl) {
         background: var(--color-white);
