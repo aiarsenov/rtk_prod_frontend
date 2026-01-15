@@ -136,7 +136,6 @@ const ReportRateEditor = ({
         }
     }, [reportData]);
 
-
     // Если Общая оценка не выбрана - утвердить отчет нельзя
     useEffect(() => {
         if (reportRateData.general_assessment != null) {
@@ -463,6 +462,7 @@ const ReportRateEditor = ({
                             handleSave("approve", true);
                         }}
                         title="Сохранить изменения"
+                        disabled={!canApprove}
                     >
                         Сохранить изменения
                     </button>
