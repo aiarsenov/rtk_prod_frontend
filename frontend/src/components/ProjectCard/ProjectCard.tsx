@@ -1078,7 +1078,6 @@ const ProjectCard = () => {
                                 <div className="project-card__tep">
                                     <div className="form-label">
                                         ТЭП
-                                        <Hint message={"ТЭП"} />
                                     </div>
 
                                     <AutoResizeTextarea
