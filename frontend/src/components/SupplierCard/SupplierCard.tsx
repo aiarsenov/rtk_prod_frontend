@@ -436,6 +436,7 @@ const SupplierCard = () => {
                                                 });
                                             }
                                         }}
+                                        minHeight={40}
                                         disabled={mode.edit !== "full"}
                                     />
                                 </div>
