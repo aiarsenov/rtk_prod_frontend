@@ -11,6 +11,7 @@ import FilterButton from "../FilterButton";
 import OverlayTransparent from "../Overlay/OverlayTransparent";
 import Loader from "../Loader";
 import AccessDenied from "../AccessDenied/AccessDenied";
+import Hint from "../Hint/Hint";
 
 const types = [
     { label: "штатный", value: true },
@@ -141,6 +142,7 @@ const Employees = () => {
             filter: "selectedUserStatuses",
             filterNoSearch: true,
             options: userStatusesOptions,
+            hint_message: "Пользователь",
         },
     ];
 
@@ -228,11 +230,12 @@ const Employees = () => {
                                             options,
                                             is_sortable,
                                             filterNoSearch,
+                                            hint_message,
                                         }) => {
                                             return (
                                                 <th
                                                     className="min-w-[125px]"
-                                                    rowSpan="2"
+                                                    rowSpan={2}
                                                     key={key}
                                                 >
                                                     <div className="registry-table__thead-item">
@@ -247,6 +250,15 @@ const Employees = () => {
                                                                 >
                                                                     {label}
                                                                 </div>
+
+                                                                {hint_message && (
+                                                                    <Hint
+                                                                        message={
+                                                                            hint_message
+                                                                        }
+                                                                        position="bottom"
+                                                                    />
+                                                                )}
 
                                                                 {filters[filter]
                                                                     .length >
