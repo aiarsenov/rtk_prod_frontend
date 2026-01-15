@@ -44,12 +44,22 @@ const Employees = () => {
         return Array.from(new Set(allNames));
     }, [list]);
 
+    // Заполняем селектор должностей
     const positionOptions = useMemo(() => {
         const allPositions = list
             .map((item) => item?.position?.name)
             .filter((name) => name !== null);
 
         return Array.from(new Set(allPositions));
+    }, [list]);
+
+    // Заполняем селектор статусов пользователей
+    const userStatusesOptions = useMemo(() => {
+        const allStatuses = list
+            .map((item) => item?.user_status)
+            .filter((status) => status !== null);
+
+        return Array.from(new Set(allStatuses));
     }, [list]);
 
     // Получени списка сотрудников
@@ -125,6 +135,13 @@ const Employees = () => {
                 .map((item) => item?.label)
                 .filter((item) => item !== null),
         },
+        {
+            label: "Пользователь",
+            key: "user_status",
+            filter: "selectedUserStatuses",
+            filterNoSearch: true,
+            options: userStatusesOptions,
+        },
     ];
 
     useEffect(() => {
@@ -142,6 +159,7 @@ const Employees = () => {
         selectedDepartments: [],
         selectedTypes: [],
         selectedStatuses: [],
+        selectedUserStatuses: [],
     });
 
     const filteredList = useMemo(() => {
@@ -165,7 +183,9 @@ const Employees = () => {
                     filters.selectedStatuses.some((label) => {
                         const status = statuses.find((s) => s.label === label);
                         return status?.value === item.is_active;
-                    }))
+                    })) &&
+                (filters.selectedUserStatuses.length === 0 ||
+                    filters.selectedUserStatuses.includes(item?.user_status))
             );
         });
     }, [sortedList, filters]);

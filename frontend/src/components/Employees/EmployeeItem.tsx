@@ -1,5 +1,26 @@
 import { useNavigate } from "react-router-dom";
 
+const handleStatusClass = (status) => {
+    switch (status) {
+        case "invited":
+            return "inprogress";
+        case "active":
+            return "active";
+        case "inactive":
+            return "canceled";
+        case "deleted":
+            return "completed";
+        default:
+            return "";
+    }
+};
+
+// Приглашён → invited
+// Активный → active
+// Неактивный → inactive
+// Удалён → deleted
+// Не присвоен → not_assigned
+
 const EmployeeItem = ({ props, columns }) => {
     const navigate = useNavigate();
 
@@ -111,7 +132,7 @@ const EmployeeItem = ({ props, columns }) => {
                         if (props.is_staff === false) {
                             return (
                                 <td
-                                    className="px-4 py-7 min-w-[180px] max-w-[200px]"
+                                    className="px-4 py-7 min-w-[110px] max-w-[150px]"
                                     key={key}
                                 >
                                     —
@@ -131,12 +152,29 @@ const EmployeeItem = ({ props, columns }) => {
 
                         return (
                             <td
-                                className="px-4 py-7 min-w-[180px] max-w-[200px]"
+                                className="px-4 py-7 min-w-[110px] max-w-[150px]"
                                 key={key}
                             >
                                 <div
                                     className={`registry-table__item-status ${
                                         statusClass || ""
+                                    }`}
+                                >
+                                    {value?.toString() || "—"}
+                                </div>
+                            </td>
+                        );
+                    } else if (key === "user_status") {
+                        return (
+                            <td
+                                className="px-4 py-7 min-w-[110px] max-w-[150px]"
+                                key={key}
+                            >
+                                <div
+                                    className={`registry-table__item-status registry-table__item-status_${
+                                        handleStatusClass(
+                                            props.user_status_alias
+                                        ) || ""
                                     }`}
                                 >
                                     {value?.toString() || "—"}
