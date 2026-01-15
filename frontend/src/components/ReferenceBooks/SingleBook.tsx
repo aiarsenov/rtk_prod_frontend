@@ -756,14 +756,14 @@ const SingleBook = () => {
         }
 
         if (name == "is_project_leader") {
-            // setBooksItems((prevBooksItems) =>
-            //     prevBooksItems.map((item) => {
-            //         if (item.is_project_leader === true) {
-            //             return { ...item, is_project_leader: false };
-            //         }
-            //         return item;
-            //     })
-            // );
+            setBooksItems((prevBooksItems) =>
+                prevBooksItems.map((item) => {
+                    if (item.is_project_leader === true) {
+                        return { ...item, is_project_leader: false };
+                    }
+                    return item;
+                })
+            );
             setBooksItems((prevBooksItems) =>
                 prevBooksItems.map((item) =>
                     item.id === data.id
