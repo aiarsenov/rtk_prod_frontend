@@ -65,6 +65,7 @@ const ReportRateEditor = ({
         closeEditor();
     }, [closeEditor]);
 
+    // Если общая оценка красная или желтая - выводим ошибку вылидации
     const handleSave = (type, isPopup = false) => {
         if (
             reportRateData.general_assessment != null &&
@@ -135,6 +136,8 @@ const ReportRateEditor = ({
         }
     }, [reportData]);
 
+
+    // Если Общая оценка не выбрана - утвердить отчет нельзя
     useEffect(() => {
         if (reportRateData.general_assessment != null) {
             setCanApprove(true);
