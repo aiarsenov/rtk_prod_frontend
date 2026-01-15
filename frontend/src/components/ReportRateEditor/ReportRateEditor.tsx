@@ -404,6 +404,7 @@ const ReportRateEditor = ({
                                                 type="button"
                                                 className="action-button"
                                                 onClick={() => {
+                                                    if (!canApprove) return;
                                                     handleSave("approve");
                                                 }}
                                                 title={
@@ -459,6 +460,7 @@ const ReportRateEditor = ({
                         type="button"
                         className="action-button"
                         onClick={() => {
+                            if (!canApprove) return;
                             handleSave("approve", true);
                         }}
                         title="Сохранить изменения"
