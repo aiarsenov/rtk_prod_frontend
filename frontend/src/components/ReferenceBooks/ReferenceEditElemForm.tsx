@@ -11,6 +11,7 @@ const ReferenceEditElemForm = ({
     resetElemPopupState,
     handlePopupFieldsChange,
     collectEditFieldsData,
+    editLeadContact,
     editContragentAndCreditorContact,
     editContactElem,
     editWokrHours,
@@ -22,6 +23,7 @@ const ReferenceEditElemForm = ({
             title={
                 bookId === "creditor" ||
                 bookId === "contragent" ||
+                bookId === "lead-contacts" ||
                 bookId === "suppliers-with-reports"
                     ? "Редактирование контакта"
                     : "Редактирование записи"
@@ -209,13 +211,11 @@ const ReferenceEditElemForm = ({
                         type="button"
                         className="action-button flex-[0_0_fit-content]"
                         onClick={() => {
-                            // if (bookId == "positions") {
-                            //     hasNameMatch(data.name, data.id);
-                            // } else {
-                            // }
                             const updatedData = collectEditFieldsData();
 
-                            if (
+                            if (bookId === "lead-contacts") {
+                                editLeadContact(updatedData);
+                            } else if (
                                 bookId === "creditor" ||
                                 bookId === "contragent"
                             ) {

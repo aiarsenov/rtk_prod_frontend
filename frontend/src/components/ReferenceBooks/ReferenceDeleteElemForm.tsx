@@ -7,6 +7,7 @@ const ReferenceDeleteElemForm = ({
     deleteContact,
     deleteContactElem,
     deleteElement,
+    deleteLeadContact,
 }) => {
     return (
         <Popup
@@ -14,6 +15,7 @@ const ReferenceDeleteElemForm = ({
             title={
                 bookId === "creditor" ||
                 bookId === "contragent" ||
+                bookId === "lead-contacts" ||
                 bookId === "suppliers-with-reports"
                     ? "Удаление контакта"
                     : "Удаление записи"
@@ -45,6 +47,8 @@ const ReferenceDeleteElemForm = ({
                                 deleteContact(elemToDelete);
                             } else if (bookId === "suppliers-with-reports") {
                                 deleteContactElem(elemToDelete);
+                            } else if (bookId === "lead-contacts") {
+                                deleteLeadContact(elemToDelete);
                             } else {
                                 deleteElement(elemToDelete);
                             }

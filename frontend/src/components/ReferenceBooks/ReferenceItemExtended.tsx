@@ -256,15 +256,9 @@ const ReferenceItemExtended = ({
                                             <button
                                                 onClick={() => {
                                                     if (
-                                                        bookId !==
+                                                        bookId ===
                                                         "suppliers-with-reports"
                                                     ) {
-                                                        handleOpenEditPopup(
-                                                            findObjectById(
-                                                                contact.id
-                                                            )
-                                                        );
-                                                    } else {
                                                         let updatedData =
                                                             contact;
                                                         updatedData.contactId =
@@ -272,6 +266,25 @@ const ReferenceItemExtended = ({
 
                                                         handleOpenEditPopup(
                                                             updatedData
+                                                        );
+                                                    } else if (
+                                                        bookId ===
+                                                        "lead-contacts"
+                                                    ) {
+                                                        let updatedData =
+                                                            contact;
+
+                                                        updatedData.leadId =
+                                                            data.id;
+
+                                                        handleOpenEditPopup(
+                                                            updatedData
+                                                        );
+                                                    } else {
+                                                        handleOpenEditPopup(
+                                                            findObjectById(
+                                                                contact.id
+                                                            )
                                                         );
                                                     }
                                                 }}
@@ -284,16 +297,24 @@ const ReferenceItemExtended = ({
                                             <button
                                                 onClick={() => {
                                                     if (
-                                                        bookId !==
+                                                        bookId ===
                                                         "suppliers-with-reports"
                                                     ) {
                                                         handleOpenDeletePopup({
-                                                            id: contact.id,
+                                                            id: data.id,
+                                                            contact: contact.id,
+                                                        });
+                                                    } else if (
+                                                        bookId ===
+                                                        "lead-contacts"
+                                                    ) {
+                                                        handleOpenDeletePopup({
+                                                            leadId: data.id,
+                                                            contact: contact.id,
                                                         });
                                                     } else {
                                                         handleOpenDeletePopup({
-                                                            id: data.id,
-                                                            contact: contact.id,
+                                                            id: contact.id,
                                                         });
                                                     }
                                                 }}

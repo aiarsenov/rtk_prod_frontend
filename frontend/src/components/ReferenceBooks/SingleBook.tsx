@@ -504,6 +504,54 @@ const SingleBook = () => {
             });
     };
 
+    // Изменение контакта лида
+    const editLeadContact = (data) => {
+        if (mode.edit !== "full") {
+            return;
+        }
+
+        postData(
+            "PATCH",
+            `${import.meta.env.VITE_API_URL}leads/${tempData.leadId}/contacts/${
+                data.id
+            }`,
+            data
+        )
+            .then((response) => {
+                if (response?.ok) {
+                    resetElemPopupState();
+                    getBooks();
+                } else {
+                    toast.error("Ошибка обновления контакта", {
+                        isLoading: false,
+                        autoClose: 2500,
+                        pauseOnFocusLoss: false,
+                        pauseOnHover: false,
+                        draggable: true,
+                        position:
+                            window.innerWidth >= 1440
+                                ? "bottom-right"
+                                : "top-right",
+                        containerId: "singleBook",
+                    });
+                }
+            })
+            .catch((error) => {
+                toast.error(error.message || "Ошибка обновления контакта", {
+                    isLoading: false,
+                    autoClose: 2500,
+                    pauseOnFocusLoss: false,
+                    pauseOnHover: false,
+                    draggable: true,
+                    position:
+                        window.innerWidth >= 1440
+                            ? "bottom-right"
+                            : "top-right",
+                    containerId: "singleBook",
+                });
+            });
+    };
+
     // Изменение контакта подрядчика
     const editContactElem = (data) => {
         if (mode.edit !== "full") {
@@ -601,6 +649,54 @@ const SingleBook = () => {
                 if (response?.ok) {
                     getBooks();
                     resetElemPopupState();
+                } else {
+                    toast.error("Ошибка удаления контакта", {
+                        isLoading: false,
+                        autoClose: 2500,
+                        pauseOnFocusLoss: false,
+                        pauseOnHover: false,
+                        draggable: true,
+                        position:
+                            window.innerWidth >= 1440
+                                ? "bottom-right"
+                                : "top-right",
+                        containerId: "singleBook",
+                    });
+                }
+            })
+            .catch((error) => {
+                toast.error(error.message || "Ошибка удаления контакта", {
+                    isLoading: false,
+                    autoClose: 2500,
+                    pauseOnFocusLoss: false,
+                    pauseOnHover: false,
+                    draggable: true,
+                    position:
+                        window.innerWidth >= 1440
+                            ? "bottom-right"
+                            : "top-right",
+                    containerId: "singleBook",
+                });
+            });
+    };
+
+    // Удаление контакта лида
+    const deleteLeadContact = (data) => {
+        if (mode.edit !== "full") {
+            return;
+        }
+
+        postData(
+            "DELETE",
+            `${import.meta.env.VITE_API_URL}leads/${data.leadId}/contacts/${
+                data.contact
+            }`,
+            {}
+        )
+            .then((response) => {
+                if (response?.ok) {
+                    resetElemPopupState();
+                    getBooks();
                 } else {
                     toast.error("Ошибка удаления контакта", {
                         isLoading: false,
@@ -1130,6 +1226,7 @@ const SingleBook = () => {
                     editContragentAndCreditorContact={
                         editContragentAndCreditorContact
                     }
+                    editLeadContact={editLeadContact}
                     editContactElem={editContactElem}
                     editWokrHours={editWokrHours}
                     editElement={editElement}
@@ -1146,6 +1243,7 @@ const SingleBook = () => {
                         deleteContact={deleteContact}
                         deleteContactElem={deleteContactElem}
                         deleteElement={deleteElement}
+                        deleteLeadContact={deleteLeadContact}
                     />
                 )}
 
