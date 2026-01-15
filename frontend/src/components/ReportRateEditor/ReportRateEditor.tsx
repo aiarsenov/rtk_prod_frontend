@@ -71,7 +71,8 @@ const ReportRateEditor = ({
             reportRateData.general_assessment != null &&
             (reportRateData.general_assessment === 0 ||
                 reportRateData.general_assessment === 1) &&
-            !reportRateData.general_summary
+            (reportRateData.general_summary == null ||
+                reportRateData.general_summary == "")
         ) {
             if (isPopup) {
                 setSaveBeforeClose(false);
