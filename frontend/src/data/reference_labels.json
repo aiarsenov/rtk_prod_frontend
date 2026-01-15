@@ -58,6 +58,9 @@
         { "label": "Название", "key": "name" }
     ],
     "lead-contacts": [
-        { "label": "Название", "key": "name" }
+        { "label": "ФИО", "key": "full_name" },
+        { "label": "Должность", "key": "position" },
+        { "label": "Телефон", "key": "phone" },
+        { "label": "Email", "key": "email" }
     ]
 }

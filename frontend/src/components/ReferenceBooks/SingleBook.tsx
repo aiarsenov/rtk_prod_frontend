@@ -851,9 +851,12 @@ const SingleBook = () => {
     // Считаем количество записей
     useEffect(() => {
         if (
-            ["creditor", "contragent", "suppliers-with-reports"].includes(
-                bookId
-            )
+            [
+                "creditor",
+                "contragent",
+                "suppliers-with-reports",
+                "lead-contacts",
+            ].includes(bookId)
         ) {
             const uniqueContactIds = new Set(
                 booksItems.flatMap((creditor) =>
@@ -893,9 +896,12 @@ const SingleBook = () => {
 
     const filteredList = useMemo(() => {
         if (
-            ["creditor", "contragent", "suppliers-with-reports"].includes(
-                bookId
-            )
+            [
+                "creditor",
+                "contragent",
+                "suppliers-with-reports",
+                "lead-contacts",
+            ].includes(bookId)
         ) {
             return booksItems
                 .map((item) => {
@@ -985,6 +991,7 @@ const SingleBook = () => {
                             bookId != "contragent" &&
                             bookId != "working-hours" &&
                             bookId != "report-types" &&
+                            bookId != "lead-contacts" &&
                             bookId != "leads" && (
                                 <button
                                     type="button"
@@ -1026,6 +1033,7 @@ const SingleBook = () => {
                             className={`registry-table reference-books__table table-auto w-full ${
                                 bookId === "creditor" ||
                                 bookId === "contragent" ||
+                                bookId === "lead-contacts" ||
                                 bookId === "suppliers-with-reports"
                                     ? "border-separate [border-spacing:0_20px]"
                                     : "border-collapse"
@@ -1053,6 +1061,7 @@ const SingleBook = () => {
                                         if (
                                             bookId === "creditor" ||
                                             bookId === "contragent" ||
+                                            bookId === "lead-contacts" ||
                                             bookId === "suppliers-with-reports"
                                         ) {
                                             return (

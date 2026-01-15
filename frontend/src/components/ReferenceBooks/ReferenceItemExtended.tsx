@@ -98,33 +98,42 @@ const ReferenceItemExtended = ({
                 </table>
             </td>
 
-            {bookId !== "suppliers-with-reports" && (
-                <td className="align-top" style={{ padding: 0 }}>
-                    <table className="w-full">
-                        <tbody>
-                            {data.contacts.map((contact, index) => (
-                                <tr
-                                    key={index}
-                                    ref={(el) =>
-                                        (projectsRefs.current[index] = el)
-                                    }
-                                    className={
-                                        hoveredIndex === index ? "hovered" : ""
-                                    }
-                                    onMouseEnter={() => setHoveredIndex(index)}
-                                    onMouseLeave={() => setHoveredIndex(null)}
-                                >
-                                    <td className="min-w-[180px] max-w-[300px] w-full relative">
-                                        <div className="extended__info h-full">
-                                            <div>{contact.projects_count}</div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </td>
-            )}
+            {bookId !== "suppliers-with-reports" &&
+                bookId !== "lead-contacts" && (
+                    <td className="align-top" style={{ padding: 0 }}>
+                        <table className="w-full">
+                            <tbody>
+                                {data.contacts.map((contact, index) => (
+                                    <tr
+                                        key={index}
+                                        ref={(el) =>
+                                            (projectsRefs.current[index] = el)
+                                        }
+                                        className={
+                                            hoveredIndex === index
+                                                ? "hovered"
+                                                : ""
+                                        }
+                                        onMouseEnter={() =>
+                                            setHoveredIndex(index)
+                                        }
+                                        onMouseLeave={() =>
+                                            setHoveredIndex(null)
+                                        }
+                                    >
+                                        <td className="min-w-[180px] max-w-[300px] w-full relative">
+                                            <div className="extended__info h-full">
+                                                <div>
+                                                    {contact.projects_count}
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </td>
+                )}
 
             <td className="align-top" style={{ padding: 0 }}>
                 <table className="w-full">
@@ -169,15 +178,27 @@ const ReferenceItemExtended = ({
                                 <td className="min-w-[180px] max-w-[300px] w-full relative">
                                     <div className="extended__info h-full">
                                         <div>
-                                            {format(
-                                                parseISO(
-                                                    contact.last_updated_at
-                                                ),
-                                                "d MMMM yyyy, HH:mm",
-                                                {
-                                                    locale: ru,
-                                                }
-                                            ) || "-"}
+                                            {bookId !== "lead-contacts" &&
+                                                (contact?.last_updated_at
+                                                    ? format(
+                                                          parseISO(
+                                                              contact.last_updated_at
+                                                          ),
+                                                          "d MMMM yyyy, HH:mm",
+                                                          { locale: ru }
+                                                      )
+                                                    : "-")}
+
+                                            {bookId == "lead-contacts" &&
+                                                (contact?.updated_at
+                                                    ? format(
+                                                          parseISO(
+                                                              contact.updated_at
+                                                          ),
+                                                          "d MMMM yyyy, HH:mm",
+                                                          { locale: ru }
+                                                      )
+                                                    : "-")}
                                         </div>
                                     </div>
                                 </td>
@@ -202,7 +223,12 @@ const ReferenceItemExtended = ({
                             >
                                 <td className="min-w-[180px] max-w-[300px] w-full relative">
                                     <div className="extended__info h-full">
-                                        <div>{contact.author || "-"}</div>
+                                        <div>
+                                            {bookId !== "lead-contacts"
+                                                ? contact.author || "-"
+                                                : contact?.updated_by?.name ||
+                                                  "-"}
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
