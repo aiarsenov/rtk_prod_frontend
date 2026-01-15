@@ -246,6 +246,10 @@
             overflow-y: auto;
             overflow-x: hidden;
 
+            @media (min-height: 800px) {
+                max-height: 465px;
+            }
+
             label {
                 position: relative;
 
