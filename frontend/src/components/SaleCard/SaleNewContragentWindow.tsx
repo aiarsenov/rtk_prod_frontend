@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
+import { createDebounce } from "../../utils/debounce.js";
+
+import Search from "../Search/Search";
 import SelectList from "../MultiSelect/SelectList";
 
 const SaleNewContragentWindow = ({
@@ -11,6 +14,36 @@ const SaleNewContragentWindow = ({
     const [programName, setProgramName] = useState("");
     const [selectedContragent, setSelectedContragent] = useState(null);
     const [activeTab, setActiveTab] = useState("create");
+
+    const [resultList, setResultList] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
+
+    useEffect(() => {
+        let filteredUsers = contragents;
+
+        // Фильтрация по поисковому запросу
+        if (searchQuery.trim() !== "") {
+            const query = searchQuery.toLowerCase();
+
+            filteredUsers = contragents.filter((item) =>
+                item.label?.toLowerCase().includes(query)
+            );
+        }
+
+        if (filteredUsers.length > 0) {
+            setResultList(filteredUsers);
+        } else {
+            setResultList([]);
+        }
+    }, [contragents, searchQuery]);
+
+    const debouncedSearch = createDebounce(
+        (event) => {
+            setSearchQuery(event.value || "");
+        },
+        150,
+        false
+    );
 
     return (
         <div className="sale-new-contragent-window">
@@ -48,16 +81,23 @@ const SaleNewContragentWindow = ({
                         onChange={(e) => setProgramName(e.target.value)}
                     />
                 ) : (
-                    <SelectList
-                        options={contragents}
-                        onChange={(selected) => {
-                            if (selected) {
-                                setSelectedContragent(selected.value);
-                            } else {
-                                setSelectedContragent(null);
-                            }
-                        }}
-                    />
+                    <>
+                        <Search
+                            placeholder="Поиск"
+                            onSearch={debouncedSearch}
+                        />
+
+                        <SelectList
+                            options={resultList}
+                            onChange={(selected) => {
+                                if (selected) {
+                                    setSelectedContragent(selected.value);
+                                } else {
+                                    setSelectedContragent(null);
+                                }
+                            }}
+                        />
+                    </>
                 )}
             </div>
 

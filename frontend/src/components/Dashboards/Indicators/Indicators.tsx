@@ -371,7 +371,6 @@ const Indicators = () => {
     const getProjectManagerReports = () => {
         const query = {
             ...mainFilters,
-            // ...selectedReportMonth,
         };
 
         const queryString = buildQueryParams(query);
@@ -542,12 +541,7 @@ const Indicators = () => {
         ) {
             getProjectManagerReports(); // Отчёты руководителей проектов
         }
-    }, [
-        mainFilters,
-        // selectedReportMonth.report_month,
-        // mainFilters.contragent_id,
-        // mainFilters.project_id,
-    ]);
+    }, [mainFilters]);
 
     useBodyScrollLock(isLoading || isActiveFilters);
 
@@ -583,7 +577,7 @@ const Indicators = () => {
                     <IndicatorsFilters
                         mainFilters={mainFilters}
                         setMainFilters={setMainFilters}
-                        setSelectedReportMonth={setSelectedReportMonth}
+                        // setSelectedReportMonth={setSelectedReportMonth}
                         setSelectedFilters={setSelectedFilters}
                         selectedFilters={selectedFilters}
                         setFinancialListFilters={setFinancialListFilters}

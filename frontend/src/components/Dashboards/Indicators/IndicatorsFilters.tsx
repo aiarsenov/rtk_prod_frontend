@@ -10,7 +10,7 @@ const IndicatorsFilters = ({
     mainFilters,
     setMainFilters,
     setSelectedFilters,
-    setSelectedReportMonth,
+    // setSelectedReportMonth,
     selectedFilters,
     setFinancialListFilters,
     setFinancialProfitListFilters,
@@ -27,9 +27,9 @@ const IndicatorsFilters = ({
     const handleFilterChange = (filterKey, value) => {
         const filteredValues = value.filter((v) => v !== "");
 
-        setSelectedReportMonth({
-            [filterKey]: filteredValues.length > 0 ? filteredValues : [],
-        });
+        // setSelectedReportMonth({
+        //     [filterKey]: filteredValues.length > 0 ? filteredValues : [],
+        // });
 
         setSelectedFilters((prev) => ({
             ...prev,
@@ -105,9 +105,9 @@ const IndicatorsFilters = ({
                         ? response.data.months[1]?.value
                         : response.data.months[0]?.value;
 
-                    setSelectedReportMonth({
-                        report_month: [reportMonthValue],
-                    });
+                    // setSelectedReportMonth({
+                    //     report_month: [reportMonthValue],
+                    // });
 
                     setSelectedFilters({
                         period: [periodValue],
