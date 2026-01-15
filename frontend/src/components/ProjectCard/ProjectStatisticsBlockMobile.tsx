@@ -41,7 +41,7 @@ const ProjectStatisticsBlockMobile = ({
                 <div className="statistics-block__item">
                     <div className="statistics-block__item-label">
                         Выручка
-                        <Hint message={"Выручка"} />
+                        <Hint message={"Выручка с НДС (по методу начисления) по проекту. Источник данных — 1С:Бухгалтерия, на основании договоров с заказчиками, добавленных в отчёты проекта."} />
                     </div>
                     <div className="statistics-block__item-value">
                         {revenue.revenue?.value !== "0" ? (
@@ -75,7 +75,7 @@ const ProjectStatisticsBlockMobile = ({
                 <div className="statistics-block__item">
                     <div className="statistics-block__item-label">
                         ДЗ
-                        <Hint message={"ДЗ"} />
+                        <Hint message={"Дебиторская задолженность заказчика по проекту с НДС на 09:00 текущего дня."} />
                     </div>
                     <div className="statistics-block__item-value">
                         {revenue.debts?.value !== "0" ? (
@@ -92,7 +92,9 @@ const ProjectStatisticsBlockMobile = ({
                 <div className="statistics-block__item">
                     <div className="statistics-block__item-label">
                         Валовая прибыль
-                        <Hint message={"Валовая прибыль"} />
+                        <Hint message="Валовая прибыль рассчитывается как выручка с НДС за вычетом расходов на подрядчиков с НДС и ФОТ сотрудников, задействованных в реализации проекта.
+
+Валовая рентабельность рассчитывается как отношение валовой прибыли к выручке." />
                     </div>
                     <div className="statistics-block__item-value">
                         {revenue.gross_profit?.value !== "0" ? (

@@ -502,7 +502,7 @@ const SupplierCard = () => {
                             <section className="project-card__project-executors">
                                 <h2 className="card__subtitle">
                                     Ключевые лица
-                                    <Hint message="Ключевые лица" />
+                                    <Hint message="Можно создать или выбрать ранее созданных ключевых лиц подрядчика (справочник «Контакты подрядчиков»). После создания ключевого лица внесение изменений в ФИО, должность и т.д. доступно только через справочник «Контакты подрядчиков»." />
                                 </h2>
 
                                 <ul className="project-card__executors-list">

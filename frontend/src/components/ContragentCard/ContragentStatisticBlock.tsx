@@ -67,7 +67,7 @@ const ContragentStatisticBlock = ({
                 <div className="statistics-block__item">
                     <div className="statistics-block__item-label">
                         Выручка
-                        <Hint message={"Выручка"} />
+                        <Hint message={" Выручка с НДС (по методу начисления) по всем проектам заказчика. Рассчитывается на основании договоров, добавленных в отчёты проектов заказчика. Источник данных — 1С:Бухгалтерия."} />
                     </div>
                     <div className="statistics-block__item-value">
                         <div>
@@ -89,7 +89,7 @@ const ContragentStatisticBlock = ({
                 <div className="statistics-block__item">
                     <div className="statistics-block__item-label">
                         Поступления
-                        <Hint message={"Поступления"} />
+                        <Hint message={"Поступления денежных средств по всем проектам заказчика с НДС. Рассчитывается на основании договоров, добавленных в отчёты проектов заказчика. Источник данных — 1С:Бухгалтерия."} />
                     </div>
                     <div className="statistics-block__item-value">
                         <div>
@@ -111,7 +111,7 @@ const ContragentStatisticBlock = ({
                 <div className="statistics-block__item">
                     <div className="statistics-block__item-label">
                         ДЗ
-                        <Hint message={"ДЗ"} />
+                        <Hint message={"Дебиторская задолженность заказчика по всем проектам с НДС на 09:00 текущего дня."} />
                     </div>
                     <div className="statistics-block__item-value">
                         <div>
@@ -133,7 +133,9 @@ const ContragentStatisticBlock = ({
                 <div className="statistics-block__item">
                     <div className="statistics-block__item-label">
                         Валовая прибыль
-                        <Hint message={"Валовая прибыль"} />
+                        <Hint message=" Валовая прибыль рассчитывается как выручка с НДС за вычетом расходов на подрядчиков с НДС и ФОТ сотрудников, задействованных в реализации проектов заказчика.
+
+Валовая рентабельность рассчитывается как отношение валовой прибыли к выручке." />
                     </div>
                     <div className="statistics-block__item-value">
                         <>
@@ -171,7 +173,9 @@ const ContragentStatisticBlock = ({
                 <div className="statistics-block__item">
                     <div className="statistics-block__item-label">
                         ФОТ
-                        <Hint message={"ФОТ"} />
+                        <Hint message="ФОТ gross (с учётом НДФЛ, без учёта социальных отчислений), распределённый на проекты заказчика на основании заполнения процента месячных трудозатрат в отчётах проектов сотрудниками. Источник данных по суммам ФОТ — 1С:Бухгалтерия.
+
+Доля ФОТ от выручки рассчитывается как отношение ФОТ к выручке." />
                     </div>
                     <div className="statistics-block__item-value">
                         <>
@@ -210,7 +214,7 @@ const ContragentStatisticBlock = ({
                 <div className="statistics-block__item">
                     <div className="statistics-block__item-label">
                         Подрячики
-                        <Hint message={"Подрячики"} />
+                        <Hint message="Расходы на подрядчиков с НДС. Источник данных — 1С:Бухгалтерия, на основании договоров с подрядчиками, добавленных в отчёты проектов заказчика." />
                     </div>
                     <div className="statistics-block__item-value">
                         <>

@@ -59,7 +59,7 @@ const SupplierStatisticBlockMobile = ({
                 <div className="statistics-block__item">
                     <div className="statistics-block__item-label">
                         Выполнено
-                        <Hint message={"Выполнено"} />
+                        <Hint message={"Стоимость услуг, оказанных подрядчиком, по методу начисления с НДС."} />
                     </div>
                     <div className="statistics-block__item-value">
                         {revenue.revenue?.value !== "0" ? (
@@ -76,7 +76,7 @@ const SupplierStatisticBlockMobile = ({
                 <div className="statistics-block__item">
                     <div className="statistics-block__item-label">
                         Оплачено
-                        <Hint message={"Оплачено"} />
+                        <Hint message={"Сумма фактических оплат подрядчику с НДС."} />
                     </div>
                     <div className="statistics-block__item-value">
                         {revenue.receipts?.value !== "0" ? (
@@ -93,7 +93,7 @@ const SupplierStatisticBlockMobile = ({
                 <div className="statistics-block__item">
                     <div className="statistics-block__item-label">
                         КЗ
-                        <Hint message={"КЗ"} />
+                        <Hint message={"Кредиторская задолженность перед подрядчиком с НДС на 09:00 текущего дня. Отрицательно значение - означает задолженность подрядчика по авансам полученным."} />
                     </div>
                     <div className="statistics-block__item-value">
                         {revenue.debts?.value !== "0" ? (

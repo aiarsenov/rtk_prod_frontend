@@ -534,7 +534,7 @@ const ContragentCard = () => {
                             <section className="project-card__project-team">
                                 <h2 className="card__subtitle">
                                     Ключевые лица
-                                    <Hint message="Ключевые лица" />
+                                    <Hint message="Контакты ключевых лиц заказчика подтягиваются автоматически на основании информации, заполненной в карточках проектов." />
                                 </h2>
 
                                 <div className="project-card__team">
