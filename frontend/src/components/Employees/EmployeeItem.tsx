@@ -15,12 +15,6 @@ const handleStatusClass = (status) => {
     }
 };
 
-// Приглашён → invited
-// Активный → active
-// Неактивный → inactive
-// Удалён → deleted
-// Не присвоен → not_assigned
-
 const EmployeeItem = ({ props, columns }) => {
     const navigate = useNavigate();
 

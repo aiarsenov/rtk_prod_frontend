@@ -11,6 +11,7 @@ import AdminUserItem from "./AdminUserItem";
 import Loader from "../Loader";
 import AccessDenied from "../AccessDenied/AccessDenied";
 import AdminTheadRow from "./AdminTheadRow";
+import OverlayTransparent from "../Overlay/OverlayTransparent";
 
 const formatStatus = (user) => {
     if (user.status === "Приглашен") {
@@ -366,6 +367,13 @@ const AdminUsers = ({ mode, loadUsers, isLoading, accessDenied, users }) => {
 
     return (
         <div className="admin-users">
+            {openFilter !== "" && (
+                <OverlayTransparent
+                    state={true}
+                    toggleMenu={() => setOpenFilter("")}
+                />
+            )}
+
             {users.length === 0 ? (
                 <div className="admin-empty">Нет пользователей</div>
             ) : (

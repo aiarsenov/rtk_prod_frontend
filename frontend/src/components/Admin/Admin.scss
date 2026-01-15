@@ -20,6 +20,16 @@
         width: 28px;
         flex: 0 0 28px;
     }
+
+    &-users {
+        .registry-table__thead
+            th:nth-child(2)
+            .registry-table__thead-item
+            .multi-select {
+            left: 0;
+            transform: none;
+        }
+    }
 }
 
 .admin-actions {
