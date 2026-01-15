@@ -39,6 +39,10 @@ input::-ms-clear {
     display: none;
 }
 
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
 button {
     cursor: pointer;
 }
