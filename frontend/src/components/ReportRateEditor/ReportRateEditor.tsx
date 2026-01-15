@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
 import { useBodyScrollLock } from "../../hooks/useBodyScrollLock.js";
+import { toast, ToastContainer } from "react-toastify";
 
 import RateSwitch from "../RateSwitch/RateSwitch";
 import Popup from "../Popup/Popup";
@@ -63,6 +64,49 @@ const ReportRateEditor = ({
         setShowApprove(false);
         closeEditor();
     }, [closeEditor]);
+
+    const handleSave = (type, isPopup = false) => {
+        if (
+            reportRateData.general_assessment != null &&
+            (reportRateData.general_assessment === 0 ||
+                reportRateData.general_assessment === 1) &&
+            !reportRateData.general_summary
+        ) {
+            if (isPopup) {
+                setSaveBeforeClose(false);
+
+                setTimeout(() => {
+                    toast.error("Добавьте заключение", {
+                        position:
+                            window.innerWidth >= 1440
+                                ? "bottom-right"
+                                : "top-right",
+                        autoClose: 2500,
+                        pauseOnFocusLoss: false,
+                        pauseOnHover: false,
+                        draggable: true,
+                        containerId: "toastContainerRate",
+                    });
+                }, 250);
+            } else {
+                toast.error("Добавьте заключение", {
+                    position:
+                        window.innerWidth >= 1440
+                            ? "bottom-right"
+                            : "top-right",
+                    autoClose: 2500,
+                    pauseOnFocusLoss: false,
+                    pauseOnHover: false,
+                    draggable: true,
+                    containerId: "toastContainerRate",
+                });
+            }
+        } else {
+            updateReportDetails(reportRateData, type).then(() => {
+                resetState();
+            });
+        }
+    };
 
     const formRef = useRef<HTMLFormElement>(null);
 
@@ -141,6 +185,8 @@ const ReportRateEditor = ({
                 }
             }}
         >
+            <ToastContainer containerId="toastContainerRate" />
+
             <div
                 className="bottom-sheet__wrapper"
                 onClick={(e) => e.stopPropagation()}
@@ -344,12 +390,7 @@ const ReportRateEditor = ({
                                                     type="button"
                                                     className="cancel-button"
                                                     onClick={() => {
-                                                        updateReportDetails(
-                                                            reportRateData,
-                                                            "save"
-                                                        ).then(() => {
-                                                            resetState();
-                                                        });
+                                                        handleSave("save");
                                                     }}
                                                     title="Сохранить без утверждения"
                                                 >
@@ -361,12 +402,7 @@ const ReportRateEditor = ({
                                                 type="button"
                                                 className="action-button"
                                                 onClick={() => {
-                                                    updateReportDetails(
-                                                        reportRateData,
-                                                        "approve"
-                                                    ).then(() => {
-                                                        resetState();
-                                                    });
+                                                    handleSave("approve");
                                                 }}
                                                 title={
                                                     showApprove
@@ -421,11 +457,7 @@ const ReportRateEditor = ({
                         type="button"
                         className="action-button"
                         onClick={() => {
-                            updateReportDetails(reportRateData, "approve").then(
-                                () => {
-                                    resetState();
-                                }
-                            );
+                            handleSave("approve", true);
                         }}
                         title="Сохранить изменения"
                     >
