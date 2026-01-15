@@ -46,8 +46,8 @@ const ProjectBudget = ({ projectData }) => {
                         projectData?.project_budget !== null && "active"
                     }`}
                 >
-                    бюджет проекта 
-                    <Hint message="Бюджет проекта" />
+                    бюджет проекта
+                    <Hint message="Бюджет проекта в соответствии с последним завершённым отчётом проекта. Изменение отображается относительно бюджета в отчёте проекта с наиболее ранней датой утверждения." />
                 </span>
                 {projectData?.project_budget == null && <b>Нет данных</b>}
             </div>
