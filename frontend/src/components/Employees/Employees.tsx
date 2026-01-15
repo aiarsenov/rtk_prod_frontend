@@ -98,7 +98,6 @@ const Employees = () => {
             filter: "selectedPositions",
             options: positionOptions,
         },
-        { label: "Телефон", key: "phone_number" },
         { label: "Email", key: "email" },
         {
             label: "Подразделение",

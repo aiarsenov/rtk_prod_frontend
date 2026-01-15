@@ -5,7 +5,9 @@ import getData from "../../utils/getData";
 import postData from "../../utils/postData";
 import { isAdmin } from "../../utils/permissions";
 import { toast } from "react-toastify";
+import { createDebounce } from "../../utils/debounce.js";
 
+import Search from "../Search/Search";
 import AccessDenied from "../AccessDenied/AccessDenied";
 import AdminUsers from "./AdminUsers";
 import AdminGroups from "./AdminGroups";
@@ -24,6 +26,9 @@ const Admin = () => {
     const [selectedEmployees, setSelectedEmployees] = useState([]);
     const [usersIsLoading, setUsersIsLoading] = useState(false);
     const [usersSubmit, setIsSubmit] = useState(false);
+
+    const [resultList, setResultList] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
 
     const [groups, setGroups] = useState([]);
 
@@ -144,6 +149,33 @@ const Admin = () => {
             loadGroups();
         }
     }, [activeTab]);
+
+    useEffect(() => {
+        let filteredUsers = availableEmployees;
+
+        // Фильтрация по поисковому запросу
+        if (searchQuery.trim() !== "") {
+            const query = searchQuery.toLowerCase();
+
+            filteredUsers = availableEmployees.filter((item) =>
+                item.name?.toLowerCase().includes(query)
+            );
+        }
+
+        if (filteredUsers.length > 0) {
+            setResultList(filteredUsers);
+        } else {
+            setResultList([]);
+        }
+    }, [availableEmployees, searchQuery]);
+
+    const debouncedSearch = createDebounce(
+        (event) => {
+            setSearchQuery(event.value || "");
+        },
+        150,
+        false
+    );
 
     // Если нет прав на управление пользователями - показываем заглушку
     if (!isAdmin(user)) {
@@ -266,13 +298,13 @@ const Admin = () => {
                                     title="Выбрать всех пользователей"
                                     onClick={() => {
                                         if (
-                                            availableEmployees.length ===
+                                            resultList.length ===
                                             selectedEmployees.length
                                         )
                                             return;
 
                                         setSelectedEmployees(
-                                            availableEmployees.map((item) => ({
+                                            resultList.map((item) => ({
                                                 physical_person_id: item.id,
                                                 email: item.email,
                                                 resend: false,
@@ -309,68 +341,79 @@ const Admin = () => {
                                 )}
                             </div>
 
-                            <div className="admin-form__users-list">
-                                {availableEmployees.length > 0 &&
-                                    availableEmployees.map((item) => (
-                                        <label
-                                            className="form-checkbox"
-                                            key={item.id}
-                                            htmlFor={item.id}
-                                        >
-                                            <div>
-                                                {item.name}
-                                                <span>{item.email}</span>
-                                            </div>
+                            <div>
+                                <div className="py-[10px] px-[30px]">
+                                    <Search
+                                        placeholder="Поиск"
+                                        onSearch={debouncedSearch}
+                                    />
+                                </div>
 
-                                            <input
-                                                type="checkbox"
-                                                name={item.name}
-                                                id={item.id}
-                                                checked={selectedEmployees.some(
-                                                    (emp) =>
-                                                        emp.physical_person_id ===
-                                                        item.id
-                                                )}
-                                                onChange={(e) => {
-                                                    const checked =
-                                                        e.target.checked;
+                                <div className="admin-form__users-list">
+                                    {resultList.length > 0 &&
+                                        resultList.map((item) => (
+                                            <label
+                                                className="form-checkbox"
+                                                key={item.id}
+                                                htmlFor={item.id}
+                                            >
+                                                <div>
+                                                    {item.name}
+                                                    <span>{item.email}</span>
+                                                </div>
 
-                                                    setSelectedEmployees(
-                                                        (prev) => {
-                                                            if (checked) {
-                                                                const exists =
-                                                                    prev.some(
-                                                                        (emp) =>
-                                                                            emp.physical_person_id ===
-                                                                            item.id
-                                                                    );
+                                                <input
+                                                    type="checkbox"
+                                                    name={item.name}
+                                                    id={item.id}
+                                                    checked={selectedEmployees.some(
+                                                        (emp) =>
+                                                            emp.physical_person_id ===
+                                                            item.id
+                                                    )}
+                                                    onChange={(e) => {
+                                                        const checked =
+                                                            e.target.checked;
 
-                                                                if (exists)
-                                                                    return prev;
+                                                        setSelectedEmployees(
+                                                            (prev) => {
+                                                                if (checked) {
+                                                                    const exists =
+                                                                        prev.some(
+                                                                            (
+                                                                                emp
+                                                                            ) =>
+                                                                                emp.physical_person_id ===
+                                                                                item.id
+                                                                        );
 
-                                                                return [
-                                                                    ...prev,
-                                                                    {
-                                                                        physical_person_id:
-                                                                            item.id,
-                                                                        email: item.email,
-                                                                        resend: false,
-                                                                    },
-                                                                ];
+                                                                    if (exists)
+                                                                        return prev;
+
+                                                                    return [
+                                                                        ...prev,
+                                                                        {
+                                                                            physical_person_id:
+                                                                                item.id,
+                                                                            email: item.email,
+                                                                            resend: false,
+                                                                        },
+                                                                    ];
+                                                                }
+
+                                                                return prev.filter(
+                                                                    (emp) =>
+                                                                        emp.physical_person_id !==
+                                                                        item.id
+                                                                );
                                                             }
-
-                                                            return prev.filter(
-                                                                (emp) =>
-                                                                    emp.physical_person_id !==
-                                                                    item.id
-                                                            );
-                                                        }
-                                                    );
-                                                }}
-                                            />
-                                            <div className="checkbox"></div>
-                                        </label>
-                                    ))}
+                                                        );
+                                                    }}
+                                                />
+                                                <div className="checkbox"></div>
+                                            </label>
+                                        ))}
+                                </div>
                             </div>
                         </div>
                     </form>
