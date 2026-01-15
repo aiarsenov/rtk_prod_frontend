@@ -23,24 +23,6 @@ const SalesItem = ({ props, columns, deleteProject, mode }) => {
                     ? getNestedValue(props, key)
                     : props[key];
 
-                let statusClass;
-
-                if (key === "last_service_last_stage") {
-                    if (value && value.toLowerCase() === "проект отложен") {
-                        statusClass = "registry-table__item-status_completed";
-                    } else if (
-                        value &&
-                        (value.toLowerCase() === "отказ от участия" ||
-                            value.toLowerCase() === "получен отказ")
-                    ) {
-                        statusClass = "registry-table__item-status_canceled";
-                    } else if (!value) {
-                        statusClass = "";
-                    } else {
-                        statusClass = "registry-table__item-status_active";
-                    }
-                }
-
                 if (Array.isArray(value) && value !== null) {
                     if (value?.length > 0) {
                         return (
@@ -145,7 +127,7 @@ const SalesItem = ({ props, columns, deleteProject, mode }) => {
                                 key={key}
                             >
                                 <div
-                                    className={`registry-table__item-status ${statusClass}`}
+                                    className={`registry-table__item-status registry-table__item-status_${props.status}`}
                                     style={{
                                         textOverflow: "ellipsis",
                                         overflow: "hidden",

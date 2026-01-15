@@ -42,6 +42,7 @@ const ReportRateEditor = ({
     const [saveBeforeClose, setSaveBeforeClose] = useState(false);
     const [isChanged, setIsChanged] = useState(false);
     const [showApprove, setShowApprove] = useState(false);
+    const [canApprove, setCanApprove] = useState(false);
 
     const rateHandler = (name: string, value: string | number) => {
         setReportRateData((prev) => ({
@@ -50,7 +51,7 @@ const ReportRateEditor = ({
         }));
 
         if (!isChanged) {
-            setShowApprove(false)
+            setShowApprove(false);
             setIsChanged(true);
         }
     };
@@ -74,7 +75,6 @@ const ReportRateEditor = ({
             setIsChanged(true);
         }
 
-
         // Если отчет не утвержден, но в нем есть изменения - отображаем только кнопку Утвердить
         if (
             !reportData.show_save_bar &&
@@ -90,6 +90,14 @@ const ReportRateEditor = ({
             });
         }
     }, [reportData]);
+
+    useEffect(() => {
+        if (reportRateData.general_assessment != null) {
+            setCanApprove(true);
+        } else {
+            setCanApprove(false);
+        }
+    }, [reportRateData]);
 
     useBodyScrollLock(rateEditorState);
 
@@ -365,6 +373,7 @@ const ReportRateEditor = ({
                                                         ? "Утвердить"
                                                         : "Сохранить и утвердить"
                                                 }
+                                                disabled={!canApprove}
                                             >
                                                 {showApprove
                                                     ? "Утвердить"
@@ -412,13 +421,11 @@ const ReportRateEditor = ({
                         type="button"
                         className="action-button"
                         onClick={() => {
-                            updateReportDetails(reportRateData, "approve")
-                                .then(() => {
+                            updateReportDetails(reportRateData, "approve").then(
+                                () => {
                                     resetState();
-                                })
-                                .catch(() => {
-                                    // Ошибка уже обработана в updateReportDetails
-                                });
+                                }
+                            );
                         }}
                         title="Сохранить изменения"
                     >
