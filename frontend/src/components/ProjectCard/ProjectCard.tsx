@@ -783,7 +783,7 @@ const ProjectCard = () => {
 
                             <div className="project-card__services">
                                 <div className="form-label">
-                                    Услуги <Hint message={"Услуги"} />
+                                    Услуги <Hint message={"Перечень уникальных услуг по типу (ФТА, ФТМ и т.д.) и регулярности  (единоразовый, ежеквартальный и т.д.) по проекту. Стоимость услуг отображается по данным последнего отчёта проекта соответствующего типа со статусом в порядке приоритета: «Запланирован», «В работе», «Завершён». "} />
                                 </div>
 
                                 <ReportServices services={services} />
@@ -796,7 +796,7 @@ const ProjectCard = () => {
 
                                 <div className="project-card__contragent">
                                     <div className="form-label">
-                                        Заказчик <Hint message={"Заказчик"} />
+                                        Заказчик <Hint message={"Выбор заказчика из справочника покупателей в 1С:Бухгалтерия."} />
                                     </div>
 
                                     <CreatableSelect
@@ -880,7 +880,7 @@ const ProjectCard = () => {
                                 <div className="project-card__industries">
                                     <div className="form-label">
                                         Основная отрасль
-                                        <Hint message={"Основная отрасль"} />
+                                        <Hint message={"Выбор одной основной отрасли проекта из справочника «Отрасли». Набор отраслей задаётся в данном справочнике."} />
                                     </div>
 
                                     <CreatableSelect
@@ -955,7 +955,7 @@ const ProjectCard = () => {
                                     <div className="form-label">
                                         Дополнительная отрасль
                                         <Hint
-                                            message={"Дополнительная отрасль"}
+                                            message={"Выбор дополнительных отраслей проекта из справочника «Отрасли» (доступен множественный выбор). Набор отраслей задаётся в данном справочнике."}
                                         />
                                     </div>
 
@@ -995,9 +995,6 @@ const ProjectCard = () => {
                                 <div className="project-card__description">
                                     <div className="form-label">
                                         Краткое описание проекта
-                                        <Hint
-                                            message={"Краткое описание проекта"}
-                                        />
                                     </div>
 
                                     <AutoResizeTextarea
@@ -1039,7 +1036,6 @@ const ProjectCard = () => {
                                 <div className="project-card__location">
                                     <div className="form-label">
                                         Местоположение
-                                        <Hint message={"Местоположение"} />
                                     </div>
 
                                     <AutoResizeTextarea

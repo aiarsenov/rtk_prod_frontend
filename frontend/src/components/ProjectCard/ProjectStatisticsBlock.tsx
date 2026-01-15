@@ -44,7 +44,7 @@ const ProjectStatisticsBlock = ({ revenue, getRevenue, period, setPeriod }) => {
                 <div className="statistics-block__item">
                     <div className="statistics-block__item-label">
                         Выручка
-                        <Hint message={"Выручка"} />
+                        <Hint message={"Выручка с НДС (по методу начисления) по проекту. Источник данных — 1С:Бухгалтерия, на основании договоров с заказчиками, добавленных в отчёты проекта."} />
                     </div>
                     <div className="statistics-block__item-value">
                         <div>
@@ -66,7 +66,7 @@ const ProjectStatisticsBlock = ({ revenue, getRevenue, period, setPeriod }) => {
                 <div className="statistics-block__item">
                     <div className="statistics-block__item-label">
                         Поступления
-                        <Hint message={"Поступления"} />
+                        <Hint message={"Поступления денежных средств по проекту с НДС. Источник данных — 1С:Бухгалтерия, на основании договоров с заказчиками, добавленных в отчёты проекта."} />
                     </div>
                     <div className="statistics-block__item-value">
                         <div>
@@ -88,7 +88,7 @@ const ProjectStatisticsBlock = ({ revenue, getRevenue, period, setPeriod }) => {
                 <div className="statistics-block__item">
                     <div className="statistics-block__item-label">
                         ДЗ
-                        <Hint message={"ДЗ"} />
+                        <Hint message={"Дебиторская задолженность заказчика по проекту с НДС на 09:00 текущего дня."} />
                     </div>
                     <div className="statistics-block__item-value">
                         <div>
@@ -110,7 +110,9 @@ const ProjectStatisticsBlock = ({ revenue, getRevenue, period, setPeriod }) => {
                 <div className="statistics-block__item">
                     <div className="statistics-block__item-label">
                         Валовая прибыль
-                        <Hint message={"Валовая прибыль"} />
+                        <Hint message="Валовая прибыль рассчитывается как выручка с НДС за вычетом расходов на подрядчиков с НДС и ФОТ сотрудников, задействованных в реализации проекта.
+
+Валовая рентабельность рассчитывается как отношение валовой прибыли к выручке." />
                     </div>
                     <div className="statistics-block__item-value">
                         <>
@@ -148,7 +150,9 @@ const ProjectStatisticsBlock = ({ revenue, getRevenue, period, setPeriod }) => {
                 <div className="statistics-block__item">
                     <div className="statistics-block__item-label">
                         ФОТ
-                        <Hint message={"ФОТ"} />
+                        <Hint message="ФОТ gross (с учётом НДФЛ, без учёта социальных отчислений), распределённый на проект на основании заполнения процента месячных трудозатрат по отчётам проекта сотрудниками. Источник данных по суммам ФОТ — 1С:Бухгалтерия.
+
+Доля ФОТ от выручки рассчитывается как отношение ФОТ к выручке." />
                     </div>
                     <div className="statistics-block__item-value">
                         <>
@@ -187,7 +191,7 @@ const ProjectStatisticsBlock = ({ revenue, getRevenue, period, setPeriod }) => {
                 <div className="statistics-block__item">
                     <div className="statistics-block__item-label">
                         Подрячики
-                        <Hint message={"Подрячики"} />
+                        <Hint message={"Расходы на подрядчиков с НДС. Источник данных — 1С:Бухгалтерия, на основании договоров с подрядчиками, добавленных в отчёты проекта."} />
                     </div>
                     <div className="statistics-block__item-value">
                         <>
