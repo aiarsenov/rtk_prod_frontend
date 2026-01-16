@@ -7,8 +7,6 @@
     "customers",
     "employees",
     "contractors",
-    "leads",
-    "lead_contacts",
     "industries",
     "report_types",
     "management_report_types",
@@ -21,5 +19,7 @@
     "request_sources",
     "working_hours",
     "departments",
+    "leads",
+    "lead_contacts",
     "admin"
 ]
