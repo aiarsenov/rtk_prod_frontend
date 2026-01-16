@@ -331,12 +331,10 @@ const SaleCard = () => {
     };
 
     // Создание нового заказчика
-    const createNewContragent = (program_name) => {
-        postData(
-            "POST",
-            `${import.meta.env.VITE_API_URL}contragents/sales-funnel`,
-            { program_name }
-        ).then((response) => {
+    const createNewContragent = (name) => {
+        postData("POST", `${import.meta.env.VITE_API_URL}leads`, {
+            name,
+        }).then((response) => {
             if (response?.ok) {
                 updateContragent(true, { contragent_id: response.id });
             }
