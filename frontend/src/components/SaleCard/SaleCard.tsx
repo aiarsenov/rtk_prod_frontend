@@ -129,7 +129,9 @@ const SaleCard = () => {
     // Получение контактов лидов
     const fetchLeadContacts = () => {
         return getData(
-            `${import.meta.env.VITE_API_URL}leads/${1}/contacts`
+            `${import.meta.env.VITE_API_URL}leads/${
+                cardData?.contragent?.id
+            }/contacts`
         ).then((response) => {
             if (response?.status == 200) {
                 setLeadContacts(response.data.data.contacts ?? []);
@@ -252,7 +254,6 @@ const SaleCard = () => {
                 }
             })
             .catch((error) => {
-                // toast.dismiss(query);
                 toast.error(
                     error.message ||
                         "Ошибка добавления. Возможно, такая услуга уже добавлена",
@@ -305,45 +306,6 @@ const SaleCard = () => {
         }
     };
 
-    // Обновление заказчика
-    // const updateContragent = async (data) => {
-    //     try {
-    //         const response = await postData("PATCH", `${URL}/${saleId}`, data)
-    //             .the;
-
-    //         setCardData(response);
-    //         setCardDataCustom(response);
-
-    //         return response;
-    //     } catch (error) {
-    //         toast.error("Ошибка при обновлении проекта", {
-    //             containerId: "toastContainer",
-    //             isLoading: false,
-    //             autoClose: 1500,
-    //             pauseOnFocusLoss: false,
-    //             pauseOnHover: false,
-    //             draggable: true,
-    //             position:
-    //                 window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-    //         });
-
-    //         throw error;
-    //     }
-    // };
-
-    // Создание нового заказчика
-    const createNewContragent = (name) => {
-        postData("POST", `${import.meta.env.VITE_API_URL}leads`, {
-            name,
-        }).then((response) => {
-            if (response?.ok) {
-                updateCard(true, {
-                    contragent: { id: response.id, is_lead: true },
-                });
-            }
-        });
-    };
-
     // Обновление карточки
     const updateCard = async (showMessage = true, data = cardDataCustom) => {
         postData("PATCH", `${URL}/${saleId}`, data)
@@ -381,6 +343,8 @@ const SaleCard = () => {
     useEffect(() => {
         if (cardData.contragent && cardData?.contragent?.is_lead) {
             fetchLeadContacts();
+        } else {
+            setLeadContacts([]);
         }
     }, [cardData]);
 
@@ -922,69 +886,76 @@ const SaleCard = () => {
                                 </div>
                             </section>
 
-                            <section className="project-card__project-executors">
-                                <h2 className="card__subtitle">
-                                    Ключевые лица
-                                    <Hint message=" ФИО, должность и т.д. доступно только через справочник «Контакты лидов»." />
-                                </h2>
+                            {cardData.contragent &&
+                                cardData?.contragent?.is_lead && (
+                                    <section className="project-card__project-executors">
+                                        <h2 className="card__subtitle">
+                                            Ключевые лица
+                                            <Hint message=" ФИО, должность и т.д. доступно только через справочник «Контакты лидов»." />
+                                        </h2>
 
-                                <ul className="project-card__executors-list">
-                                    {leadContacts.length > 0 ? (
-                                        leadContacts.map((contanct) => (
-                                            <ExecutorBlock
-                                                key={contanct.id}
-                                                contanct={contanct}
-                                                mode={mode}
-                                                type={"customer"}
-                                                deleteBlock={deleteLeadContact}
-                                            />
-                                        ))
-                                    ) : (
-                                        <li className="project-card__executors-list-nodata">
-                                            Нет данных
-                                        </li>
-                                    )}
-                                </ul>
+                                        <ul className="project-card__executors-list">
+                                            {leadContacts.length > 0 ? (
+                                                leadContacts.map((contanct) => (
+                                                    <ExecutorBlock
+                                                        key={contanct.id}
+                                                        contanct={contanct}
+                                                        mode={mode}
+                                                        type={"customer"}
+                                                        deleteBlock={
+                                                            deleteLeadContact
+                                                        }
+                                                    />
+                                                ))
+                                            ) : (
+                                                <li className="project-card__executors-list-nodata">
+                                                    Нет данных
+                                                </li>
+                                            )}
+                                        </ul>
 
-                                {mode.edit === "full" && (
-                                    <button
-                                        type="button"
-                                        className="button-add"
-                                        onClick={() => {
-                                            if (!addLeadContact) {
-                                                setAddLeadContact(true);
-                                            }
-                                        }}
-                                        title="Добавить ключевое лицо"
-                                    >
-                                        Добавить
-                                        <span>
-                                            <svg
-                                                width="10"
-                                                height="9"
-                                                viewBox="0 0 10 9"
-                                                fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
+                                        {mode.edit === "full" && (
+                                            <button
+                                                type="button"
+                                                className="button-add"
+                                                onClick={() => {
+                                                    if (!addLeadContact) {
+                                                        setAddLeadContact(true);
+                                                    }
+                                                }}
+                                                title="Добавить ключевое лицо"
                                             >
-                                                <path
-                                                    d="M5.75 3.75H9.5v1.5H5.75V9h-1.5V5.25H.5v-1.5h3.75V0h1.5v3.75z"
-                                                    fill="currentColor"
-                                                />
-                                            </svg>
-                                        </span>
-                                    </button>
-                                )}
+                                                Добавить
+                                                <span>
+                                                    <svg
+                                                        width="10"
+                                                        height="9"
+                                                        viewBox="0 0 10 9"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            d="M5.75 3.75H9.5v1.5H5.75V9h-1.5V5.25H.5v-1.5h3.75V0h1.5v3.75z"
+                                                            fill="currentColor"
+                                                        />
+                                                    </svg>
+                                                </span>
+                                            </button>
+                                        )}
 
-                                {/* {addLeadContact && (
-                                    <SaleAddLeadContactPopup
-                                        supplierId={supplierId}
-                                        removeBlock={() =>
-                                            setAddRespPerson(false)
-                                        }
-                                        sendExecutor={sendExecutor}
-                                    />
-                                )} */}
-                            </section>
+                                        {addLeadContact && (
+                                            <SaleAddLeadContactPopup
+                                                leadId={cardData.contragent.id}
+                                                fetchLeadContacts={
+                                                    fetchLeadContacts
+                                                }
+                                                setAddLeadContact={
+                                                    setAddLeadContact
+                                                }
+                                            />
+                                        )}
+                                    </section>
+                                )}
                         </section>
 
                         <section className="card__aside-content">
@@ -1067,7 +1038,6 @@ const SaleCard = () => {
                     <SaleNewContragentWindow
                         setAddCustomer={setAddCustomer}
                         updateCard={updateCard}
-                        createNewContragent={createNewContragent}
                     />
                 </Popup>
             )}

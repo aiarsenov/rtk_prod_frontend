@@ -3,16 +3,13 @@ import { useState, useEffect } from "react";
 import { createDebounce } from "../../utils/debounce.js";
 
 import getData from "../../utils/getData";
+import postData from "../../utils/postData";
 
 import Search from "../Search/Search";
 import SelectList from "../MultiSelect/SelectList";
 import Loader from "../Loader.js";
 
-const SaleNewContragentWindow = ({
-    setAddCustomer,
-    updateCard,
-    createNewContragent,
-}) => {
+const SaleNewContragentWindow = ({ setAddCustomer, updateCard }) => {
     const [programName, setProgramName] = useState("");
     const [selectedContragent, setSelectedContragent] = useState(null);
 
@@ -27,6 +24,19 @@ const SaleNewContragentWindow = ({
 
     const [contragents, setContragents] = useState([]); // Заказчики
     const [leads, setLeads] = useState([]); // Лиды
+
+    // Создание нового заказчика
+    const createNewContragent = (name) => {
+        postData("POST", `${import.meta.env.VITE_API_URL}leads`, {
+            name,
+        }).then((response) => {
+            if (response?.ok) {
+                updateCard(true, {
+                    contragent: { id: response.id, is_lead: true },
+                });
+            }
+        });
+    };
 
     // Получение заказчика
     const fetchContragents = () => {
