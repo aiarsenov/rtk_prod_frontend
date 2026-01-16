@@ -290,18 +290,19 @@ const SaleCard = () => {
 
     // Удалить контакт лида
     const deleteLeadContact = (id) => {
-        // postData(
-        //     "DELETE",
-        //     `${
-        //         import.meta.env.VITE_API_URL
-        //     }sales-funnel-projects/${saleId}/services/${id}`,
-        //     {}
-        // ).then((response) => {
-        //     if (response?.ok) {
-        //         fetchServices();
-        //         getStages();
-        //     }
-        // });
+        if (cardDataCustom.contragent.is_lead) {
+            postData(
+                "DELETE",
+                `${import.meta.env.VITE_API_URL}leads/${
+                    cardDataCustom.contragent.id
+                }/contacts/${id}`,
+                {}
+            ).then((response) => {
+                if (response?.ok) {
+                    fetchLeadContacts();
+                }
+            });
+        }
     };
 
     // Обновление заказчика
