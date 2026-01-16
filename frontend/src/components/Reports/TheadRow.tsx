@@ -2,6 +2,7 @@ import TheadSortButton from "../TheadSortButton/TheadSortButton";
 import MultiSelectWithSearch from "../MultiSelect/MultiSelectWithSearch";
 import FilterButton from "../FilterButton";
 import CustomDatePicker from "../CustomDatePicker/CustomDatePicker";
+import Hint from "../Hint/Hint";
 
 interface projectReportsFilters {
     selectedReports: string[];
@@ -63,6 +64,7 @@ const TheadRow = ({
                     setFunc,
                     date,
                     dateValue,
+                    hint_message,
                 }) => {
                     return (
                         <th className="min-w-[125px]" rowSpan="2" key={key}>
@@ -74,6 +76,13 @@ const TheadRow = ({
                                                 <div className="registry-table__thead-label">
                                                     {label}
                                                 </div>
+
+                                                {hint_message && (
+                                                    <Hint
+                                                        message={hint_message}
+                                                        position="bottom"
+                                                    />
+                                                )}
 
                                                 {(activeTab === "projects"
                                                     ? projectReportsFilters[

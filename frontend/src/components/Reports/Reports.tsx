@@ -593,6 +593,7 @@ const Reports = () => {
                 key: "name",
                 filter: "selectedManagementReports",
                 options: managementReportOptions,
+                hint_message: "Отчёт",
             },
             {
                 label: "Отчётный месяц",
@@ -606,18 +607,21 @@ const Reports = () => {
                 key: "score",
                 filter: "selectedRates",
                 options: rateOptions,
+                hint_message: "Оценка",
             },
             {
                 label: "Отвественный",
                 key: "physical_person",
                 filter: "selectedResponsiblePersons",
                 options: managemenReponsiblePersontOptions,
+                hint_message: "Отвественный",
             },
             {
                 label: "Статус",
                 key: "status",
                 filter: "selectedManagementStatus",
                 options: managemenStatusOptions,
+                hint_message: "Статус",
             },
             {
                 label: "Дата утверждения",
