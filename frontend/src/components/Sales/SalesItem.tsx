@@ -70,11 +70,11 @@ const SalesItem = ({ props, columns, deleteProject, mode }) => {
                             <td className="w-[250px]" key={key}>
                                 <div className="hidden-group cursor-pointer">
                                     <div className="visible-text">
-                                        {value?.program_name.toString() || "—"}
+                                        {value?.program_name?.toString() || "—"}
                                     </div>
 
                                     <div className="hidden-text">
-                                        {value?.program_name.toString() || "—"}
+                                        {value?.program_name?.toString() || "—"}
                                     </div>
                                 </div>
                             </td>
