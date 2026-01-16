@@ -65,6 +65,7 @@ const TheadRow = ({
                     date,
                     dateValue,
                     hint_message,
+                    hint_position,
                 }) => {
                     return (
                         <th className="min-w-[125px]" rowSpan="2" key={key}>
@@ -80,7 +81,7 @@ const TheadRow = ({
                                                 {hint_message && (
                                                     <Hint
                                                         message={hint_message}
-                                                        position="bottom"
+                                                        position={hint_position || "bottom"}
                                                     />
                                                 )}
 
