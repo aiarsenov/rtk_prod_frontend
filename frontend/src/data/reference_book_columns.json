@@ -94,8 +94,8 @@
         { "label": "Автор измнения", "key": "updated_by" }
     ],
     "lead-contacts": [
-        { "label": "Наименование", "key": "name"},
-        { "label": "ФИО и должность", "key": "full_name"},
+        { "label": "Наименование", "key": "name", "filter": "selectedNames", "options": "nameOptions"},
+        { "label": "ФИО и должность", "key": "full_name", "filter": "selectedFullNames", "options": "fullNameOptions"},
         { "label": "Контакты", "key": "" },
         { "label": "Последнее изменение", "key": "" },
         { "label": "Автор измнения", "key": "" },

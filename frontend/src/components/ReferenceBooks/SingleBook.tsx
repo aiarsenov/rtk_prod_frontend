@@ -69,8 +69,6 @@ const SingleBook = () => {
     const [availableYears, setAvailableYears] = useState([]); // Доступные года
     const [currentYear, setCurrentYear] = useState(""); // Текущий год
 
-    // let query;
-
     // Заполняем фильтры
     const filterOptions = useMemo(() => {
         const nameOptions = Array.from(
