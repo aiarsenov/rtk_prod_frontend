@@ -2,30 +2,82 @@ import { useState, useEffect } from "react";
 
 import { createDebounce } from "../../utils/debounce.js";
 
+import getData from "../../utils/getData";
+
 import Search from "../Search/Search";
 import SelectList from "../MultiSelect/SelectList";
+import Loader from "../Loader.js";
 
 const SaleNewContragentWindow = ({
     setAddCustomer,
-    contragents,
     updateCard,
     createNewContragent,
 }) => {
     const [programName, setProgramName] = useState("");
     const [selectedContragent, setSelectedContragent] = useState(null);
+
+    const [isLoading, setIsLoading] = useState(true);
+
     const [activeTab, setActiveTab] = useState("create");
+    const [activeSubTab, setActiveSubTab] = useState("leads");
+    const [activeList, setActiveList] = useState([]);
 
     const [resultList, setResultList] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
 
+    const [contragents, setContragents] = useState([]); // Заказчики
+    const [leads, setLeads] = useState([]); // Лиды
+
+    // Получение заказчика
+    const fetchContragents = () => {
+        return getData(`${import.meta.env.VITE_API_URL}contragents?all=true`, {
+            Accept: "application/json",
+        }).then((response) => {
+            if (response?.status == 200) {
+                if (response.data.length > 0) {
+                    setContragents(
+                        response.data.map((item) => ({
+                            value: item.id,
+                            label: item.program_name,
+                        }))
+                    );
+                }
+            }
+        });
+    };
+
+    // Получение лидов
+    const fetchLeads = () => {
+        return getData(`${import.meta.env.VITE_API_URL}leads`).then(
+            (response) => {
+                if (response?.status == 200) {
+                    if (response.data.data.length > 0) {
+                        setLeads(
+                            response.data.data.map((item) => ({
+                                value: item.id,
+                                label: item.name,
+                            }))
+                        );
+                    }
+                }
+            }
+        );
+    };
+
     useEffect(() => {
-        let filteredUsers = contragents;
+        activeSubTab === "leads"
+            ? setActiveList(leads)
+            : setActiveList(contragents);
+    }, [activeSubTab, contragents, leads]);
+
+    useEffect(() => {
+        let filteredUsers = activeList;
 
         // Фильтрация по поисковому запросу
         if (searchQuery.trim() !== "") {
             const query = searchQuery.toLowerCase();
 
-            filteredUsers = contragents.filter((item) =>
+            filteredUsers = activeList.filter((item) =>
                 item.label?.toLowerCase().includes(query)
             );
         }
@@ -35,7 +87,21 @@ const SaleNewContragentWindow = ({
         } else {
             setResultList([]);
         }
-    }, [contragents, searchQuery]);
+    }, [activeList, searchQuery]);
+
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                await Promise.all([fetchContragents(), fetchLeads()]);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadData();
+    }, []);
 
     const debouncedSearch = createDebounce(
         (event) => {
@@ -80,8 +146,38 @@ const SaleNewContragentWindow = ({
                         type="text"
                         onChange={(e) => setProgramName(e.target.value)}
                     />
+                ) : isLoading ? (
+                    <div className="relative min-h-[300px]">
+                        <Loader absolute={true} />
+                    </div>
                 ) : (
                     <>
+                        <ul className="card__tabs executor-block__tabs mt-[-10px]">
+                            <li className="card__tabs-item radio-field_tab">
+                                <input
+                                    id="leads"
+                                    type="radio"
+                                    checked={activeSubTab === "leads"}
+                                    name="leads"
+                                    onChange={() => setActiveSubTab("leads")}
+                                />
+                                <label htmlFor="leads">Лиды</label>
+                            </li>
+
+                            <li className="card__tabs-item radio-field_tab">
+                                <input
+                                    id="contragents"
+                                    type="radio"
+                                    name="contragents"
+                                    checked={activeSubTab === "contragents"}
+                                    onChange={() =>
+                                        setActiveSubTab("contragents")
+                                    }
+                                />
+                                <label htmlFor="contragents">Заказчики</label>
+                            </li>
+                        </ul>
+
                         <Search
                             placeholder="Поиск"
                             onSearch={debouncedSearch}

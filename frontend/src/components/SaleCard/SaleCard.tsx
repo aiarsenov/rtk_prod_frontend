@@ -10,9 +10,11 @@ import CreatableSelect from "react-select/creatable";
 import AutoResizeTextarea from "../AutoResizeTextarea";
 import CardMultiSelector from "../CardMultiSelector/CardMultiSelector";
 
+import ExecutorBlock from "../ExecutorBlock/ExecutorBlock";
 import SaleNewContragentWindow from "./SaleNewContragentWindow";
 import SaleServicesList from "./SaleServicesList";
 import SaleFunnelStages from "./SaleFunnelStages";
+import SaleAddLeadContactPopup from "./SaleAddLeadContactPopup";
 
 import Popup from "../Popup/Popup";
 import Loader from "../Loader";
@@ -54,10 +56,13 @@ const SaleCard = () => {
 
     const [addCustomer, setAddCustomer] = useState(false); // Добавить заказчика
     const [addServices, setAddServices] = useState(false); // Добавить услугу
+    const [addLeadContact, setAddLeadContact] = useState(false); // Добавить контакт лида
 
     const [industries, setIndustries] = useState([]); // Отрасли
-    const [contragents, setContragents] = useState([]); // Заказчики
+
     const [banks, setBanks] = useState([]); // Банки
+
+    const [leadContacts, setLeadContacts] = useState([]); // Контакты лидов
 
     const [physicalPersons, setPhysicalPersons] = useState([]); // Сотрудники
     const [reportTypes, setReportTypes] = useState([]);
@@ -103,24 +108,6 @@ const SaleCard = () => {
         });
     };
 
-    // Получение заказчика
-    const fetchContragents = () => {
-        return getData(`${import.meta.env.VITE_API_URL}contragents?all=true`, {
-            Accept: "application/json",
-        }).then((response) => {
-            if (response?.status == 200) {
-                if (response.data.length > 0) {
-                    setContragents(
-                        response.data.map((item) => ({
-                            value: item.id,
-                            label: item.program_name,
-                        }))
-                    );
-                }
-            }
-        });
-    };
-
     // Получение банков
     const fetchBanks = () => {
         return getData(`${import.meta.env.VITE_API_URL}banks`).then(
@@ -137,6 +124,17 @@ const SaleCard = () => {
                 }
             }
         );
+    };
+
+    // Получение контактов лидов
+    const fetchLeadContacts = () => {
+        return getData(
+            `${import.meta.env.VITE_API_URL}leads/${1}/contacts`
+        ).then((response) => {
+            if (response?.status == 200) {
+                setLeadContacts(response.data.data.contacts ?? []);
+            }
+        });
     };
 
     // Получение услуг
@@ -216,9 +214,8 @@ const SaleCard = () => {
             await Promise.all([
                 fetchPhysicalpersons(),
                 fetchIndustries(),
-                fetchContragents(),
-                fetchBanks(),
                 fetchSources(),
+                fetchBanks(),
                 fetchReportTypes(),
                 fetchServices(),
                 getStages(),
@@ -289,6 +286,22 @@ const SaleCard = () => {
                 getStages();
             }
         });
+    };
+
+    // Удалить услугу
+    const deleteLeadContact = (id) => {
+        // postData(
+        //     "DELETE",
+        //     `${
+        //         import.meta.env.VITE_API_URL
+        //     }sales-funnel-projects/${saleId}/services/${id}`,
+        //     {}
+        // ).then((response) => {
+        //     if (response?.ok) {
+        //         fetchServices();
+        //         getStages();
+        //     }
+        // });
     };
 
     // Обновление заказчика
@@ -363,6 +376,12 @@ const SaleCard = () => {
                 });
             });
     };
+
+    useEffect(() => {
+        if (cardData.contragent_id) {
+            fetchLeadContacts();
+        }
+    }, [cardData]);
 
     useEffect(() => {
         if (services.length > 0) {
@@ -712,38 +731,6 @@ const SaleCard = () => {
 
                                 <div className="card__general-info__block">
                                     <div className="form-label">
-                                        Банк
-                                        <Hint message={"Банк"} />
-                                    </div>
-
-                                    <CardMultiSelector
-                                        options={banks}
-                                        selectedValues={
-                                            cardDataCustom.creditors
-                                        }
-                                        onChange={(updated) => {
-                                            if (mode.edit !== "full") return;
-
-                                            setCardDataCustom((prev) => ({
-                                                ...prev,
-                                                creditors: updated.banks,
-                                            }));
-                                        }}
-                                        submit={() =>
-                                            updateCard(true, {
-                                                creditors:
-                                                    cardDataCustom.creditors,
-                                            })
-                                        }
-                                        filedName="banks"
-                                        popupTitle="Добавить банк"
-                                        buttonTitle="Добавить банк"
-                                        disabled={mode.edit !== "full"}
-                                    />
-                                </div>
-
-                                <div className="card__general-info__block">
-                                    <div className="form-label">
                                         Ответственный
                                         <Hint message={"Ответственный"} />
                                     </div>
@@ -920,6 +907,70 @@ const SaleCard = () => {
                                     />
                                 </div>
                             </section>
+
+                            <section className="project-card__project-executors">
+                                <h2 className="card__subtitle">
+                                    Ключевые лица
+                                    <Hint message=" ФИО, должность и т.д. доступно только через справочник «Контакты лидов»." />
+                                </h2>
+
+                                <ul className="project-card__executors-list">
+                                    {leadContacts.length > 0 ? (
+                                        leadContacts.map((contanct) => (
+                                            <ExecutorBlock
+                                                key={contanct.id}
+                                                contanct={contanct}
+                                                mode={mode}
+                                                type={"customer"}
+                                                deleteBlock={deleteLeadContact}
+                                            />
+                                        ))
+                                    ) : (
+                                        <li className="project-card__executors-list-nodata">
+                                            Нет данных
+                                        </li>
+                                    )}
+                                </ul>
+
+                                {mode.edit === "full" && (
+                                    <button
+                                        type="button"
+                                        className="button-add"
+                                        onClick={() => {
+                                            if (!addLeadContact) {
+                                                setAddLeadContact(true);
+                                            }
+                                        }}
+                                        title="Добавить ключевое лицо"
+                                    >
+                                        Добавить
+                                        <span>
+                                            <svg
+                                                width="10"
+                                                height="9"
+                                                viewBox="0 0 10 9"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    d="M5.75 3.75H9.5v1.5H5.75V9h-1.5V5.25H.5v-1.5h3.75V0h1.5v3.75z"
+                                                    fill="currentColor"
+                                                />
+                                            </svg>
+                                        </span>
+                                    </button>
+                                )}
+
+                                {/* {addLeadContact && (
+                                    <SaleAddLeadContactPopup
+                                        supplierId={supplierId}
+                                        removeBlock={() =>
+                                            setAddRespPerson(false)
+                                        }
+                                        sendExecutor={sendExecutor}
+                                    />
+                                )} */}
+                            </section>
                         </section>
 
                         <section className="card__aside-content">
@@ -1002,7 +1053,6 @@ const SaleCard = () => {
                     <SaleNewContragentWindow
                         setAddCustomer={setAddCustomer}
                         updateCard={updateCard}
-                        contragents={contragents}
                         createNewContragent={createNewContragent}
                     />
                 </Popup>
