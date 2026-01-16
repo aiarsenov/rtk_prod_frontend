@@ -615,7 +615,7 @@ const Reports = () => {
                 hint_message: `Оценка ситуации в проекте по итогам отчётного месяца со стороны ответственного: проблем нет, есть сложности, есть проблемы.`,
             },
             {
-                label: "Отвественный",
+                label: "Ответственный",
                 key: "physical_person",
                 filter: "selectedResponsiblePersons",
                 options: managemenReponsiblePersontOptions,
