@@ -288,7 +288,7 @@ const SaleCard = () => {
         });
     };
 
-    // Удалить услугу
+    // Удалить контакт лида
     const deleteLeadContact = (id) => {
         // postData(
         //     "DELETE",
@@ -305,30 +305,30 @@ const SaleCard = () => {
     };
 
     // Обновление заказчика
-    const updateContragent = async (showMessage = true, data) => {
-        try {
-            const response = await postData("PATCH", `${URL}/${saleId}`, data);
-            // if (response?.ok && showMessage) {
-            // }
-            setCardData(response);
-            setCardDataCustom(response);
+    // const updateContragent = async (data) => {
+    //     try {
+    //         const response = await postData("PATCH", `${URL}/${saleId}`, data)
+    //             .the;
 
-            return response;
-        } catch (error) {
-            toast.error("Ошибка при обновлении проекта", {
-                containerId: "toastContainer",
-                isLoading: false,
-                autoClose: 1500,
-                pauseOnFocusLoss: false,
-                pauseOnHover: false,
-                draggable: true,
-                position:
-                    window.innerWidth >= 1440 ? "bottom-right" : "top-right",
-            });
+    //         setCardData(response);
+    //         setCardDataCustom(response);
 
-            throw error;
-        }
-    };
+    //         return response;
+    //     } catch (error) {
+    //         toast.error("Ошибка при обновлении проекта", {
+    //             containerId: "toastContainer",
+    //             isLoading: false,
+    //             autoClose: 1500,
+    //             pauseOnFocusLoss: false,
+    //             pauseOnHover: false,
+    //             draggable: true,
+    //             position:
+    //                 window.innerWidth >= 1440 ? "bottom-right" : "top-right",
+    //         });
+
+    //         throw error;
+    //     }
+    // };
 
     // Создание нового заказчика
     const createNewContragent = (name) => {
@@ -336,7 +336,9 @@ const SaleCard = () => {
             name,
         }).then((response) => {
             if (response?.ok) {
-                updateContragent(true, { contragent_id: response.id });
+                updateCard(true, {
+                    contragent: { id: response.id, is_lead: true },
+                });
             }
         });
     };
@@ -376,7 +378,7 @@ const SaleCard = () => {
     };
 
     useEffect(() => {
-        if (cardData.contragent_id) {
+        if (cardData.contragent && cardData?.contragent?.is_lead) {
             fetchLeadContacts();
         }
     }, [cardData]);
@@ -463,19 +465,30 @@ const SaleCard = () => {
                             <div className="project-card__services">
                                 <h2 className="card__subtitle">Заказчик</h2>
 
-                                <ul className="sale-contragents__list">
-                                    {cardDataCustom.contragent
-                                        ?.program_name && (
-                                        <li className="sale-contragents__list-item">
-                                            <div>
-                                                {
-                                                    cardDataCustom.contragent
-                                                        ?.program_name
-                                                }
-                                            </div>
-                                        </li>
-                                    )}
-                                </ul>
+                                {cardDataCustom.contragent && (
+                                    <ul className="sale-contragents__list">
+                                        {!cardDataCustom.contragent?.is_lead ? (
+                                            <li className="sale-contragents__list-item">
+                                                <div>
+                                                    {
+                                                        cardDataCustom
+                                                            .contragent
+                                                            ?.program_name
+                                                    }
+                                                </div>
+                                            </li>
+                                        ) : (
+                                            <li className="sale-contragents__list-item">
+                                                <div>
+                                                    {
+                                                        cardDataCustom
+                                                            .contragent?.name
+                                                    }
+                                                </div>
+                                            </li>
+                                        )}
+                                    </ul>
+                                )}
 
                                 {mode.edit === "full" && (
                                     <button
@@ -484,13 +497,15 @@ const SaleCard = () => {
                                         onClick={() => setAddCustomer(true)}
                                         title={`${
                                             cardDataCustom.contragent
-                                                ?.program_name
+                                                ?.program_name ||
+                                            cardDataCustom.contragent?.name
                                                 ? "Изменить заказчика"
                                                 : "Добавить заказчика"
                                         }`}
                                     >
                                         {!cardDataCustom.contragent
-                                            ?.program_name ? (
+                                            ?.program_name &&
+                                        !cardDataCustom.contragent?.name ? (
                                             <>
                                                 Добавить
                                                 <span>

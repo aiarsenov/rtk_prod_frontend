@@ -214,8 +214,19 @@ const SaleNewContragentWindow = ({
                         if (activeTab === "create") {
                             createNewContragent(programName);
                         } else {
+                            const data =
+                                activeSubTab === "leads"
+                                    ? {
+                                          id: selectedContragent,
+                                          is_lead: true,
+                                      }
+                                    : {
+                                          id: selectedContragent,
+                                          is_lead: false,
+                                      };
+
                             updateCard(true, {
-                                contragent_id: selectedContragent,
+                                contragent: data,
                             });
                         }
 
