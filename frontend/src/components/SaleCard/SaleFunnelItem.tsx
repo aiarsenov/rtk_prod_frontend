@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 import Hint from "../Hint/Hint";
 
@@ -22,6 +22,7 @@ const SaleFunnelItem = ({
     mode: object;
 }) => {
     const [activeStage, setActiveStage] = useState(isLast || null);
+    const today = useMemo(() => new Date(), []);
 
     const handleStatusClass = () => {
         if (stage.next_possible_stages[1]?.selected) {
@@ -108,6 +109,7 @@ const SaleFunnelItem = ({
                             handleStageDate(updated, stage.instance_id);
                         }}
                         minDate={maxPrevDate}
+                        maxDate={today}
                         disabled={mode.edit !== "full" || !isLast}
                         single={true}
                     />

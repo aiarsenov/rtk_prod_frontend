@@ -48,6 +48,7 @@ const CustomDatePicker = ({
     single = false,
     value,
     minDate,
+    maxDate,
 }: {
     type: string;
     closePicker: () => void;
@@ -55,7 +56,8 @@ const CustomDatePicker = ({
     fieldkey: string;
     single?: boolean;
     value: string | Date;
-    minDate: string | Date;
+    minDate?: string | Date;
+    maxDate?: string | Date;
 }) => {
     const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
         null,
@@ -115,6 +117,7 @@ const CustomDatePicker = ({
         <div className={`custom-datepicker custom-datepicker_${type}`}>
             <DatePicker
                 minDate={minDate || MIN_DATE}
+                maxDate={maxDate || new Date()}
                 filterDate={(date) => date >= MIN_DATE}
                 onSelect={(clickedDate) => {
                     if (!single) return;

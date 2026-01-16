@@ -118,9 +118,9 @@ const CardMultiSelector = ({
                                 submit();
                                 setShowWindow(false);
                             }}
-                            title="Применить добавление"
+                            title="Сохранить изменения"
                         >
-                            Добавить
+                            Сохранить
                         </button>
                     </div>
                 </Popup>

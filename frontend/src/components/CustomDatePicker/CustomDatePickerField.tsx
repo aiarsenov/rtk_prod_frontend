@@ -40,12 +40,14 @@ const CustomDatePickerField = ({
     shortMonthYear,
     disabled,
     minDate,
+    maxDate,
 }: {
     className: string;
     type: string;
     startDate: string;
     endDate: string;
-    minDate: string | Date;
+    minDate?: string | Date;
+    maxDate?: string | Date;
     value: string | Date;
     placeholder: string;
     onChange: () => void;
@@ -142,6 +144,7 @@ const CustomDatePickerField = ({
                     single={single}
                     type={type}
                     minDate={minDate}
+                    maxDate={maxDate}
                 />
             )}
         </div>
