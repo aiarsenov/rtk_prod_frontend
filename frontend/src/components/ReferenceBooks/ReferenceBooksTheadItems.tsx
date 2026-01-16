@@ -17,7 +17,7 @@ const ReferenceBooksTheadItems = ({
     return (
         <>
             {COLUMNS[bookId]?.map(
-                ({ label, key, filter, options, hint, hint_message, is_sortable }) => {
+                ({ label, key, filter, options, hint, hint_message, hint_position, is_sortable }) => {
                     return (
                         <th className="min-w-[50px]" rowSpan="2" key={key}>
                             <div className="registry-table__thead-item">
@@ -28,7 +28,7 @@ const ReferenceBooksTheadItems = ({
                                         </div>
 
                                         {hint && hint_message && (
-                                            <Hint message={hint_message} />
+                                            <Hint message={hint_message} position={hint_position || "bottom"} />
                                         )}
 
                                         {filters[filter].length > 0 && (
@@ -112,7 +112,7 @@ const ReferenceBooksTheadItems = ({
                                         </div>
 
                                         {hint && hint_message && (
-                                            <Hint message={hint_message} />
+                                            <Hint message={hint_message} position={hint_position || "bottom"} />
                                         )}
 
                                         {is_sortable && (
